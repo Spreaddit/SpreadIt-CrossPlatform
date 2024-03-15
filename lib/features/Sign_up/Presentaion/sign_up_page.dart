@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'widget/button.dart';
 import 'widget/header.dart';
-import 'widget/email_input.dart';
-import 'widget/password_input.dart';
 import 'widget/terms_and_cond_text.dart';
-
+import 'widget/custom_input.dart'; 
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -16,7 +14,7 @@ class SignUpScreen extends StatefulWidget {
 class SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
- var _userEmail = '';
+  var _userEmail = '';
   var _userPassword = '';
   bool _validPassAndEmail = false;
   var validEmail = true;
@@ -32,10 +30,10 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
-       Navigator.of(context).pushNamed('/sign-up-page'); // change later
+      Navigator.of(context).pushNamed('/sign-up-page'); // change later
     }
   }
-  
+
   void updateEmail(String email, bool validation) {
     _userEmail = email;
     validEmail = validation;
@@ -58,8 +56,6 @@ class SignUpScreenState extends State<SignUpScreen> {
     print(_validPassAndEmail);
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,22 +66,26 @@ class SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 children: [
                   Header(
-                    buttonText:'Log in',
+                    buttonText: 'Log in',
                     title: 'Hi new friend, Welcome to SpreadIt',
-                   onPressed: () => navigateToLogin(context),
+                    onPressed: () => navigateToLogin(context),
                   ),
-                  EmailInput(
+                  CustomInput(
                     formKey: _emailForm,
                     validate: true,
-                    onEmailChanged: updateEmail,
-                    isEmailValid: validEmail,
-                    placeholder: 'Email'
+                    onChanged: updateEmail,
+                    isFieldValid: validEmail,
+                    label: 'Email',
+                    placeholder: 'Email',
                   ),
-                  PasswordInput(
+                  CustomInput(
                     formKey: _passwordForm,
                     validate: true,
-                    onPasswordChanged: updatePassword,
-                    isPasswordValid: validPass,
+                    onChanged: updatePassword,
+                    isFieldValid: validPass,
+                    label: 'Password',
+                    placeholder: 'Password',
+                    obscureText: true,
                   ),
                 ],
               ),
@@ -98,7 +98,7 @@ class SignUpScreenState extends State<SignUpScreen> {
               left: 20,
               right: 20,
             ),
-             child : TermsAndCondText(), 
+            child: TermsAndCondText(),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

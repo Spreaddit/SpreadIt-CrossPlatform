@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'widget/button.dart';
 import 'widget/header.dart';
-import 'widget/email_input.dart';
-import 'widget/password_input.dart';
 import 'widget/terms_and_cond_text.dart';
 import "./widget/oauth_service.dart";
-
+import 'widget/custom_input.dart'; 
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -25,19 +23,20 @@ class LogInScreenState extends State<LogInScreen> {
   var validPass = true;
 
   void navigateToForgetPassword(BuildContext context) {
-    signOutWithGoogle( context) ;   // change later
+    signOutWithGoogle(context); // change later
   }
 
   void navigateToSignUp(BuildContext context) {
-    Navigator.of(context).pushNamed('/sign-up-page'); 
+    Navigator.of(context).pushNamed('/sign-up-page');
   }
+
   void navigateToHomePage(BuildContext context) {
     final valid = _emailForm.currentState!.validate();
     final valid1 = _passwordForm.currentState!.validate();
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
-       Navigator.of(context).pushNamed('/sign-up-page'); // change later
+      Navigator.of(context).pushNamed('/sign-up-page'); // change later
     }
   }
 
@@ -63,8 +62,6 @@ class LogInScreenState extends State<LogInScreen> {
     print(_validPassAndEmail);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,36 +72,40 @@ class LogInScreenState extends State<LogInScreen> {
               child: Column(
                 children: [
                   Header(
-                    buttonText:  'Sign up' ,
+                    buttonText: 'Sign up',
                     title: 'Log in to Spreadit',
-                    onPressed: () => navigateToSignUp(context), 
+                    onPressed: () => navigateToSignUp(context),
                   ),
-                  EmailInput(
+                  CustomInput(
                     formKey: _emailForm,
                     validate: false,
-                    onEmailChanged: updateEmail,
-                    isEmailValid: validEmail,
-                    placeholder: 'Email or Username'
+                    onChanged: updateEmail,
+                    isFieldValid: validEmail,
+                    label: 'Email',
+                    placeholder: 'Email or Username',
                   ),
-                  PasswordInput(
+                  CustomInput(
                     formKey: _passwordForm,
                     validate: false,
-                    onPasswordChanged: updatePassword,
-                    isPasswordValid: validPass,
+                    onChanged: updatePassword,
+                    isFieldValid: validPass,
+                    label: 'Password',
+                    placeholder: 'Password',
+                    obscureText: true,
                   ),
                   Container(
                     margin: const EdgeInsets.all(20),
                     alignment: Alignment.topLeft,
-                    child:  TextButton(
-                            onPressed: () => navigateToForgetPassword(context), 
-                            child: Text(
-                              'Forgot Password?',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Color(0xFFFF4500),
-                              ),
-                            ),
-                          )
+                    child: TextButton(
+                      onPressed: () => navigateToForgetPassword(context),
+                      child: Text(
+                        'Forgot Password?',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFFFF4500),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -117,13 +118,13 @@ class LogInScreenState extends State<LogInScreen> {
               left: 20,
               right: 20,
             ),
-             child : TermsAndCondText(), 
+            child: TermsAndCondText(),
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             alignment: Alignment.bottomCenter,
             child: Button(
-              onPressed: () => navigateToHomePage(context), 
+              onPressed: () => navigateToHomePage(context),
               text: 'Continue',
               backgroundColor: _validPassAndEmail
                   ? Color(0xFFFF4500)
