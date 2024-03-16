@@ -7,9 +7,11 @@ class CreateCommunityPage extends StatefulWidget {
 
 class _CreateCommunityPageState extends State<CreateCommunityPage> {
   final communityType = [
-    'Public',
-    'Anyone can view post, and comment to this community'
+    'Public \n Anyone can view post, and comment to this community',
+    'Private \n Only approved members can view and contribute to this community',
+    'Restricted \n Only approved members can view this community',
   ];
+  var selectedCommunityType = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             ),
             TextButton(
               onPressed: _onCommunityTypePress,
-              child: Text(communityType.join(', ')),
+              child: Text(communityType[selectedCommunityType].split('\n')[0]),
             )
           ],
         ),
@@ -69,19 +71,51 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
       builder: (context) {
         return Container(
           height: 200,
-          child: ListView.builder(
-            itemCount: communityType.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(communityType[index]),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              );
-            },
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(
+                  'Community type',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: communityType.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(communityType[index].split('\n')[0],
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      subtitle: Text(communityType[index].split('\n')[1],
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey,
+                          )),
+                      onTap: () {
+                        _changeSelectedCommunity(index);
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
     );
+  }
+
+  void _changeSelectedCommunity(index) {
+    setState(() {
+      selectedCommunityType = index;
+    });
   }
 }
