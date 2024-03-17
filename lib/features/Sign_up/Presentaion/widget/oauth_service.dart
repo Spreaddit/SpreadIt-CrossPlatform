@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+final GoogleSignIn _googleSignIn = GoogleSignIn();  
 
-Future<void> signInWithGoogle(BuildContext context) async {
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+Future<bool> signInWithGoogle(BuildContext context) async {
+  final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
   if (googleUser == null) {
-    return;
+    return false;
   }
   final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
   final credential = GoogleAuthProvider.credential(
@@ -14,12 +15,14 @@ Future<void> signInWithGoogle(BuildContext context) async {
     idToken: googleAuth?.idToken,
   );
   await FirebaseAuth.instance.signInWithCredential(credential);
-  Navigator.of(context).pushNamed('/log-in-page'); // should be homepage
+  return true;
 }
 
-void signOutWithGoogle(BuildContext context) {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  _googleSignIn.signOut();
-  Navigator.of(context).pushNamed('/start-up-page'); // Ensure correct route setup
+Future<bool> signOutWithGoogle(BuildContext context) async {
+  if (_googleSignIn.currentUser != null) {
+    await _googleSignIn.disconnect();
+    await _googleSignIn.signOut();
+    print('not null');
+  }
+  return true;
 }
-

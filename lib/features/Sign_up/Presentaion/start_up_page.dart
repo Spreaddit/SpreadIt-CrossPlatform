@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import "./widget/oauth_service.dart";
 
+import "./widget/oauth_service.dart";
 import './widget/terms_and_cond_text.dart';
 import './widget/button.dart'; 
 
@@ -13,6 +13,13 @@ class StartUpPage extends StatelessWidget {
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
   }
+
+  Future<void> handleSignIn(BuildContext context) async {
+  bool signedIn= await signInWithGoogle(context);
+  if(signedIn) {
+    Navigator.of(context).pushNamed('/log-in-page'); 
+  }
+}
 
 
   @override
@@ -48,13 +55,13 @@ class StartUpPage extends StatelessWidget {
               prefixIcon: Icons.email,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-            Button(
-              onPressed: () => signInWithGoogle(context), 
-              text: 'Continue with Google',
-              backgroundColor: Color(0xFFEFEFED),
-              foregroundColor: Color(0xFF222222),
-              prefixIcon: Icons.account_circle, // Change to Google icon
-            ),
+             Button(
+                onPressed: () => handleSignIn(context), 
+                text: 'Continue with Google',
+                backgroundColor: Color(0xFFEFEFED),
+                foregroundColor: Color(0xFF222222),
+                imagePath: 'assets/images/GoogleLogo.png', 
+              ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Container(
               margin: const EdgeInsets.only(

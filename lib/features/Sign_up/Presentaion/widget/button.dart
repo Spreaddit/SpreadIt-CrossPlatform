@@ -5,14 +5,16 @@ class Button extends StatefulWidget {
   final String text;
   final Color backgroundColor;
   final Color foregroundColor;
-  final IconData? prefixIcon; // Optional prefix icon
+  final IconData? prefixIcon; 
+  final String? imagePath;
 
   const Button({
     required this.onPressed,
     required this.text,
     required this.backgroundColor,
     required this.foregroundColor,
-    this.prefixIcon, // Optional prefix icon
+    this.prefixIcon,
+    this.imagePath, 
   });
 
   @override
@@ -38,10 +40,19 @@ class _ButtonState extends State<Button> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (widget.prefixIcon != null) // If prefix icon is passed, show it
+            if (widget.prefixIcon != null) 
               Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Icon(widget.prefixIcon),
+              ),
+            if (widget.imagePath != null) 
+              Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: Image.asset(
+                  widget.imagePath!,
+                  width: 24,
+                  height: 24,
+                ),
               ),
             Expanded(
               child: Text(

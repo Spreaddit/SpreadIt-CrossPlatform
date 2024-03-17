@@ -3,6 +3,7 @@ import 'widget/button.dart';
 import 'widget/header.dart';
 import 'widget/terms_and_cond_text.dart';
 import 'widget/custom_input.dart'; 
+import 'widget/validations.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -14,19 +15,17 @@ class SignUpScreen extends StatefulWidget {
 class SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
-  var _userEmail = '';
-  var _userPassword = '';
+  var _userEmail = '';  // to be sent to api
+  var _userPassword = ''; // to be sent to api
   bool _validPassAndEmail = false;
-  var validEmail = true;
-  var validPass = true;
+  var validEmail = false;
+  var validPass = false;
 
   void navigateToLogin(BuildContext context) {
     Navigator.of(context).pushNamed('/log-in-page');
   }
 
   void navigateToHomePage(BuildContext context) {
-    final valid = _emailForm.currentState!.validate();
-    final valid1 = _passwordForm.currentState!.validate();
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
@@ -50,10 +49,8 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   void updateValidStatus() {
     setState(() {
-      _validPassAndEmail = validEmail && validPass;
+      _validPassAndEmail = validPass && validEmail;
     });
-    print('valid');
-    print(_validPassAndEmail);
   }
 
   @override
@@ -69,7 +66,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     buttonText: 'Log in',
                     title: 'Hi new friend, Welcome to SpreadIt',
                     onPressed: () => navigateToLogin(context),
-                  ),
+                  ),    
                   CustomInput(
                     formKey: _emailForm,
                     validate: true,
@@ -77,6 +74,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                     isFieldValid: validEmail,
                     label: 'Email',
                     placeholder: 'Email',
+                    invalidText: emailInvalidText,
+                    validateField:validateEmail,
                   ),
                   CustomInput(
                     formKey: _passwordForm,
@@ -86,6 +85,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                     label: 'Password',
                     placeholder: 'Password',
                     obscureText: true,
+                    invalidText: passwordInvalidText,
+                    validateField:validatePassword,
                   ),
                 ],
               ),

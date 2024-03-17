@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'widget/button.dart';
 import 'widget/header.dart';
 import 'widget/terms_and_cond_text.dart';
 import "./widget/oauth_service.dart";
 import 'widget/custom_input.dart'; 
+import "./auth.dart";
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -15,28 +17,45 @@ class LogInScreen extends StatefulWidget {
 class LogInScreenState extends State<LogInScreen> {
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
+  final Auth _auth = Auth(); 
 
-  var _userEmail = '';
-  var _userPassword = '';
+  var _userEmail = ''; // passeed later to api
+  var _userPassword = ''; // passed later to api
   bool _validPassAndEmail = false;
   var validEmail = true;
   var validPass = true;
 
-  void navigateToForgetPassword(BuildContext context) {
-    signOutWithGoogle(context); // change later
+  Future <void> signInWithEmailAndPassword() async {
+    try{
+      await _auth.signInWithEmailAndPassword(
+        email: _userEmail,
+        password: _userPassword,
+        );
+       Navigator.of(context).pushNamed('/sign-up-page'); // change later
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> navigateToForgetPassword(BuildContext context) async {
+    //changed later 
+    bool signedIn= await signOutWithGoogle(context); 
+  if(signedIn) {
+    Navigator.of(context).pushNamed('/start-up-page'); 
+  }
   }
 
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
   }
 
-  void navigateToHomePage(BuildContext context) {
-    final valid = _emailForm.currentState!.validate();
-    final valid1 = _passwordForm.currentState!.validate();
+  
+
+  Future<void> navigateToHomePage(BuildContext context) async{
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
-      Navigator.of(context).pushNamed('/sign-up-page'); // change later
+      await signInWithEmailAndPassword();
     }
   }
 
@@ -56,11 +75,10 @@ class LogInScreenState extends State<LogInScreen> {
 
   void updateValidStatus() {
     setState(() {
-      _validPassAndEmail = validEmail && validPass;
+      _validPassAndEmail = _userEmail.isNotEmpty && _userPassword.isNotEmpty;
     });
-    print('valid');
-    print(_validPassAndEmail);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +96,6 @@ class LogInScreenState extends State<LogInScreen> {
                   ),
                   CustomInput(
                     formKey: _emailForm,
-                    validate: false,
                     onChanged: updateEmail,
                     isFieldValid: validEmail,
                     label: 'Email',
@@ -86,7 +103,6 @@ class LogInScreenState extends State<LogInScreen> {
                   ),
                   CustomInput(
                     formKey: _passwordForm,
-                    validate: false,
                     onChanged: updatePassword,
                     isFieldValid: validPass,
                     label: 'Password',
