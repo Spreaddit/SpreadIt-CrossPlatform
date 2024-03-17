@@ -9,7 +9,6 @@ class CustomInput extends StatefulWidget {
   final String invalidText;
   final bool Function(String)? validateField; 
   final bool validate;
-  final bool isFieldValid;
 
   CustomInput({
     required this.formKey,
@@ -20,7 +19,6 @@ class CustomInput extends StatefulWidget {
     this.invalidText="",
     this.validateField,
     this.validate=false,
-    this.isFieldValid=false,
   });
 
   @override

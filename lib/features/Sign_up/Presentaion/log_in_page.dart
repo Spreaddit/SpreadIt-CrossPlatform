@@ -97,14 +97,12 @@ class LogInScreenState extends State<LogInScreen> {
                   CustomInput(
                     formKey: _emailForm,
                     onChanged: updateEmail,
-                    isFieldValid: validEmail,
                     label: 'Email',
                     placeholder: 'Email or Username',
                   ),
                   CustomInput(
                     formKey: _passwordForm,
                     onChanged: updatePassword,
-                    isFieldValid: validPass,
                     label: 'Password',
                     placeholder: 'Password',
                     obscureText: true,
