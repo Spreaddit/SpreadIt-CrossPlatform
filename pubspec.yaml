@@ -1,12 +1,12 @@
 name: spreadit_crossplatform
-description: "Reddit recreated, but cooler"
+description: "Reddit recreated, but cooler."
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
-version: 0.0.1+1
+version: 1.0.0+1
 
 environment:
-  sdk: ^3.1.1
+  sdk: ">=2.16.1 <3.0.0"
 
 dependencies:
   flutter:
@@ -31,16 +31,17 @@ dependencies:
   cached_network_image: ^3.2.0
   
   dio: ^5.4.1
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
+  retrofit_generator: ^8.1.0
+  floor_generator: ^1.4.2
+  build_runner: ^2.4.8
+  
 
 flutter:
-  uses-material-design: true
 
-  assets:
-  - assets/images/LogoSpreadIt.png
-  - assets/images/GoogleLogo.png
+  uses-material-design: true
