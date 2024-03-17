@@ -5,7 +5,7 @@ void main() {
 }
 
 class SpreadIt extends StatelessWidget {
-  const SpreadIt({super.key});
+  const SpreadIt({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
