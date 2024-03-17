@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 
 void main() {
   runApp(const SpreadIt());
 }
 
 class SpreadIt extends StatelessWidget {
-  const SpreadIt({Key? key}) : super(key: key);
+  const SpreadIt({super.key});
 
   @override
   Widget build(BuildContext context) {

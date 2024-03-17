@@ -3,8 +3,15 @@
 features/
 ├─ feature_x/
 │  ├─ data/
-│  │  ├─ data_source/
+│  │  ├─ dataSource/
+│  │  ├─ models/
+│  │  ├─ repository/
+│  ├─ domain/
+│  │  ├─ entities/
+│  │  ├─ repository/
+│  │  ├─ useCases/
 │  ├─ presentation/
-│  │  ├─ pages/
-│  │  ├─ widgets/
+│  │  ├─ components/
+│  │  ├─ controllers/
+│  │  ├─ screens/
 ```
