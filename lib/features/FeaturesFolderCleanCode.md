@@ -3,8 +3,8 @@
 features/
 ├─ feature_x/
 │  ├─ data/
-│  │  ├─ data_source/
+│  │  ├─ dataSource/
 │  ├─ presentation/
-│  │  ├─ pages/
 │  │  ├─ widgets/
+│  │  ├─ pages/
 ```
