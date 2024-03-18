@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
+import './features/pages/reset_password_main.dart';
+import './features/pages/random_page.dart';
 
 void main() {
   runApp(const SpreadIt());
@@ -13,6 +15,10 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
+      home: ResetPassword(),
+      routes: {
+        '/forgetPasswordPage': (context) => RandomPage() , 
+      }
     );
   }
 }
