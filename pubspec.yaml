@@ -43,5 +43,8 @@ dev_dependencies:
   
 
 flutter:
-
   uses-material-design: true
+
+  assets:
+  - assets/images/LogoSpreadIt.png
+  - assets/images/GoogleLogo.png
