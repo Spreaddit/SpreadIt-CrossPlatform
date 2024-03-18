@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/theme/theme.dart';
 
 void main() {
   runApp(const SpreadIt());
@@ -11,10 +12,7 @@ class SpreadIt extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Spread It',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: spreadItTheme,
     );
   }
 }
