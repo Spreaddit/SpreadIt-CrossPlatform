@@ -53,10 +53,13 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: _onCommunityTypePress,
-              child: Text(communityType[selectedCommunityType].split('\n')[0]),
-            )
+            Container(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: _onCommunityTypePress,
+                  child:
+                      Text(communityType[selectedCommunityType].split('\n')[0]),
+                )),
           ],
         ),
       ),
