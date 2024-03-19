@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/widgets/generic/button.dart';
+import 'package:spreadit_crossplatform/features/widgets/generic/custom_input.dart';
+import 'package:spreadit_crossplatform/features/widgets/generic/header.dart';
 
 class CreateCommunityPage extends StatefulWidget {
   @override
@@ -7,10 +10,11 @@ class CreateCommunityPage extends StatefulWidget {
 
 class _CreateCommunityPageState extends State<CreateCommunityPage> {
   final communityType = [
-    'Public \n Anyone can view post, and comment to this community',
-    'Private \n Only approved members can view and contribute to this community',
-    'Restricted \n Only approved members can view this community',
+    ' Public \n Anyone can view post, and comment to this  community',
+    ' Private \n Only approved members can view and contribute to this community',
+    ' Restricted \n Only approved members can view this community',
   ];
+
   var selectedCommunityType = 0;
 
   @override
@@ -20,60 +24,112 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
         title: Text('Create a community'),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
-          child: Divider(height: 1.0, color: Colors.grey),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: Offset(0, 1),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
-      body: Container(
-        margin: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Community Name',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Community Name',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          CustomInput(
+            formKey: GlobalKey<FormState>(),
+            onChanged: (value, isValid) {},
+            label: 'Community Name',
+            placeholder: 'r/CommunityName',
+          ),
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Community type',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: GestureDetector(
+              onTap: _onCommunityTypePress,
+              child: Padding(
+                padding: EdgeInsets.only(right: 20.0, left: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: communityType[selectedCommunityType]
+                            .split('\n')
+                            .map((line) => Text(
+                                  line,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    Icon(Icons.arrow_drop_down),
+                  ],
                 ),
               ),
             ),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'r/Community_name',
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Community type',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Container(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: _onCommunityTypePress,
-                  child:
-                      Text(communityType[selectedCommunityType].split('\n')[0]),
-                )),
-          ],
-        ),
+          ),
+          SizedBox(height: 20),
+          Button(
+            onPressed: _onCreateCommunityPress,
+            text: 'Create a community',
+            backgroundColor: Color.fromARGB(255, 6, 107, 190),
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          ),
+        ],
       ),
     );
   }
 
+  void _onCreateCommunityPress() {
+    print('Create a community');
+  }
+
   void _onCommunityTypePress() async {
+    List<IconData> icons = [
+      Icons.account_circle_outlined,
+      Icons.lock_outlined,
+      Icons.check_circle_outline,
+    ]; // Add your desired icons
+
     await showModalBottomSheet(
       showDragHandle: true,
       isScrollControlled: true,
       context: context,
       builder: (context) {
         return Container(
-          height: 200,
+          height: MediaQuery.of(context).size.height *
+              0.5, // Set height to 50% of screen height
           child: Column(
             children: [
               Container(
@@ -91,6 +147,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                   itemCount: communityType.length,
                   itemBuilder: (context, index) {
                     return ListTile(
+                      leading: Icon(icons[index % icons.length]),
                       title: Text(communityType[index].split('\n')[0],
                           style: TextStyle(
                             fontSize: 20,
