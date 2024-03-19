@@ -15,7 +15,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     ' Private \n Only approved members can view and contribute to this community',
     ' Restricted \n Only approved members can view this community',
   ];
-
+  int? _responseStatus;
   String _communityName = "";
 
   var selectedCommunityType = 0;
@@ -63,6 +63,20 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             label: 'Community Name',
             placeholder: 'r/CommunityName',
           ),
+          Visibility(
+            visible: _responseStatus == 204,
+            child: Text(
+              'Community Name Already taken!',
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Visibility(
+                visible: _responseStatus == 205,
+                child: Text(
+                  'Must be between 3 and 21 characters long and can only contain letters, numbers, and underscores.',
+                ),
+              )),
           SizedBox(height: 20),
           Container(
             padding: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -117,6 +131,15 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
   }
 
   void _onCreateCommunityPress() async {
+    if (_communityName.length < 3 ||
+        _communityName.length > 21 ||
+        !_communityName.contains(RegExp(r'^[a-zA-Z0-9_]*$'))) {
+      setState(() {
+        _responseStatus = 205;
+      });
+      return;
+    }
+
     final dio = Dio();
     final client = RestClient(dio);
 
@@ -124,6 +147,9 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
 
     try {
       final response = await client.createCommunity(community);
+      setState(() {
+        _responseStatus = response.response.statusCode;
+      });
       if (response.response.statusCode == 200) {
         // Navigate to the community page
         print('Community created successfully!');
