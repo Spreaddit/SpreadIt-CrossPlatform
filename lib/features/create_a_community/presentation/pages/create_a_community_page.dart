@@ -50,8 +50,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             child: Text(
               'Community Name',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 15,
               ),
             ),
           ),
@@ -84,11 +83,11 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             child: Text(
               'Community type',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 15,
               ),
             ),
           ),
+          SizedBox(height: 10),
           Container(
             alignment: Alignment.centerLeft,
             child: GestureDetector(
@@ -107,6 +106,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                                   line,
                                   style: TextStyle(
                                     color: Colors.black,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ))
                             .toList(),
@@ -121,7 +121,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           SizedBox(height: 20),
           Button(
             onPressed: _onCreateCommunityPress,
-            text: 'Create a community',
+            text: 'Create community',
             backgroundColor: Color.fromARGB(255, 6, 107, 190),
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
