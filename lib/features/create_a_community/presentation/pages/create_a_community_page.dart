@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/widgets/generic/button.dart';
 import 'package:spreadit_crossplatform/features/widgets/generic/custom_input.dart';
-import 'package:spreadit_crossplatform/features/widgets/generic/header.dart';
+import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
 
 class CreateCommunityPage extends StatefulWidget {
   @override
@@ -14,6 +15,8 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     ' Private \n Only approved members can view and contribute to this community',
     ' Restricted \n Only approved members can view this community',
   ];
+
+  String _communityName = "";
 
   var selectedCommunityType = 0;
 
@@ -54,7 +57,9 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           ),
           CustomInput(
             formKey: GlobalKey<FormState>(),
-            onChanged: (value, isValid) {},
+            onChanged: (value, isValid) {
+              _communityName = value;
+            },
             label: 'Community Name',
             placeholder: 'r/CommunityName',
           ),
@@ -111,8 +116,23 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     );
   }
 
-  void _onCreateCommunityPress() {
-    print('Create a community');
+  void _onCreateCommunityPress() async {
+    final dio = Dio();
+    final client = RestClient(dio);
+
+    final community = Community(_communityName);
+
+    try {
+      final response = await client.createCommunity(community);
+      if (response.response.statusCode == 200) {
+        // Navigate to the community page
+        print('Community created successfully!');
+      } else {
+        print('oh noooooooo');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   void _onCommunityTypePress() async {
@@ -128,8 +148,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
       context: context,
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height *
-              0.5, // Set height to 50% of screen height
+          height: MediaQuery.of(context).size.height * 0.5,
           child: Column(
             children: [
               Container(
