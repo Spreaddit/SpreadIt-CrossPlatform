@@ -78,8 +78,14 @@ class _ResetPasswordState extends State<ResetPassword> {
     }  
   }
 
-  void postData(){
-      UpdatePassword(_currentPassword, _newPassword);
+  void postData() async{
+      Future<bool> response = UpdatePassword(_currentPassword, _newPassword);
+      if( await response) {
+        CustomSnackbar(content: "password is updated successfully").show(context);
+      }
+      else {
+        CustomSnackbar(content: " an error occurred , please refill correct data").show(context);
+      }
   }
 
   void NavigateToForgetPassword(){
