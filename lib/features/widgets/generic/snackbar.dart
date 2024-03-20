@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import './custom_snackbar_action.dart';
 
 class CustomSnackbar {
 
@@ -9,18 +8,13 @@ class CustomSnackbar {
   final VoidCallback? onPressed;
   final String? label;
   final int? duration;
-  final IconData? icon;
-  final String?imagePath;
-
-
+ 
   const CustomSnackbar({
     required this.content,
     this.backgroundColor,
     this.onPressed,
     this.duration,
     this.label,
-    this.icon,
-    this.imagePath,
   });
 
 
@@ -38,11 +32,10 @@ void show(BuildContext context) {
           Duration(milliseconds: duration!)
           : Duration(milliseconds: 2000),
         action: label != null && onPressed != null ?
-          CustomSnackBarAction(
+          SnackBarAction(
             label: label!,
             onPressed: onPressed!,
-            icon: icon!,
-            imagePath: imagePath) 
+            ) 
             : null
        )
            ,);

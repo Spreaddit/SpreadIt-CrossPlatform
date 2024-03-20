@@ -56,7 +56,7 @@ class _ResetPasswordState extends State<ResetPassword> {
      return true; 
     }
     else {
-     CustomSnackbar(content: "provide your current password").show(context); 
+     CustomSnackbar(content: "provide your current password" ).show(context); 
      return false;
     }
   }
@@ -74,7 +74,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   void checkIdentical() {
     if(!checkPasswordLength());
     if (_newPassword != _confirmedPassword){
-      CustomSnackbar(content: "password mismatch:please reconfirm your new password", icon: Icons.time_to_leave).show(context);
+      CustomSnackbar(content: "password mismatch:please reconfirm your new password").show(context);
       }
   }
 
@@ -143,4 +143,5 @@ class _ResetPasswordState extends State<ResetPassword> {
 4) unit testing 
 5) mock service
   a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar
-  b) law matching yeshil el old password w ybaddelha bl gedida w ytalla3 snack bar enno done   */
+  b) law matching yeshil el old password w ybaddelha bl gedida w ytalla3 snack bar enno done 
+  c) yegib el username wel email wel avatar ml database  */
