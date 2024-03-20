@@ -3,6 +3,7 @@ import '../widgets/generic/button.dart';
 import '../widgets/generic/custom_input.dart';
 import '../widgets/generic/header.dart';
 import '../widgets/generic/validations.dart';
+import '../../data/send_user_input.dart';
 
 
 class ForgetPassword extends StatefulWidget {
@@ -16,14 +17,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   final GlobalKey<FormState> _inputForm = GlobalKey<FormState>();
 
-  String _usernameOrPassword = '';
+  String _usernameOrEmail = '';
   bool isValidInput = false ;
 
   void updateInput(String input, bool validation) {
-    _usernameOrPassword = input;
+    _usernameOrEmail = input;
     isValidInput = validation;
     _inputForm.currentState!.save();
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +63,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           Spacer(),
           Container(
             child: Button(
-              onPressed: () {},
+              onPressed: () => sendUserInput(_usernameOrEmail),
               text: "Reset Password",
               backgroundColor:  isValidInput ? Theme.of(context).primaryColor : Theme.of(context).primaryColorLight,
               foregroundColor: Colors.white,
@@ -74,10 +77,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
 /* TO DOs:
 
-1) ashouf 7war el button elli lono sabet da 
+1) el zorar lono msh byetghayyar
 2) navigation 
 3) unit testing 
-5) mock service  */
+4) mock service (done but double check) */
 
 /*
 elvalidation elli fl text field hey a just text validation , el mafroud a3mel function zyada lamma adous 3al zorar teb3at el 

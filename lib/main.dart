@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
-import './features/pages/forget_password_main.dart';
+import 'features/forget_password/presentation/pages/forget_password_main.dart';
 
 void main() {
   runApp(const SpreadIt());
