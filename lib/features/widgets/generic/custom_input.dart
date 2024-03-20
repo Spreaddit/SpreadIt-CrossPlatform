@@ -7,7 +7,7 @@ class CustomInput extends StatefulWidget {
   final String placeholder;
   final bool obscureText;
   final String invalidText;
-  final bool Function(String)? validateField; 
+  final bool Function(String)? validateField;
   final bool validate;
   final bool isFieldValid;
 
@@ -17,10 +17,10 @@ class CustomInput extends StatefulWidget {
     required this.label,
     required this.placeholder,
     this.obscureText = false,
-    this.invalidText="",
+    this.invalidText = "",
     this.validateField,
-    this.validate=false,
-    this.isFieldValid=false,
+    this.validate = false,
+    this.isFieldValid = false,
   });
 
   @override
@@ -40,16 +40,13 @@ class _CustomInputState extends State<CustomInput> {
     _controller.addListener(() {
       setState(() {
         fieldValue = _controller.text;
-        if (widget.validate)
-        {
-        _isValid = widget.validateField!(fieldValue);
+        if (widget.validate) {
+          _isValid = widget.validateField!(fieldValue);
         }
         widget.onChanged(fieldValue, _isValid);
       });
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -108,13 +105,15 @@ class _CustomInputState extends State<CustomInput> {
             ),
           ),
         ),
-        if (widget.validate&&!_isValid)
+        if (widget.validate && !_isValid)
           Container(
             padding: const EdgeInsets.only(top: 5.0, left: 20),
-            child: Text(
-              widget.invalidText,
-              style: TextStyle(color: Colors.red),
-            ),
+            child: Text(widget.invalidText,
+                style: TextStyle(
+                    color: Colors.red,
+                    decoration: TextDecoration.none,
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal)),
           ),
       ],
     );
