@@ -46,7 +46,7 @@ class StartUpPage extends StatelessWidget {
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             Button(
               onPressed: () => navigateToSignUp(context),
               text: 'Continue with email',
@@ -54,7 +54,6 @@ class StartUpPage extends StatelessWidget {
               foregroundColor: Color(0xFF222222),
               prefixIcon: Icons.email,
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
              Button(
                 onPressed: () => handleSignIn(context), 
                 text: 'Continue with Google',
@@ -62,7 +61,6 @@ class StartUpPage extends StatelessWidget {
                 foregroundColor: Color(0xFF222222),
                 imagePath: 'assets/images/GoogleLogo.png', 
               ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             Container(
               margin: const EdgeInsets.only(
                 top: 20,

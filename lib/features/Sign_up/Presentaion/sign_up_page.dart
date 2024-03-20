@@ -25,11 +25,11 @@ class SignUpScreenState extends State<SignUpScreen> {
     Navigator.of(context).pushNamed('/log-in-page');
   }
 
-  void navigateToHomePage(BuildContext context) {
+  void navigateToCreateUsernamePage(BuildContext context) {
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
-      Navigator.of(context).pushNamed('/sign-up-page'); // change later
+      Navigator.of(context).pushNamed('/create-username-page'); // change later
     }
   }
 
@@ -92,18 +92,16 @@ class SignUpScreenState extends State<SignUpScreen> {
           ),
           Container(
             margin: const EdgeInsets.only(
-              top: 20,
-              bottom: 16,
               left: 20,
-              right: 20,
+              right:20,
             ),
             child: TermsAndCondText(),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             alignment: Alignment.bottomCenter,
             child: Button(
-              onPressed: () => navigateToHomePage(context),
+              onPressed: () => navigateToCreateUsernamePage(context),
               text: 'Continue',
               backgroundColor: _validPassAndEmail
                   ? Color(0xFFFF4500)

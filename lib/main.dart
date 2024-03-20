@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spreadit_crossplatform/features/Sign_up/Presentaion/createusername.dart';
 import 'firebase_options.dart';
 
 import './features/Sign_up/Presentaion/sign_up_page.dart';
@@ -30,6 +31,7 @@ class SpreadIt extends StatelessWidget {
         '/start-up-page': (context) => StartUpPage(), 
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
+        '/create-username-page' :(context) => CreateUsername(),
       },
     );
   }

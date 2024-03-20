@@ -17,26 +17,13 @@ class LogInScreen extends StatefulWidget {
 class LogInScreenState extends State<LogInScreen> {
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
-  final Auth _auth = Auth(); 
-
   var _userEmail = ''; // passeed later to api
   var _userPassword = ''; // passed later to api
   bool _validPassAndEmail = false;
   var validEmail = true;
   var validPass = true;
 
-  Future <void> signInWithEmailAndPassword() async {
-    try{
-      await _auth.signInWithEmailAndPassword(
-        email: _userEmail,
-        password: _userPassword,
-        );
-       Navigator.of(context).pushNamed('/sign-up-page'); // change later
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
-  }
-
+ 
   Future<void> navigateToForgetPassword(BuildContext context) async {
     //changed later 
     bool signedIn= await signOutWithGoogle(context); 
@@ -51,12 +38,12 @@ class LogInScreenState extends State<LogInScreen> {
 
   
 
-  Future<void> navigateToHomePage(BuildContext context) async{
+  void navigateToHomePage(BuildContext context){
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
-      await signInWithEmailAndPassword();
     }
+    //navigate here
   }
 
   void updateEmail(String email, bool validation) {

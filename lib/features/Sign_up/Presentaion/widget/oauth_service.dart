@@ -22,7 +22,6 @@ Future<bool> signOutWithGoogle(BuildContext context) async {
   if (_googleSignIn.currentUser != null) {
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
-    print('not null');
   }
   return true;
 }
