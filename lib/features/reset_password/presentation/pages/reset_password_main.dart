@@ -5,6 +5,7 @@ import '../widgets/generic/header.dart';
 import '../widgets/generic/validations.dart';
 import '../widgets/generic/reset_password_widgets/user_card.dart';
 import '../widgets/generic/snackbar.dart';
+import '../../data/update_password.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
@@ -44,15 +45,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     _confirmedPasswordForm.currentState!.save();
   }
   
-  void textFieldsChecks() {
-    if(checkCurrentPassExists()){
-      checkPasswordLength();
-      checkIdentical();
-    }
-  }
-
   bool checkCurrentPassExists(){
     if(_currentPassword.isNotEmpty ){
+     checkPasswordLength();
      return true; 
     }
     else {
@@ -67,15 +62,24 @@ class _ResetPasswordState extends State<ResetPassword> {
         return false;   
     }
     else {
+      checkIdentical();
       return true;
     }
   }
 
-  void checkIdentical() {
-    if(!checkPasswordLength());
+  bool checkIdentical() {
     if (_newPassword != _confirmedPassword){
       CustomSnackbar(content: "password mismatch:please reconfirm your new password").show(context);
+      return false;
       }
+    else{
+      postData();
+      return true;
+    }  
+  }
+
+  void postData(){
+      UpdatePassword(_currentPassword, _newPassword);
   }
 
   void NavigateToForgetPassword(){
@@ -91,7 +95,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             child: Header(
               buttonText: "Save",
               title: "Reset Password",
-              onPressed: textFieldsChecks),
+              onPressed: checkCurrentPassExists),
           ),
           Container(
             margin: EdgeInsets.all(10) ,
@@ -113,7 +117,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             alignment: Alignment.centerRight,
             child: InkWell(
               child: Text("Forgot password"),
-              onTap: textFieldsChecks ,
+              onTap: checkCurrentPassExists ,
             ),
           ),
           Container(
@@ -131,7 +135,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               label:"Confirmed password" ,
               placeholder: "Confirmed password",
               obscureText: true,),
-          ),
+          ), 
         ],
         ),
     );
@@ -139,7 +143,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 }
 
 /* TO DOs:
-1) el custom snackbar shaghal bas el save bta3et mimo laa (check with mimo again) + ashouf ma3aha bet7ot icon fl button ezzay 
+1) el custom snackbar shaghal bas el save bta3et mimo laa (check with mimo again)  
 4) unit testing 
 5) mock service
   a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar

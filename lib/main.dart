@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
-import './features/pages/reset_password_main.dart';
-import './features/pages/random_page.dart';
+import 'features/reset_password/presentation/pages/reset_password_main.dart';
+import 'features/reset_password/presentation/pages/random_page.dart';
 
 void main() {
   runApp(const SpreadIt());
