@@ -4,6 +4,7 @@ import '../widgets/generic/custom_input.dart';
 import '../widgets/generic/header.dart';
 import '../widgets/generic/validations.dart';
 import '../../data/send_user_input.dart';
+import '../widgets/generic/snackbar.dart';
 
 
 class ForgetPassword extends StatefulWidget {
@@ -26,7 +27,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     _inputForm.currentState!.save();
   }
 
-  
+  void checkUserInput() async{
+    Future<bool> response = sendUserInput(_usernameOrEmail);
+    if (await response){
+      CustomSnackbar(content: "an email was sent to you to reset your password").show(context);
+    }
+    else{
+      CustomSnackbar(content: "an error occured , please enter email again").show(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +72,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           Spacer(),
           Container(
             child: Button(
-              onPressed: () => sendUserInput(_usernameOrEmail),
+              onPressed: checkUserInput,
               text: "Reset Password",
               backgroundColor:  isValidInput ? Theme.of(context).primaryColor : Theme.of(context).primaryColorLight,
               foregroundColor: Colors.white,
@@ -80,7 +89,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 1) el zorar lono msh byetghayyar
 2) navigation 
 3) unit testing 
-4) mock service (done but double check) */
+4) mock service (done but double check)
+5) username masmou7 kaman walla laa(law laa change variable name and) */
 
 /*
 elvalidation elli fl text field hey a just text validation , el mafroud a3mel function zyada lamma adous 3al zorar teb3at el 
