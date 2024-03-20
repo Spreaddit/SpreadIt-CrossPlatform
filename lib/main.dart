@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
+import './features/pages/forget_password_main.dart';
 
 void main() {
   runApp(const SpreadIt());
@@ -13,6 +14,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
+      home: ForgetPassword(),
     );
   }
 }
