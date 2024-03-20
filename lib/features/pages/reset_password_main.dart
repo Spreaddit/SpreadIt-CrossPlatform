@@ -4,6 +4,7 @@ import '../widgets/generic/custom_input.dart';
 import '../widgets/generic/header.dart';
 import '../widgets/generic/validations.dart';
 import '../widgets/generic/reset_password_widgets/user_card.dart';
+import '../widgets/generic/snackbar.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
@@ -22,8 +23,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   String _newPassword = '';
   String _confirmedPassword = '';
 
-  bool isValidInput = false ;
-  bool areIdentical = false ;
+  bool isValidInput = false;
+  
 
   void updateCurrentPassword(String password, bool validation) {
     _currentPassword = password;
@@ -42,6 +43,40 @@ class _ResetPasswordState extends State<ResetPassword> {
     isValidInput = validation;
     _confirmedPasswordForm.currentState!.save();
   }
+  
+  void textFieldsChecks() {
+    if(checkCurrentPassExists()){
+      checkPasswordLength();
+      checkIdentical();
+    }
+  }
+
+  bool checkCurrentPassExists(){
+    if(_currentPassword.isNotEmpty ){
+     return true; 
+    }
+    else {
+     CustomSnackbar(content: "provide your current password").show(context); 
+     return false;
+    }
+  }
+  
+  bool checkPasswordLength() {
+    if (_newPassword.length < 8 || _confirmedPassword.length < 8) {
+        CustomSnackbar(content: "password must contain more than 8 characters").show(context);
+        return false;   
+    }
+    else {
+      return true;
+    }
+  }
+
+  void checkIdentical() {
+    if(!checkPasswordLength());
+    if (_newPassword != _confirmedPassword){
+      CustomSnackbar(content: "password mismatch:please reconfirm your new password", icon: Icons.time_to_leave).show(context);
+      }
+  }
 
   void NavigateToForgetPassword(){
      Navigator.of(context).pushNamed('/forgetPasswordPage');
@@ -56,7 +91,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             child: Header(
               buttonText: "Save",
               title: "Reset Password",
-              onPressed: () {}),
+              onPressed: textFieldsChecks),
           ),
           Container(
             margin: EdgeInsets.all(10) ,
@@ -66,32 +101,35 @@ class _ResetPasswordState extends State<ResetPassword> {
             child: CustomInput(
               formKey: _currentPasswordForm,
               onChanged: updateCurrentPassword ,
-              label:"" ,
+              label:"Current password" ,
               placeholder: "Current password",
+              invalidText: "provide your current password",
+              validateField: validatePassword,
+              validate: true,
               obscureText: true,),
           ),
           Container(
             margin: EdgeInsets.fromLTRB(0, 5, 20, 5),
             alignment: Alignment.centerRight,
             child: InkWell(
-              child: Text(" Forgot password"),
-              onTap: NavigateToForgetPassword ,
+              child: Text("Forgot password"),
+              onTap: textFieldsChecks ,
             ),
           ),
           Container(
             child: CustomInput(
               formKey: _newPasswordForm,
               onChanged: updateNewPassword ,
-              label:"" ,
-              placeholder: "Current password",
+              label:"New password" ,
+              placeholder: "New password",
               obscureText: true,),
           ),
           Container(
             child: CustomInput(
               formKey: _confirmedPasswordForm,
               onChanged: updateConfirmedPassword ,
-              label:"" ,
-              placeholder: "Current password",
+              label:"Confirmed password" ,
+              placeholder: "Confirmed password",
               obscureText: true,),
           ),
         ],
@@ -101,10 +139,8 @@ class _ResetPasswordState extends State<ResetPassword> {
 }
 
 /* TO DOs:
-1) afham men mimo el buttons wel input fields shaghalin ezzay (leih el placeholder msh zaher ml awwel)
-2) azawwed el visibility 
-3) ashouf 7war el button elli lono sabet da 
-4) navigation (done for this page)
-5) unit testing 
-6) desktop or web
-7) mock service  */
+1) el custom snackbar shaghal bas el save bta3et mimo laa (check with mimo again) + ashouf ma3aha bet7ot icon fl button ezzay 
+4) unit testing 
+5) mock service
+  a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar
+  b) law matching yeshil el old password w ybaddelha bl gedida w ytalla3 snack bar enno done   */
