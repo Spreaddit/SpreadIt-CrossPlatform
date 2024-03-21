@@ -55,7 +55,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: Header(
               buttonText: "Help",
               title: "Forgot password?",
-              onPressed: () {}),
+              onPressed: () {}), //TODO: to be implemented later
           ),
           Container(
             margin: EdgeInsets.all(10) ,
@@ -95,6 +95,4 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
 /* TO DOs:
 
-1) el zorar lono msh byetghayyar ( moshkela fl theme colors)
-2) navigation 
-3) unit testing */
+new mock service route */
