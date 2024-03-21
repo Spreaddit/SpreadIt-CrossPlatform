@@ -24,4 +24,18 @@ class Post {
     required this.commentsCount,
     required this.profilePic,
   });
+
+  factory Post.fromJson(Map<String, dynamic> json) => Post(
+        username: json["username"] as String,
+        userId: json["userId"] as String,
+        postId: json["postId"] as int,
+        date: DateTime.parse(json["date"] as String),
+        headline: json["headline"] as String,
+        description: json["description"] as String,
+        imageUrl: json["imageUrl"] as String,
+        votesCount: json["votesCount"] as int,
+        sharesCount: json["sharesCount"] as int,
+        commentsCount: json["commentsCount"] as int,
+        profilePic: json["profilePic"] as String,
+      );
 }
