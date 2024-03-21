@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'features/Account_Settings/presentation/pages/account_settings.dart';
+import 'package:spreadit_crossplatform/theme/theme.dart';
+import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
 
 void main() {
-  runApp(const SpreadIt());
+  runApp(
+    const MaterialApp(
+      home: Scaffold(
+        body: BlockedAccountsPage(),
+      ),
+    ),
+  );
 }
 
 class SpreadIt extends StatelessWidget {
@@ -12,11 +19,7 @@ class SpreadIt extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Spread It',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: AccountSettingsPage(),
+      theme: spreadItTheme,
     );
   }
 }
