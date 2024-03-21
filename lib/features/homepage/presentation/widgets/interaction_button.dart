@@ -52,7 +52,7 @@ class VoteButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 120,
+      width: 130,
       height: 40,
       child: Row(
         children: [
