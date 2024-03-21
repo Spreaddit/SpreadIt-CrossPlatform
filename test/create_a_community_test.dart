@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
-import 'package:spreadit_crossplatform/features/widgets/generic/button.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 
 void main() {
   testWidgets('Create a community page test', (WidgetTester tester) async {

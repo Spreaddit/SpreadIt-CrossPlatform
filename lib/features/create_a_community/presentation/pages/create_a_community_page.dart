@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/widgets/generic/button.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
 
