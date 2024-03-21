@@ -23,8 +23,17 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   void updateInput(String input, bool validation) {
     _usernameOrEmail = input;
-    isValidInput = validation;
+     setState(() => {isValidInput = validation});
     _inputForm.currentState!.save();
+  }
+
+  void checkNotEmpty(){
+    if(validateNotEmpty(_usernameOrEmail)){
+      checkUserInput();
+    }
+    else {
+      CustomSnackbar(content: "please provide your email").show(context);
+    }
   }
 
   void checkUserInput() async{
@@ -72,9 +81,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           Spacer(),
           Container(
             child: Button(
-              onPressed: checkUserInput,
+              onPressed: checkNotEmpty,
               text: "Reset Password",
-              backgroundColor:  isValidInput ? Theme.of(context).primaryColor : Theme.of(context).primaryColorLight,
+              backgroundColor:  isValidInput ? Colors.orange : Colors.grey,
               foregroundColor: Colors.white,
             ),
           )
@@ -86,12 +95,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
 /* TO DOs:
 
-1) el zorar lono msh byetghayyar
+1) el zorar lono msh byetghayyar ( moshkela fl theme colors)
 2) navigation 
-3) unit testing 
-4) mock service (done but double check)
-5) username masmou7 kaman walla laa(law laa change variable name and) */
-
-/*
-elvalidation elli fl text field hey a just text validation , el mafroud a3mel function zyada lamma adous 3al zorar teb3at el 
-usernmae or password lel back w howwa nycheck law el mail aw el username dol actually 3al database */
+3) unit testing */
