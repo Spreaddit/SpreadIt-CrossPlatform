@@ -6,7 +6,7 @@ class Header extends StatelessWidget {
   final VoidCallback? onPressed;
 
   Header({
-    this.buttonText="",
+    this.buttonText = "",
     required this.title,
     this.onPressed,
   });
@@ -20,7 +20,7 @@ class Header extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
             ),
             Expanded(

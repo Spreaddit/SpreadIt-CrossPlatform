@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'widget/button.dart';
-import 'widget/header.dart';
-import 'widget/terms_and_cond_text.dart';
-import 'widget/custom_input.dart'; 
-import 'widget/validations.dart';
+
+import '../../../generic_widgets/button.dart';
+import '../../../generic_widgets/custom_input.dart';
+import '../../../generic_widgets/header.dart';
+import '../../../generic_widgets/terms_and_cond_text.dart';
+import '../../../generic_widgets/validations.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -13,10 +14,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class SignUpScreenState extends State<SignUpScreen> {
+
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
-  var _userEmail = '';  // to be sent to api
-  var _userPassword = ''; // to be sent to api
+  
+  var _userEmail = '';
+  var _userPassword = '';
   bool _validPassAndEmail = false;
   var validEmail = false;
   var validPass = false;
@@ -29,7 +32,13 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
       _passwordForm.currentState!.save();
-      Navigator.of(context).pushNamed('/create-username-page'); // change later
+      Navigator.of(context).pushNamed(
+        '/create-username-page',
+        arguments: {
+          'email': _userEmail,
+          'password': _userPassword,
+        },
+      );
     }
   }
 
@@ -66,7 +75,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                     buttonText: 'Log in',
                     title: 'Hi new friend, Welcome to SpreadIt',
                     onPressed: () => navigateToLogin(context),
-                  ),    
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   CustomInput(
                     formKey: _emailForm,
                     validate: true,
@@ -74,7 +84,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     label: 'Email',
                     placeholder: 'Email',
                     invalidText: emailInvalidText,
-                    validateField:validateEmail,
+                    validateField: validateEmail,
                   ),
                   CustomInput(
                     formKey: _passwordForm,
@@ -84,7 +94,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     placeholder: 'Password',
                     obscureText: true,
                     invalidText: passwordInvalidText,
-                    validateField:validatePassword,
+                    validateField: validatePassword,
                   ),
                 ],
               ),
@@ -93,23 +103,18 @@ class SignUpScreenState extends State<SignUpScreen> {
           Container(
             margin: const EdgeInsets.only(
               left: 20,
-              right:20,
+              right: 20,
             ),
             child: TermsAndCondText(),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            alignment: Alignment.bottomCenter,
-            child: Button(
-              onPressed: () => navigateToCreateUsernamePage(context),
-              text: 'Continue',
-              backgroundColor: _validPassAndEmail
-                  ? Color(0xFFFF4500)
-                  : Color(0xFFEFEFED),
-              foregroundColor: _validPassAndEmail
-                  ? Colors.white
-                  : Color.fromARGB(255, 113, 112, 112),
-            ),
+          Button(
+            onPressed: () => navigateToCreateUsernamePage(context),
+            text: 'Continue',
+            backgroundColor:
+                _validPassAndEmail ? Color(0xFFFF4500) : Color(0xFFEFEFED),
+            foregroundColor: _validPassAndEmail
+                ? Colors.white
+                : Color.fromARGB(255, 113, 112, 112),
           ),
         ],
       ),

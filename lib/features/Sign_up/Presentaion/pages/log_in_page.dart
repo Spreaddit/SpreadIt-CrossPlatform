@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'widget/button.dart';
-import 'widget/header.dart';
-import 'widget/terms_and_cond_text.dart';
-import "./widget/oauth_service.dart";
-import 'widget/custom_input.dart'; 
-import "./auth.dart";
+
+import '../../../generic_widgets/button.dart';
+import '../../../generic_widgets/custom_input.dart';
+import '../../../generic_widgets/header.dart';
+import '../../../generic_widgets/snackbar.dart';
+import '../../../generic_widgets/terms_and_cond_text.dart';
+import '../../data/log_in_api.dart';
+import '../../data/oauth_service.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -15,41 +16,55 @@ class LogInScreen extends StatefulWidget {
 }
 
 class LogInScreenState extends State<LogInScreen> {
-  final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
+
+  final GlobalKey<FormState> _usernameForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
-  var _userEmail = ''; // passeed later to api
-  var _userPassword = ''; // passed later to api
-  bool _validPassAndEmail = false;
-  var validEmail = true;
+
+  var _username = '';
+  var _userPassword = '';
+  bool _validPassAndUsername = false;
+  var validusername = true;
   var validPass = true;
 
- 
   Future<void> navigateToForgetPassword(BuildContext context) async {
-    //changed later 
-    bool signedIn= await signOutWithGoogle(context); 
-  if(signedIn) {
-    Navigator.of(context).pushNamed('/start-up-page'); 
-  }
+    /////////////////////////////////////////////////// changed when integrating cross ////////////////////////////////////////////////////
+    bool signedIn = await signOutWithGoogle(context);
+    if (signedIn) {
+      Navigator.of(context).pushNamed('/start-up-page');
+    }
   }
 
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
   }
 
-  
-
-  void navigateToHomePage(BuildContext context){
-    if (validEmail && validPass) {
-      _emailForm.currentState!.save();
+  void navigateToHomePage(BuildContext context) async {
+    if (validusername && validPass) {
+      _usernameForm.currentState!.save();
       _passwordForm.currentState!.save();
     }
-    //navigate here
+   var responseCode = await logInApi(
+      username: _username,
+      password: _userPassword,
+    );
+     if (responseCode == 200) {
+      Navigator.of(context).pushNamed('/start-up-page'); // should be Home page
+    } 
+    else if (responseCode == 400) {
+      CustomSnackbar(content: "Invalid input" ).show(context); 
+    } 
+    else if (responseCode == 404) {
+      CustomSnackbar(content: "User not found" ).show(context); 
+    } 
+     else if (responseCode == 401) {
+      CustomSnackbar(content: "Authentication failed" ).show(context); 
+    } 
   }
 
-  void updateEmail(String email, bool validation) {
-    _userEmail = email;
-    validEmail = validation;
-    _emailForm.currentState!.save();
+  void updateUsername(String username, bool validation) {
+    _username = username;
+    validusername = validation;
+    _usernameForm.currentState!.save();
     updateValidStatus();
   }
 
@@ -62,10 +77,9 @@ class LogInScreenState extends State<LogInScreen> {
 
   void updateValidStatus() {
     setState(() {
-      _validPassAndEmail = _userEmail.isNotEmpty && _userPassword.isNotEmpty;
+      _validPassAndUsername = _username.isNotEmpty && _userPassword.isNotEmpty;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +95,12 @@ class LogInScreenState extends State<LogInScreen> {
                     title: 'Log in to Spreadit',
                     onPressed: () => navigateToSignUp(context),
                   ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                   CustomInput(
-                    formKey: _emailForm,
-                    onChanged: updateEmail,
-                    label: 'Email',
-                    placeholder: 'Email or Username',
+                    formKey: _usernameForm,
+                    onChanged: updateUsername,
+                    label: 'Username',
+                    placeholder: 'Username',
                   ),
                   CustomInput(
                     formKey: _passwordForm,
@@ -121,19 +136,14 @@ class LogInScreenState extends State<LogInScreen> {
             ),
             child: TermsAndCondText(),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            alignment: Alignment.bottomCenter,
-            child: Button(
-              onPressed: () => navigateToHomePage(context),
-              text: 'Continue',
-              backgroundColor: _validPassAndEmail
-                  ? Color(0xFFFF4500)
-                  : Color(0xFFEFEFED),
-              foregroundColor: _validPassAndEmail
-                  ? Colors.white
-                  : Color.fromARGB(255, 113, 112, 112),
-            ),
+          Button(
+            onPressed: () => navigateToHomePage(context),
+            text: 'Continue',
+            backgroundColor:
+                _validPassAndUsername ? Color(0xFFFF4500) : Color(0xFFEFEFED),
+            foregroundColor: _validPassAndUsername
+                ? Colors.white
+                : Color.fromARGB(255, 113, 112, 112),
           ),
         ],
       ),
