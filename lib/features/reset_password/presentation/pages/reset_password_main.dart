@@ -79,7 +79,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   void postData() async{
-      Future<bool> response = UpdatePassword(_newPassword);
+      Future<bool> response = UpdatePassword(_newPassword, _currentPassword);
       if( await response) {
         CustomSnackbar(content: "password is updated successfully").show(context);
       }
@@ -107,8 +107,9 @@ class _ResetPasswordState extends State<ResetPassword> {
             margin: EdgeInsets.all(10) ,
             child: UserCard()  ,
           ),
-          Container(
-            child: CustomInput(
+          //Container(
+            //child: 
+            CustomInput(
               formKey: _currentPasswordForm,
               onChanged: updateCurrentPassword ,
               label:"Current password" ,
@@ -117,7 +118,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               validateField: validatePassword,
               validate: true,
               obscureText: true,),
-          ),
+          //),
           Container(
             margin: EdgeInsets.fromLTRB(0, 5, 20, 5),
             alignment: Alignment.centerRight,
@@ -149,7 +150,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 }
 
 /* TO DOs:
-1) unit testing 
+1) unit testing (partially done)
 2) mock service
-  a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar
-  c) yegib el username wel email wel avatar ml database  */
+  a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar (tocken acquisition)
+  c) yegib el username wel email wel avatar ml database (phase 2) */
