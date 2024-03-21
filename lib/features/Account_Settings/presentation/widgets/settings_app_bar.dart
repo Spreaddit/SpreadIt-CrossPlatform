@@ -27,7 +27,7 @@ class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
           Icons.arrow_back,
         ),
         onPressed: (() {
-          print("Goto Settings Page");
+          Navigator.pop(context);
         }),
       ),
     );
