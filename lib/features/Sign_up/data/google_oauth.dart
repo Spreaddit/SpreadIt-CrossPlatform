@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+
+import '../../user.dart';
 
 const apibase= "http://10.0.2.2:3002/M7MDREFAAT550/Spreadit/2.0.0";
 
@@ -13,10 +17,8 @@ Future<int> GoogleOuthApi(
     }; 
      final response = await Dio().post(apiURl, data: data);
     if (response.statusCode == 200) {
-      var token = response.data['access_token'];     /// save the access token 
-      var user = response.data['user'];              // save the user data
-      var acesstokenexpiry= response.data['token_expiration_date']; // save the user data
-      print("token: $token");
+      Map<String, dynamic> jsonMap = json.decode(response.data);
+      User user = User.fromJson(jsonMap);
       print(response.statusMessage);
       return 200;
     } else if (response.statusCode == 409) {

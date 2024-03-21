@@ -21,15 +21,33 @@ void main()
     expect(check, false);
   });
 
-  test('validate username2', () {
+  test('validate text username2', () {
     String intial ="mar";
     String check = validateusernametext(intial);
     expect(check, "Great name! it's not taken, so it's all yours.");
   });
- test('validate username3', () {
-    String intial ="mariam23";
+ test('validate text username3', () {
+    String intial ="mariam 23";
     String check = validateusernametext(intial);
-    expect(check,"Great name! it's not taken, so it's all yours." );
+    expect(check,"Username can only contain letters, numbers, dashes, and underscores." );
+  });
+
+  test('password check', () {
+    String intial ="1234";
+    bool check = validatePassword(intial);
+    expect(check, false);
+  });
+
+  test('password check1', () {
+    String intial ="";
+    bool check = validatePassword(intial);
+    expect(check, false);
+  });
+
+   test('password check1', () {
+    String intial ="123456789";
+    bool check = validatePassword(intial);
+    expect(check, true);
   });
 
 }
