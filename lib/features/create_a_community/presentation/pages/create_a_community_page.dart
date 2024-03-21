@@ -115,16 +115,30 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                     Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: communityType[selectedCommunityType]
-                            .split('\n')
-                            .map((line) => Text(
-                                  line,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ))
-                            .toList(),
+                        children: <Widget>[
+                          Text(
+                            communityType[selectedCommunityType]
+                                .split('\n')
+                                .first
+                                .trim(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          ...communityType[selectedCommunityType]
+                              .split('\n')
+                              .skip(1)
+                              .map((line) => Text(
+                                    line.trim(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ))
+                              .toList(),
+                        ],
                       ),
                     ),
                     Icon(Icons.arrow_drop_down),
@@ -140,7 +154,8 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             title: Text(
               '18+ community',
               style: TextStyle(
-                fontWeight: FontWeight.bold, // Make the text bold
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
             ),
             value: _is18Plus,
