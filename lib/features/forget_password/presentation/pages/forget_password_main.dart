@@ -83,7 +83,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             child: Button(
               onPressed: checkNotEmpty,
               text: "Reset Password",
-              backgroundColor:  isValidInput ? Colors.orange : Colors.grey,
+              backgroundColor:  isValidInput ? Color(0xFFFF4500) : Colors.grey,
               foregroundColor: Colors.white,
             ),
           )
