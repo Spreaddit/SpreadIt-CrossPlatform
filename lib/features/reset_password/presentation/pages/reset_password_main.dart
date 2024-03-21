@@ -79,7 +79,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   void postData() async{
-      Future<bool> response = UpdatePassword(_currentPassword, _newPassword);
+      Future<bool> response = UpdatePassword(_newPassword);
       if( await response) {
         CustomSnackbar(content: "password is updated successfully").show(context);
       }
@@ -149,9 +149,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 }
 
 /* TO DOs:
-1) el custom snackbar shaghal bas el save bta3et mimo laa (check with mimo again)  
-4) unit testing 
-5) mock service
+1) unit testing 
+2) mock service
   a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar
-  b) law matching yeshil el old password w ybaddelha bl gedida w ytalla3 snack bar enno done 
   c) yegib el username wel email wel avatar ml database  */
