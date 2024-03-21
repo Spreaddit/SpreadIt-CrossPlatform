@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 
-class DummyPage extends StatelessWidget {
-  const DummyPage({Key? key}) : super(key: key);
+class SelectLocationPage extends StatelessWidget {
+  const SelectLocationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SettingsAppBar(
-        title: "DUMMY PAGE",
+        title: "Select location",
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {},
-          child: Text('Useless Button, Use the AppBar Icon To Return'),
+          child: Text('Welcome to the Select location page'),
         ),
       ),
     );

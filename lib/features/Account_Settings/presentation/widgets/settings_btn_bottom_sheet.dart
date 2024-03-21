@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
 
-class ToPageBtn extends StatefulWidget {
-  const ToPageBtn(
+class BottomModalBtn extends StatefulWidget {
+  const BottomModalBtn(
       {Key? key,
       required this.iconData,
       required this.mainText,
       required this.onPressed,
-      this.secondaryIconData = Icons.arrow_forward,
+      required this.selection,
       this.secondaryText = "",
       this.tertiaryText = ""})
       : super(key: key);
 
   final IconData iconData;
-  final IconData secondaryIconData;
-  final VoidCallback onPressed;
+  final Function onPressed;
   final String mainText;
   final String secondaryText;
   final String tertiaryText;
+  final String? selection;
 
   @override
-  State<ToPageBtn> createState() => _ToPageBtnState();
+  State<BottomModalBtn> createState() => _BottomModalBtnState();
 }
 
-class _ToPageBtnState extends State<ToPageBtn> {
+class _BottomModalBtnState extends State<BottomModalBtn> {
   @override
   Widget build(BuildContext context) {
     String optionalText = widget.secondaryText;
 
     return TextButton(
-      onPressed: (() => widget.onPressed()),
+      onPressed: (() {
+        setState(() {
+          widget.onPressed();
+        });
+      }),
       style: ButtonStyle(
-        shape: MaterialStateProperty.all<OutlinedBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
-        overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.5)),
-      ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
+          overlayColor:
+              MaterialStateProperty.all(Colors.grey.withOpacity(0.5))),
       child: Padding(
         padding: EdgeInsets.only(top: 7, bottom: 7),
         child: Column(
@@ -61,17 +65,27 @@ class _ToPageBtnState extends State<ToPageBtn> {
                       ),
                       if (optionalText != "")
                         TextSpan(
-                            text: "\n$optionalText",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: const Color.fromARGB(255, 91, 91, 91),
-                                height: 1.25)),
+                          text: "\n$optionalText",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: const Color.fromARGB(255, 91, 91, 91),
+                              height: 1.25),
+                        ),
                     ]),
                     softWrap: true,
                   ),
                 ),
-                Icon(widget.secondaryIconData,
-                    color: Color.fromARGB(255, 104, 103, 103)),
+                Text(
+                  widget.selection ?? "",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: const Color.fromARGB(255, 91, 91, 91),
+                      height: 1.25),
+                ),
+                Icon(
+                  Icons.expand_more_outlined,
+                  color: Color.fromARGB(255, 104, 103, 103),
+                ),
               ],
             ),
             if (widget.tertiaryText != "")

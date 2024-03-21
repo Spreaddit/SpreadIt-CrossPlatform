@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
+import '../pages/dummy_page.dart';
+import '../widgets/connected_acc_btn.dart';
+import '../widgets/settings_followers_sect.dart';
+import '../widgets/settings_gender_modal.dart';
 import '../widgets/settings_app_bar.dart';
 import '../widgets/settings_btn_to_page.dart';
 import '../widgets/settings_section_body.dart';
 import '../widgets/settings_section_title.dart';
-import '../pages/dummy_page.dart';
+import '../pages/update_email.dart';
+import '../pages/change_password.dart';
+import '../pages/location_select.dart';
+import '../pages/manage_notifications_page.dart';
 
 void main() {
   runApp(const HomeAccountSettingsPage());
 }
 
-class HomeAccountSettingsPage extends StatelessWidget {
+class HomeAccountSettingsPage extends StatefulWidget {
   const HomeAccountSettingsPage({Key? key}) : super(key: key);
 
+  @override
+  State<HomeAccountSettingsPage> createState() =>
+      _HomeAccountSettingsPageState();
+}
+
+class _HomeAccountSettingsPageState extends State<HomeAccountSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,27 +34,41 @@ class HomeAccountSettingsPage extends StatelessWidget {
   }
 }
 
-class AccountSettingsPage extends StatelessWidget {
+class AccountSettingsPage extends StatefulWidget {
   AccountSettingsPage({Key? key}) : super(key: key);
 
+  @override
+  State<AccountSettingsPage> createState() => _AccountSettingsPageState();
+}
+
+class _AccountSettingsPageState extends State<AccountSettingsPage> {
   final String title = "Account Settings";
 
-  final List<Widget> routes = [DummyPage()];
+  final List<Widget> routes = [
+    UpdateEmailPage(),
+    ChangePasswordPage(),
+    SelectLocationPage(),
+    NotificationsPageUI(),
+    DummyPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     List<Widget> basicSectionChildren = [];
+    List<Widget> connectedSectionChildren = [];
     List<Widget> notificationsSectionChildren = [];
+    List<Widget> safetySectionChildren = [];
 
     void navigateToPage(Widget route) {
       Navigator.push(
         context,
         PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 200),
-          pageBuilder: (_, __, ___) => DummyPage(),
+          reverseTransitionDuration: Duration(milliseconds: 100),
+          pageBuilder: (_, __, ___) => route,
           transitionsBuilder: (_, animation, __, child) {
             return ScaleTransition(
-              scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+              scale: Tween<double>(begin: 0.95, end: 1.0).animate(
                 CurvedAnimation(
                   parent: animation,
                   curve: Curves.fastOutSlowIn,
@@ -64,7 +91,7 @@ class AccountSettingsPage extends StatelessWidget {
       ToPageBtn(
         iconData: Icons.settings_outlined,
         mainText: "Change password",
-        onPressed: () => navigateToPage(routes[0]),
+        onPressed: () => navigateToPage(routes[1]),
       ),
       ToPageBtn(
         iconData: Icons.location_on_outlined,
@@ -72,13 +99,18 @@ class AccountSettingsPage extends StatelessWidget {
         secondaryText: "Use approximate location (based on IP)",
         tertiaryText:
             "Specify a location to customize your recommendations and feed. Reddit does not track your precise geolocation data. Learn more",
-        onPressed: () => navigateToPage(routes[0]),
+        onPressed: () => navigateToPage(routes[2]),
       ),
-      ToPageBtn(
-        iconData: Icons.person_outline,
-        secondaryIconData: Icons.expand_more_outlined,
-        mainText: "Gender",
-        onPressed: () => print("Goto Set Gender"),
+      SelectGender(),
+    ]);
+
+    connectedSectionChildren.addAll([
+      ConnectAccBtn(
+        iconData: Icons.account_circle_outlined,
+        accountName: "Google",
+        onPressed: () {
+          print("object");
+        },
       )
     ]);
 
@@ -86,13 +118,22 @@ class AccountSettingsPage extends StatelessWidget {
       ToPageBtn(
         iconData: Icons.notifications_outlined,
         mainText: "Manage notifications",
-        onPressed: () => navigateToPage(routes[0]),
+        onPressed: () => navigateToPage(routes[3]),
+      ),
+    ]);
+
+    safetySectionChildren.addAll([
+      ToPageBtn(
+        iconData: Icons.block_outlined,
+        mainText: "Manage blocked accounts",
+        onPressed: () => navigateToPage(routes[4]),
       ),
       ToPageBtn(
-        iconData: Icons.email_outlined,
-        mainText: "Manage emails",
-        onPressed: () => navigateToPage(routes[0]),
+        iconData: Icons.volume_mute_outlined,
+        mainText: "Manage muted communities",
+        onPressed: () => navigateToPage(routes[4]),
       ),
+      SwitchSection(),
     ]);
 
     return Scaffold(
@@ -112,9 +153,17 @@ class AccountSettingsPage extends StatelessWidget {
               SettingsSectionBody(
                 sectionChildren: basicSectionChildren,
               ),
+              SettingsSectionTitle(title: "Connected Accounts"),
+              SettingsSectionBody(sectionChildren: connectedSectionChildren),
               SettingsSectionTitle(title: "Contact Settings"),
               SettingsSectionBody(
-                  sectionChildren: notificationsSectionChildren),
+                sectionChildren: notificationsSectionChildren,
+              ),
+              SettingsSectionTitle(title: "Safety"),
+              SettingsSectionBody(
+                sectionChildren: safetySectionChildren,
+              ),
+              SettingsSectionTitle(title: ""),
             ],
           ),
         ),

@@ -1,41 +1,54 @@
 import 'package:flutter/material.dart';
 
-class ToPageBtn extends StatefulWidget {
-  const ToPageBtn(
+class SwitchBtn1 extends StatefulWidget {
+  const SwitchBtn1(
       {Key? key,
       required this.iconData,
       required this.mainText,
       required this.onPressed,
-      this.secondaryIconData = Icons.arrow_forward,
-      this.secondaryText = "",
+      this.switchActiveClr = const Color.fromARGB(255, 7, 116, 205),
+      this.thumbActiveClr = Colors.white,
       this.tertiaryText = ""})
       : super(key: key);
 
   final IconData iconData;
-  final IconData secondaryIconData;
-  final VoidCallback onPressed;
+  final Function onPressed;
+  final Color switchActiveClr;
+  final Color thumbActiveClr;
   final String mainText;
-  final String secondaryText;
   final String tertiaryText;
 
   @override
-  State<ToPageBtn> createState() => _ToPageBtnState();
+  State<SwitchBtn1> createState() => SwitchBtn1State();
 }
 
-class _ToPageBtnState extends State<ToPageBtn> {
+class SwitchBtn1State extends State<SwitchBtn1> {
+  bool lightVal = false;
+
+  bool getCurrentState() {
+    return lightVal;
+  }
+
+  void changeState() {
+    setState(() {
+      lightVal = !lightVal;
+    });
+    widget.onPressed();
+  }
+
   @override
   Widget build(BuildContext context) {
-    String optionalText = widget.secondaryText;
-
     return TextButton(
-      onPressed: (() => widget.onPressed()),
+      onPressed: (() {
+        changeState();
+      }),
       style: ButtonStyle(
         shape: MaterialStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
         overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.5)),
       ),
       child: Padding(
-        padding: EdgeInsets.only(top: 7, bottom: 7),
+        padding: EdgeInsets.only(top: 0, bottom: 0),
         child: Column(
           children: [
             Row(
@@ -59,19 +72,20 @@ class _ToPageBtnState extends State<ToPageBtn> {
                             color: Colors.black,
                             height: 1.25),
                       ),
-                      if (optionalText != "")
-                        TextSpan(
-                            text: "\n$optionalText",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: const Color.fromARGB(255, 91, 91, 91),
-                                height: 1.25)),
                     ]),
                     softWrap: true,
                   ),
                 ),
-                Icon(widget.secondaryIconData,
-                    color: Color.fromARGB(255, 104, 103, 103)),
+                Switch(
+                  value: lightVal,
+                  activeColor: widget.switchActiveClr,
+                  activeTrackColor: widget.switchActiveClr,
+                  thumbColor:
+                      MaterialStatePropertyAll<Color>(widget.thumbActiveClr),
+                  onChanged: (bool val) {
+                    changeState();
+                  },
+                )
               ],
             ),
             if (widget.tertiaryText != "")
@@ -93,7 +107,7 @@ class _ToPageBtnState extends State<ToPageBtn> {
                           style: TextStyle(
                               fontSize: 15,
                               color: const Color.fromARGB(255, 91, 91, 91),
-                              height: 1),
+                              height: 1.2),
                         ),
                       ),
                     ),
