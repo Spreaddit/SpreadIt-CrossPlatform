@@ -4,7 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 
-enum PostCategories { best, hot, recent, top, random }
+enum PostCategories {
+  best,
+  hot,
+  newposts,
+  top,
+  random,
+  recent,
+}
 
 String postCategoryEndpoint(PostCategories action) {
   switch (action) {
@@ -12,12 +19,14 @@ String postCategoryEndpoint(PostCategories action) {
       return "best/best/";
     case PostCategories.hot:
       return "best/hot/";
-    case PostCategories.recent:
-      return "best/recent/";
+    case PostCategories.newposts:
+      return "best/new/";
     case PostCategories.top:
       return "best/top/";
     case PostCategories.random:
       return "best/random/";
+    case PostCategories.recent:
+      return "best/recent-posts/";
   }
 }
 

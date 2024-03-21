@@ -95,7 +95,7 @@ class _PostBody extends StatelessWidget {
           headline,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        subtitle: imageUrl != null && imageUrl !=""
+        subtitle: imageUrl != null && imageUrl != ""
             ? Image(image: NetworkImage(imageUrl ?? ""))
             : Text(
                 description ?? "",
