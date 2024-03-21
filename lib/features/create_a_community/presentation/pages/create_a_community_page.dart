@@ -18,6 +18,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
   String _communityName = "";
   final _controller = TextEditingController();
   var selectedCommunityType = 0;
+  bool _is18Plus = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,11 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                 setState(() {});
               },
               decoration: InputDecoration(
-                labelText: 'Community Name',
+                filled: true,
+                enabledBorder: InputBorder.none,
+                fillColor: Colors.grey[200],
+                labelText: 'r/Community Name',
+                floatingLabelBehavior: FloatingLabelBehavior.never,
                 hintText: 'CommunityName',
                 border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -127,6 +132,23 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                 ),
               ),
             ),
+          ),
+          SizedBox(height: 20),
+          SwitchListTile(
+            activeColor: Colors.white,
+            activeTrackColor: Color.fromARGB(255, 4, 69, 198),
+            title: Text(
+              '18+ community',
+              style: TextStyle(
+                fontWeight: FontWeight.bold, // Make the text bold
+              ),
+            ),
+            value: _is18Plus,
+            onChanged: (bool value) {
+              setState(() {
+                _is18Plus = value;
+              });
+            },
           ),
           SizedBox(height: 20),
           Button(
