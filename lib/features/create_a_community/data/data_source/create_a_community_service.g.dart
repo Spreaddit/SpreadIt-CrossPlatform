@@ -13,7 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:3001/AMIRAELGARF02/Spreadit1/1.0.0';
+    baseUrl ??= 'http://10.0.2.2:3001/M7MDREFAAT550/Spreadit/2.0.0';
   }
 
   final Dio _dio;

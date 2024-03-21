@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/widgets/generic/button.dart';
-import 'package:spreadit_crossplatform/features/widgets/generic/custom_input.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
 
@@ -17,7 +16,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
   ];
   int? _responseStatus;
   String _communityName = "";
-
+  final _controller = TextEditingController();
   var selectedCommunityType = 0;
 
   @override
@@ -54,13 +53,24 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
               ),
             ),
           ),
-          CustomInput(
-            formKey: GlobalKey<FormState>(),
-            onChanged: (value, isValid) {
-              _communityName = value;
-            },
-            label: 'Community Name',
-            placeholder: 'r/CommunityName',
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: TextField(
+              controller: _controller,
+              onChanged: (value) {
+                _communityName = value;
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                labelText: 'Community Name',
+                hintText: 'CommunityName',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                prefixText: 'r/',
+                suffix: Text('${21 - _controller.text.length}'),
+              ),
+            ),
           ),
           Visibility(
             visible: _responseStatus == 204,
@@ -166,7 +176,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
       Icons.account_circle_outlined,
       Icons.lock_outlined,
       Icons.check_circle_outline,
-    ]; // Add your desired icons
+    ];
 
     await showModalBottomSheet(
       showDragHandle: true,
