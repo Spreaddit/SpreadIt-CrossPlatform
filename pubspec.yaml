@@ -48,3 +48,4 @@ flutter:
   assets:
   - assets/images/LogoSpreadIt.png
   - assets/images/GoogleLogo.png
+  - assets/images/Empty_Toast.png
