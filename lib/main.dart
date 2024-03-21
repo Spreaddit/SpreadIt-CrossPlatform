@@ -4,6 +4,11 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
 
+void main() {
+  // dotenv.load();
+  runApp(SpreadIt());
+}
+
 class SpreadIt extends StatelessWidget {
   SpreadIt({Key? key}) : super(key: key);
 
