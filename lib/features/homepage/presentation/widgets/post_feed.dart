@@ -4,6 +4,11 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 class PostFeed extends StatefulWidget {
+  PostCategories postCategory;
+  PostFeed({
+    required this.postCategory,
+  });
+
   @override
   _PostFeedState createState() => _PostFeedState();
 }
@@ -18,7 +23,7 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   Future<void> fetchData() async {
-    List<Post> fetchedItems = await getFeedPosts(PostCategories.best);
+    List<Post> fetchedItems = await getFeedPosts(widget.postCategory);
     setState(() {
       items = fetchedItems;
     });
