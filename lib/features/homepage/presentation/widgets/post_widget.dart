@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 
@@ -146,31 +147,11 @@ class _PostInteractions extends HookWidget {
 }
 
 class PostWidget extends StatelessWidget {
-  final int postId;
-  final String username;
-  final String userId;
-  final DateTime date;
-  final String headline;
-  final String? description;
-  final String? imageUrl;
-  final int votesCount;
-  final int sharesCount;
-  final int commentsCount;
-  final String profilePic;
+  final Post post;
   //TODO: final bool isJoinCommunityVisible;
 
   PostWidget({
-    required this.postId,
-    required this.username,
-    required this.userId,
-    required this.date,
-    required this.headline,
-    this.description,
-    this.imageUrl,
-    required this.votesCount,
-    required this.sharesCount,
-    required this.commentsCount,
-    required this.profilePic,
+    required this.post,
     //TODO:required this.isJoinCommunityVisible,
   });
 
@@ -180,20 +161,20 @@ class PostWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PostHeader(
-          username: username,
-          userId: userId,
-          date: date,
-          profilePic: profilePic,
+          username: post.username,
+          userId: post.userId,
+          date: post.date,
+          profilePic: post.profilePic,
         ),
         _PostBody(
-          headline: headline,
-          description: description,
-          imageUrl: imageUrl,
+          headline: post.headline,
+          description: post.description,
+          imageUrl: post.imageUrl,
         ),
         _PostInteractions(
-          votesCount: votesCount,
-          sharesCount: sharesCount,
-          commentsCount: commentsCount,
+          votesCount: post.votesCount,
+          sharesCount: post.sharesCount,
+          commentsCount: post.commentsCount,
         )
       ],
     );
