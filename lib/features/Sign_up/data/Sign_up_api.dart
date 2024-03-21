@@ -18,7 +18,10 @@ Future<int> signUpApi(
      final response = await Dio().post(apiURl, data: data);
 
     if (response.statusCode == 200) {
-      var token = response.data['token'];     /// save the access token 
+      var token = response.data['access_token'];     /// save the access token 
+      var user = response.data['user'];              // save the user data
+      var acesstokenexpiry= response.data['token_expiration_date']; // save the user data
+      
       print("token: $token");
       print(response.statusMessage);
       return 200;

@@ -4,18 +4,19 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();  
 
-Future<bool> signInWithGoogle(BuildContext context) async {
+Future<String> signInWithGoogle(BuildContext context) async {
   final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
   if (googleUser == null) {
-    return false;
+    return "";
   }
   final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
   final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth?.accessToken,
     idToken: googleAuth?.idToken,
   );
+  var accessToken=credential.accessToken!;
   await FirebaseAuth.instance.signInWithCredential(credential);
-  return true;
+  return accessToken;
 }
 
 Future<bool> signOutWithGoogle(BuildContext context) async {

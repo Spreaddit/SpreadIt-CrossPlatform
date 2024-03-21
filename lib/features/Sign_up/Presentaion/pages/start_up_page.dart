@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../generic_widgets/snackbar.dart';
+import '../../data/google_oauth.dart';
 import "../../data/oauth_service.dart";
 import '../../../generic_widgets/terms_and_cond_text.dart';
 import '../../../generic_widgets/button.dart';
@@ -14,10 +16,24 @@ class StartUpPage extends StatelessWidget {
   }
 
   Future<void> handleSignIn(BuildContext context) async {
-    bool signedIn = await signInWithGoogle(context);
-    if (signedIn) {
-      Navigator.of(context).pushNamed('/log-in-page');
-    }
+    
+    String access_token = await signInWithGoogle(context);
+    var responseCode = await GoogleOuthApi(
+      googleToken: access_token,
+    );
+    if (responseCode == 200) {
+      Navigator.of(context).pushNamed('/start-up-page'); // SHOULD BE HOME
+    } 
+    else if (responseCode == 400) {
+      CustomSnackbar(content: "Invalid input" ).show(context); 
+    } 
+    else if (responseCode == 409) {
+      CustomSnackbar(content: "User already exists" ).show(context); 
+    } 
+    else if (responseCode == 500) {
+      CustomSnackbar(content: "Internal server error" ).show(context); 
+    } 
+
   }
 
   @override
