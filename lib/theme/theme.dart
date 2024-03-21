@@ -5,7 +5,6 @@ const redditBlack = Color(0x00000000);
 const redditGrey = Color.fromRGBO(206, 227, 248, 1);
 
 ThemeData spreadItTheme = ThemeData(
-  primaryTextTheme: TextTheme(),
   primaryColor: redditOrange,
   primaryColorLight: redditGrey,
   primaryColorDark: redditBlack,

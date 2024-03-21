@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/homepage/widgets/post_feed.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
-import 'package:spreadit_crossplatform/features/homepage/widgets/post.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post.dart';
 
 void main() {
   runApp(SpreadIt());
@@ -15,7 +16,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: PostFeed(),
+      home: HomePage(),
     );
   }
 }

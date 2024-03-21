@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:spreadit_crossplatform/features/homepage/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/homepage/widgets/interaction_button.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 
-//TODO: create options tab for post (shows join community options when pressed)
+//TODO: create options tab for PostWidget(shows join community options when pressed)
 
 // class PostOptions extends StatefulWidget {
 // bool isJoinCommunityVisible;
@@ -46,6 +46,8 @@ class _PostHeader extends HookWidget {
     }, []);
 
     return Material(
+      color: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ListTile(
@@ -84,6 +86,8 @@ class _PostBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
       child: ListTile(
         dense: true,
         title: Text(
@@ -118,6 +122,8 @@ class _PostInteractions extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
       child: Container(
         width: double.infinity,
         child: Wrap(
@@ -139,7 +145,7 @@ class _PostInteractions extends HookWidget {
   }
 }
 
-class Post extends StatelessWidget {
+class PostWidget extends StatelessWidget {
   final int postId;
   final String username;
   final String userId;
@@ -153,7 +159,7 @@ class Post extends StatelessWidget {
   final String profilePic;
   //TODO: final bool isJoinCommunityVisible;
 
-  Post({
+  PostWidget({
     required this.postId,
     required this.username,
     required this.userId,
