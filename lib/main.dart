@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
+import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
 
 void main() {
-  runApp(const SpreadIt());
+  runApp(
+    const MaterialApp(
+      home: Scaffold(
+        body: BlockedAccountsPage(),
+      ),
+    ),
+  );
 }
 
 class SpreadIt extends StatelessWidget {
