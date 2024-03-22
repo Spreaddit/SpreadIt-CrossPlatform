@@ -19,7 +19,7 @@ class User {
   bool newFollowers;
   bool chatRequestEmail;
   bool unsubscribeAllEmails;
-  List<String> communityContentSort;
+  String communityContentSort;
   String globalContentView;
   bool communityThemes;
   bool autoplayMedia;
@@ -95,7 +95,7 @@ class User {
     required this.modNotifications,
   });
 
-User.fromJson(Map<String, dynamic> json)
+  User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         username = json['username'],
@@ -104,43 +104,44 @@ User.fromJson(Map<String, dynamic> json)
         backgroundPictureUrl = json['background_picture_url'],
         bio = json['bio'],
         followersCount = json['followers_count'] as int,
-        followingCount = json['following_count']  as int,
+        followingCount = json['following_count'] as int,
         createdAt = DateTime.parse(json['created_at']),
         nsfw = json['nsfw'] as bool,
-        activeInCommunityVisibility = json['activeInCommunityVisibility'] as bool,
-        clearHistory = json['clearHistory'] as bool ,
-        allowFollow = json['allowFollow'] as bool ,
+        activeInCommunityVisibility =
+            json['activeInCommunityVisibility'] as bool,
+        clearHistory = json['clearHistory'] as bool,
+        allowFollow = json['allowFollow'] as bool,
         blockedUsers = List<String>.from(json['blockedUsers']),
         mutedCommunities = List<String>.from(json['mutedCommunities']),
-        resetPasswordCodeExpiration = DateTime.parse(json['resetPasswordCodeExpiration']),
-        newFollowers = json['newFollowers'] as bool ,
-        chatRequestEmail = json['chatRequestEmail']as bool,
-        unsubscribeAllEmails = json['unsubscribeAllEmails']as bool,
-        communityContentSort = json['communityContentSort'] as List<String>,
+        resetPasswordCodeExpiration =
+            DateTime.parse(json['resetPasswordCodeExpiration']),
+        newFollowers = json['newFollowers'] as bool,
+        chatRequestEmail = json['chatRequestEmail'] as bool,
+        unsubscribeAllEmails = json['unsubscribeAllEmails'] as bool,
+        communityContentSort = json['communityContentSort'] as String,
         globalContentView = json['globalContentView'] as String,
-        communityThemes = json['communityThemes'] as bool ,
+        communityThemes = json['communityThemes'] as bool,
         autoplayMedia = json['autoplayMedia'] as bool,
         adultContent = json['adultContent'] as bool,
         openPostsInNewTab = json['openPostsInNewTab'] as bool,
-        mentions = json['mentions']as bool,
+        mentions = json['mentions'] as bool,
         commentsOnYourPost = json['commentsOnYourPost'] as bool,
         commentsYouFollow = json['commentsYouFollow'] as bool,
-        upvotesComments = json['upvotesComments']as bool,
-        upvotesPosts = json['upvotesPosts']as bool,
-        newFollowerEmail = json['newFollowerEmail']as bool,
-        replies = json['replies']as bool,
-        invitations = json['invitations']as bool,
-        posts = json['posts']as bool,
+        upvotesComments = json['upvotesComments'] as bool,
+        upvotesPosts = json['upvotesPosts'] as bool,
+        newFollowerEmail = json['newFollowerEmail'] as bool,
+        replies = json['replies'] as bool,
+        invitations = json['invitations'] as bool,
+        posts = json['posts'] as bool,
         about = json['about'] as String,
         approvedUsers = List<String>.from(json['approvedUsers']),
         sendYouFriendRequests = json['sendYouFriendRequests'] as String,
-        sendYouPrivateMessages = json['sendYouPrivateMessages']as String,
+        sendYouPrivateMessages = json['sendYouPrivateMessages'] as String,
         markAllChatsAsRead = json['markAllChatsAsRead'] as bool,
         inboxMessages = json['inboxMessages'] as bool,
-        chatMessages = json['chatMessages']as bool,
-        chatRequests = json['chatRequests']as bool,
-        repliesToComments = json['repliesToComments']as bool,
-        cakeDay = json['cakeDay']as bool,
+        chatMessages = json['chatMessages'] as bool,
+        chatRequests = json['chatRequests'] as bool,
+        repliesToComments = json['repliesToComments'] as bool,
+        cakeDay = json['cakeDay'] as bool,
         modNotifications = json['modNotifications'] as String;
-
 }
