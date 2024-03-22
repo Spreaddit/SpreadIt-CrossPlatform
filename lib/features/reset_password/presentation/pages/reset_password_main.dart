@@ -23,6 +23,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   String _currentPassword = '';
   String _newPassword = '';
   String _confirmedPassword = '';
+  String _token = 'dummy_token';
 
   bool isValidInput = false;
   
@@ -57,7 +58,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
   
   bool checkPasswordLength() {
-    if (_newPassword.length < 8 || _confirmedPassword.length < 8) {
+    if ( _currentPassword.length < 8 || _newPassword.length < 8 || _confirmedPassword.length < 8) {
         CustomSnackbar(content: "password must contain more than 8 characters").show(context);
         return false;   
     }
@@ -79,13 +80,23 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   void postData() async{
-      Future<bool> response = UpdatePassword(_newPassword, _currentPassword);
-      if( await response) {
+      int response = await updatePassword(_newPassword, _currentPassword, _token);
+      if(response == 200) {
         CustomSnackbar(content: "password is updated successfully").show(context);
       }
-      else {
-        CustomSnackbar(content: " an error occurred , please refill correct data").show(context);
+      else if (response == 400) {
+        CustomSnackbar(content: "entered password is not the current password , please provide the correct password").show(context);
       }
+      else if (response == 401) {
+        CustomSnackbar(content: "an error occurred , please refill correct data").show(context);
+      }
+      else if (response == 500) {
+        CustomSnackbar(content: "a server error occurred , please try again later").show(context);
+      }
+      else {
+        CustomSnackbar(content: "invalid data").show(context);
+      }
+      
   }
 
   void NavigateToForgetPassword(){
@@ -149,8 +160,3 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 }
 
-/* TO DOs:
-1) unit testing (partially done)
-2) mock service
-  a) lamma adous save a check el current password di matching walla laa , law laa talla3i snack bar (tocken acquisition)
-  c) yegib el username wel email wel avatar ml database (phase 2) */
