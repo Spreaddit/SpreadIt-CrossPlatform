@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
@@ -14,7 +16,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const SpreadIt());
+  runApp(SpreadIt());
 }
 
 class SpreadIt extends StatelessWidget {
