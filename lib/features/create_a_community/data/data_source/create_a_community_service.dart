@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 
 part 'create_a_community_service.g.dart';
 
-@RestApi(baseUrl: "http://10.0.2.2:3001/M7MDREFAAT550/Spreadit/2.0.0")
+@RestApi(baseUrl: "http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0")
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 

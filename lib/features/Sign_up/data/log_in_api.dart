@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../user.dart';
 
-const apibase= "http://10.0.2.2:3002/M7MDREFAAT550/Spreadit/2.0.0";
+const apibase= "http://localhost:3002/M7MDREFAAT550/Spreadit/2.0.0";
 
 Future<int> logInApi(
     {required String username,

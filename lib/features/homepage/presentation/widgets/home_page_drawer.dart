@@ -28,7 +28,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.watch_later_outlined,
               'text': 'History',
-              'route': '/logout'
+              'route': '/history'
             },
             {
               'icon': Icons.settings_outlined,
