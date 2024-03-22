@@ -18,7 +18,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.group,
               'text': 'Create a community',
-              'route': '/communities'
+              'route': '/create_a_community'
             },
             {
               'icon': Icons.bookmarks_outlined,
@@ -28,7 +28,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.watch_later_outlined,
               'text': 'History',
-              'route': '/logout'
+              'route': '/history'
             },
             {
               'icon': Icons.settings_outlined,
@@ -40,7 +40,7 @@ class HomePageDrawer extends StatelessWidget {
               leading: Icon(item['icon']),
               title: Text(item['text'], style: TextStyle(fontSize: 18.0)),
               onTap: () {
-                //Navigate using the item[route]
+                Navigator.pushNamed(context, item['route']);
               },
             );
           }).toList(),
