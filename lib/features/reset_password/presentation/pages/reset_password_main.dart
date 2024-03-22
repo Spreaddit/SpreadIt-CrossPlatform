@@ -6,6 +6,7 @@ import '../widgets/generic/validations.dart';
 import '../widgets/generic/reset_password_widgets/user_card.dart';
 import '../widgets/generic/snackbar.dart';
 import '../../data/update_password.dart';
+import '../widgets/generic/reset_password_widgets/reset_password_validations.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
@@ -46,39 +47,26 @@ class _ResetPasswordState extends State<ResetPassword> {
     _confirmedPasswordForm.currentState!.save();
   }
   
-  bool checkCurrentPassExists(){
-    if(_currentPassword.isNotEmpty ){
-     checkPasswordLength();
-     return true; 
+
+  void textValidations () {
+    if (checkCurrentPassExists(_currentPassword)) {
+       if(checkPasswordLength(_currentPassword, _newPassword, _confirmedPassword)) {
+        if(checkIdentical(_newPassword ,_confirmedPassword)) {
+          postData();
+        }
+        else {
+          CustomSnackbar(content: "password mismatch:please reconfirm your new password").show(context);
+        }
+       }
+       else {
+        CustomSnackbar(content: "password must contain more than 8 characters").show(context);
+       }
     }
     else {
-     CustomSnackbar(content: "provide your current password" ).show(context); 
-     return false;
+      CustomSnackbar(content: "provide your current password" ).show(context);
     }
   }
   
-  bool checkPasswordLength() {
-    if ( _currentPassword.length < 8 || _newPassword.length < 8 || _confirmedPassword.length < 8) {
-        CustomSnackbar(content: "password must contain more than 8 characters").show(context);
-        return false;   
-    }
-    else {
-      checkIdentical();
-      return true;
-    }
-  }
-
-  bool checkIdentical() {
-    if (_newPassword != _confirmedPassword){
-      CustomSnackbar(content: "password mismatch:please reconfirm your new password").show(context);
-      return false;
-      }
-    else{
-      postData();
-      return true;
-    }  
-  }
-
   void postData() async{
       int response = await updatePassword(_newPassword, _currentPassword, _token);
       if(response == 200) {
@@ -112,7 +100,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             child: Header(
               buttonText: "Save",
               title: "Reset Password",
-              onPressed: checkCurrentPassExists),
+              onPressed: textValidations),
           ),
           Container(
             margin: EdgeInsets.all(10) ,
@@ -135,7 +123,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             alignment: Alignment.centerRight,
             child: InkWell(
               child: Text("Forgot password"),
-              onTap: checkCurrentPassExists ,
+              onTap: textValidations ,
             ),
           ),
           Container(
