@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class Header extends StatelessWidget {
   final String buttonText;
   final String title;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   Header({
-    required this.buttonText,
+    this.buttonText = "",
     required this.title,
-    required this.onPressed,
+    this.onPressed,
   });
 
   @override
@@ -20,7 +20,7 @@ class Header extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
             ),
             Expanded(

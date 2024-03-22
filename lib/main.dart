@@ -4,10 +4,17 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
+import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
+import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
+import "features/Sign_up/Presentaion/pages/start_up_page.dart";
+import 'features/Sign_up/Presentaion/pages/createusername.dart';
 
-void main() {
-  // dotenv.load();
-  runApp(SpreadIt());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const SpreadIt());
 }
 
 class SpreadIt extends StatelessWidget {
@@ -18,8 +25,13 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: HomePage(),
+      home: StartUpPage(),
       routes: {
+        '/home': (context) => HomePage(),
+        '/start-up-page': (context) => StartUpPage(),
+        '/log-in-page': (context) => LogInScreen(),
+        '/sign-up-page': (context) => SignUpScreen(),
+        '/create-username-page': (context) => CreateUsername(),
         '/create_a_community': (context) => CreateCommunityPage(),
       },
     );
