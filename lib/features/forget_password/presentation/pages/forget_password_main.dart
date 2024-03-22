@@ -32,17 +32,23 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       checkUserInput();
     }
     else {
-      CustomSnackbar(content: "please provide your email").show(context);
+      CustomSnackbar(content: "please enter your email or username").show(context);
     }
   }
 
   void checkUserInput() async{
-    Future<bool> response = sendUserInput(_usernameOrEmail);
-    if (await response){
+    int response =  await sendUserInput(_usernameOrEmail);
+    if (response == 200){
       CustomSnackbar(content: "an email was sent to you to reset your password").show(context);
     }
-    else{
-      CustomSnackbar(content: "an error occured , please enter email again").show(context);
+    else if (response == 400){
+      CustomSnackbar(content: "please enter your email or username").show(context);
+    }
+    else if (response == 500){
+      CustomSnackbar(content: "an internal server error has occured , please try again later").show(context);
+    }
+    else {
+      CustomSnackbar(content:" no username exists").show(context);
     }
   }
 
@@ -93,6 +99,4 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   }
 }
 
-/* TO DOs:
 
-new mock service route */
