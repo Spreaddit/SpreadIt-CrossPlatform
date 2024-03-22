@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/home_page_drawer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 
 class HistoryPage extends StatelessWidget {
   @override
@@ -35,7 +33,23 @@ class HistoryPage extends StatelessWidget {
                 height: 0.5,
               ),
             ),
-            //TODO: ADD DROP DOWN ICON
+            Container(
+              color: Color.fromARGB(255, 225, 222, 218),
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Recent',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 39, 13, 1),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             PostFeed(
               postCategory: PostCategories.recent,
             ),
