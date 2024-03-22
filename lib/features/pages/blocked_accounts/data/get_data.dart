@@ -20,9 +20,9 @@ Future<List> getData() async {
         'http://10.0.2.2:3001/AMIRAELGARF02/Spreadit1/1.0.0/mobile/settings/blocking-permissions');
     if (response.statusCode == 200) {
       {
-        print(response.data["blockedAccounts"] as List);
+        print(response.data['blockedAccounts'] as List);
         print(response.statusMessage);
-        return response.data["blockedAccounts"] as List;
+        return response.data['blockedAccounts'] as List;
       }
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');

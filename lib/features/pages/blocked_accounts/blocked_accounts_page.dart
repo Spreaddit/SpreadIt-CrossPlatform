@@ -71,8 +71,10 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
           : ListView(
               shrinkWrap: true, //blockedUsers.map((e)
               children: blockedAccountsList.map((e) {
+                print(e['icon']);
                 return ListTile(
-                  /*leading: CircleAvatar(foregroundImage: NetworkImage(e['icon'])),*/
+                  leading:
+                      CircleAvatar(foregroundImage: NetworkImage(e['icon'])),
                   title: Text(e['name'],
                       style: TextStyle(
                           fontSize: 18,
