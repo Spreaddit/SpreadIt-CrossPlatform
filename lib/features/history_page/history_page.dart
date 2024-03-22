@@ -35,13 +35,13 @@ class HistoryPage extends StatelessWidget {
                 height: 0.5,
               ),
             ),
+            //TODO: ADD DROP DOWN ICON
             PostFeed(
               postCategory: PostCategories.recent,
             ),
           ]),
         ),
       ),
-      endDrawer: HomePageDrawer(),
     );
   }
 }
