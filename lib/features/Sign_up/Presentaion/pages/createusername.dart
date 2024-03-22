@@ -47,7 +47,7 @@ void navigateToHomePage(BuildContext context) async {
       password: _userPassword,
     );
     if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/start-up-page'); // SHOULD BE HOME
+      Navigator.of(context).pushNamed('/home'); // SHOULD BE HOME
     } 
     else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input" ).show(context); 

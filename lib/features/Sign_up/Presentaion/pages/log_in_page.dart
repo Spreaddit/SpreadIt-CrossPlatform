@@ -48,7 +48,7 @@ class LogInScreenState extends State<LogInScreen> {
       password: _userPassword,
     );
      if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/start-up-page'); // should be Home page
+      Navigator.of(context).pushNamed('/home'); // should be Home page
     } 
     else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input" ).show(context); 

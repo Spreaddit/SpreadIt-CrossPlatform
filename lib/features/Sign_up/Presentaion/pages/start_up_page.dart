@@ -21,7 +21,7 @@ class StartUpPage extends StatelessWidget {
       googleToken: access_token,
     );
     if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/start-up-page'); // SHOULD BE HOME
+      Navigator.of(context).pushNamed('/home');
     } else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input").show(context);
     } else if (responseCode == 409) {
