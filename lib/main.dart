@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
+import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
@@ -35,6 +36,7 @@ class SpreadIt extends StatelessWidget {
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),
         '/create_a_community': (context) => CreateCommunityPage(),
+        '/history': (context) => HistoryPage(),
       },
     );
   }
