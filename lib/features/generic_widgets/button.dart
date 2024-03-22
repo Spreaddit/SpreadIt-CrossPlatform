@@ -5,7 +5,7 @@ class Button extends StatefulWidget {
   final String text;
   final Color backgroundColor;
   final Color foregroundColor;
-  final IconData? prefixIcon;
+  final IconData? prefixIcon; 
   final String? imagePath;
 
   const Button({
@@ -14,7 +14,7 @@ class Button extends StatefulWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     this.prefixIcon,
-    this.imagePath,
+    this.imagePath, 
   });
 
   @override
@@ -41,12 +41,12 @@ class _ButtonState extends State<Button> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (widget.prefixIcon != null)
+            if (widget.prefixIcon != null) 
               Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Icon(widget.prefixIcon),
               ),
-            if (widget.imagePath != null)
+            if (widget.imagePath != null) 
               Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Image.asset(

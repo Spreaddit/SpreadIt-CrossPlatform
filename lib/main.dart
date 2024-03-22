@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
+import 'package:spreadit_crossplatform/theme/theme.dart';
+import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
+import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
 import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
@@ -16,22 +18,21 @@ void main() async {
 }
 
 class SpreadIt extends StatelessWidget {
-  const SpreadIt({Key? key}) : super(key: key);
+  SpreadIt({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Spread It',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: spreadItTheme,
       home: StartUpPage(),
       routes: {
+        '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),
+        '/create_a_community': (context) => CreateCommunityPage(),
       },
     );
   }
