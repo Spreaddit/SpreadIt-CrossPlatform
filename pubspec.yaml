@@ -51,4 +51,4 @@ flutter:
   - assets/images/GoogleLogo.png
   - assets/images/upvoteicon.png
   - assets/images/downvoteicon.png
-  - lib/.env
+

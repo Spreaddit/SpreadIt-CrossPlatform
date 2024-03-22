@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
+import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts_page.dart';
 
@@ -17,7 +18,10 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: HomePage(),
+      home: HistoryPage(),
+      /*routes: {
+        '/create_a_community': (context) => CreateCommunityPage(),
+      },*/
     );
   }
 }
