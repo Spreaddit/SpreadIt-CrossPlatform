@@ -17,7 +17,7 @@ import 'package:dio/dio.dart';
 Future<List> getData() async {
   try {
     var response = await Dio().get(
-        'http://10.0.2.2:3001/AMIRAELGARF02/Spreadit1/1.0.0/mobile/settings/blocking-permissions');
+        'http://localhost:3001/AMIRAELGARF02/Spreadit1/1.0.0/mobile/settings/blocking-permissions');
     if (response.statusCode == 200) {
       {
         print(response.data['blockedAccounts'] as List);
