@@ -9,7 +9,6 @@ class CustomInput extends StatefulWidget {
   final String invalidText;
   final bool Function(String)? validateField;
   final bool validate;
-  final bool isFieldValid;
 
   CustomInput({
     required this.formKey,
@@ -20,7 +19,6 @@ class CustomInput extends StatefulWidget {
     this.invalidText = "",
     this.validateField,
     this.validate = false,
-    this.isFieldValid = false,
   });
 
   @override
@@ -32,6 +30,8 @@ class _CustomInputState extends State<CustomInput> {
   late String fieldValue;
   bool _isPasswordVisible = false;
   bool _isValid = true;
+  late FocusNode _focusNode;
+  bool _isFocused = true;
 
   @override
   void initState() {
@@ -46,6 +46,18 @@ class _CustomInputState extends State<CustomInput> {
         widget.onChanged(fieldValue, _isValid);
       });
     });
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,9 +67,22 @@ class _CustomInputState extends State<CustomInput> {
       children: [
         Card(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          color: Color(0xFFF5F5F5),
+          color: Color.fromARGB(255, 251, 251, 251),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
+            side: BorderSide(
+              color: widget.validate
+                  ? _isFocused
+                      ? Colors.transparent // No color when focused
+                      : _isValid
+                          ? const Color.fromARGB(255, 107, 188,
+                              110)
+                          : const Color.fromARGB(255, 233, 88,
+                              77) 
+                  : Colors
+                      .transparent, // Transparent border when validation is not required
+              width: 1.0,
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(5),
@@ -66,9 +91,11 @@ class _CustomInputState extends State<CustomInput> {
               child: Column(
                 children: [
                   TextFormField(
+                    focusNode: _focusNode,
                     decoration: InputDecoration(
                       labelText: widget.label,
-                      labelStyle: TextStyle(fontSize: 14),
+                      labelStyle: TextStyle(
+                          fontSize: 14, color: Color.fromARGB(255, 85, 80, 80)),
                       hintText: widget.placeholder,
                       border: InputBorder.none,
                       suffixIcon: widget.obscureText
@@ -105,15 +132,13 @@ class _CustomInputState extends State<CustomInput> {
             ),
           ),
         ),
-        if (widget.validate && !_isValid)
+        if (widget.validate && !_isValid && !_isFocused)
           Container(
-            padding: const EdgeInsets.only(top: 5.0, left: 20),
-            child: Text(widget.invalidText,
-                style: TextStyle(
-                    color: Colors.red,
-                    decoration: TextDecoration.none,
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal)),
+            padding: const EdgeInsets.only(top: 5.0, left: 25),
+            child: Text(
+              widget.invalidText,
+              style: TextStyle(color: Colors.red),
+            ),
           ),
       ],
     );
