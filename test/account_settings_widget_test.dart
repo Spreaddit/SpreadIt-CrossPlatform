@@ -9,7 +9,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_followers_sect.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_gender_modal.dart';
-import 'package:spreadit_crossplatform/features/pages/blocked_accounts/blocked_accounts_page.dart';
+import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 
 class CustomBindings extends AutomatedTestWidgetsFlutterBinding {
   @override

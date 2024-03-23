@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
 Future<Map<String, dynamic>> getBasicData() async {
   try {
-    var response = await Dio().get(
-        'http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0/mobile/settings/general/account');
+    var response = await Dio().get('$apiUrl/mobile/settings/general/account');
     if (response.statusCode == 200) {
       {
         print(response.data);
@@ -32,9 +32,8 @@ Future<Map<String, dynamic>> getBasicData() async {
 
 Future<int> updateBasicData({required Map<String, dynamic> updatedData}) async {
   try {
-    final response = await Dio().put(
-        'http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0/mobile/settings/general/account',
-        data: updatedData);
+    final response = await Dio()
+        .put('$apiUrl/mobile/settings/general/account', data: updatedData);
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return 1;

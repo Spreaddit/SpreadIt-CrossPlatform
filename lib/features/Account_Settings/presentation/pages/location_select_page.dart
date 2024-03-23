@@ -33,7 +33,7 @@ class SelectLocationPage extends StatelessWidget {
             onTap: () async{
               var data = await getBasicData();
               data["country"] = availableLocations[index];
-              var result = await updateData(updatedData: data);
+              var result = await updateUserInfo(updatedData: data);
               if (result == 0) CustomSnackbar(content: "Failed to update location").show(context);
               Navigator.pop(context);
             },

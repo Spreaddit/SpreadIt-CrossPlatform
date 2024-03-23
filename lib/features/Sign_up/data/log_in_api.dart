@@ -1,27 +1,24 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 import '../../user.dart';
 
-const apibase= "http://localhost:3002/M7MDREFAAT550/Spreadit/2.0.0";
+String apibase = apiUrl;
 
-Future<int> logInApi(
-    {required String username,
-    required String password,
-    }) async {
+Future<int> logInApi({
+  required String username,
+  required String password,
+}) async {
   try {
-    const apiroute= "/login";
-    const apiURl= apibase + apiroute; 
-    var data = {
-    "username": username,
-    "password": password
-    }; 
-     final response = await Dio().post(apiURl, data: data);
+    const apiroute = "/login";
+    String apiUrl = apibase + apiroute;
+    var data = {"username": username, "password": password};
+    final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
-      String access_token = response.data['access_token'];
-      print("access token:$access_token");
-      String token_expiration_date = response.data['access_token'];
+      String accessToken = response.data['access_token'];
+      print("access token:$accessToken");
+      String tokenExpirationDate = response.data['access_token'];
+      print("token expiration date:$tokenExpirationDate");
       User user = User.fromJson(response.data['user']);
 
       print(response.statusMessage);
@@ -32,16 +29,13 @@ Future<int> logInApi(
     } else if (response.statusCode == 400) {
       print("Bad request: ${response.statusMessage}");
       return 400;
-    }  
-    else if (response.statusCode == 401) {
+    } else if (response.statusCode == 401) {
       print("Unauthorized ${response.statusMessage}");
       return 401;
-    }  
-    else {
+    } else {
       print("Unexpected status code: ${response.statusCode}");
       return 409;
-    } 
-
+    }
   } on DioError catch (e) {
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
@@ -50,8 +44,7 @@ Future<int> logInApi(
       } else if (e.response!.statusCode == 401) {
         print("Unauthorized ${e.response!.statusMessage}");
         return 401;
-      }
-       else if (e.response!.statusCode == 404) {
+      } else if (e.response!.statusCode == 404) {
         print("Not Found: ${e.response!.statusMessage}");
         return 404;
       }

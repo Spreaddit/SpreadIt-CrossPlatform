@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
-import 'package:dio/dio.dart';
-
-const apiBase = "http://localhost:3000/M7MDREFAAT550/Spreadit/2.0.0";
+String apibase = apiUrl;
 
 Future<int> sendEmail(String email) async {
   try {
     const apiRoute = "/forgot-username";
-    const apiURL = apiBase + apiRoute;
-    final response = await Dio().post(apiURL, data: {"email": email});
+    String apiUrl = apibase + apiRoute;
+    final response = await Dio().post(apiUrl, data: {"email": email});
     if (response.statusCode == 200) {
       print(response.statusCode);
       print(response.statusMessage);

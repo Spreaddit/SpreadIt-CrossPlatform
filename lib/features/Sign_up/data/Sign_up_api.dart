@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 import '../../user.dart';
 
-const apibase = "http://localhost:3001/AMIRAELGARF02/Spreadit1/1.0.0";
+String apibase = apiUrl;
 
 Future<int> signUpApi({
   required String username,
@@ -12,14 +11,15 @@ Future<int> signUpApi({
 }) async {
   try {
     const apiroute = "/signup";
-    const apiURl = apibase + apiroute;
+    String apiUrl = apibase + apiroute;
     var data = {"username": username, "email": email, "password": password};
-    final response = await Dio().post(apiURl, data: data);
+    final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
-      String access_token = response.data['access_token'];
-      print("access token:$access_token");
-      String token_expiration_date = response.data['access_token'];
+      String accessToken = response.data['access_token'];
+      print("access token:$accessToken");
+      String tokenExpirationDate = response.data['access_token'];
+      print("token expiration date:$tokenExpirationDate");
       User user = User.fromJson(response.data['user']);
 
       // User user = User.fromJson(jsonDecode(jsonMap));

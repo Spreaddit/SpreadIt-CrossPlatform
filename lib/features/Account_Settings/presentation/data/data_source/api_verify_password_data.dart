@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
 Future<int> postData({required Map<String, dynamic> enteredPassowrd}) async {
   try {
-    final response = await Dio().post(
-        'http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0/settings/layout',
-        data: enteredPassowrd);
+    final response =
+        await Dio().post('$apiUrl/settings/layout', data: enteredPassowrd);
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;

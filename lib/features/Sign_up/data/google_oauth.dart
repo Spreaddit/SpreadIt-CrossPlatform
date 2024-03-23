@@ -1,25 +1,25 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
 import '../../user.dart';
 
-const apibase= "http://localhost:3002/M7MDREFAAT550/Spreadit/2.0.0";
+String apibase = apiUrl;
 
-Future<int> GoogleOuthApi(
-    {required String googleToken,
-    }) async {
+Future<int> GoogleOuthApi({
+  required String googleToken,
+}) async {
   try {
-    const apiroute= "/google/oauth";
-    const apiURl= apibase + apiroute; 
+    const apiroute = "/google/oauth";
+    String apiUrl = apibase + apiroute;
     var data = {
-    "googleToken": googleToken,
-    }; 
-     final response = await Dio().post(apiURl, data: data);
+      "googleToken": googleToken,
+    };
+    final response = await Dio().post(apiUrl, data: data);
     if (response.statusCode == 200) {
-      String access_token = response.data['access_token'];
-      print("access token:$access_token");
-      String token_expiration_date = response.data['access_token'];
+      String accessToken = response.data['access_token'];
+      print("access token:$accessToken");
+      String tokenExpirationDate = response.data['access_token'];
+      print("token expiration date:$tokenExpirationDate");
       User user = User.fromJson(response.data['user']);
       print(response.statusMessage);
       return 200;
@@ -29,7 +29,7 @@ Future<int> GoogleOuthApi(
     } else if (response.statusCode == 400) {
       print("Bad request: ${response.statusMessage}");
       return 400;
-    }  else if (response.statusCode == 500) {
+    } else if (response.statusCode == 500) {
       print("Server error: ${response.statusMessage}");
       return 500;
     } else {
@@ -44,8 +44,7 @@ Future<int> GoogleOuthApi(
       } else if (e.response!.statusCode == 409) {
         print("Conflict: ${e.response!.statusMessage}");
         return 409;
-      }
-      else if (e.response!.statusCode == 500) {
+      } else if (e.response!.statusCode == 500) {
         print("Conflict: ${e.response!.statusMessage}");
         return 500;
       }

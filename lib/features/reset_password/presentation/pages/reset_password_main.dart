@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../widgets/generic/button.dart';
-import '../widgets/generic/custom_input.dart';
-import '../widgets/generic/header.dart';
-import '../widgets/generic/validations.dart';
-import '../widgets/generic/reset_password_widgets/user_card.dart';
-import '../widgets/generic/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import '../widgets/user_card.dart';
 import '../../data/update_password.dart';
-import '../widgets/generic/reset_password_widgets/reset_password_validations.dart';
+import '../widgets/reset_password_validations.dart';
+import '../../../generic_widgets/custom_input.dart';
+import '../../../generic_widgets/header.dart';
+import '../../../generic_widgets/validations.dart';
+
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);

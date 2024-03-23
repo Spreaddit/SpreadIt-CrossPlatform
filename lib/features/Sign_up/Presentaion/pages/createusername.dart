@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/custom_input.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/header.dart';
-import 'package:spreadit_crossplatform/features/Sign_up/data/Sign_up_api.dart';
+import 'package:spreadit_crossplatform/features/Sign_up/data/sign_up_api.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 
 import '../../../generic_widgets/snackbar.dart';

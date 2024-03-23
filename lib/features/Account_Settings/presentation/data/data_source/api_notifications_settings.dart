@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
 Future<List> getData() async {
   try {
-    var response = await Dio().get(
-        'http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0/mobile/settings/contact');
+    var response = await Dio().get('$apiUrl/mobile/settings/contact');
     if (response.statusCode == 200) {
       {
         Map<String, dynamic> data = response.data['notifications'];
@@ -39,9 +39,8 @@ Future<int> updateData({required List<dynamic> updatedList}) async {
       "modNotifications": updatedList[10],
     };
     var data = {"notifications": notificationsMap};
-    final response = await Dio().put(
-        'http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0/mobile/settings/contact',
-        data: data);
+    final response =
+        await Dio().put('$apiUrl/mobile/settings/contact', data: data);
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;

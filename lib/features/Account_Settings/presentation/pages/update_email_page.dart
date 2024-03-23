@@ -39,7 +39,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
   }
 
   Future<void> fetchData() async {
-    data = await getData(); // Await the result of getData()
+    data = await getUserInfo(); // Await the result of getData()
     setState(() {
       currentEmail = data["email"];
       username = data["username"];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/pages/blocked_accounts/blocked_accounts_page.dart';
+import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
+import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import '../widgets/connected_acc_btn.dart';
 import '../widgets/settings_followers_sect.dart';
 import '../widgets/settings_gender_modal.dart';
@@ -44,7 +45,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   final List<Widget> routes = [
     UpdateEmailPage(),
-    ChangePasswordPage(),
+    ResetPassword(),
     SelectLocationPage(),
     NotificationsPageUI(),
     BlockedAccountsPage(),
@@ -110,7 +111,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.settings_outlined,
         mainText: "Change password",
-        onPressed: () => navigateToPage(routes[1]),
+        onPressed: () => Navigator.of(context)
+            .pushNamed('/settings/account-settings/change-password'),
       ),
       ToPageBtn(
         iconData: Icons.location_on_outlined,
@@ -155,7 +157,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.notifications_outlined,
         mainText: "Manage notifications",
-        onPressed: () => navigateToPage(routes[3]),
+        onPressed: () => Navigator.of(context)
+            .pushNamed('/settings/account-settings/manage-notifications'),
       ),
     ]);
 
@@ -163,7 +166,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.block_outlined,
         mainText: "Manage blocked accounts",
-        onPressed: () => navigateToPage(routes[4]),
+        onPressed: () => Navigator.of(context)
+            .pushNamed('/settings/account-settings/blocked_accounts'),
       ),
       ToPageBtn(
         iconData: Icons.volume_mute_outlined,

@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
 part 'create_a_community_service.g.dart';
 
-@RestApi(baseUrl: "http://localhost:3001/M7MDREFAAT550/Spreadit/2.0.0")
+@RestApi(baseUrl: apiUrl)
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 

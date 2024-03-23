@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:spreadit_crossplatform/main.dart';
-import '../lib/features/forget_username/presentation/widgets/generic/validations.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 
 void main() {
 

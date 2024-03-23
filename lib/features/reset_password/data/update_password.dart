@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
-const apiBase = "http://localhost:3000/M7MDREFAAT550/Spreadit/2.0.0";
+String apibase = apiUrl;
 
 Future<int> updatePassword(
     String newPassword, String currentPassword, String token) async {
   try {
     const apiRoute = "/reset-password";
-    const apiURL = apiBase + apiRoute;
-    final response = await Dio().post(apiURL, data: {
+    String apiUrl = apibase + apiRoute;
+    final response = await Dio().post(apiUrl, data: {
       "newPassword": newPassword,
       "currentPassword": currentPassword,
       "token": token

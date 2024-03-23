@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../widgets/generic/button.dart';
-import '../widgets/generic/custom_input.dart';
-import '../widgets/generic/header.dart';
-import '../widgets/generic/validations.dart';
-import '../widgets/generic/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import '../../../generic_widgets/button.dart';
+import '../../../generic_widgets/custom_input.dart';
+import '../../../generic_widgets/header.dart';
+import '../../../generic_widgets/validations.dart';
 import '../../data/post_email.dart';
-
 
 class ForgetUsername extends StatefulWidget {
   const ForgetUsername({Key? key}) : super(key: key);
@@ -15,29 +14,30 @@ class ForgetUsername extends StatefulWidget {
 }
 
 class _ForgetUsernameState extends State<ForgetUsername> {
-
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
 
   String _email = '';
-  bool isValidEmail = false ;
+  bool isValidEmail = false;
 
   void updateEmail(String email, bool validation) {
     _email = email;
-     setState(() => {isValidEmail = validation});
+    setState(() => {isValidEmail = validation});
     _emailForm.currentState!.save();
   }
 
-  void postEmail () async{
-    if(validateEmail(_email)) {
+  void postEmail() async {
+    if (validateEmail(_email)) {
       int response = await sendEmail(_email);
       if (response == 200) {
-      CustomSnackbar(content: "Your username was sent to your email").show(context);
+        CustomSnackbar(content: "Your username was sent to your email")
+            .show(context);
+      } else {
+        CustomSnackbar(
+                content:
+                    "An internal server error has occured , please try again later")
+            .show(context);
       }
-      else {
-        CustomSnackbar(content: "An internal server error has occured , please try again later").show(context);
-      }
-    }
-    else {
+    } else {
       CustomSnackbar(content: "please enter a valid email").show(context);
     }
   }
@@ -49,39 +49,36 @@ class _ForgetUsernameState extends State<ForgetUsername> {
         children: [
           Container(
             child: Header(
-              buttonText: "Help",
-              title: "Forgot username?",
-              onPressed: () {}),
+                buttonText: "Help",
+                title: "Forgot username?",
+                onPressed: () {}),
           ),
           Container(
-            margin: EdgeInsets.all(10) ,
+            margin: EdgeInsets.all(10),
             child: Text(
               "Tell us the email address associated with your SpreadIt account, and we'll send you an email with your username",
-              style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black54
-              ),
-            ),  
+              style: TextStyle(fontSize: 15, color: Colors.black54),
+            ),
           ),
           Container(
             child: CustomInput(
               formKey: _emailForm,
-              onChanged: updateEmail ,
-              label:"Email address" ,
-              placeholder: "Email address",),
+              onChanged: updateEmail,
+              label: "Email address",
+              placeholder: "Email address",
+            ),
           ),
           Spacer(),
           Container(
             child: Button(
               onPressed: postEmail,
               text: "Email me",
-              backgroundColor:  isValidEmail ? Color(0xFFFF4500) : Colors.grey,
+              backgroundColor: isValidEmail ? Color(0xFFFF4500) : Colors.grey,
               foregroundColor: Colors.white,
             ),
           )
         ],
-        ),
+      ),
     );
   }
 }
-

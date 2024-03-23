@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
-import 'package:spreadit_crossplatform/features/pages/blocked_accounts/data/get_data.dart';
-import 'package:spreadit_crossplatform/features/pages/blocked_accounts/data/put_data.dart';
+import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/data/get_blocked_accounts.dart';
+import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/data/put_blocked_accounts.dart';
 
 //testing data//
 List blockedUsers = [
@@ -41,7 +40,7 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
   }
 
   Future<void> fetchData() async {
-    var data = await getData(); // Await the result of getData()
+    var data = await getBlockedAccounts(); // Await the result of getData()
     setState(() {
       blockedAccountsList =
           data; // Update blockedAccountsList with fetched data
@@ -71,7 +70,7 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
                       setState(() {
                         blockedAccountsList.remove(e);
                       });
-                      updateData(updatedList: blockedAccountsList);
+                      updateBlockedAccounts(updatedList: blockedAccountsList);
                     },
                     child: Text('Unblock'),
                   ),

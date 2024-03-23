@@ -41,7 +41,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   }
 
   Future<void> fetchData() async {
-    data = await getData(); // Await the result of getData()
+    data = await getUserInfo(); // Await the result of getData()
     setState(() {
       username = data["username"];
     });

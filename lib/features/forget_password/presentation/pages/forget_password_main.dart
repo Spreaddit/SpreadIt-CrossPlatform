@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../widgets/generic/button.dart';
-import '../widgets/generic/custom_input.dart';
-import '../widgets/generic/header.dart';
-import '../widgets/generic/validations.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import '../../../generic_widgets/button.dart';
+import '../../../generic_widgets/custom_input.dart';
+import '../../../generic_widgets/header.dart';
+import '../../../generic_widgets/validations.dart';
 import '../../data/send_user_input.dart';
-import '../widgets/generic/snackbar.dart';
 
 
 class ForgetPassword extends StatefulWidget {

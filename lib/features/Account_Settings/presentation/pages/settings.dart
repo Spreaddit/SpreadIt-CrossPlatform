@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> fetchData() async {
-    data = await getData(); // Await the result of getData()
+    data = await getUserInfo(); // Await the result of getData()
     setState(() {
       username = data["username"];
     });
@@ -66,7 +66,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ToPageBtn(
         iconData: Icons.person_outline,
         mainText: "Account Settings for u/$username",
-        onPressed: () => navigateToPage(AccountSettingsPage()),
+        onPressed: () =>
+            Navigator.of(context).pushNamed('/settings/account-settings'),
       ),
     ]);
 

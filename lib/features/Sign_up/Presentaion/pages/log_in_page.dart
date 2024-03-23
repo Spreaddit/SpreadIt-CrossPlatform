@@ -6,7 +6,6 @@ import '../../../generic_widgets/header.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../generic_widgets/terms_and_cond_text.dart';
 import '../../data/log_in_api.dart';
-import '../../data/oauth_service.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -16,7 +15,6 @@ class LogInScreen extends StatefulWidget {
 }
 
 class LogInScreenState extends State<LogInScreen> {
-
   final GlobalKey<FormState> _usernameForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
 
@@ -26,11 +24,9 @@ class LogInScreenState extends State<LogInScreen> {
   var validusername = true;
   var validPass = true;
 
-  
   void navigateToForgetPassword(BuildContext context) {
     Navigator.of(context).pushNamed('/forgetPasswordPage');
   }
-
 
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
@@ -41,22 +37,19 @@ class LogInScreenState extends State<LogInScreen> {
       _usernameForm.currentState!.save();
       _passwordForm.currentState!.save();
     }
-   var responseCode = await logInApi(
+    var responseCode = await logInApi(
       username: _username,
       password: _userPassword,
     );
-     if (responseCode == 200) {
+    if (responseCode == 200) {
       Navigator.of(context).pushNamed('/home'); // should be Home page
-    } 
-    else if (responseCode == 400) {
-      CustomSnackbar(content: "Invalid input" ).show(context); 
-    } 
-    else if (responseCode == 404) {
-      CustomSnackbar(content: "User not found" ).show(context); 
-    } 
-     else if (responseCode == 401) {
-      CustomSnackbar(content: "Authentication failed" ).show(context); 
-    } 
+    } else if (responseCode == 400) {
+      CustomSnackbar(content: "Invalid input").show(context);
+    } else if (responseCode == 404) {
+      CustomSnackbar(content: "User not found").show(context);
+    } else if (responseCode == 401) {
+      CustomSnackbar(content: "Authentication failed").show(context);
+    }
   }
 
   void updateUsername(String username, bool validation) {
