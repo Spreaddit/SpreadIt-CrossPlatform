@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:spreadit_crossplatform/features/user_interactions/data/api.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
 enum InteractWithUsersActions { follow, unfollow, block, report }
 
