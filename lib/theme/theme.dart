@@ -12,4 +12,4 @@ ThemeData spreadItTheme = ThemeData(
       seedColor: redditOrange,
       primary: redditOrange,
       secondary: redditGrey,
-    ));
+    ),);
