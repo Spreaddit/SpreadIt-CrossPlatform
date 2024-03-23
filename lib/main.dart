@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/sort_home.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -33,7 +34,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: HomePage(),
+      home: StartUpPage(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -42,7 +43,7 @@ class SpreadIt extends StatelessWidget {
         '/create-username-page': (context) => CreateUsername(),
         '/create_a_community': (context) => CreateCommunityPage(),
         '/history': (context) => HistoryPage(),
-        '/settings': (context) => AccountSettingsPage(),
+        '/settings': (context) => SettingsPage(),
         '/settings/blocked_accounts': (context) => BlockedAccountsPage(),
         '/forgetPasswordPage': (context) => RandomPage() , 
       },
