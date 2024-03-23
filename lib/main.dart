@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
+import 'features/forget_password/presentation/pages/forget_password_main.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
 import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
@@ -30,7 +31,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: AccountSettingsPage(),
+      home: HomePage(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
