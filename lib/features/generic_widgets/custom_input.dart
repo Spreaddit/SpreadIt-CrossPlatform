@@ -73,14 +73,14 @@ class _CustomInputState extends State<CustomInput> {
             side: BorderSide(
               color: widget.validate
                   ? _isFocused
-                      ? Colors.transparent // No color when focused
+                      ? Colors.transparent
                       : _isValid
                           ? const Color.fromARGB(255, 107, 188,
                               110)
                           : const Color.fromARGB(255, 233, 88,
                               77) 
                   : Colors
-                      .transparent, // Transparent border when validation is not required
+                      .transparent, 
               width: 1.0,
             ),
           ),
@@ -132,7 +132,7 @@ class _CustomInputState extends State<CustomInput> {
             ),
           ),
         ),
-        if (widget.validate && !_isValid && !_isFocused)
+        if (widget.validate && !_isValid )
           Container(
             padding: const EdgeInsets.only(top: 5.0, left: 25),
             child: Text(
