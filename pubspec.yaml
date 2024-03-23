@@ -56,6 +56,7 @@ flutter:
   assets:
   - assets/images/LogoSpreadIt.png
   - assets/images/GoogleLogo.png
+  - assets/images/UserAvatar.png
   - assets/images/Empty_Toast.png
   - assets/images/upvoteicon.png
   - assets/images/downvoteicon.png

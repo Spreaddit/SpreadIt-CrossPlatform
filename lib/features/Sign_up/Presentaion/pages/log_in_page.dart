@@ -26,13 +26,11 @@ class LogInScreenState extends State<LogInScreen> {
   var validusername = true;
   var validPass = true;
 
-  Future<void> navigateToForgetPassword(BuildContext context) async {
-    /////////////////////////////////////////////////// changed when integrating cross ////////////////////////////////////////////////////
-    bool signedIn = await signOutWithGoogle(context);
-    if (signedIn) {
-      Navigator.of(context).pushNamed('/start-up-page');
-    }
+  
+  void navigateToForgetPassword(BuildContext context) {
+    Navigator.of(context).pushNamed('/forgetPasswordPage');
   }
+
 
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
