@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/sort_home.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
@@ -13,7 +14,6 @@ import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -21,6 +21,7 @@ void main() async {
   );
   runApp(SpreadIt());
 }
+
 class SpreadIt extends StatelessWidget {
   SpreadIt({Key? key}) : super(key: key);
 
@@ -29,7 +30,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: StartUpPage(),
+      home: AccountSettingsPage(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
