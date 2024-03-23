@@ -6,6 +6,8 @@ import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
+import 'features/reset_password/presentation/pages/reset_password_main.dart';
+import 'features/reset_password/presentation/pages/random_page.dart';
 import 'features/forget_password/presentation/pages/forget_password_main.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
@@ -42,6 +44,7 @@ class SpreadIt extends StatelessWidget {
         '/history': (context) => HistoryPage(),
         '/settings': (context) => AccountSettingsPage(),
         '/settings/blocked_accounts': (context) => BlockedAccountsPage(),
+        '/forgetPasswordPage': (context) => RandomPage() , 
       },
     );
   }
