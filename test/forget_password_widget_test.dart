@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:spreadit_crossplatform/features/forget_password/presentation/pages/forget_password_main.dart';
 
-import 'package:spreadit_crossplatform/main.dart';
-
-void main(){
+void main() {
   testWidgets('forget password widget test', (WidgetTester tester) async {
-    await tester.pumpWidget(SpreadIt());
+    await tester.pumpWidget(ForgetPassword());
+    await tester.pumpAndSettle();
     var textField = find.byType(TextField);
     expect(textField, findsOneWidget);
     await tester.enterText(textField, "chz@gmail.com");
@@ -14,7 +14,5 @@ void main(){
     expect(button, findsOneWidget);
     await tester.tap(button);
     await tester.pumpAndSettle();
-
-  }
-  );
+  });
 }
