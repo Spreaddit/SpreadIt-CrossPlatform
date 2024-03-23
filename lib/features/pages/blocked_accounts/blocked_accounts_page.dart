@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts/data/get_data.dart';
 import 'package:spreadit_crossplatform/features/pages/blocked_accounts/data/put_data.dart';
 
@@ -49,22 +50,7 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
 
   Widget build(context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Blocked Accounts',
-            style: TextStyle(
-                fontSize: 22, color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
-      ),
+      appBar: SettingsAppBar(title: "Blocked Accounts"),
       body: blockedAccountsList.isEmpty
           ? Center(
               child: Image.asset('assets/images/Empty_Toast.png', width: 200))

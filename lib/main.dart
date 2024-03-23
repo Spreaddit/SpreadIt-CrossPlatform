@@ -11,6 +11,8 @@ import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,6 @@ void main() async {
   );
   runApp(SpreadIt());
 }
-
 class SpreadIt extends StatelessWidget {
   SpreadIt({Key? key}) : super(key: key);
 
@@ -37,6 +38,7 @@ class SpreadIt extends StatelessWidget {
         '/create-username-page': (context) => CreateUsername(),
         '/create_a_community': (context) => CreateCommunityPage(),
         '/history': (context) => HistoryPage(),
+        '/settings': (context) => AccountSettingsPage(),
         '/settings/blocked_accounts': (context) => BlockedAccountsPage(),
       },
     );

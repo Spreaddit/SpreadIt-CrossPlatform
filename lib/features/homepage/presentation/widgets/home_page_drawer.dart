@@ -33,7 +33,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.settings_outlined,
               'text': 'Settings',
-              'route': '/logout'
+              'route': '/settings'
             }
           ].map((Map<String, dynamic> item) {
             return ListTile(

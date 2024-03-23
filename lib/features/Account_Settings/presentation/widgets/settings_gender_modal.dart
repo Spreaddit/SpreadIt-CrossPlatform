@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'settings_btn_bottom_sheet.dart';
+import '../data/data_source/api_basic_settings_data.dart';
+import '../../../generic_widgets/snackbar.dart';
 
 class SelectGender extends StatefulWidget {
   SelectGender({Key? key}) : super(key: key);
@@ -16,6 +18,23 @@ class SelectGender extends StatefulWidget {
 class _SelectGenderState extends State<SelectGender> {
   String? _selectedGender = "";
   String? _tempSelectedGender = "";
+  late Map<String, dynamic> data;
+  int result = 1;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      fetchData();
+    });
+  }
+
+  Future<void> fetchData() async {
+    data = await getBasicData(); // Await the result of getData()
+    setState(() {
+      _selectedGender =
+          data["gender"]; // Update blockedAccountsList with fetched data
+    });
+  }
 
   void setGenderModal() {
     showModalBottomSheet(
@@ -67,29 +86,21 @@ class _SelectGenderState extends State<SelectGender> {
                                 color: Color.fromARGB(255, 4, 75, 133),
                               ),
                             ),
-                            onPressed: () {
-                              _selectedGender = _tempSelectedGender;
-                              setState(() {
-                                _selectedGender = _tempSelectedGender;
-                              });
-                              final snackBar = SnackBar(
-                                content: Text(
-                                  'Gender Saved!',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 20),
-                                backgroundColor: Colors.black,
-                                duration: Duration(seconds: 2),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+                            onPressed: () async {
+                              var oldGender = _tempSelectedGender;
+                              data["gender"] = _tempSelectedGender;
+                              var result = await updateBasicData(updatedData: data);
+                              if (result != 0) {
+                                setState(() {
+                                  _selectedGender = data["gender"];
+                                });
+                                CustomSnackbar(content: "Gender Saved!")
+                                    .show(context);
+                              } else {
+                                data["gender"] = oldGender;
+                                CustomSnackbar(content: "Couldn't Save Gender")
+                                    .show(context);
+                              }
                               Navigator.pop(context);
                             },
                           ),

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ToPageBtn extends StatefulWidget {
-  const ToPageBtn(
-      {Key? key,
-      required this.iconData,
-      required this.mainText,
-      required this.onPressed,
-      this.secondaryIconData = Icons.arrow_forward,
-      this.secondaryText = "",
-      this.tertiaryText = ""})
-      : super(key: key);
+  const ToPageBtn({
+    Key? key,
+    required this.iconData,
+    required this.mainText,
+    required this.onPressed,
+    this.secondaryIconData = Icons.arrow_forward,
+    this.secondaryText = "",
+    this.tertiaryText = "",
+  }) : super(key: key);
 
   final IconData iconData;
   final IconData secondaryIconData;

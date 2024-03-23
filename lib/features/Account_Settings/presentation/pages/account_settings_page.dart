@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pages/dummy_page.dart';
+import 'package:spreadit_crossplatform/features/pages/blocked_accounts/blocked_accounts_page.dart';
 import '../widgets/connected_acc_btn.dart';
 import '../widgets/settings_followers_sect.dart';
 import '../widgets/settings_gender_modal.dart';
@@ -7,32 +7,11 @@ import '../widgets/settings_app_bar.dart';
 import '../widgets/settings_btn_to_page.dart';
 import '../widgets/settings_section_body.dart';
 import '../widgets/settings_section_title.dart';
-import '../pages/update_email.dart';
-import '../pages/change_password.dart';
-import '../pages/location_select.dart';
+import 'update_email_page.dart';
+import 'change_password_page.dart';
+import 'location_select_page.dart';
 import '../pages/manage_notifications_page.dart';
-
-void main() {
-  runApp(const HomeAccountSettingsPage());
-}
-
-class HomeAccountSettingsPage extends StatefulWidget {
-  const HomeAccountSettingsPage({Key? key}) : super(key: key);
-
-  @override
-  State<HomeAccountSettingsPage> createState() =>
-      _HomeAccountSettingsPageState();
-}
-
-class _HomeAccountSettingsPageState extends State<HomeAccountSettingsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: AccountSettingsPage(),
-    );
-  }
-}
+import '../data/data_source/api_basic_settings_data.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   AccountSettingsPage({Key? key}) : super(key: key);
@@ -43,13 +22,32 @@ class AccountSettingsPage extends StatefulWidget {
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
   final String title = "Account Settings";
+  late Map<String, dynamic> data;
+  String currentEmail = "";
+  String currentLocation = "";
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      fetchData();
+    });
+  }
+
+  Future<void> fetchData() async {
+    data = await getBasicData(); // Await the result of getData()
+    setState(() {
+      currentEmail = data["email"];
+      currentLocation = data["country"];
+    });
+  }
 
   final List<Widget> routes = [
     UpdateEmailPage(),
     ChangePasswordPage(),
     SelectLocationPage(),
     NotificationsPageUI(),
-    DummyPage(),
+    BlockedAccountsPage(),
   ];
 
   @override
@@ -85,8 +83,29 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.settings_outlined,
         mainText: "Update email address",
-        secondaryText: "galalmohamed2003@gmail.com",
-        onPressed: () => navigateToPage(routes[0]),
+        secondaryText: currentEmail,
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 200),
+              reverseTransitionDuration: Duration(milliseconds: 100),
+              pageBuilder: (_, __, ___) => routes[0],
+              transitionsBuilder: (_, animation, __, child) {
+                return ScaleTransition(
+                  scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.fastOutSlowIn,
+                    ),
+                  ),
+                  child: child,
+                );
+              },
+            ),
+          );
+          await fetchData();
+        },
       ),
       ToPageBtn(
         iconData: Icons.settings_outlined,
@@ -96,10 +115,31 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.location_on_outlined,
         mainText: "Location customization",
-        secondaryText: "Use approximate location (based on IP)",
+        secondaryText: currentLocation,
         tertiaryText:
             "Specify a location to customize your recommendations and feed. Reddit does not track your precise geolocation data. Learn more",
-        onPressed: () => navigateToPage(routes[2]),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 200),
+              reverseTransitionDuration: Duration(milliseconds: 100),
+              pageBuilder: (_, __, ___) => routes[2],
+              transitionsBuilder: (_, animation, __, child) {
+                return ScaleTransition(
+                  scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.fastOutSlowIn,
+                    ),
+                  ),
+                  child: child,
+                );
+              },
+            ),
+          );
+          await fetchData();
+        },
       ),
       SelectGender(),
     ]);
@@ -108,9 +148,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ConnectAccBtn(
         iconData: Icons.account_circle_outlined,
         accountName: "Google",
-        onPressed: () {
-          print("object");
-        },
       )
     ]);
 
@@ -131,7 +168,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.volume_mute_outlined,
         mainText: "Manage muted communities",
-        onPressed: () => navigateToPage(routes[4]),
+        onPressed: () {},
       ),
       SwitchSection(),
     ]);
