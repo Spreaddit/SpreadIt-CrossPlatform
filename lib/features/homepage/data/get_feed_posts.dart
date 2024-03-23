@@ -32,8 +32,31 @@ Future<List<Post>> getFeedPosts(PostCategories category) async {
   try {
     String requestURL = apiUrl + postCategoryEndpoint(category);
     final response = await Dio().get(requestURL);
-    return (response.data as List).map((x) => Post.fromJson(x)).toList();
-  } catch (error, stacktrace) {
-    throw Exception("Exception occured: $error stackTrace: $stacktrace");
+    if (response.statusCode == 200) {
+      return (response.data as List).map((x) => Post.fromJson(x)).toList();
+    } else if (response.statusCode == 409) {
+      print("Conflict: ${response.statusMessage}");
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
+    } else {
+      print("Internal Server Error: ${response.statusCode}");
+    }
+    return [];
+  } on DioException catch (e) {
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+      } else if (e.response!.statusCode == 409) {
+        print("Conflict: ${e.response!.statusMessage}");
+      } else {
+        print("Internal Server Error: ${e.response!.statusMessage}");
+      }
+      return [];
+    }
+    rethrow;
+  } catch (e) {
+    //TO DO: show error message to user
+    print("Error occurred: $e");
+    return [];
   }
 }

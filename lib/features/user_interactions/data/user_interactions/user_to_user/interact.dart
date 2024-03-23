@@ -27,12 +27,26 @@ void interactWithUser(
     if (response.statusCode == 200) {
       //TO DO: implement logic needed to re-render UI
       print(response.statusMessage);
+    } else if (response.statusCode == 404) {
+      print("Not Found: ${response.statusMessage}");
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
     } else {
-      //TO DO: show error message to user
-      print(response.statusCode);
+      print("Internal Server Error: ${response.statusCode}");
     }
+  } on DioException catch (e) {
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+      } else if (e.response!.statusCode == 404) {
+        print("Not Found: ${e.response!.statusMessage}");
+      } else {
+        print("Internal Server Error: ${e.response!.statusMessage}");
+      }
+    }
+    rethrow;
   } catch (e) {
     //TO DO: show error message to user
-    print(e);
+    print("Error occurred: $e");
   }
 }

@@ -36,7 +36,7 @@ Future<int> logInApi({
       print("Unexpected status code: ${response.statusCode}");
       return 409;
     }
-  } on DioError catch (e) {
+  } on DioException catch (e) {
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         print("Bad request: ${e.response!.statusMessage}");

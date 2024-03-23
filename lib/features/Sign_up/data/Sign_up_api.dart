@@ -35,7 +35,7 @@ Future<int> signUpApi({
       print("Unexpected status code: ${response.statusCode}");
       return 404;
     }
-  } on DioError catch (e) {
+  } on DioException catch (e) {
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         print("Bad request: ${e.response!.statusMessage}");
