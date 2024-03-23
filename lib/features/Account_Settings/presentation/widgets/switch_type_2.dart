@@ -6,6 +6,7 @@ class SwitchBtn2 extends StatefulWidget {
     required this.filledIconData,
     required this.outlinedIconData,
     required this.mainText,
+    required this.currentLightVal,
     required this.onPressed,
     this.switchActiveClr = const Color.fromARGB(255, 7, 116, 205),
     this.thumbActiveClr = Colors.white,
@@ -14,6 +15,7 @@ class SwitchBtn2 extends StatefulWidget {
   final IconData filledIconData;
   final IconData outlinedIconData;
   final Function onPressed;
+  final bool currentLightVal;
   final Color switchActiveClr;
   final Color thumbActiveClr;
   final String mainText;
@@ -23,7 +25,7 @@ class SwitchBtn2 extends StatefulWidget {
 }
 
 class SwitchBtn2State extends State<SwitchBtn2> {
-  bool lightVal = false;
+  late bool lightVal = widget.currentLightVal;
   late IconData iconData;
   bool getCurrentState() {
     return lightVal;
@@ -31,14 +33,15 @@ class SwitchBtn2State extends State<SwitchBtn2> {
 
   void changeState() {
     setState(() {
-      lightVal = !lightVal;
+      widget.onPressed();
       iconData = (lightVal)? widget.filledIconData : widget.outlinedIconData;
     });
-    widget.onPressed();
+    print(lightVal);
   }
 
   @override
   Widget build(BuildContext context) {
+    lightVal = widget.currentLightVal;
     iconData = (lightVal)? widget.filledIconData : widget.outlinedIconData;
     return TextButton(
       onPressed: (() {

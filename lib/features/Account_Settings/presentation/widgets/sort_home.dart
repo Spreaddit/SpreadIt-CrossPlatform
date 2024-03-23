@@ -1,42 +1,34 @@
 import 'package:flutter/material.dart';
 import 'settings_btn_bottom_sheet.dart';
-import '../data/data_source/api_basic_settings_data.dart';
-import '../../../generic_widgets/snackbar.dart';
 
-class SelectGender extends StatefulWidget {
-  SelectGender({Key? key}) : super(key: key);
+class SortHome extends StatefulWidget {
+  SortHome({Key? key}) : super(key: key);
 
-  final List<String> genders = [
-    "Man",
-    "Woman",
+  final List<String> homeSort = [
+    "best",
+    "hot",
+    "newposts",
+    "top",
+    "random",
+    "recent",
   ];
 
   @override
-  State<SelectGender> createState() => _SelectGenderState();
+  State<SortHome> createState() => _SortHomeState();
 }
 
-class _SelectGenderState extends State<SelectGender> {
-  String? _selectedGender = "";
-  String? _tempSelectedGender = "";
+class _SortHomeState extends State<SortHome> {
+  String? _selectedHomeSort = "";
+  String? _tempSelectedHomeSort = "";
   late Map<String, dynamic> data;
   int result = 1;
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
+    setState(() {});
   }
 
-  Future<void> fetchData() async {
-    data = await getBasicData(); // Await the result of getData()
-    setState(() {
-      _selectedGender =
-          data["gender"]; // Update blockedAccountsList with fetched data
-    });
-  }
-
-  void setGenderModal() {
+  void setHomeSort() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -64,7 +56,7 @@ class _SelectGenderState extends State<SelectGender> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Gender',
+                            'Sort Home By',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -87,20 +79,9 @@ class _SelectGenderState extends State<SelectGender> {
                               ),
                             ),
                             onPressed: () async {
-                              var oldGender = _tempSelectedGender;
-                              data["gender"] = _tempSelectedGender;
-                              var result = await updateBasicData(updatedData: data);
-                              if (result != 0) {
-                                setState(() {
-                                  _selectedGender = data["gender"];
-                                });
-                                CustomSnackbar(content: "Gender Saved!")
-                                    .show(context);
-                              } else {
-                                data["gender"] = oldGender;
-                                CustomSnackbar(content: "Couldn't Save Gender")
-                                    .show(context);
-                              }
+                              setState(() {
+                                _selectedHomeSort = _tempSelectedHomeSort;
+                              });
                               Navigator.pop(context);
                             },
                           ),
@@ -117,7 +98,7 @@ class _SelectGenderState extends State<SelectGender> {
                   Expanded(
                     child: Center(
                       child: Text(
-                        "This information may be used to improve your recommendations and ads.",
+                        "This information may be used to improve your recommendations",
                         style: TextStyle(
                           fontSize: 15,
                           color: const Color.fromARGB(255, 109, 109, 109),
@@ -136,7 +117,7 @@ class _SelectGenderState extends State<SelectGender> {
                     title: Transform.translate(
                       offset: const Offset(-12, 0),
                       child: Text(
-                        widget.genders[0],
+                        widget.homeSort[0],
                         style: TextStyle(
                           fontSize: 17.5,
                         ),
@@ -145,11 +126,11 @@ class _SelectGenderState extends State<SelectGender> {
                     contentPadding: EdgeInsets.zero,
                     activeColor: MaterialStateColor.resolveWith(
                         (states) => Colors.black),
-                    value: widget.genders[0],
-                    groupValue: _tempSelectedGender,
+                    value: widget.homeSort[0],
+                    groupValue: _tempSelectedHomeSort,
                     onChanged: (value) {
                       setModalState(() {
-                        _tempSelectedGender = value;
+                        _tempSelectedHomeSort = value;
                       });
                     },
                   ),
@@ -158,7 +139,7 @@ class _SelectGenderState extends State<SelectGender> {
                     title: Transform.translate(
                       offset: const Offset(-12, 0),
                       child: Text(
-                        widget.genders[1],
+                        widget.homeSort[1],
                         style: TextStyle(
                           fontSize: 17.5,
                         ),
@@ -167,11 +148,77 @@ class _SelectGenderState extends State<SelectGender> {
                     contentPadding: EdgeInsets.zero,
                     activeColor: MaterialStateColor.resolveWith(
                         (states) => Colors.black),
-                    value: widget.genders[1],
-                    groupValue: _tempSelectedGender,
+                    value: widget.homeSort[1],
+                    groupValue: _tempSelectedHomeSort,
                     onChanged: (value) {
                       setModalState(() {
-                        _tempSelectedGender = value;
+                        _tempSelectedHomeSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    dense: true,
+                    title: Transform.translate(
+                      offset: const Offset(-12, 0),
+                      child: Text(
+                        widget.homeSort[2],
+                        style: TextStyle(
+                          fontSize: 17.5,
+                        ),
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.black),
+                    value: widget.homeSort[2],
+                    groupValue: _tempSelectedHomeSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        _tempSelectedHomeSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    dense: true,
+                    title: Transform.translate(
+                      offset: const Offset(-12, 0),
+                      child: Text(
+                        widget.homeSort[3],
+                        style: TextStyle(
+                          fontSize: 17.5,
+                        ),
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.black),
+                    value: widget.homeSort[3],
+                    groupValue: _tempSelectedHomeSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        _tempSelectedHomeSort = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    dense: true,
+                    title: Transform.translate(
+                      offset: const Offset(-12, 0),
+                      child: Text(
+                        widget.homeSort[4],
+                        style: TextStyle(
+                          fontSize: 17.5,
+                        ),
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.black),
+                    value: widget.homeSort[4],
+                    groupValue: _tempSelectedHomeSort,
+                    onChanged: (value) {
+                      setModalState(() {
+                        _tempSelectedHomeSort = value;
                       });
                     },
                   ),
@@ -189,11 +236,11 @@ class _SelectGenderState extends State<SelectGender> {
     return Builder(builder: (context) {
       return BottomModalBtn(
         iconData: Icons.person_outline,
-        mainText: "Gender",
-        selection: _selectedGender,
+        mainText: "Sort Home By",
+        selection: _selectedHomeSort,
         onPressed: () {
-          _tempSelectedGender = _selectedGender;
-          setGenderModal();
+          _tempSelectedHomeSort = _selectedHomeSort;
+          setHomeSort();
         },
       );
     });

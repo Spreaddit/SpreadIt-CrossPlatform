@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/sort_home.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
@@ -11,6 +12,7 @@ import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +30,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: StartUpPage(),
+      home: AccountSettingsPage(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -37,6 +39,7 @@ class SpreadIt extends StatelessWidget {
         '/create-username-page': (context) => CreateUsername(),
         '/create_a_community': (context) => CreateCommunityPage(),
         '/history': (context) => HistoryPage(),
+        '/settings': (context) => AccountSettingsPage(),
         '/settings/blocked_accounts': (context) => BlockedAccountsPage(),
       },
     );
