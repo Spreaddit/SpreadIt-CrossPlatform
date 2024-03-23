@@ -21,7 +21,7 @@ void interactWithUser(
     required InteractWithUsersActions action,
     String? reportReason}) async {
   try {
-    String requestURL = apiURL() + interactionType(action);
+    String requestURL = apiUrl + interactionType(action);
     var data = {'userId': userId, 'reason': reportReason};
     final response = await Dio().post(requestURL, data: data);
     if (response.statusCode == 200) {
