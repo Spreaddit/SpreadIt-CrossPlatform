@@ -48,12 +48,8 @@ class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
     });
   }
 
-  Future<void> navigateToForgetPassword(BuildContext context) async {
-    /////////////////////////////////////////////////// changed when integrating cross ////////////////////////////////////////////////////
-    bool signedIn = await signOutWithGoogle(context);
-    if (signedIn) {
-      Navigator.of(context).pushNamed('/start-up-page');
-    }
+  void navigateToForgetPassword(BuildContext context) {
+    Navigator.of(context).pushNamed('/forget-password');
   }
 
   void updatePassword(String password, bool validation) {

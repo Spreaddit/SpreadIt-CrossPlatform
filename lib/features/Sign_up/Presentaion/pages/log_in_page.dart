@@ -25,7 +25,11 @@ class LogInScreenState extends State<LogInScreen> {
   var validPass = true;
 
   void navigateToForgetPassword(BuildContext context) {
-    Navigator.of(context).pushNamed('/forgetPasswordPage');
+    Navigator.of(context).pushNamed('/forget-password');
+  }
+
+  void navigateToForgetUsername(BuildContext context) {
+    Navigator.of(context).pushNamed('/forget-username');
   }
 
   void navigateToSignUp(BuildContext context) {
@@ -100,20 +104,39 @@ class LogInScreenState extends State<LogInScreen> {
                     placeholder: 'Password',
                     obscureText: true,
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(20),
-                    alignment: Alignment.topLeft,
-                    child: TextButton(
-                      onPressed: () => navigateToForgetPassword(context),
-                      child: Text(
-                        'Forgot Password?',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFFFF4500),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(20),
+                        alignment: Alignment.topLeft,
+                        child: TextButton(
+                          onPressed: () => navigateToForgetPassword(context),
+                          child: Text(
+                            'Forgot Password?',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFFFF4500),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                      Container(
+                        margin: const EdgeInsets.all(20),
+                        alignment: Alignment.topLeft,
+                        child: TextButton(
+                          onPressed: () => navigateToForgetUsername(context),
+                          child: Text(
+                            'Forgot Username?',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFFFF4500),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

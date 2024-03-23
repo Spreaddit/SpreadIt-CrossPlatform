@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -45,7 +46,8 @@ class SpreadIt extends StatelessWidget {
         '/settings/account-settings': (context) => AccountSettingsPage(),
         '/settings/account-settings/blocked_accounts': (context) =>
             BlockedAccountsPage(),
-        '/forgetPasswordPage': (context) => ForgetPassword(),
+        '/forget-password': (context) => ForgetPassword(),
+        '/forget-username': (context) => ForgetUsername(),
         '/settings/account-settings/manage-notifications': (context) =>
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>

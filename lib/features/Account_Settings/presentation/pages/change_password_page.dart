@@ -47,12 +47,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     });
   }
 
-  Future<void> navigateToForgetPassword(BuildContext context) async {
-    /////////////////////////////////////////////////// changed when integrating cross ////////////////////////////////////////////////////
-    bool signedIn = await signOutWithGoogle(context);
-    if (signedIn) {
-      Navigator.of(context).pushNamed('/start-up-page');
-    }
+  void navigateToForgetPassword(BuildContext context) {
+    Navigator.of(context).pushNamed('/forget-password');
   }
 
   void updateCurrentPassword(String password, bool validation) {
@@ -78,7 +74,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   void updateValidStatus() {
     setState(() {
-      _validState = _newUserPassword == _confirmNewUserPassword && _newUserPassword.isNotEmpty && _newUserPassword.length >= 8;
+      _validState = _newUserPassword == _confirmNewUserPassword &&
+          _newUserPassword.isNotEmpty &&
+          _newUserPassword.length >= 8;
     });
   }
 
@@ -92,8 +90,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       return;
     }
     _newPasswordForm.currentState!.save();
-    var responseCode =
-        await postData(enteredPassowrd: {"enteredPassword": _currentUserPassword});
+    var responseCode = await postData(
+        enteredPassowrd: {"enteredPassword": _currentUserPassword});
     if (responseCode == 0) {
       CustomSnackbar(content: "Error").show(context);
     } else if (responseCode == 401) {

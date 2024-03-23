@@ -17,7 +17,7 @@ class StartUpPage extends StatelessWidget {
 
   Future<void> handleSignIn(BuildContext context) async {
     String access_token = await signInWithGoogle(context);
-    var responseCode = await GoogleOuthApi(
+    var responseCode = await googleOAuthApi(
       googleToken: access_token,
     );
     if (responseCode == 200) {

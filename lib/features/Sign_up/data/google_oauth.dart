@@ -5,7 +5,7 @@ import '../../user.dart';
 
 String apibase = apiUrl;
 
-Future<int> GoogleOuthApi({
+Future<int> googleOAuthApi({
   required String googleToken,
 }) async {
   try {

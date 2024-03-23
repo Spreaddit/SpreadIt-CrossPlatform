@@ -3,22 +3,6 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/data/get_blocked_accounts.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/data/put_blocked_accounts.dart';
 
-//testing data//
-List blockedUsers = [
-  {
-    'name': 'rehab',
-    'icon': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-  },
-  {
-    'name': 'mimo',
-    'icon': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
-  },
-  {
-    'name': 'fofa',
-    'icon': 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
-  }
-];
-
 class BlockedAccountsPage extends StatefulWidget {
   const BlockedAccountsPage({Key? key}) : super(key: key);
   @override
@@ -28,7 +12,6 @@ class BlockedAccountsPage extends StatefulWidget {
 }
 
 class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
-  //Data Membere//
   List<dynamic> blockedAccountsList = [];
 
   @override
@@ -40,13 +23,13 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
   }
 
   Future<void> fetchData() async {
-    var data = await getBlockedAccounts(); // Await the result of getData()
+    var data = await getBlockedAccounts();
     setState(() {
-      blockedAccountsList =
-          data; // Update blockedAccountsList with fetched data
+      blockedAccountsList = data;
     });
   }
 
+  @override
   Widget build(context) {
     return Scaffold(
       appBar: SettingsAppBar(title: "Blocked Accounts"),
@@ -54,7 +37,7 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
           ? Center(
               child: Image.asset('assets/images/Empty_Toast.png', width: 200))
           : ListView(
-              shrinkWrap: true, //blockedUsers.map((e)
+              shrinkWrap: true,
               children: blockedAccountsList.map((e) {
                 print(e['icon']);
                 return ListTile(
