@@ -4,38 +4,48 @@ import 'package:spreadit_crossplatform/features/create_a_community/presentation/
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 
 void main() {
-  testWidgets('Create a community page test', (WidgetTester tester) async {
-    // Build the CreateCommunityPage in the widget tester
+  testWidgets('Initial state of CreateCommunityPage',
+      (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(home: CreateCommunityPage()));
 
-    // Verify the presence of certain widgets
     expect(find.text('18+ community'), findsOneWidget);
     expect(find.text('Create community'), findsOneWidget);
     expect(find.byType(SwitchListTile), findsOneWidget);
     expect(find.byType(Button), findsOneWidget);
+  });
 
-    // Tap the '18+ community' switch
+  testWidgets('Switch changes state when tapped', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: CreateCommunityPage()));
+
     await tester.tap(find.byType(SwitchListTile));
     await tester.pump();
 
-    // Verify the switch changes state when tapped
     SwitchListTile switchListTile = tester.widget(find.byType(SwitchListTile));
     expect(switchListTile.value, isTrue);
+  });
 
-    // Tap the TextButton to open the BottomSheet
-    await tester.tap(find.byType(TextButton));
-    await tester.pumpAndSettle(); // Wait for the BottomSheet to fully open
+  testWidgets('BottomSheet is displayed when TextButton is tapped',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: CreateCommunityPage()));
 
-    // Verify the BottomSheet is displayed
+    await tester.tap(find.byKey(Key('communityTypeGestureDetector')));
+    await tester.pumpAndSettle();
+
     expect(find.byType(ModalBarrier), findsWidgets);
+  });
 
-    // Tap the first option in the BottomSheet
-    await tester.tap(find.text('Private'));
-    await tester.pumpAndSettle(); // Wait for the BottomSheet to fully close
+  testWidgets('TextButton text changes when option is selected',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(home: CreateCommunityPage()));
 
-    // Verify the TextButton's text has changed
-    TextButton button = tester.widget(find.byType(TextButton));
-    expect(button.child, isA<Text>());
-    expect((button.child as Text).data, 'Private');
+    await tester.tap(find.byKey(Key('communityTypeGestureDetector')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(' Private '));
+    await tester.pumpAndSettle();
+
+    Text communityTypeText =
+        tester.widget(find.byKey(Key('communityTypeText')));
+    expect(communityTypeText.data, 'Private');
   });
 }

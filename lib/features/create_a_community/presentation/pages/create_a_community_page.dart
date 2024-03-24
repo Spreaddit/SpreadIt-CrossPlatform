@@ -106,6 +106,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
           Container(
             alignment: Alignment.centerLeft,
             child: GestureDetector(
+              key: Key('communityTypeGestureDetector'),
               onTap: _onCommunityTypePress,
               child: Padding(
                 padding: EdgeInsets.only(right: 20.0, left: 20.0),
@@ -121,6 +122,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
                                 .split('\n')
                                 .first
                                 .trim(),
+                            key: Key('communityTypeText'),
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
