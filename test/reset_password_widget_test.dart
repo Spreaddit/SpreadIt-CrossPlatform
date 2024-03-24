@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 
-import 'package:spreadit_crossplatform/main.dart';
-
 void main() {
   testWidgets('reset password widget test', (WidgetTester tester) async {
     await tester.pumpWidget(ResetPassword());
