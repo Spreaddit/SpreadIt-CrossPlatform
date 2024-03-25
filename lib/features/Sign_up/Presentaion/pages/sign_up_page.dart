@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../../generic_widgets/button.dart';
 import '../../../generic_widgets/custom_input.dart';
 import '../../../generic_widgets/header.dart';
 import '../../../generic_widgets/terms_and_cond_text.dart';
 import '../../../generic_widgets/validations.dart';
-
 /// The sign-up screen where users can register with their email and password.
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -14,28 +14,22 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class SignUpScreenState extends State<SignUpScreen> {
+
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
-
-  late String _userEmail;
-  late String _userPassword;
+  
+  var _userEmail = '';
+  var _userPassword = '';
   bool _validPassAndEmail = false;
-  bool validEmail = false;
-  bool validPass = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _userEmail = '';
-    _userPassword = '';
-  }
-
+  var validEmail = false;
+  var validPass = false;
   /// Navigates to the login page.
+
   void navigateToLogin(BuildContext context) {
     Navigator.of(context).pushNamed('/log-in-page');
   }
 
-  /// Navigates to the create username page after validating email and password.
+/// Navigates to the create username page after validating email and password.
   void navigateToCreateUsernamePage(BuildContext context) {
     if (validEmail && validPass) {
       _emailForm.currentState!.save();
@@ -50,7 +44,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  /// Callback function to update the email and its validation status.
+/// Callback function to update the email and its validation status.
   void updateEmail(String email, bool validation) {
     _userEmail = email;
     validEmail = validation;
@@ -58,7 +52,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     updateValidStatus();
   }
 
-  /// Callback function to update the password and its validation status.
+/// Callback function to update the password and its validation status.
   void updatePassword(String password, bool validation) {
     _userPassword = password;
     validPass = validation;
@@ -66,7 +60,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     updateValidStatus();
   }
 
-  /// Updates the validation status for both email and password.
+/// Updates the validation status for both email and password.
   void updateValidStatus() {
     setState(() {
       _validPassAndEmail = validPass && validEmail;
