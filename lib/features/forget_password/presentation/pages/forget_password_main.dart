@@ -6,6 +6,9 @@ import '../../../generic_widgets/header.dart';
 import '../../../generic_widgets/validations.dart';
 import '../../data/send_user_input.dart';
 
+/// This class is responsible for rendering the [ForgetPassword] page.
+/// It contains an input field in which a user writes his `emailOrUsername` and a button to send this input data to the backend.
+
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key? key}) : super(key: key);
