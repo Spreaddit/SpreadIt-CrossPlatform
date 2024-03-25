@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
+/// This Library is responsible for handling post interactions
+/// (e.g., votes, comments and shares)
+
+/// This widget is responsible for the display
+/// and state handling of an upvote button
+/// in a [PostWidget] card
 class UpVoteButton extends HookWidget {
   void upVote() {
     print("upvoted");
@@ -22,6 +29,9 @@ class UpVoteButton extends HookWidget {
   }
 }
 
+/// This widget is responsible for the display
+/// and state handling of a downvote button
+/// in a [PostWidget] card
 class DownVoteButton extends HookWidget {
   void downVote() {
     print("downvotes");
@@ -41,6 +51,9 @@ class DownVoteButton extends HookWidget {
   }
 }
 
+/// This widget is responsible for the display
+/// of [UpVoteButton] and [DownVoteButton]
+/// and the total vote count (upvotes - down votes)
 class VoteButton extends HookWidget {
   int initialVotesCount; // TODO: to be changed to a state
   VoteButton({
@@ -69,6 +82,9 @@ class VoteButton extends HookWidget {
   }
 }
 
+/// This widget is responsible for the display
+/// and state handling of a share button/share count
+/// in a [PostWidget] card
 class ShareButton extends HookWidget {
   int initialSharesCount; // TODO: to be changed to a state
   ShareButton({
@@ -106,6 +122,9 @@ class ShareButton extends HookWidget {
   }
 }
 
+/// This widget is responsible for the display
+/// and state handling of a comment button/comment count
+/// in a [PostWidget] card
 class CommentButton extends HookWidget {
   int initialCommensCount; // TODO: to be changed to a state
   CommentButton({

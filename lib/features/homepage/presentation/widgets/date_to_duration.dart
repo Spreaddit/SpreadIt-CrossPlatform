@@ -1,5 +1,12 @@
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:time_machine/time_machine.dart';
 
+/// This function takes a [DateTime] as parameter and returns how
+/// long ago (seconds/days/weeks/etc...) this date took place.
+/// The returned variable is a formatted, read-to-display string,
+/// suitable for the post card duration label in the [PostWidget] card
+/// (e.g., 1 year ago is returned as "1y")
+///
 String dateToDuration(DateTime date) {
   final currentDate = LocalDateTime.dateTime(DateTime.now());
   final duration = currentDate.periodSince(LocalDateTime.dateTime(date));

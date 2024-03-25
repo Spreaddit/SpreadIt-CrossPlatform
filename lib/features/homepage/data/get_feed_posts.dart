@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 
+/// describes the way reddit posts are categorized and/or sorted
 enum PostCategories {
   best,
   hot,
@@ -11,6 +12,8 @@ enum PostCategories {
   recent,
 }
 
+/// takes [PostCategories] as a parameter and
+/// returns its respective endpoint
 String postCategoryEndpoint(PostCategories action) {
   switch (action) {
     case PostCategories.best:
@@ -28,6 +31,8 @@ String postCategoryEndpoint(PostCategories action) {
   }
 }
 
+/// Takes [PostCategories] as a paremeter
+/// and fetches its respective [Post] List
 Future<List<Post>> getFeedPosts(PostCategories category) async {
   try {
     String requestURL = apiUrl + postCategoryEndpoint(category);
