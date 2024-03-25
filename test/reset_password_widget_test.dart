@@ -61,7 +61,6 @@ void main() {
         tester.widget<TextField>(confirmedPassField).controller!.text;
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
-    //expect(find.text("password must contain more than 8 characters"), findsOneWidget);
 
     // check that the new password and the confirmed passwords are identical
     await tester.enterText(currentPassField, 'HelloThere');
@@ -74,7 +73,6 @@ void main() {
         tester.widget<TextField>(confirmedPassField).controller!.text;
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
-    //expect(find.text("password mismatch:please reconfirm your new password"), findsOneWidget);
 
     // inspect when all inputs are valid
     await tester.enterText(currentPassField, 'HelloThere');
@@ -87,6 +85,6 @@ void main() {
         tester.widget<TextField>(confirmedPassField).controller!.text;
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
-    //expect(find.text("password is updated successfully"),findsOneWidget);
+  
   });
 }

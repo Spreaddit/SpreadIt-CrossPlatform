@@ -44,13 +44,5 @@ void main() {
     // Expect a snackbar indicating that an email was sent.
     expect(find.text("please enter a valid email"), findsOneWidget);
 
-    // Enter a valid email .
-    /*await tester.enterText(find.byType(TextField), 'test@example.com');
-    await tester.pump();
-    // Tap on the Reset Password button again with valid input.
-    await tester.tap(find.text("Email me"));
-    await tester.pump();
-    // Expect a snackbar indicating that an email was sent.
-    expect(find.text("Your username was sent to your email"), findsOneWidget);*/
   });
 }

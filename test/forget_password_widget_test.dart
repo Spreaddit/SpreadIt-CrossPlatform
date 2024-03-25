@@ -33,7 +33,6 @@ void main(){
     // Enter valid input.
     await tester.enterText(find.byType(TextField), 'test@example.com');
     await tester.pumpAndSettle();
-   // expect(find.text("an email was sent to you to reset your password"), findsOneWidget);
     
     
   });
