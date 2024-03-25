@@ -1,5 +1,40 @@
 import 'package:flutter/material.dart';
 
+/// A customizable input field widget. 
+/// This widget provides a flexible input field that can be customized in various ways,
+/// including text, password, and validation support.   
+/// Required parameters: 
+/// -formKey: A global key used to identify the form that contains this input field.   
+/// -onChanged: A callback function triggered whenever the input field value changes.   
+/// -label: The label text displayed above the input field.   
+/// -placeholder: The placeholder text displayed inside the input field when it's empty.   
+/// Optional parameters:   
+/// -obscureText: Determines whether the input should be obscured (e.g., for passwords). Defaults is set to false.   
+/// -invalidText: The text to display when input validation fails.   
+/// -validateField: A function used to validate the input field's value. Returns true if valid, false otherwise.   
+/// -validate: Indicates whether input validation is enabled. Defaults is set to false.   
+/// ```dart
+///   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+///   var _inputvalue = '';   // The value inside the input feild
+///    void updateInput(String value, bool isValid) {
+///     _inputvalue = value;
+///     isFeildValid = isValid;
+///     _formkey.currentState!.save();
+///     }
+/// CustomInput(
+///   formKey: _formKey,
+///   onChanged: updateInput, 
+///   label: 'Email',
+///   placeholder: 'Enter your email',
+///   obscureText: false,
+///   invalidText: 'Please enter a valid email',
+///   validateField: (value) {
+///     return EmailValidator.validate(value); 
+///   },
+///   validate: true,
+/// )
+/// ```
+
 class CustomInput extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final Function(String, bool) onChanged;

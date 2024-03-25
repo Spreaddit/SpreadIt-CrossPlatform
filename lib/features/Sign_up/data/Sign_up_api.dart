@@ -2,8 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import '../../user.dart';
 
+/// Base URL for the API.
 String apibase = apiUrl;
 
+/// takes [username] , [password] and [email] as a parameter and
+/// returns user info and access token if the user is successfully signed up
 Future<int> signUpApi({
   required String username,
   required String email,

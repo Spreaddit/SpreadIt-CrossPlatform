@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
 import '../../user.dart';
-
+/// Base URL for the API.
 String apibase = apiUrl;
 
+/// takes [googleToken] as a parameter and
+/// returns its the user info and the new access token 
 Future<int> googleOAuthApi({
   required String googleToken,
 }) async {
