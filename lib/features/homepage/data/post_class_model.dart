@@ -1,6 +1,4 @@
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
-
-/// Post model for the [PostWidget]
+/// Post model for the post card
 class Post {
   int postId;
   final String username;

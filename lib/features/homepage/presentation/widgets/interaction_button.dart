@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 /// This Library is responsible for handling post interactions
 /// (e.g., votes, comments and shares)
