@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../lib/features/forget_username/presentation/pages/forget_username.dart';
+import '../../lib/features/forget_username/presentation/pages/forget_username.dart';
 
 void main() {
   testWidgets('forget password widget test', (WidgetTester tester) async {
