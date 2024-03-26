@@ -25,11 +25,11 @@ class ConfirmConnectedPassword extends StatefulWidget {
 
   @override
   State<ConfirmConnectedPassword> createState() =>
-      ConfirmPasswConnectedordState();
+      _ConfirmPasswConnectedordState();
 }
 
 /// [ConfirmConnectedPassword] state.
-class ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
+class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
   /// Entered password form state variable.
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
 

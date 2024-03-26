@@ -13,11 +13,11 @@ class UpdateEmailPage extends StatefulWidget {
   const UpdateEmailPage({Key? key}) : super(key: key);
 
   @override
-  State<UpdateEmailPage> createState() => UpdateEmailPageState();
+  State<UpdateEmailPage> createState() => _UpdateEmailPageState();
 }
 
 /// [UpdateEmailPage] state.
-class UpdateEmailPageState extends State<UpdateEmailPage> {
+class _UpdateEmailPageState extends State<UpdateEmailPage> {
   /// GlobalKey for managing the form state of the email input field.
   final GlobalKey<FormState> _emailForm = GlobalKey<FormState>();
 

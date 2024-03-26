@@ -13,11 +13,11 @@ class SwitchSection extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SwitchSection> createState() => SwitchSectionState();
+  State<SwitchSection> createState() => _SwitchSectionState();
 }
 
 /// [SwitchSection] state.
-class SwitchSectionState extends State<SwitchSection> {
+class _SwitchSectionState extends State<SwitchSection> {
   /// Represents whether following is allowed.
   late bool allowFollow = false;
 

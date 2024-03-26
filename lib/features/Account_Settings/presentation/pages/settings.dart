@@ -13,11 +13,11 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<SettingsPage> createState() => SettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 /// [SettingsPage] state.
-class SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
   /// Holds user data fetched.
   late Map<String, dynamic> data;
 

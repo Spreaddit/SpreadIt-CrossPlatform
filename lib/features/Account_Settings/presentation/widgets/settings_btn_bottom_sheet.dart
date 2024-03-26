@@ -31,11 +31,11 @@ class BottomModalBtn extends StatefulWidget {
   final String? selection;
 
   @override
-  State<BottomModalBtn> createState() => BottomModalBtnState();
+  State<BottomModalBtn> createState() => _BottomModalBtnState();
 }
 
 /// [BottomModalBtn] state.
-class BottomModalBtnState extends State<BottomModalBtn> {
+class _BottomModalBtnState extends State<BottomModalBtn> {
   @override
   Widget build(BuildContext context) {
     String optionalText = widget.secondaryText;

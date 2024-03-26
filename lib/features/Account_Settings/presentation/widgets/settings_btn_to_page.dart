@@ -32,11 +32,11 @@ class ToPageBtn extends StatefulWidget {
   final String tertiaryText;
 
   @override
-  State<ToPageBtn> createState() => ToPageBtnState();
+  State<ToPageBtn> createState() => _ToPageBtnState();
 }
 
 /// [ToPageBtn] state.
-class ToPageBtnState extends State<ToPageBtn> {
+class _ToPageBtnState extends State<ToPageBtn> {
   @override
   Widget build(BuildContext context) {
     String optionalText = widget.secondaryText;

@@ -20,11 +20,11 @@ class SortHome extends StatefulWidget {
   ];
 
   @override
-  State<SortHome> createState() => SortHomeState();
+  State<SortHome> createState() => _SortHomeState();
 }
 
 /// [SortHome] state.
-class SortHomeState extends State<SortHome> {
+class _SortHomeState extends State<SortHome> {
   /// Represents the selected sorting option for home page posts.
   String? _selectedHomeSort = "";
 

@@ -14,12 +14,12 @@ class NotificationsPageUI extends StatefulWidget {
   const NotificationsPageUI({Key? key}) : super(key: key);
   @override
   State<NotificationsPageUI> createState() {
-    return NotificationsPageUIState();
+    return _NotificationsPageUIState();
   }
 }
 
 /// [NotificationsPageUI] state.
-class NotificationsPageUIState extends State<NotificationsPageUI> {
+class _NotificationsPageUIState extends State<NotificationsPageUI> {
   /// List that hold the current notification settings, defaults to false.
   List<dynamic> notificationsSettingsList = List.generate(11, (_) => false);
 

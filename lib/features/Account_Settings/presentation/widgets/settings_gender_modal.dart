@@ -18,11 +18,11 @@ class SelectGender extends StatefulWidget {
   ];
 
   @override
-  State<SelectGender> createState() => SelectGenderState();
+  State<SelectGender> createState() => _SelectGenderState();
 }
 
 /// [SelectGender] state.
-class SelectGenderState extends State<SelectGender> {
+class _SelectGenderState extends State<SelectGender> {
   /// Represents the selected gender.
   String? _selectedGender = "";
 

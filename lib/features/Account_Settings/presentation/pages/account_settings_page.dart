@@ -20,11 +20,11 @@ class AccountSettingsPage extends StatefulWidget {
   AccountSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<AccountSettingsPage> createState() => AccountSettingsPageState();
+  State<AccountSettingsPage> createState() => _AccountSettingsPageState();
 }
 
 /// [AccountSettingsPage] state.
-class AccountSettingsPageState extends State<AccountSettingsPage> {
+class _AccountSettingsPageState extends State<AccountSettingsPage> {
   /// Define the title of the page.
   final String title = "Account Settings";
 

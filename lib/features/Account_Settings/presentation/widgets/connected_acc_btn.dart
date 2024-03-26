@@ -20,11 +20,11 @@ class ConnectAccBtn extends StatefulWidget {
   final String accountName;
 
   @override
-  State<ConnectAccBtn> createState() => ConnectAccBtnState();
+  State<ConnectAccBtn> createState() => _ConnectAccBtnState();
 }
 
 /// [ConnectAccBtn] state.
-class ConnectAccBtnState extends State<ConnectAccBtn> {
+class _ConnectAccBtnState extends State<ConnectAccBtn> {
   /// Represents the current action for connection.
   var _connectionAction = "Connect";
 
