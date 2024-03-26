@@ -1,6 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
+/// Retrieves contact settings data from the API endpoint '$apiUrl/mobile/settings/contact'.
+///
+/// Returns a [List] of boolean values representing notifications settings.
+/// 
+/// Returns a [List] of false boolean values if fetching fails.
+///
+/// Throws an error if fetching data fails.
 Future<List> getData() async {
   try {
     var response = await Dio().get('$apiUrl/mobile/settings/contact');
@@ -23,6 +30,16 @@ Future<List> getData() async {
   }
 }
 
+/// Updates contact settings data on the API endpoint '$apiUrl/mobile/settings/contact'.
+///
+/// [updatedList] is a [List] of boolean values representing updated notification settings
+/// in the following order: inboxMessages, chatMessages, chatRequests, mentions,
+/// commentsOnYourPost, commentsYouFollow, upvotes, repliesToComments, newFollowers,
+/// cakeDay, and modNotifications.
+///
+/// Returns the status code of the update operation or 0 in case of no response status code.
+///
+/// Throws an error if updating data fails.
 Future<int> updateData({required List<dynamic> updatedList}) async {
   try {
     Map<String, bool> notificationsMap = {

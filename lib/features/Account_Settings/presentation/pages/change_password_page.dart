@@ -2,36 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/Sign_up/data/oauth_service.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
-import '../data/data_source/api_user_info_data.dart';
+import '../../data/data_source/api_user_info_data.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/custom_input.dart';
 import '../../../generic_widgets/snackbar.dart';
-import '../data/data_source/api_verify_password_data.dart';
+import '../../data/data_source/api_verify_password_data.dart';
 
+/// A page for changing the user's password.
 class ChangePasswordPage extends StatefulWidget {
+  /// Constructs an [ChangePasswordPage] instance.
   const ChangePasswordPage({Key? key}) : super(key: key);
 
   @override
-  State<ChangePasswordPage> createState() => _ChangePasswordPageState();
+  State<ChangePasswordPage> createState() => ChangePasswordPageState();
 }
-
-class _ChangePasswordPageState extends State<ChangePasswordPage> {
+/// [ChangePasswordPage] state.
+class ChangePasswordPageState extends State<ChangePasswordPage> {
+  /// Global keys for managing form states.
   final GlobalKey<FormState> _currentPasswordForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _newPasswordForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _confirmNewPasswordForm = GlobalKey<FormState>();
 
+  /// Variables to hold user input for passwords.
   var _currentUserPassword = '';
   var _newUserPassword = '';
   var _confirmNewUserPassword = '';
 
+  /// Data to store user information fetched from API.
   late Map<String, dynamic> data;
+
+  /// Username of the user.
   String username = "";
 
+  /// Flag to indicate the validity of password change process.
   var _validState = false;
+
+  /// Flag to indicate the validity of the current password.
   var validCurrentPass = false;
+
+  /// Flag to indicate the validity of the new password.
   var validNewPass = false;
+
+  /// Flag to indicate the validity of the confirm new password.
   var validConfirmNewPass = false;
 
+  /// Fetches user data during initialization.
   @override
   void initState() {
     super.initState();
@@ -40,6 +55,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     });
   }
 
+  /// Calls the [fetchData] method to fetch user information.
   Future<void> fetchData() async {
     data = await getUserInfo(); // Await the result of getData()
     setState(() {
@@ -47,10 +63,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     });
   }
 
+  /// Navigates to the forget password page.
   void navigateToForgetPassword(BuildContext context) {
     Navigator.of(context).pushNamed('/forget-password');
   }
 
+  /// Updates the current password field.
   void updateCurrentPassword(String password, bool validation) {
     _currentUserPassword = password;
     validCurrentPass = validation;
@@ -58,6 +76,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     updateValidStatus();
   }
 
+  /// Updates the new password field.
   void updateNewPassword(String password, bool validation) {
     _newUserPassword = password;
     validNewPass = validation;
@@ -65,6 +84,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     updateValidStatus();
   }
 
+  /// Updates the confirm new password field.
   void updateConfirmNewPassword(String password, bool validation) {
     _confirmNewUserPassword = password;
     validConfirmNewPass = validation;
@@ -72,6 +92,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     updateValidStatus();
   }
 
+  /// Updates the valid state based on password validations.
   void updateValidStatus() {
     setState(() {
       _validState = _newUserPassword == _confirmNewUserPassword &&
@@ -80,7 +101,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     });
   }
 
-  void verifyEmailUpdate(BuildContext context) async {
+  /// Verifies and updates the user's password.
+  void verifyPasswordUpdate(BuildContext context) async {
     if (_currentUserPassword.isEmpty || _currentUserPassword.length < 8) {
       CustomSnackbar(content: "Enter valid current password").show(context);
       return;
@@ -201,7 +223,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
                 Expanded(
                   child: Button(
-                    onPressed: () => verifyEmailUpdate(context),
+                    onPressed: () => verifyPasswordUpdate(context),
                     text: 'Save',
                     backgroundColor: Colors.blueAccent,
                     foregroundColor: Colors.white,

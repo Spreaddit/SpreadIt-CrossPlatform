@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// A button widget that opens a bottom modal sheet when pressed.
 class BottomModalBtn extends StatefulWidget {
+  /// Creates a custom button widget.
+  /// 
+  /// This button is used to open bottom sheets and display the selected option on the right side of the bottom
+  ///
+  /// Parameters:
+  /// - [iconData] : [IconData] The icon data for the button [required].
+  /// - [mainText] : [String] The main text displayed on the button [required].
+  /// - [onPressed] : [Function] Callback function invoked when the button is pressed [required].
+  /// - [selection] : [String] The optional text displayed on the right side of the button (default is an empty string) [required].
+  /// - [secondaryText] : [String] The optional secondary text displayed below the main text (default is an empty string).
+  /// - [tertiaryText] : [String] The optional tertiary text displayed below the secondary text (default is an empty string).
   const BottomModalBtn(
       {Key? key,
       required this.iconData,
@@ -19,10 +31,11 @@ class BottomModalBtn extends StatefulWidget {
   final String? selection;
 
   @override
-  State<BottomModalBtn> createState() => _BottomModalBtnState();
+  State<BottomModalBtn> createState() => BottomModalBtnState();
 }
 
-class _BottomModalBtnState extends State<BottomModalBtn> {
+/// [BottomModalBtn] state.
+class BottomModalBtnState extends State<BottomModalBtn> {
   @override
   Widget build(BuildContext context) {
     String optionalText = widget.secondaryText;

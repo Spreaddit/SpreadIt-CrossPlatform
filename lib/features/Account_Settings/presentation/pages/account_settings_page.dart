@@ -12,21 +12,28 @@ import 'update_email_page.dart';
 import 'change_password_page.dart';
 import 'location_select_page.dart';
 import '../pages/manage_notifications_page.dart';
-import '../data/data_source/api_basic_settings_data.dart';
+import '../../data/data_source/api_basic_settings_data.dart';
 
+/// The page for managing account settings.
 class AccountSettingsPage extends StatefulWidget {
+  /// Constructs an [AccountSettingsPage] instance.
   AccountSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<AccountSettingsPage> createState() => _AccountSettingsPageState();
+  State<AccountSettingsPage> createState() => AccountSettingsPageState();
 }
 
-class _AccountSettingsPageState extends State<AccountSettingsPage> {
+/// [AccountSettingsPage] state.
+class AccountSettingsPageState extends State<AccountSettingsPage> {
+  /// Define the title of the page.
   final String title = "Account Settings";
+
+  /// Variables to store user data.
   late Map<String, dynamic> data;
   String currentEmail = "";
   String currentLocation = "";
 
+  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
@@ -35,14 +42,18 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     });
   }
 
+  /// Fetches user data.
   Future<void> fetchData() async {
-    data = await getBasicData(); // Await the result of getData()
+    // Call the function to retrieve basic user data.
+    data = await getBasicData();
+    // Update the state with the fetched data.
     setState(() {
       currentEmail = data["email"];
       currentLocation = data["country"];
     });
   }
 
+  /// List of routes to navigate to different settings pages.
   final List<Widget> routes = [
     UpdateEmailPage(),
     ResetPassword(),
@@ -53,11 +64,13 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    /// Lists to hold widgets for different sections of the settings page.
     List<Widget> basicSectionChildren = [];
     List<Widget> connectedSectionChildren = [];
     List<Widget> notificationsSectionChildren = [];
     List<Widget> safetySectionChildren = [];
 
+    /// Function to navigate to a different page using a custom route transition.
     void navigateToPage(Widget route) {
       Navigator.push(
         context,

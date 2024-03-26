@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'switch_type_1.dart';
-import '../data/data_source/api_allow_follow_data.dart';
+import '../../data/data_source/api_allow_follow_data.dart';
 
+/// A widget representing a section with two switches of type [SwitchBtn1].
+///
+/// The first switch controls the visibility of the second switch.
 class SwitchSection extends StatefulWidget {
+  /// Creates a switch section widget.
   const SwitchSection({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SwitchSection> createState() => _SwitchSectionState();
+  State<SwitchSection> createState() => SwitchSectionState();
 }
 
-class _SwitchSectionState extends State<SwitchSection> {
-  //final GlobalKey<SwitchBtn1State> _childKey = GlobalKey<SwitchBtn1State>();
-
+/// [SwitchSection] state.
+class SwitchSectionState extends State<SwitchSection> {
+  /// Represents whether following is allowed.
   late bool allowFollow = false;
+
+  /// Holds data fetched for user information.
   late Map<String, dynamic> jsonData;
+
+  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
@@ -25,6 +33,7 @@ class _SwitchSectionState extends State<SwitchSection> {
     });
   }
 
+  /// Fetches data from the API.
   Future<void> fetchData() async {
     var data = await getData(); // Await the result of getData()
     setState(() {
@@ -33,6 +42,7 @@ class _SwitchSectionState extends State<SwitchSection> {
     });
   }
 
+  /// Updates the state of the first switch.
   Future<void> stateSetter() async {
     jsonData['allowFollow'] = !allowFollow;
     var result = await updateData(
@@ -42,22 +52,18 @@ class _SwitchSectionState extends State<SwitchSection> {
       setState(() {
         allowFollow = !allowFollow;
       });
-    }
-    else{
+    } else {
       CustomSnackbar(content: "Failed to update").show(context);
     }
   }
 
-  //bool? _visibilitySetting = false;
   @override
   Widget build(BuildContext context) {
-    //_visibilitySetting = _childKey.currentState?.getCurrentState();
     return Column(
       children: <Widget>[
         GestureDetector(
           onTap: () {},
           child: SwitchBtn1(
-            //key: _childKey,
             iconData: Icons.account_circle_outlined,
             currentLightVal: allowFollow,
             mainText: "Allow people to follow you",

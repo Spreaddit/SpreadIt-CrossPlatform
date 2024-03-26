@@ -6,19 +6,24 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/switch_type_2.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import '../data/data_source/api_notifications_settings.dart';
+import '../../data/data_source/api_notifications_settings.dart';
 
+/// Page for managing notification settings.
 class NotificationsPageUI extends StatefulWidget {
+  /// Constructs a [NotificationsPageUI] instance.
   const NotificationsPageUI({Key? key}) : super(key: key);
   @override
   State<NotificationsPageUI> createState() {
-    return _NotificationsPageUIState();
+    return NotificationsPageUIState();
   }
 }
 
-class _NotificationsPageUIState extends State<NotificationsPageUI> {
+/// [NotificationsPageUI] state.
+class NotificationsPageUIState extends State<NotificationsPageUI> {
+  /// List that hold the current notification settings, defaults to false.
   List<dynamic> notificationsSettingsList = List.generate(11, (_) => false);
 
+  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
@@ -27,6 +32,7 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
     });
   }
 
+  /// Fetches notification settings data.
   Future<void> fetchData() async {
     var data = await getData(); // Await the result of getData()
     setState(() {
@@ -35,6 +41,7 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
     });
   }
 
+  /// Toggles the state of notification setting and calls the API to update the data.
   void stateSetter(int index) async {
     setState(() {
       notificationsSettingsList[index] = !notificationsSettingsList[index];
@@ -50,9 +57,16 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
 
   @override
   Widget build(context) {
+    /// A list of widgets representing the messages section in the notifications settings.
     List<Widget> messagesSection = [];
+
+    /// A list of widgets representing the activity section in the notifications settings.
     List<Widget> activitySection = [];
+
+    /// A list of widgets representing the updates section in the notifications settings.
     List<Widget> updatesSection = [];
+
+    /// A list of widgets representing the moderation section in the notifications settings.
     List<Widget> moderationSection = [];
 
     messagesSection.addAll([
