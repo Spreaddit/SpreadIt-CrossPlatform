@@ -16,6 +16,7 @@ import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
+import 'features/create_post/presentation/pages/content_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +34,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: StartUpPage(),
+      home: CreatePost(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
