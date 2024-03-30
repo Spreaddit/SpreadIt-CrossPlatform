@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../../../generic_widgets/button.dart';
+import './blue_button.dart';
 
 class CreatePostHeader extends StatelessWidget {
 
@@ -28,21 +29,7 @@ class CreatePostHeader extends StatelessWidget {
             onPressed: () {},
           ),
         ),
-        Container(
-          margin:EdgeInsets.all(10),
-          child: ElevatedButton(
-            onPressed: onPressed,
-            child: Text(buttonText),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[900],
-              foregroundColor: Colors.white,
-              fixedSize: Size(80,20),
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              )
-            )
-            ),
-        )
+      BlueButton(buttonText: buttonText, onPressed: onPressed),
       ],
     );
   }
