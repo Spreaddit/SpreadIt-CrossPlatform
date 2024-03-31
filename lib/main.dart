@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'firebase_options.dart';
@@ -16,7 +17,9 @@ import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
-import 'features/create_post/presentation/pages/content_page.dart';
+import 'features/create_post/presentation/pages/primary_content_page.dart';
+import 'features/create_post/presentation/pages/rules_page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +37,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CreatePost(),
+      home: CommunityRules(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -53,6 +56,7 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
+        '/post-to-community': (context) => PostToCommunity(),    
       },
     );
   }

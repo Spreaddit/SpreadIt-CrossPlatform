@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../../../generic_widgets/button.dart';
-import './blue_button.dart';
 
-class CreatePostHeader extends StatelessWidget {
+
+class CreatePostHeader extends StatefulWidget {
 
   final String buttonText;
   final VoidCallback onPressed;
@@ -13,6 +12,11 @@ class CreatePostHeader extends StatelessWidget {
     required this.onPressed,
   });
 
+  @override
+  State<CreatePostHeader> createState() => _CreatePostHeaderState();
+}
+
+class _CreatePostHeaderState extends State<CreatePostHeader> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -29,7 +33,21 @@ class CreatePostHeader extends StatelessWidget {
             onPressed: () {},
           ),
         ),
-      BlueButton(buttonText: buttonText, onPressed: onPressed),
+      Container(
+          margin:EdgeInsets.all(10),
+          child: ElevatedButton(
+            onPressed:widget.onPressed,
+            child: Text(widget.buttonText),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[900],
+              foregroundColor: Colors.white,
+              fixedSize: Size(80,20),
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              )
+            )
+            ),
+        ),
       ],
     );
   }
