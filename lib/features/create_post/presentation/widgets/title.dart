@@ -10,9 +10,7 @@ class PostTitle extends StatefulWidget {
 class _PostTitleState extends State<PostTitle> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-        children:[Container(
+    return Container(
           padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
           child:SingleChildScrollView(
             child: TextField(
@@ -32,8 +30,6 @@ class _PostTitleState extends State<PostTitle> {
             ),
             ),
           ),
-        ),
-        ],
         );
   }
 }

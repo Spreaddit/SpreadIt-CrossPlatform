@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/pages/add_tags.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
@@ -37,7 +39,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CommunityRules(),
+      home: FinalCreatePost(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -57,6 +59,7 @@ class SpreadIt extends StatelessWidget {
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
         '/post-to-community': (context) => PostToCommunity(),    
+        '/add-tags':(context) => Tags(),
       },
     );
   }
