@@ -59,9 +59,13 @@ class _PostToCommunityState extends State<PostToCommunity> {
     });
   }
 
-   void navigateToFinalContentPage() {
+  void navigateToFinalContentPage() {
     Navigator.of(context).pushNamed('/final-content-page');
-   }
+  }
+
+  void navigateToPrimaryContentPage() {
+    Navigator.of(context).pushNamed('/primary-content-page');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +76,10 @@ class _PostToCommunityState extends State<PostToCommunity> {
     return Scaffold(
       body: Column(
         children: [
-        ButtonlesHeader(text: "Post to"),
+        ButtonlesHeader(
+          text: "Post to",
+          onIconPress: navigateToPrimaryContentPage,
+        ),
         CustomSearchBar(
           hintText: 'Search for a community',
           searchList: communityData,

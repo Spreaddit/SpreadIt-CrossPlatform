@@ -3,8 +3,11 @@ import'package:flutter/material.dart';
 class ButtonlesHeader extends StatefulWidget {
 
   final String text;
+  final VoidCallback onIconPress;
+
   const ButtonlesHeader({
     required this.text,
+    required this.onIconPress,
   });
 
   @override
@@ -26,7 +29,7 @@ class _ButtonlesHeaderState extends State<ButtonlesHeader> {
               icon: Icon(
                 Icons.clear_rounded,
                 size: 40),
-              onPressed: () {},
+              onPressed: widget.onIconPress,
             ),
           ),
           Expanded(

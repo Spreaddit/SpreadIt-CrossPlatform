@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ExpandableListWidget extends StatefulWidget {
-  final String text;
-  final List<String> itemList;
+  final String title;
+  final String? body;
 
   const ExpandableListWidget({
-    required this.text,
-    required this.itemList,
+    required this.title,
+    this.body,
   });
 
   @override
@@ -14,47 +14,54 @@ class ExpandableListWidget extends StatefulWidget {
 }
 
 class _ExpandableListWidgetState extends State<ExpandableListWidget> {
+
   bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              _isExpanded = !_isExpanded;
-            });
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.text,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+    return Padding(
+      padding: EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: (widget.body?.isNotEmpty ?? false)
+                ? () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  }
+                : null,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-              Icon(
-                _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                size: 24,
-              ),
-            ],
+                if (widget.body?.isNotEmpty ?? false)
+                  Icon(
+                    _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    size: 24,
+                  ),
+              ],
+            ),
           ),
-        ),
-        if (_isExpanded)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.itemList.map((item) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(item),
-              );
-            }).toList(),
-          ),
-      ],
+          if (_isExpanded)
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text(widget.body!), 
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

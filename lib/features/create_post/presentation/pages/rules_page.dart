@@ -13,13 +13,41 @@ class CommunityRules extends StatefulWidget {
 
 class _CommunityRulesState extends State<CommunityRules> {
 
-  List <dynamic> rules = [];
+  List<Map<String, dynamic>> rulesList = [
+    {
+      'title': 'Hate won\'t be tolerated',
+      'body': 'Hate, personal insults and incitinng violence are all against our rules',
+    },
+    {
+      'title':'Content quality',
+      'body':'The moderators reserve the right to remove any content if it is deemed to be too low quality for this subreddit',
+    },
+    {
+      'title': 'Personal insults',
+      'body': 'We don\'t tolerate personal insults in this community especially if those insults are come as part of a heated argument'
+    },
+    {
+      'title': 'All content must be related to programming',
+    },
+    {
+      'title': 'No NSFW content',
+      'body':' Elli haynazzel hagat keda hamawweto',
+    },
+
+  ];
+
+  void navigateToFinalContentPage() {
+    Navigator.of(context).pushNamed('/final-content-page');
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          ButtonlesHeader(text: "Community rules"),
+          ButtonlesHeader(
+            text: "Community rules",
+            onIconPress: navigateToFinalContentPage,
+          ),
           Container(
             margin: EdgeInsets.all(10),
             child: Text(
@@ -30,40 +58,32 @@ class _CommunityRulesState extends State<CommunityRules> {
               ),
             ),
           ),
-       /* Expanded(
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text("the first rule"),
-                trailing: IconButton(
-                  onPressed:() {},
-                  icon: Icon(Icons.arrow_drop_down)),
-              ),
-              ListTile(
-                title: Text("the second rule"),
-                trailing: IconButton(
-                  onPressed:() {},
-                  icon: Icon(Icons.arrow_drop_down)),
-              ),
-              ListTile(
-                title: Text("the third rule"),
-                trailing: IconButton(
-                  onPressed:() {},
-                  icon: Icon(Icons.arrow_drop_down)),
-              ),
-            ],
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,  
+            itemCount: rulesList.length,
+            itemBuilder: (context, index) {
+              return ExpandableListWidget(
+                title: rulesList[index]['title'],
+                body: rulesList[index]['body'],
+                );
+              },
           ),
-        )*/
-        ExpandableListWidget(text:'rules',itemList: ['first rule', 'second rule', 'third rule']),
-        ExpandableListWidget(text:'rules',itemList: ['fourth rule', 'fifth rule', 'sixth rule']),
-        Spacer(),
-        Button(onPressed: () {}, text: 'I understand', backgroundColor: Colors.blue, foregroundColor: Colors.white)
-        ],
         ),
-        );
+        //Spacer(),
+        Button(
+          onPressed: navigateToFinalContentPage,
+          text: 'I understand',
+          backgroundColor: Color.fromARGB(255, 13, 71, 161),
+          foregroundColor: Colors.white,
+          ),
+        ],
+      ),
+    );
   }
 }
 
 /* TODOs 
-1) azabbat el expanded list di akhalliha zay mana 3ayza 
-2)a3mel el api elli byfetch el rules aslan  */
+a3mel el api elli byfetch el rules aslan  */
+
+ 
