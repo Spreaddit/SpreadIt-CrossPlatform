@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../widgets/footer_icon.dart';
 
 class PostFooter extends StatefulWidget {
   final VoidCallback toggleFooter;
@@ -23,65 +24,31 @@ class _PostFooterState extends State<PostFooter> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Container(
-            height: 25,
-            width: 25,
-            margin: EdgeInsets.all(5),
-            child: IconButton(
-              icon: Icon(
-                Icons.attachment_rounded,
-                size: 25
-                ),
-              onPressed: () {},
+          FooterIcon(
+            icon: Icons.attachment_rounded,
+            onPressed: () {}
             ),
-          ),
-          Container(
-            height: 25,
-            width: 25,
-            margin: EdgeInsets.all(5),
-            child: IconButton(
-              icon: Icon(
-                Icons.photo,
-                size: 25
-                ),
-              onPressed: () {},
+          FooterIcon(
+            icon: Icons.photo,
+            onPressed: () {}
             ),
-          ),
-          Container(
-            height: 25,
-            width: 25,
-            margin: EdgeInsets.all(5),
-            child: IconButton(
-              icon: Icon(
-                Icons.ondemand_video_rounded,
-                size: 25
-                ),
-              onPressed: () {},
+          FooterIcon(
+            icon: Icons.ondemand_video_rounded,
+            onPressed: () {}
             ),
-          ),
-          Container(
-            height: 25,
-            width: 25,
-            margin: EdgeInsets.all(5),
-            child: IconButton(
-              icon: Icon(
-                Icons.poll,
-                size: 25
-                ),
-              onPressed: () {},
+          FooterIcon(
+            icon: Icons.poll,
+            onPressed: () {}
             ),
-          ),
           Expanded(
-            child: Container(
-              alignment: Alignment.centerRight,
-              height: 25,
-              width: 25,
-              child: IconButton(
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 25
+            child:Padding(
+              padding: EdgeInsets.only(right:15),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: FooterIcon(
+                  icon: Icons.keyboard_arrow_down,
+                  onPressed: widget.toggleFooter,
                   ),
-                onPressed: widget.toggleFooter,
               ),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../widgets/secondary_footer_icon.dart';
 
 class SecondaryPostFooter extends StatefulWidget {
   const SecondaryPostFooter({Key? key}) : super(key: key);
@@ -31,74 +32,26 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Column(
-              children: [
-                CircleAvatar(
-                backgroundColor: const Color.fromARGB(255, 206, 206, 206),
-                radius: 20,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.attachment_rounded,
-                    size: 20,
-                    color: Colors.black,
-                    ),
-                  onPressed: () {},
-                ),
+            SecondaryFooterIcon(
+              icon: Icons.attachment_rounded,
+              text: 'Link',
+              onPressed: () {},
               ),
-              Text('Link'),
-              ],
-            ),
-            Column(
-              children: [
-                CircleAvatar(
-                backgroundColor: const Color.fromARGB(255, 206, 206, 206),
-                radius: 20,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.photo,
-                    size: 20,
-                    color: Colors.black,
-                    ),
-                  onPressed: () {},
-                ),
+            SecondaryFooterIcon(
+              icon: Icons.photo,
+              text: 'Image',
+              onPressed: () {},
               ),
-              Text('Image'),
-              ],
-            ),
-            Column(
-              children: [
-                CircleAvatar(
-                backgroundColor: const Color.fromARGB(255, 206, 206, 206),
-                radius: 20,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.ondemand_video_rounded,
-                    size: 20,
-                    color: Colors.black,
-                    ),
-                  onPressed: () {},
-                ),
+            SecondaryFooterIcon(
+              icon: Icons.ondemand_video_rounded,
+              text: 'Video',
+              onPressed: () {},
               ),
-              Text('Video'),
-              ],
-            ),
-            Column(
-              children: [
-                CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 206, 206, 206),
-                radius: 20,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.poll,
-                    size: 20,
-                    color: Colors.black,
-                    ),
-                  onPressed: () {},
-                ),
-              ),
-              Text('Poll'),
-              ],
-            ),
+            SecondaryFooterIcon(
+              icon: Icons.poll,
+              text: 'Poll',
+              onPressed: () {},
+              ), 
           ],
           ),
         ],
