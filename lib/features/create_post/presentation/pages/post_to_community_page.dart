@@ -121,7 +121,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
 
 /*
 TODOs:
-1) a3addel shakl el search bar
 2) agahhez el api call elli ha-get biha el communities 
 3) action l see more button 
 4) (pass el community lel final content page )

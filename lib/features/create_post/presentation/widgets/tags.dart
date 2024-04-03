@@ -5,11 +5,15 @@ class Tag extends StatefulWidget {
   final String tagName;
   final String tagDescription;
   final Icon tagIcon;
+  final bool tagValue;
+  final ValueChanged<bool>? onChanged;
 
   const Tag({
     required this.tagName,
     required this.tagDescription,
     required this.tagIcon,
+    required this.tagValue,
+    this.onChanged,
   });
 
   @override
@@ -17,8 +21,6 @@ class Tag extends StatefulWidget {
 }
 
 class _TagState extends State<Tag> {
-
-  bool light = true;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +44,8 @@ class _TagState extends State<Tag> {
                     ),
                   Spacer(),
                   Switch(
-                    value: light,
-                    onChanged: (bool value) {setState(() { light = value;});},
+                    value: widget.tagValue,
+                    onChanged: widget.onChanged,
                     activeColor: Colors.blue,
                     ), 
                 ],

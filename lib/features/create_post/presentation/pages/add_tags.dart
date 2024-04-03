@@ -10,7 +10,14 @@ class Tags extends StatefulWidget {
 
 class _TagsState extends State<Tags> {
 
-bool isNSFW= true;
+  bool isNSFWAllowed = true;
+  bool isSpoiler = false;
+  bool isNSFW = false;
+
+
+  void navigateToFinalContentPage() {
+    Navigator.of(context).pushNamed('/final-content-page');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ bool isNSFW= true;
                 ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: navigateToFinalContentPage,
                   icon: Icon(Icons.cancel_rounded),
                   iconSize: 40,
                   color: Colors.grey,
@@ -41,12 +48,24 @@ bool isNSFW= true;
               tagName: 'Spoiler',
               tagDescription: 'Tag posts that may ruin a surprise',
               tagIcon: Icon(Icons.new_releases_rounded),
+              tagValue: isSpoiler,
+              onChanged: (value) { 
+                setState(() { 
+                  isSpoiler = value;
+                  });
+                },
               ),
-            isNSFW ? Tag(
+            isNSFWAllowed ? Tag(
               tagName: 'NSFW',
               tagDescription: 'Not safe for work',
               tagIcon: Icon(Icons.warning_rounded),
-              ) : Spacer()
+              tagValue: isNSFW,
+              onChanged: (value) { 
+                setState(() { 
+                  isNSFW = value;
+                  });
+                },
+              ) : Spacer(),  
           ],),
       )
     );
@@ -54,7 +73,7 @@ bool isNSFW= true;
 }
 
 /* TODOs 
-1) a-save el tags di f 7etta w ab3atha lel page elli barra 
+1) ab3at el is hagat di l barra
 2) akhod ml api howwa aslan masmou7 NSFW walla laa
 3) navigations
 4) unit testing */

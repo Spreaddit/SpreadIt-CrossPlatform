@@ -58,6 +58,10 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     Navigator.of(context).pushNamed('/add-tags');
   }
 
+  void navigateToRules() {
+    Navigator.of(context).pushNamed('/rules');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +95,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 ),
               ),
               InkWell(
-                onTap: () {}, // Add your onPressed action here
+                onTap: navigateToRules, 
                 child: Container(
                 padding: EdgeInsets.all(5), // Adjust padding as needed
                 child: Icon(Icons.keyboard_arrow_down),
