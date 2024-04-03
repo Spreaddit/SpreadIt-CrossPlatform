@@ -72,6 +72,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               buttonText: "Post",
               onPressed: navigateToPostToCommunity,
               isEnabled: isButtonEnabled,
+              onIconPress : 
               ),
           ),
           Container(

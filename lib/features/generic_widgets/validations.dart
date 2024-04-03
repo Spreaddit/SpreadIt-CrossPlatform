@@ -38,3 +38,12 @@
     }
     return "Great name! it's not taken, so it's all yours.";
   }
+
+  bool validatePostTitle(String value) {
+    if(value.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(value)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
