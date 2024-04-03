@@ -8,11 +8,13 @@ class CreatePostHeader extends StatefulWidget {
   final String buttonText;
   final VoidCallback onPressed;
   final bool isEnabled;
+  final VoidCallback onIconPress;
   
   const CreatePostHeader({
     required this.buttonText,
     required this.onPressed,
     required this.isEnabled,
+    required this.onIconPress,
   });
 
   @override
@@ -33,13 +35,16 @@ class _CreatePostHeaderState extends State<CreatePostHeader> {
             icon: Icon(
               Icons.clear_rounded,
               size: 40),
-            onPressed: () {},
+            onPressed: widget.onIconPress,
           ),
         ),
       SmallButton(
         buttonText: widget.buttonText,
         onPressed: widget.onPressed,
-        isEnabled: widget.isEnabled)
+        isEnabled: widget.isEnabled,
+        width: 80,
+        height: 20,
+        ),
       ],
     );
   }

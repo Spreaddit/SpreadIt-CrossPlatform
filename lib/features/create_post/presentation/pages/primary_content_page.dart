@@ -5,7 +5,8 @@ import '../widgets/title.dart';
 import '../widgets/content.dart';
 import '../widgets/create_post_footer.dart';
 import '../widgets/create_post_secondary_footer.dart';
-import '../../../generic_widgets/snackbar.dart';
+import '../../../generic_widgets/validations.dart';
+import '../widgets/showDiscardBottomSheet.dart';
 
 class CreatePost extends StatefulWidget {  
   const CreatePost({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _CreatePostState extends State<CreatePost> {
 
   void updateButtonState() {
     setState(() {
-      isButtonEnabled = title.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(title);
+      isButtonEnabled = validatePostTitle(title);
     });
   }
 
@@ -72,6 +73,7 @@ class _CreatePostState extends State<CreatePost> {
               buttonText: "Next",
               onPressed: navigateToPostToCommunity,
               isEnabled: isButtonEnabled,
+              onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},
               ),
           ),
           PostTitle(
@@ -87,6 +89,7 @@ class _CreatePostState extends State<CreatePost> {
               buttonText: "Next",
               onPressed: navigateToPostToCommunity,
               isEnabled: isButtonEnabled,
+              onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},
               ),
           ),
           isPrimaryFooterVisible? PostFooter(toggleFooter: toggleFooter) : SecondaryPostFooter(),

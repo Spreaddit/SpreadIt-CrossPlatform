@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import '../widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
 import '../widgets/create_post_footer.dart';
 import '../widgets/create_post_secondary_footer.dart';
+import '../widgets/showDiscardBottomSheet.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
@@ -72,8 +74,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               buttonText: "Post",
               onPressed: navigateToPostToCommunity,
               isEnabled: isButtonEnabled,
-              onIconPress : 
-              ),
+              onIconPress : () { showDiscardButtomSheet(context);},
+            ),
           ),
           Container(
            margin: EdgeInsets.all(10),
@@ -98,7 +100,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               InkWell(
                 onTap: navigateToRules, 
                 child: Container(
-                padding: EdgeInsets.all(5), // Adjust padding as needed
+                padding: EdgeInsets.all(5), 
                 child: Icon(Icons.keyboard_arrow_down),
                 ),
               ),
@@ -106,7 +108,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               Container(
                 margin: EdgeInsets.only(right: 10),
                 child: InkWell(
-                  onTap: (){},
+                  onTap: navigateToRules,
                   child: Text(
                     'Rules',
                     style: TextStyle(
@@ -143,6 +145,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
           PostContent(
             formKey: _finalContentForm,
             onChanged:  updateContent,
+          ),
+          Container(
+            child: CreatePostHeader(
+              buttonText: "Post",
+              onPressed: navigateToPostToCommunity,
+              isEnabled: isButtonEnabled,
+              onIconPress : () { showDiscardButtomSheet(context);},
+            ),
           ),
           isPrimaryFooterVisible? PostFooter(toggleFooter: toggleFooter) : SecondaryPostFooter(),
         ],)

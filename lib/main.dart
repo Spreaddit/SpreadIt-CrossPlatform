@@ -39,7 +39,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CommunityRules(),
+      home: CreatePost(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),

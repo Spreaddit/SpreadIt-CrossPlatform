@@ -5,6 +5,8 @@ class SmallButton extends StatefulWidget {
   final String buttonText;
   final VoidCallback onPressed;
   final bool isEnabled;
+  final double width;
+  final double height;
   final Color? foregroundColor;
   final Color? backgroundColor;
 
@@ -12,6 +14,8 @@ class SmallButton extends StatefulWidget {
     required this.buttonText,
     required this.onPressed,
     required this.isEnabled,
+    required this.width,
+    required this.height,
     this.foregroundColor,
     this.backgroundColor,
   });
@@ -31,7 +35,7 @@ class _SmallButtonState extends State<SmallButton> {
             style: ElevatedButton.styleFrom(
               backgroundColor: widget.backgroundColor != null ? widget.backgroundColor : Colors.blue[900],
               foregroundColor: widget.foregroundColor != null ? widget.foregroundColor : Colors.white,
-              fixedSize: Size(80,20),
+              fixedSize: Size(widget.width,widget.height),
               shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
               )
