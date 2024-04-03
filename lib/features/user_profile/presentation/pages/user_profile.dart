@@ -3,7 +3,7 @@ import 'package:spreadit_crossplatform/features/user_profile/presentation/widget
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../data/comments.dart';
-//import '../widgets/about.dart';
+import '../widgets/about.dart';
 import '../widgets/comments.dart';
 import '../widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
@@ -34,6 +34,9 @@ class _UserProfileState extends State<UserProfile> {
       _selectedIndex = index;
     });
   }
+  void navigateToEditProfile(BuildContext context) {
+    Navigator.of(context).pushNamed('/edit-profile');
+  }
 
 Widget _buildSelectedPage() {
   switch (_selectedIndex) {
@@ -57,7 +60,14 @@ Widget _buildSelectedPage() {
     case 2:
       // Render about
       return SliverToBoxAdapter(
-        //child: AboutWidget(),
+        child: AboutWidget(
+        postKarmaNo: '100', 
+        commentKarmaNo: '200', 
+        aboutText: about, 
+        onSendMessagePressed: () {},
+        onStartChatPressed: () {},
+        myProfile: false,
+      ),
       );
     default:
       // Render posts
@@ -80,6 +90,10 @@ Widget _buildSelectedPage() {
               username: username,
               userinfo: userinfo,
               about: about,
+              myProfile: true,
+              followed:false,
+              onStartChatPressed: ()=>{},
+              editprofile:  () => navigateToEditProfile(context),
             ),
           ),
           SliverToBoxAdapter(

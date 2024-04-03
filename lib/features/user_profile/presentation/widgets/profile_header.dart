@@ -6,18 +6,27 @@ class ProfileHeader extends StatelessWidget {
   final String username;
   final String userinfo;
   final String about;
+  final bool myProfile;
+  final bool followed;
+  final VoidCallback? onStartChatPressed;
+  final VoidCallback? follow;
+  final VoidCallback? editprofile;
 
   ProfileHeader({
     required this.backgroundImage,
     required this.profilePicture,
-    required this.username ,
-    required this.userinfo ,
-    required this.about ,
+    required this.username,
+    required this.userinfo,
+    required this.about,
+    required this.myProfile,
+    required this.followed,
+    this.onStartChatPressed,
+    this.follow,
+    this.editprofile,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Get screen size
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     const double iconSizePercentage = 0.07;
@@ -95,37 +104,53 @@ class ProfileHeader extends StatelessWidget {
                     // Buttons
                     Row(
                       children: [
-                        OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.white),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Follow',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                        if (!myProfile)
+                          OutlinedButton(
+                            onPressed: follow,
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.white),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                followed ? 'Following' : 'Follow',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: screenWidth * 0.02),
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white),
+                        if (!myProfile)
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white),
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.message_rounded),
+                              onPressed: onStartChatPressed,
+                              color: Colors.white,
+                              iconSize: iconSize * 0.8,
+                            ),
                           ),
-                          child: IconButton(
-                            icon: Icon(Icons.message_rounded),
-                            onPressed: () {
-                              // Your onPressed logic here
-                            },
-                            color: Colors.white,
-                            iconSize: iconSize * 0.8, // Adjust icon size
+                        if (myProfile)
+                          OutlinedButton(
+                            onPressed: editprofile,
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.white),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     Text(

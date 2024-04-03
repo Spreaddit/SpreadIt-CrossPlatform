@@ -13,6 +13,9 @@ class CommentWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10.0),
       margin: EdgeInsets.symmetric(vertical: 5.0),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey, width: screenHeight*0.001)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
