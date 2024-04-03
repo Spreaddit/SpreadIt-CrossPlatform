@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import '../../../generic_widgets/small_custom_button.dart';
 
 
 class CreatePostHeader extends StatefulWidget {
@@ -33,21 +34,9 @@ class _CreatePostHeaderState extends State<CreatePostHeader> {
             onPressed: () {},
           ),
         ),
-      Container(
-          margin:EdgeInsets.all(10),
-          child: ElevatedButton(
-            onPressed:widget.onPressed,
-            child: Text(widget.buttonText),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[900],
-              foregroundColor: Colors.white,
-              fixedSize: Size(80,20),
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              )
-            )
-            ),
-        ),
+      SmallButton(
+        buttonText: widget.buttonText,
+        onPressed: widget.onPressed)
       ],
     );
   }
