@@ -38,6 +38,18 @@ class ProfileHeader extends StatelessWidget {
 
     return Stack(
       children: [
+        Container(
+          width: screenWidth,
+          height: screenHeight * 0.5,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.black.withOpacity(0), Colors.transparent],
+              stops: [0.5, 1.0],
+            ),
+          ),
+        ),
         Image.network(
           backgroundImage,
           fit: BoxFit.cover,
@@ -70,22 +82,15 @@ class ProfileHeader extends StatelessWidget {
                         color: Colors.white,
                         iconSize: iconSize,
                       ),
-                      IconButton(
-                        icon: Icon(Icons.share),
-                        onPressed: () {
-                          // Your onPressed logic here
-                        },
-                        color: Colors.white,
-                        iconSize: iconSize,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.more_vert),
-                        onPressed: () {
-                          // Your onPressed logic here
-                        },
-                        color: Colors.white,
-                        iconSize: iconSize,
-                      ),
+                      if (!myProfile)
+                        IconButton(
+                          icon: Icon(Icons.more_vert),
+                          onPressed: () {
+                            // Your onPressed logic here
+                          },
+                          color: Colors.white,
+                          iconSize: iconSize,
+                        ),
                     ],
                   ),
                 ],

@@ -66,7 +66,7 @@ Widget _buildSelectedPage() {
         aboutText: about, 
         onSendMessagePressed: () {},
         onStartChatPressed: () {},
-        myProfile: false,
+        myProfile: true,
       ),
       );
     default:
@@ -90,7 +90,7 @@ Widget _buildSelectedPage() {
               username: username,
               userinfo: userinfo,
               about: about,
-              myProfile: true,
+              myProfile: false,
               followed:false,
               onStartChatPressed: ()=>{},
               editprofile:  () => navigateToEditProfile(context),

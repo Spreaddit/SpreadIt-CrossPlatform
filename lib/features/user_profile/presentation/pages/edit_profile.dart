@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../../../Account_Settings/presentation/widgets/switch_type_1.dart';
 import '../../../generic_widgets/custom_input.dart';
-import '../../../generic_widgets/validations.dart';
+import '../widgets/social_link_bottom_sheet_model.dart';
+import '../widgets/social_media_selection_bottom_sheet.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -10,33 +10,61 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  
   final GlobalKey<FormState> _usernameForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _aboutForm = GlobalKey<FormState>();
   var _about = '';
   var _username = '';
-  var _change =false;
+  var _change = false;
   bool _switchValue1 = false;
   bool _switchValue2 = false;
-    void updateUsername(String username, bool validation) {
+
+  void updateUsername(String username, bool validation) {
     _username = username;
     _usernameForm.currentState!.save();
     setState(() {
-      _change=true;
+      _change = true;
     });
-    }
-      void updateAbout(String about, bool validation) {
+  }
+
+  void updateAbout(String about, bool validation) {
     _about = about;
     _aboutForm.currentState!.save();
     setState(() {
-      _change=true;
+      _change = true;
     });
-    }
+  }
+
+
+void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
+  final selectedPlatform = await showModalBottomSheet<Map<String, dynamic>>(
+    context: context,
+    builder: (context) => SocialMediaSelectionBottomSheet(),
+  );
+
+  if (selectedPlatform != null) {
+    showModalBottomSheet<Map<String, dynamic>>(
+      context: context,
+      isScrollControlled: true,
+      builder: ((context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+         child: SocialMediaBottomSheet(
+          platformName: selectedPlatform['platformName'],
+          icon: selectedPlatform['icon'],
+          color: selectedPlatform['color'],
+        ),
+        );
+      }),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
-     final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false, 
       appBar: AppBar(
         title: Text('Edit Profile'),
         leading: IconButton(
@@ -118,61 +146,63 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 20),
-                          CustomInput(
-                            formKey: _usernameForm,
-                            onChanged: updateUsername,
-                            label: 'Display name - optional',
-                            placeholder: 'Display name - optional',
-                            wordLimit: 30,
-                            tertiaryText: "ay haga for now ama n4of a5rtha eh fy el lela el soda dy",
-                          ),
-                          SizedBox(height: 20),
-                          CustomInput(
-                            formKey: _aboutForm,
-                            onChanged: updateAbout,
-                            label: 'About you - optional',
-                            placeholder: 'About you - optional',
-                            height: screenHeight*0.25,
-                            wordLimit: 200,
-                          ),
-                          SizedBox(height: 20),
-                          TextButton(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20),
+                        CustomInput(
+                          formKey: _usernameForm,
+                          onChanged: updateUsername,
+                          label: 'Display name - optional',
+                          placeholder: 'Display name - optional',
+                          wordLimit: 30,
+                          tertiaryText:
+                              "This will be displayed to viewers of your profile page and does not change your username",
+                        ),
+                        SizedBox(height: 20),
+                        CustomInput(
+                          formKey: _aboutForm,
+                          onChanged: updateAbout,
+                          label: 'About you - optional',
+                          placeholder: 'About you - optional',
+                          height: screenHeight * 0.25,
+                          wordLimit: 200,
+                        ),
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: ElevatedButton.icon(
                             onPressed: () {
-                              // Implement adding social links
+                              _showSocialMediaSelectionBottomSheet(context);
                             },
-                            child: Text('Add Social Links'),
+                            icon: Icon(Icons.add),
+                            label: Text('Add Social Media'),
                           ),
-                          SizedBox(height: 20),
-                          SwitchBtn1(
-                            currentLightVal: _switchValue1,
-                            mainText: "Content Visibility",
-                            onPressed: () {
-                              setState(() {
-                                _switchValue1 = !_switchValue1;
-                              });
-                            },
-                            tertiaryText:
-                                "All posts to this profile will appear in r/all and your profile can be discovered in /users",
-                          ),
-                          SwitchBtn1(
-                            currentLightVal: _switchValue2,
-                            mainText: "Show active communities",
-                            onPressed: () {
-                              setState(() {
-                                _switchValue2 = !_switchValue2;
-                              });
-                            },
-                            tertiaryText:
-                                "Decide whether to show the communities you are active in on your profile",
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 20),
+                        SwitchBtn1(
+                          currentLightVal: _switchValue1,
+                          mainText: "Content Visibility",
+                          onPressed: () {
+                            setState(() {
+                              _switchValue1 = !_switchValue1;
+                            });
+                          },
+                          tertiaryText:
+                              "All posts to this profile will appear in r/all and your profile can be discovered in /users",
+                        ),
+                        SwitchBtn1(
+                          currentLightVal: _switchValue2,
+                          mainText: "Show active communities",
+                          onPressed: () {
+                            setState(() {
+                              _switchValue2 = !_switchValue2;
+                            });
+                          },
+                          tertiaryText:
+                              "Decide whether to show the communities you are active in on your profile",
+                        ),
+                      ],
                     ),
                   ],
                 ),
