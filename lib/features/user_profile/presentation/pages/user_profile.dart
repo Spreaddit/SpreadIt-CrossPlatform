@@ -5,7 +5,7 @@ import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../data/comments.dart';
 import '../widgets/about.dart';
 import '../widgets/comments.dart';
-import '../widgets/custom_bar.dart';
+import '../../../generic_widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
 
 class UserProfile extends StatefulWidget {
