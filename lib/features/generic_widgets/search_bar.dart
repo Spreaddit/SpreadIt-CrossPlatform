@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class CustomSearchBar extends StatefulWidget {
 
   final String hintText;
+  final List<Map<String, dynamic>> searchList;
+  final Function(List<Map<String, dynamic>>) onSearch;
 
   const CustomSearchBar({
     required this.hintText,
+    required this.searchList,
+    required this.onSearch,
   });
 
   @override
@@ -13,33 +17,57 @@ class CustomSearchBar extends StatefulWidget {
 }
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
+
+  final TextEditingController searchController = TextEditingController();
+
+  @override 
+  void initState() {
+    super.initState();
+    searchController.addListener(queryListener);
+  }
+
+  @override 
+  void dispose() {
+    searchController.removeListener(queryListener);
+    searchController.dispose();
+    super.dispose;
+  }
+
+  void queryListener() {
+    widget.onSearch(_filterList(searchController.text));
+  }
+
+  List<Map<String, dynamic>> _filterList(String query) {
+    if (query.isEmpty) {
+      return List.from(widget.searchList);
+    } 
+    else {
+      return widget.searchList
+          .where((e) =>
+              e['communityName']
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
+          .toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(15),
-      shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Color.fromARGB(255, 214, 214, 214)
+    return Padding(
+      padding: EdgeInsets.all(15),
+      child: SearchBar(
+        hintText: 'Search for a community',
+        controller: searchController,
+        trailing: [
+          IconButton(
+          icon: Icon(Icons.cancel),
+          onPressed: () {},
           ),
-        child: SizedBox(
-          height: 40,
-          child: TextField(
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 5),
-                hintText: widget.hintText,
-                prefixIcon: Icon(Icons.search),
-                border:OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                )
-              ),
-          ),
-        ),
+        ],
       ),
     );
+
+     
   }
 }

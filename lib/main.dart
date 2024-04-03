@@ -39,7 +39,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CreatePost(),
+      home: PostToCommunity(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -60,6 +60,7 @@ class SpreadIt extends StatelessWidget {
             ResetPassword(),
         '/post-to-community': (context) => PostToCommunity(),    
         '/add-tags':(context) => Tags(),
+        '/final-content-page': (context) => FinalCreatePost(),
       },
     );
   }
