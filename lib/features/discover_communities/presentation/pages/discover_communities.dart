@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'category.dart';
 
 class DiscoverCommunitiesPage extends StatelessWidget {
   final List<String> categories = [];
@@ -71,7 +72,12 @@ class DiscoverCommunitiesBody extends StatelessWidget {
               ],
             ),
             onPressed: () {
-              // Handle category selection
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CategoryPage(categoryName: categories[index]),
+                  ));
             },
           );
         }
