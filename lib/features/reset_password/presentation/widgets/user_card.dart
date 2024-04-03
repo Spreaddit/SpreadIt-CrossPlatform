@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+
+/// This widget is to display the user information in the page. It displays the user avatar, his email and username.
+
+// TODO : to be parametrised in phase 2
+
 class UserCard extends StatelessWidget {
   const UserCard({Key? key}) : super(key: key);
 

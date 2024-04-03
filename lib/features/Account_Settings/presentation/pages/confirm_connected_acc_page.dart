@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
-import '../data/data_source/api_verify_password_data.dart';
+import '../../data/data_source/api_verify_password_data.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import '../../../generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/custom_input.dart';
 import 'package:spreadit_crossplatform/features/Sign_up/data/oauth_service.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
-import '../data/data_source/api_user_info_data.dart';
+import '../../data/data_source/api_user_info_data.dart';
 
+/// Page for confirming the account's password.
+///
+/// Used for verification when connecting or disconnecting from the connected accounts experience.
 class ConfirmConnectedPassword extends StatefulWidget {
+  /// Constructs an [ConfirmConnectedPassword] instance.
+  /// 
+  /// Parameters:
+  /// - [connectionAction] : [String] Specifies whether the user is connecting or disconnecting [required].
   const ConfirmConnectedPassword({
     Key? key,
     required this.connectionAction,
@@ -21,17 +28,27 @@ class ConfirmConnectedPassword extends StatefulWidget {
       _ConfirmPasswConnectedordState();
 }
 
+/// [ConfirmConnectedPassword] state.
 class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
+  /// Entered password form state variable.
   final GlobalKey<FormState> _passwordForm = GlobalKey<FormState>();
 
+  /// Variable for storing the entered password.
   var _userPassword = '';
 
+  /// Variable for storing user data.
   late Map<String, dynamic> data;
+
+  /// The current email associated with the user.
   String currentEmail = "";
+
+  /// The username of the user.
   String username = "";
 
+  /// Flag indicating whether the entered password is valid.
   var validPass = false;
 
+  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
@@ -40,6 +57,7 @@ class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
     });
   }
 
+  /// Fetches user information.
   Future<void> fetchData() async {
     data = await getUserInfo(); // Await the result of getData()
     setState(() {
@@ -48,16 +66,19 @@ class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
     });
   }
 
+  /// Navigates to the forget password page.
   void navigateToForgetPassword(BuildContext context) {
     Navigator.of(context).pushNamed('/forget-password');
   }
 
+  /// Updates the password field.
   void updatePassword(String password, bool validation) {
     _userPassword = password;
     validPass = validation;
     _passwordForm.currentState!.save();
   }
 
+  /// Verifies the confirmation of the password.
   void verifyConfirmPassword(BuildContext context) async {
     if (!validPass) {
       CustomSnackbar(content: "Enter a valid password").show(context);

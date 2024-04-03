@@ -4,6 +4,18 @@ import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dar
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
+/// This widget is a post feed display,
+/// which takes [PostCategories] as a constructor parameter
+/// and creates a post feed, by fetching posts from
+/// the respective endpoint
+///
+/// This example shows how a post feed of best posts can be created
+///
+/// ```dart
+/// PostFeed(
+///   postCategory: PostCategories.best,
+/// ),
+/// ```
 class PostFeed extends StatefulWidget {
   PostCategories postCategory;
   PostFeed({

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/confirm_connected_acc_page.dart';
-import '../data/data_source/api_basic_settings_data.dart';
+import '../../data/data_source/api_basic_settings_data.dart';
 import '../../../Sign_up/data/oauth_service.dart';
 
+/// A button widget used for connecting or disconnecting from the connected accounts experience.
 class ConnectAccBtn extends StatefulWidget {
+  /// Creates a button widget for connecting or disconnecting an account.
+  ///
+  /// Parameters:
+  /// - [iconData] : [IconData] The icon data for the account [required].
+  /// - [accountName] : [String] The name of the account [required].
   const ConnectAccBtn({
     Key? key,
     required this.iconData,
@@ -17,12 +23,18 @@ class ConnectAccBtn extends StatefulWidget {
   State<ConnectAccBtn> createState() => _ConnectAccBtnState();
 }
 
+/// [ConnectAccBtn] state.
 class _ConnectAccBtnState extends State<ConnectAccBtn> {
+  /// Represents the current action for connection.
   var _connectionAction = "Connect";
 
+  /// Holds fetched user info data.
   late Map<String, dynamic> data;
+
+  /// Represents the email address of the connected account.
   String connectedEmail = "";
 
+  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
@@ -31,6 +43,7 @@ class _ConnectAccBtnState extends State<ConnectAccBtn> {
     });
   }
 
+  /// Fetches data about the connected account.
   Future<void> fetchData() async {
     data = await getBasicData(); // Await the result of getData()
     setState(() {

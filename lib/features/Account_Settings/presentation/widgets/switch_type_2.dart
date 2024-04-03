@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// A customizable switch button widget with two different icons representing on and off states.
 class SwitchBtn2 extends StatefulWidget {
+  /// Creates a switch button widget.
+  ///
+  /// Parameters:
+  /// - [filledIconData] : [IconData] The icon to be displayed when the switch is on [required].
+  /// - [outlinedIconData] : [IconData] The icon to be displayed when the switch is off [required].
+  /// - [mainText] : [String] The main text of the switch button [required].
+  /// - [onPressed] : [Function] The function called when the switch button is pressed [required].
+  /// - [currentLightVal] : [bool] The current value of the switch [required].
+  /// - [switchActiveClr] : [Color] The color of the switch when active (default is [Color.fromARGB(255, 7, 116, 205)]).
+  /// - [thumbActiveClr] : [Color] The color of the switch thumb when active (default is [Colors.white]).
   const SwitchBtn2({
     Key? key,
     required this.filledIconData,
@@ -24,17 +35,23 @@ class SwitchBtn2 extends StatefulWidget {
   State<SwitchBtn2> createState() => SwitchBtn2State();
 }
 
+/// [SwitchBtn2] state.
 class SwitchBtn2State extends State<SwitchBtn2> {
+  /// Current value of the switch.
   late bool lightVal = widget.currentLightVal;
+  /// Current icon.
   late IconData iconData;
+
+  /// Gets the current value of the switch.
   bool getCurrentState() {
     return lightVal;
   }
 
+  /// Changes the state of the switch and runs the function [widget.onPressed].
   void changeState() {
     setState(() {
       widget.onPressed();
-      iconData = (lightVal)? widget.filledIconData : widget.outlinedIconData;
+      iconData = (lightVal) ? widget.filledIconData : widget.outlinedIconData;
     });
     print(lightVal);
   }
@@ -42,7 +59,7 @@ class SwitchBtn2State extends State<SwitchBtn2> {
   @override
   Widget build(BuildContext context) {
     lightVal = widget.currentLightVal;
-    iconData = (lightVal)? widget.filledIconData : widget.outlinedIconData;
+    iconData = (lightVal) ? widget.filledIconData : widget.outlinedIconData;
     return TextButton(
       onPressed: (() {
         changeState();

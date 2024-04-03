@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// A Flutter widget for displaying terms and conditions text with styling.   
+/// ```dart
+/// TermsAndCondText()
+/// ```
+
 class TermsAndCondText extends StatelessWidget {
   const TermsAndCondText({Key? key}) : super(key: key);
 

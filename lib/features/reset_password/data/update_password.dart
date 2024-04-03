@@ -3,6 +3,11 @@ import 'package:spreadit_crossplatform/api.dart';
 
 String apibase = apiUrl;
 
+/// This page receives the user input passwords which are [currentPassword], [newPassword] and a [token] for the user request, and 
+/// sends all thede data to the backend.
+/// the backend first checks that the [currentPassword] is indeed connected to this user and then updated the 
+/// [currentPassword] with the [newPassword].
+
 Future<int> updatePassword(
     String newPassword, String currentPassword, String token) async {
   try {
