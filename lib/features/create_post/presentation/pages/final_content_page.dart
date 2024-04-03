@@ -16,7 +16,33 @@ class FinalCreatePost extends StatefulWidget {
 }
 
 class _FinalCreatePostState extends State<FinalCreatePost> {
-    bool isPrimaryFooterVisible = true;
+
+  final GlobalKey<FormState> _finalTitleForm = GlobalKey<FormState>();
+  final GlobalKey<FormState> _finalContentForm = GlobalKey<FormState>();
+
+  String title = '';
+  String content ='';
+
+  bool isPrimaryFooterVisible = true;
+  bool isButtonEnabled = false;
+
+   void updateTitle(String value) {
+    title = value;
+    _finalTitleForm.currentState!.save();
+    updateButtonState();
+  }
+
+  void updateContent(String value) {
+    content = value;
+    _finalContentForm.currentState!.save();
+      
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled = title.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(title);
+    });
+  }
 
   void toggleFooter() {
     setState(() {
@@ -41,6 +67,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
             child: CreatePostHeader(
               buttonText: "Post",
               onPressed: navigateToPostToCommunity,
+              isEnabled: isButtonEnabled,
               ),
           ),
           Container(
@@ -104,8 +131,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               ),
              ),
           ),
-          PostTitle(),
-          PostContent(),
+          PostTitle(
+            formKey: _finalTitleForm,
+            onChanged: updateTitle,
+          ),
+          PostContent(
+            formKey: _finalContentForm,
+            onChanged:  updateContent,
+          ),
           isPrimaryFooterVisible? PostFooter(toggleFooter: toggleFooter) : SecondaryPostFooter(),
         ],)
     );

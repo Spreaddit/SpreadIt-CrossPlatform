@@ -4,12 +4,14 @@ class SmallButton extends StatefulWidget {
 
   final String buttonText;
   final VoidCallback onPressed;
+  final bool isEnabled;
   final Color? foregroundColor;
   final Color? backgroundColor;
 
   const SmallButton({
     required this.buttonText,
     required this.onPressed,
+    required this.isEnabled,
     this.foregroundColor,
     this.backgroundColor,
   });
@@ -24,7 +26,7 @@ class _SmallButtonState extends State<SmallButton> {
     return Container(
           margin:EdgeInsets.all(10),
           child: ElevatedButton(
-            onPressed:widget.onPressed,
+            onPressed: widget.isEnabled? widget.onPressed : null,
             child: Text(widget.buttonText),
             style: ElevatedButton.styleFrom(
               backgroundColor: widget.backgroundColor != null ? widget.backgroundColor : Colors.blue[900],

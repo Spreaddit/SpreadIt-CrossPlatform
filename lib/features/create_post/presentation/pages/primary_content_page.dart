@@ -5,8 +5,9 @@ import '../widgets/title.dart';
 import '../widgets/content.dart';
 import '../widgets/create_post_footer.dart';
 import '../widgets/create_post_secondary_footer.dart';
+import '../../../generic_widgets/snackbar.dart';
 
-class CreatePost extends StatefulWidget {
+class CreatePost extends StatefulWidget {  
   const CreatePost({Key? key}) : super(key: key);
 
   @override
@@ -14,7 +15,42 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
-    bool isPrimaryFooterVisible = true;
+
+  final GlobalKey<FormState> _primaryTitleForm = GlobalKey<FormState>();
+  final GlobalKey<FormState> _primaryContentForm = GlobalKey<FormState>();
+
+  String title = '';
+  String content = '';
+
+  bool isPrimaryFooterVisible = true;
+  bool isButtonEnabled = false;
+
+  void updateTitle(String value) {
+    print('title :' + title);
+    title = value;
+    print('title after initialization :' + title);
+    _primaryTitleForm.currentState!.save();
+    print('title state saved');
+    updateButtonState();
+  }
+
+  void updateContent(String value) {
+    print('content :' + content);
+    content = value;
+    print('content after initialization :' + content);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    if (_primaryContentForm.currentState != null) {
+      _primaryContentForm.currentState!.save();
+      print('content state saved');
+    }
+    });
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonEnabled = title.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(title);
+    });
+  }
 
   void toggleFooter() {
     setState(() {
@@ -23,7 +59,7 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   void navigateToPostToCommunity() {
-    Navigator.of(context).pushNamed('/post-to-community');
+      Navigator.of(context).pushNamed('/post-to-community');
   }
 
   @override
@@ -35,10 +71,24 @@ class _CreatePostState extends State<CreatePost> {
             child: CreatePostHeader(
               buttonText: "Next",
               onPressed: navigateToPostToCommunity,
+              isEnabled: isButtonEnabled,
               ),
           ),
-          PostTitle(),
-          PostContent(),
+          PostTitle(
+            formKey: _primaryTitleForm,
+            onChanged:updateTitle,
+          ),
+          PostContent(
+            formKey: _primaryContentForm,
+            onChanged:updateContent,
+          ),
+          Container(
+            child: CreatePostHeader(
+              buttonText: "Next",
+              onPressed: navigateToPostToCommunity,
+              isEnabled: isButtonEnabled,
+              ),
+          ),
           isPrimaryFooterVisible? PostFooter(toggleFooter: toggleFooter) : SecondaryPostFooter(),
         ],)
     );
@@ -46,8 +96,7 @@ class _CreatePostState extends State<CreatePost> {
 }
 
 /* TODOs 
-1) law mafish title , deactivate el zorar
-2) save the title wel content f 7etta 
+1) asalla7 moshekelt el content initstate walla ma3rafsh eih  
 3) a7ot actions lel footer
 4) law 3andi link a7ottelo makano bardou
 5) ab3at el haga di kollaha lel final content page 
