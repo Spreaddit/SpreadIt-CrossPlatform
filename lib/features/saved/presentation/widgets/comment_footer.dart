@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 
 class CommentFooter extends StatelessWidget {
   final Function()? onMorePressed;
   final Function()? onReplyPressed;
-  final Function()? onUpvotePressed;
-  final Function()? onDownvotePressed;
   final int number;
   final bool upvoted;
   final bool downvoted;
@@ -12,8 +11,6 @@ class CommentFooter extends StatelessWidget {
   CommentFooter({
     required this.onMorePressed,
     required this.onReplyPressed,
-    required this.onUpvotePressed,
-    required this.onDownvotePressed,
     required this.number,
     this.upvoted = false,
     this.downvoted = false,
@@ -21,11 +18,10 @@ class CommentFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
-      margin: EdgeInsets.only(left: screenWidth * 0.4),
+      margin: EdgeInsets.only(left: screenWidth * 0.33),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -35,32 +31,23 @@ class CommentFooter extends StatelessWidget {
                 onPressed: onMorePressed,
                 icon: Icon(Icons.more_vert),
               ),
-              SizedBox(width: 8.0),
+              SizedBox(width: screenWidth * 0.02),
               IconButton(
                 onPressed: onReplyPressed,
                 icon: Icon(Icons.reply),
               ),
-              SizedBox(width: 8.0),
               Text('Reply'),
-              SizedBox(width: 8.0),
-              GestureDetector(
-                onTap: onUpvotePressed,
-                child: ImageIcon(
-                  AssetImage("assets/images/upvoteicon.png"),
-                  size: screenHeight * 0.02,
-                  color: upvoted ? Colors.orange : Colors.grey,
-                ),
+              SizedBox(width: screenWidth * 0.02),
+              UpVoteButton(
+                color: upvoted ? Colors.orange : Colors.grey,
+                width: screenWidth * 0.04,
+                height: screenWidth * 0.04,
               ),
-              SizedBox(width: 8.0),
               Text('$number'),
-              SizedBox(width: 8.0),
-              GestureDetector(
-                onTap: onDownvotePressed,
-                child: ImageIcon(
-                  AssetImage("assets/images/downvoteicon.png"),
-                  size: screenHeight * 0.02,
-                  color: downvoted ? Colors.purple : Colors.grey,
-                ),
+              DownVoteButton(
+                color: downvoted ? Colors.purple : Colors.grey,
+                width: screenWidth * 0.04,
+                height: screenWidth * 0.04,
               ),
             ],
           ),

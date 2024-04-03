@@ -13,37 +13,11 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
   int _selectedIndex = 0;
-  bool _upvoted = false;
-  bool _downvoted = false;
+  bool _upvoted = true;
+  bool _downvoted = true;
   int _number = 10;
 
-  void _toggleUpvote() {
-    setState(() {
-      _upvoted = !_upvoted;
-      if (_upvoted) {
-        if (_downvoted) {
-          _number++;
-        } else {
-          _number += 2;
-        }
-        _downvoted = false;
-      }
-    });
-  }
-
-  void _toggleDownvote() {
-    setState(() {
-      _downvoted = !_downvoted;
-      if (_downvoted) {
-        if (_upvoted) {
-          _number--;
-        } else {
-          _number -= 2;
-        }
-        _upvoted = false;
-      }
-    });
-  }
+  
 
   void _onIndexChanged(int index) {
     setState(() {
@@ -68,8 +42,6 @@ class _SavedPageState extends State<SavedPage> {
             onReplyPressed: () {
               print('Reply button pressed');
             },
-            onUpvotePressed: _toggleUpvote,
-            onDownvotePressed: _toggleDownvote,
             number: _number,
             upvoted: _upvoted,
             downvoted: _downvoted,
