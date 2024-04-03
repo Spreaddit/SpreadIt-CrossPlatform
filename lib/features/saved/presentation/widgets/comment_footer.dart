@@ -21,7 +21,7 @@ class CommentFooter extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
-      margin: EdgeInsets.only(left: screenWidth * 0.33),
+      margin: EdgeInsets.only(left: screenWidth * 0.35),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -31,13 +31,20 @@ class CommentFooter extends StatelessWidget {
                 onPressed: onMorePressed,
                 icon: Icon(Icons.more_vert),
               ),
-              SizedBox(width: screenWidth * 0.02),
-              IconButton(
+              SizedBox(width: screenWidth * 0.01),
+              TextButton(
                 onPressed: onReplyPressed,
-                icon: Icon(Icons.reply),
+                child: Row(
+                  children: [
+                    Icon(Icons.reply, color: Colors.grey),
+                    Text(
+                      'Reply',
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                  ],
+                ),
               ),
-              Text('Reply'),
-              SizedBox(width: screenWidth * 0.02),
+              SizedBox(width: screenWidth * 0.01),
               UpVoteButton(
                 color: upvoted ? Colors.orange : Colors.grey,
                 width: screenWidth * 0.04,
