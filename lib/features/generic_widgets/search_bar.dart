@@ -57,17 +57,16 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     return Padding(
       padding: EdgeInsets.all(15),
       child: SearchBar(
-        hintText: 'Search for a community',
-        controller: searchController,
-        trailing: [
-          IconButton(
-          icon: Icon(Icons.cancel),
-          onPressed: () {},
-          ),
-        ],
-      ),
+          hintText: 'Search for a community',
+          controller: searchController,
+          backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 241, 243, 254)),
+          trailing: [
+            IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {searchController.clear();},
+            ),
+          ],
+        ),
     );
-
-     
   }
 }
