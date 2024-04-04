@@ -48,22 +48,74 @@ class DiscoverCommunitiesBody extends StatelessWidget {
           SizedBox(height: 16.0),
           Container(
             alignment: Alignment.centerLeft,
-            child: Text('   🔥 Trending globally',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                )),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(),
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.black87,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '🔥 Trending globally',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Icon(Icons.arrow_right, color: Colors.black87),
+                ],
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoryPage(
+                      categoryName: '🔥 Trending globally',
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           // First section with horizontal scrolling
           HorizontalScroll(),
           SizedBox(height: 16.0),
           Container(
             alignment: Alignment.centerLeft,
-            child: Text('   🌍 Top globally',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                )),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(),
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.black87,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '🌍 Top globally',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Icon(Icons.arrow_right, color: Colors.black87),
+                ],
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoryPage(
+                      categoryName: '🌍 Top globally',
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
           HorizontalScroll(),
           // Second section with vertical scrolling
