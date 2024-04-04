@@ -1,56 +1,66 @@
 import 'package:flutter/material.dart';
 import 'subreddit_cards.dart';
+import '../../data/community.dart';
+import '../../data/get_specific_category.dart';
 
-class HorizontalScroll extends StatelessWidget {
+class HorizontalScroll extends StatefulWidget {
+  @override
+  _HorizontalScrollState createState() => _HorizontalScrollState();
+}
+
+class _HorizontalScrollState extends State<HorizontalScroll> {
+  List<Community> communities = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadCommunities();
+  }
+
+  void loadCommunities() async {
+    GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
+    List<Community> loadedCommunities =
+        await getSpecificCommunity.getCommunities('🔥 Trending globally');
+    setState(() {
+      communities = loadedCommunities;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int cardIndex = 1;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: <Widget>[
-          Container(
+        children: List<Widget>.generate((communities.length / 2).ceil(), (i) {
+          Community community1 = communities[i * 2];
+          Community? community2;
+          if ((i * 2) + 1 < communities.length) {
+            community2 = communities[(i * 2) + 1];
+          }
+          return Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
               children: [
                 SubredditCard(
-                  index: 1,
-                  title: 'Title',
-                  description: 'Description',
-                  numberOfMembers: '1000',
-                  image: 'https://picsum.photos/205',
+                  index: cardIndex++,
+                  title: community1.name,
+                  description: community1.description,
+                  numberOfMembers: community1.membersCount.toString(),
+                  image: community1.image,
                 ),
-                SubredditCard(
-                  index: 2,
-                  title: 'Title',
-                  description: 'Description',
-                  numberOfMembers: '1000',
-                  image: 'https://picsum.photos/204',
-                ),
+                if (community2 != null)
+                  SubredditCard(
+                    index: cardIndex++,
+                    title: community2.name,
+                    description: community2.description,
+                    numberOfMembers: community2.membersCount.toString(),
+                    image: community2.image,
+                  ),
               ],
             ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                SubredditCard(
-                  index: 1,
-                  title: 'Title',
-                  description: 'Description',
-                  numberOfMembers: '1000',
-                  image: 'https://picsum.photos/202',
-                ),
-                SubredditCard(
-                  index: 2,
-                  title: 'Title',
-                  description: 'Description',
-                  numberOfMembers: '1000',
-                  image: 'https://picsum.photos/203',
-                ),
-              ],
-            ),
-          ),
-        ],
+          );
+        }).toList(),
       ),
     );
   }
