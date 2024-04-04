@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'category.dart';
 import '../widgets/subreddit_cards.dart';
+import '../widgets/horizontal_scroll.dart';
 
 class DiscoverCommunitiesPage extends StatelessWidget {
   final List<String> categories = [];
@@ -44,35 +45,27 @@ class DiscoverCommunitiesBody extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          // First section with horizontal scrolling
+          SizedBox(height: 16.0),
           Container(
-            height: 160.0, // Set a height for the horizontal scrolling section
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: SubredditCard(
-                    index: 1,
-                    title: 'Title',
-                    description: 'Description',
-                    numberOfMembers: '1000',
-                    image: 'assets/flutterdev.png',
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: SubredditCard(
-                    index: 2,
-                    title: 'Title',
-                    description: 'Description',
-                    numberOfMembers: '1000',
-                    image: 'assets/flutterdev.png',
-                  ),
-                ),
-              ],
-            ),
+            alignment: Alignment.centerLeft,
+            child: Text('   🔥 Trending globally',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                )),
           ),
+          // First section with horizontal scrolling
+          HorizontalScroll(),
+          SizedBox(height: 16.0),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text('   🌍 Top globally',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                )),
+          ),
+          HorizontalScroll(),
           // Second section with vertical scrolling
           ListView.builder(
             shrinkWrap: true,
@@ -83,7 +76,10 @@ class DiscoverCommunitiesBody extends StatelessWidget {
                 return ListTile(
                   title: Text(
                     categories[index],
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                    ),
                   ),
                 );
               } else {
@@ -107,7 +103,14 @@ class DiscoverCommunitiesBody extends StatelessWidget {
                     ],
                   ),
                   onPressed: () {
-                    // Add your navigation logic here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryPage(
+                          categoryName: categories[index],
+                        ),
+                      ),
+                    );
                   },
                 );
               }
