@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
 
+/// A customizable button widget.
+/// This widget allows you to create a button with various customization options such as text, background color,
+/// foreground color, prefix icon, and image.   
+/// To use this widget, provide the required parameters:    
+/// -onPressed: Callback function to be executed when the button is pressed.   
+/// -text: Text to be displayed on the button.   
+/// -backgroundColor: Background color of the button.  
+/// -foregroundColor: Foreground color of the button (text color).   
+/// Additionally, you can optionally provide:    
+/// -prefixIcon: An optional icon to be displayed before the text.   
+/// -imagePath: An optional path to an image asset to be displayed before the text.   
+/// ```dart
+/// Button(
+///   onPressed: () {
+///     // Handle button press
+///   },
+///   text: 'Submit',
+///   backgroundColor: Colors.blue,
+///   foregroundColor: Colors.white,
+///   prefixIcon: Icons.send,
+/// )
+/// ```
+
 class Button extends StatefulWidget {
   final VoidCallback onPressed;
   final String text;
   final Color backgroundColor;
   final Color foregroundColor;
-  final IconData? prefixIcon; 
+  final IconData? prefixIcon;
   final String? imagePath;
 
   const Button({
@@ -14,7 +37,7 @@ class Button extends StatefulWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     this.prefixIcon,
-    this.imagePath, 
+    this.imagePath,
   });
 
   @override
@@ -41,12 +64,12 @@ class _ButtonState extends State<Button> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (widget.prefixIcon != null) 
+            if (widget.prefixIcon != null)
               Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Icon(widget.prefixIcon),
               ),
-            if (widget.imagePath != null) 
+            if (widget.imagePath != null)
               Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Image.asset(

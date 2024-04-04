@@ -6,6 +6,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'features/saved/presentation/page/saved_page.dart';
+import 'features/user_profile/presentation/pages/edit_profile.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
@@ -17,6 +18,7 @@ import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
+import 'features/user_profile/presentation/pages/user_profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +56,8 @@ class SpreadIt extends StatelessWidget {
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
          '/saved': (context) => SavedPage(),
+        '/user-profile': (context) => UserProfile(),
+        '/edit-profile' : (context) => EditProfilePage(),
       },
     );
   }

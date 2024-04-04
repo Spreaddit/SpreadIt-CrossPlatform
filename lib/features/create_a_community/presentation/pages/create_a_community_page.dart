@@ -1,26 +1,50 @@
+/// This file contains the CreateCommunityPage widget which is a stateful widget.
+/// This widget allows the user to create a new community by providing the necessary details.
+///
+/// The user can specify the community name, type, and whether it is 18+ or not.
+///
+/// This file also imports necessary packages and widgets required for the CreateCommunityPage widget.
+
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
 
+/// The CreateCommunityPage widget is a stateful widget that builds the UI for creating a new community.
 class CreateCommunityPage extends StatefulWidget {
   @override
+
+  /// Creates the mutable state for this widget at a given location in the tree.
   State<CreateCommunityPage> createState() => _CreateCommunityPageState();
 }
 
+/// The _CreateCommunityPageState class is the logic and internal state for a StatefulWidget.
 class _CreateCommunityPageState extends State<CreateCommunityPage> {
+  /// A list of community types that the user can choose from.
   final communityType = [
     ' Public \n Anyone can view post, and comment to this  community',
     ' Private \n Only approved members can view and contribute to this community',
     ' Restricted \n Only approved members can view this community',
   ];
+
+  /// The HTTP response status code.
   int? _responseStatus;
+
+  /// The name of the community that the user inputs.
   String _communityName = "";
+
+  /// A controller for an editable text field.
   final _controller = TextEditingController();
+
+  /// The index of the selected community type in the communityType list.
   var selectedCommunityType = 0;
+
+  /// A boolean value that indicates whether the community is 18+ or not.
   bool _is18Plus = false;
 
   @override
+
+  /// Describes the part of the user interface represented by this widget.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

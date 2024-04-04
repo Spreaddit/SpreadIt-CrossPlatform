@@ -4,6 +4,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 
+/// first page after login, displaying user feed
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

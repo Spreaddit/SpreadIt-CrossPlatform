@@ -9,7 +9,7 @@ class TopBar extends AppBar {
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.transparent,
           title: Container(
-            width: 140,
+            width: 160,
             height: 50,
             decoration: BoxDecoration(
               color: Color.fromARGB(18, 0, 0, 0),

@@ -1,3 +1,9 @@
+/// This file contains unit tests for the CreateCommunityPage widget.
+///
+/// The tests cover the initial state of the CreateCommunityPage,
+/// the state change when the SwitchListTile is tapped,
+/// and the display of the BottomSheet when the TextButton is tapped.
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';

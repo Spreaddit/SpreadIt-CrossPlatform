@@ -7,7 +7,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart
 
 import '../../../generic_widgets/snackbar.dart';
 
-
+/// This page allows users to create their usernames during the sign-up process.
 class CreateUsername extends StatefulWidget {
   const CreateUsername({Key? key}) : super(key: key);
 
@@ -28,6 +28,7 @@ class _CreateUsernameState extends State<CreateUsername> {
   var invalidText = "";
 
 
+  /// Callback function to update the username and its validation status.
   void updateUsername(String username, bool validation) {
     _userName = username;
     setState(() {
@@ -37,7 +38,7 @@ class _CreateUsernameState extends State<CreateUsername> {
     _usernameform.currentState!.save();
   }
 
-
+  /// Navigates to the home page after successful sign-up.
 void navigateToHomePage(BuildContext context) async {
   if (validUserName) {
     _usernameform.currentState!.save();
@@ -47,7 +48,7 @@ void navigateToHomePage(BuildContext context) async {
       password: _userPassword,
     );
     if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/home'); // SHOULD BE HOME
+      Navigator.of(context).pushNamed('/home'); 
     } 
     else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input" ).show(context); 

@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
+import '../../../user_info.dart';
 import '../../user.dart';
-
+/// Base URL for the API.
 String apibase = apiUrl;
 
+/// takes [googleToken] as a parameter and
+/// returns its the user info and the new access token 
 Future<int> googleOAuthApi({
   required String googleToken,
 }) async {
@@ -16,11 +19,10 @@ Future<int> googleOAuthApi({
     };
     final response = await Dio().post(apiUrl, data: data);
     if (response.statusCode == 200) {
-      String accessToken = response.data['access_token'];
-      print("access token:$accessToken");
-      String tokenExpirationDate = response.data['access_token'];
-      print("token expiration date:$tokenExpirationDate");
       User user = User.fromJson(response.data['user']);
+      UserSingleton().setUser(user);
+      UserSingleton().setAccessToken(response.data['access_token'], DateTime.parse(response.data['token_expiration_date']));
+
       print(response.statusMessage);
       return 200;
     } else if (response.statusCode == 409) {

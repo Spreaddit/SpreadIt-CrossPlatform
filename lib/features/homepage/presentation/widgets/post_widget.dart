@@ -11,6 +11,8 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/in
 // bool isJoinCommunityVisible;
 // }
 
+/// This widget is responsible for displaying post header:
+/// (e.g., user info and date of posting)
 class _PostHeader extends HookWidget {
   final String username;
   final String userId;
@@ -73,6 +75,8 @@ class _PostHeader extends HookWidget {
   }
 }
 
+/// This widget is responsible for displaying post body:
+/// headline, description (optional) and an image (optional)
 class _PostBody extends StatelessWidget {
   final String headline;
   final String? description;
@@ -107,6 +111,8 @@ class _PostBody extends StatelessWidget {
   }
 }
 
+/// This widget is responsible for displaying post interactions bottom bar
+/// count of shares, upvotes and comments is displayed here.
 class _PostInteractions extends HookWidget {
   final int votesCount;
   final int sharesCount;
@@ -146,6 +152,8 @@ class _PostInteractions extends HookWidget {
   }
 }
 
+/// This widget takes an instance of [Post] as a paremeter
+/// and returns a postcard with its relevant info
 class PostWidget extends StatelessWidget {
   final Post post;
   //TODO: final bool isJoinCommunityVisible;

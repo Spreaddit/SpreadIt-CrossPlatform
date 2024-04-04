@@ -13,7 +13,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.account_circle_outlined,
               'text': 'My profile',
-              'route': '/home'
+              'route': '/user-profile'
             },
             {
               'icon': Icons.group,

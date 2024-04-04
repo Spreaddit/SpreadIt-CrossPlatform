@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 
+/// A Widget for displaying the history page.
 class HistoryPage extends StatelessWidget {
+  /// Builds the widget for the history page.
+  ///
+  /// The [context] parameter represents the build context.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
