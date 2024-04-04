@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'category.dart';
-import '../widgets/subreddit_cards.dart';
 import '../widgets/horizontal_scroll.dart';
 
 class DiscoverCommunitiesPage extends StatelessWidget {
