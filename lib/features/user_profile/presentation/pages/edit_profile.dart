@@ -3,6 +3,7 @@ import '../../../Account_Settings/presentation/widgets/switch_type_1.dart';
 import '../../../generic_widgets/custom_input.dart';
 import '../widgets/social_link_bottom_sheet_model.dart';
 import '../widgets/social_media_selection_bottom_sheet.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -97,7 +98,7 @@ void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
               height: MediaQuery.of(context).size.height,
               child: FractionallySizedBox(
                 alignment: Alignment.topCenter,
-                heightFactor: 0.25,
+                heightFactor: kIsWeb? 0.35:0.25,
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -111,7 +112,7 @@ void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.2),
+                  top:  kIsWeb? MediaQuery.of(context).size.height *0.32: MediaQuery.of(context).size.height * 0.2),
               child: Center(
                 child: Column(
                   children: [
@@ -119,17 +120,17 @@ void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
                       alignment: Alignment.center,
                       children: [
                         CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.14,
+                          radius: kIsWeb? MediaQuery.of(context).size.height *0.1: MediaQuery.of(context).size.width * 0.14,
                           backgroundImage: NetworkImage(
                             'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
                           ),
                         ),
                         Positioned(
-                          bottom: 0,
-                          right: 0,
+                          bottom:  0,
+                          right:  0,
                           child: Container(
-                            width: MediaQuery.of(context).size.height * 0.05,
-                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: kIsWeb? MediaQuery.of(context).size.width * 0.025 : MediaQuery.of(context).size.height * 0.05,
+                            height: kIsWeb? MediaQuery.of(context).size.width * 0.025:MediaQuery.of(context).size.height * 0.05,
                             decoration: BoxDecoration(
                               color: Colors.blue,
                               shape: BoxShape.circle,

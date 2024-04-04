@@ -5,10 +5,11 @@ import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../data/comments.dart';
 import '../../data/community.dart';
 import '../widgets/about.dart';
-import '../widgets/active_community';
+import '../widgets/active_community.dart';
 import '../widgets/comments.dart';
 import '../../../generic_widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -19,16 +20,14 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
-  ////////////////////////////////////////////    TO BE TAKEN FROM THE BACKEND ////////////////////////////////////////////////
   String backgroundImage =
-      'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg';
+      'https://t1.gstatic.com/licensed-image?q=tbn:ANd9GcRM0OQsITDDUQ-PCjobiXAyUfEQn1sOAkjorPKB2miR-sYx_aCjqMSevH2Y4WjIvPoA';
   String profilePicture =
       'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj';
   String username = "mimo";
   String userinfo = "u/mimo • 43 karma • Jun 6,2020";
   String about = "Don't take ay haga seriously";
 
-  //////////////////////////////////////           Comments dummy data     ////////////////////////////////////////////////////////
   final List<Comment> commentsList = comments;
   final List<Community> communitiesList = communities;
 
@@ -45,43 +44,46 @@ class _UserProfileState extends State<UserProfile> {
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
-  return SliverToBoxAdapter(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (communitiesList.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-          child: Text(
-            'Active Communities',
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-        ),
-        if (communitiesList.isNotEmpty)
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.21,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: communitiesList.map((community) {
-                return Padding(
-                  padding: EdgeInsets.only(right: 10.0),
-                  child: ActiveCommunity(
-                    community: community,
+        return SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (communitiesList.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 15.0),
+                  child: Text(
+                    'Active Communities',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              if (communitiesList.isNotEmpty)
+                SizedBox(
+                  height: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.25
+                      : MediaQuery.of(context).size.height * 0.21,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: communitiesList.map((community) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: 10.0),
+                          child: ActiveCommunity(
+                            community: community,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              PostFeed(
+                postCategory: PostCategories.best,
+              ),
+            ],
           ),
-        ),
-        PostFeed(
-          postCategory: PostCategories.best,
-        ),
-      ],
-    ),
-  );
+        );
 
       case 1:
         return SliverList(
@@ -94,7 +96,6 @@ class _UserProfileState extends State<UserProfile> {
           ),
         );
       case 2:
-        // Render about
         return SliverToBoxAdapter(
           child: AboutWidget(
             postKarmaNo: '100',
@@ -106,7 +107,6 @@ class _UserProfileState extends State<UserProfile> {
           ),
         );
       default:
-        // Render posts
         return SliverToBoxAdapter(
           child: Text('Posts'),
         );
@@ -116,29 +116,31 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: ProfileHeader(
-              backgroundImage: backgroundImage,
-              profilePicture: profilePicture,
-              username: username,
-              userinfo: userinfo,
-              about: about,
-              myProfile: true,
-              followed: false,
-              onStartChatPressed: () => {},
-              editprofile: () => navigateToEditProfile(context),
+      body: Scrollbar(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: ProfileHeader(
+                backgroundImage: backgroundImage,
+                profilePicture: profilePicture,
+                username: username,
+                userinfo: userinfo,
+                about: about,
+                myProfile: true,
+                followed: true,
+                onStartChatPressed: () => {},
+                editprofile: () => navigateToEditProfile(context),
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: CustomBar(
-              tabs: ['Posts', 'Comments', 'About'],
-              onIndexChanged: _onIndexChanged,
+            SliverToBoxAdapter(
+              child: CustomBar(
+                tabs: ['Posts', 'Comments', 'About'],
+                onIndexChanged: _onIndexChanged,
+              ),
             ),
-          ),
-          _buildSelectedPage(),
-        ],
+            _buildSelectedPage(),
+          ],
+        ),
       ),
     );
   }

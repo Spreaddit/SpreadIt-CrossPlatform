@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ProfileHeader extends StatelessWidget {
   final String backgroundImage;
@@ -35,28 +35,32 @@ class ProfileHeader extends StatelessWidget {
     final double iconSize =
         (screenWidth < screenHeight ? screenWidth : screenHeight) *
             iconSizePercentage;
-    final double photosize =
+    final double photosize = kIsWeb? screenHeight * 0.065 :
         (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
-
+    bool isWeb = kIsWeb;
     return Stack(
       children: [
         Container(
           width: screenWidth,
-          height: screenHeight * 0.5,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.black.withOpacity(0), Colors.transparent],
-              stops: [0.5, 1.0],
+          height: kIsWeb? screenHeight*0.52:screenHeight * 0.5,
+          child: ShaderMask(
+            blendMode: BlendMode.srcATop,
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.9),
+                ],
+                stops: [0.0, 0.7], 
+              ).createShader(bounds);
+            },
+            child: Image.network(
+              backgroundImage,
+              fit: BoxFit.cover,
             ),
           ),
-        ),
-        Image.network(
-          backgroundImage,
-          fit: BoxFit.cover,
-          width: screenWidth,
-          height: screenHeight * 0.5,
         ),
         Container(
           color: Colors.transparent,
@@ -98,17 +102,16 @@ class ProfileHeader extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20),
+                padding: EdgeInsets.only(left: kIsWeb? screenHeight * 0.02 :20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: screenHeight * 0.08),
+                    SizedBox(height: kIsWeb? screenHeight * 0.02 : screenHeight * 0.08),
                     CircleAvatar(
                       radius: photosize,
                       backgroundImage: NetworkImage(profilePicture),
                     ),
-                    SizedBox(height: screenHeight * 0.02),
-                    // Buttons
+                    SizedBox(height: kIsWeb? screenHeight * 0.01 :screenHeight * 0.02),
                     Row(
                       children: [
                         if (!myProfile)
@@ -131,7 +134,7 @@ class ProfileHeader extends StatelessWidget {
                         if (!myProfile)
                           Container(
                             padding: EdgeInsets.zero,
-                            margin:EdgeInsets.only(left:5),
+                            margin: EdgeInsets.only(left: 5),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white),
@@ -171,7 +174,7 @@ class ProfileHeader extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: kIsWeb? screenHeight * 0.02 : screenHeight * 0.02),
                     Text(
                       userinfo,
                       style: TextStyle(
@@ -181,7 +184,7 @@ class ProfileHeader extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.02),
+                    SizedBox(height: kIsWeb? screenHeight * 0.02 : screenHeight * 0.02),
                     Text(
                       about,
                       style: TextStyle(
