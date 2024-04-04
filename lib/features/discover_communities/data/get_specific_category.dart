@@ -7,12 +7,22 @@ class GetSpecificCommunity {
 
   Future<List<Community>> getCommunities(String category) async {
     try {
-      Response response = await dio.get(
-        '$apiUrl/community/get-specific-category',
-        queryParameters: {
-          'category': category,
-        },
-      );
+      Response response;
+      if (category == '') {
+        response = await dio.get(
+          '$apiUrl/community/get-random-category',
+          queryParameters: {
+            'category': category,
+          },
+        );
+      } else {
+        response = await dio.get(
+          '$apiUrl/community/get-specific-category',
+          queryParameters: {
+            'category': category,
+          },
+        );
+      }
 
       if (response.statusCode == 200) {
         List<Community> communities =
