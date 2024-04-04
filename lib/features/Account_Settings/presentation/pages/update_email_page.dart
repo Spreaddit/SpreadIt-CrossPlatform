@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_basic_settings_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import '../../data/data_source/api_user_info_data.dart';
@@ -115,6 +116,8 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
     } else if (responseCode == 500) {
       CustomSnackbar(content: "Internal server error").show(context);
     } else {
+      data["email"] = _userEmail;
+      updateBasicData(updatedData: data);
       Navigator.pop(context);
     }
   }
@@ -153,6 +156,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
                             children: <Widget>[
                               Text(
                                 "u/${username.toUpperCase()}",
+                                softWrap: true,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700, fontSize: 17),
                               ),
