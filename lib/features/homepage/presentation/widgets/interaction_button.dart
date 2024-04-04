@@ -9,6 +9,14 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 /// and state handling of an upvote button
 /// in a [PostWidget] card
 class UpVoteButton extends HookWidget {
+  Color color;
+  double width;
+  double height;
+  UpVoteButton({
+    this.color = const Color.fromARGB(255, 255, 68, 0),
+    this.width = 18,
+    this.height = 24,
+  });
   void upVote() {
     print("upvoted");
     //TODO: impement upvote logic (you can change icon button to match needed logic)
@@ -21,8 +29,9 @@ class UpVoteButton extends HookWidget {
         onPressed: upVote,
         icon: Image.asset(
           "assets/images/upvoteicon.png",
-          width: 18,
-          height: 24,
+          width: width,
+          height: height,
+          color: color,
         ),
       ),
     );
@@ -33,6 +42,14 @@ class UpVoteButton extends HookWidget {
 /// and state handling of a downvote button
 /// in a [PostWidget] card
 class DownVoteButton extends HookWidget {
+  Color color;
+  double width;
+  double height;
+  DownVoteButton({
+    this.color = const Color.fromARGB(255, 255, 68, 0),
+    this.width = 18,
+    this.height = 24,
+  });
   void downVote() {
     print("downvotes");
     //TODO: impement downvote logic (you can change icon button to match needed logic)
@@ -44,8 +61,9 @@ class DownVoteButton extends HookWidget {
       onPressed: downVote,
       icon: Image.asset(
         "assets/images/downvoteicon.png",
-        width: 18,
-        height: 24,
+        width: width,
+        height: height,
+        color: color,
       ),
     );
   }
