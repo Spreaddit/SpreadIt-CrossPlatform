@@ -25,7 +25,9 @@ class SubredditCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          border: Border.all(
+            color: Colors.grey[350]!,
+          ),
           borderRadius: BorderRadius.circular(8.0),
           color: Colors.white,
         ),
@@ -44,7 +46,8 @@ class SubredditCard extends StatelessWidget {
                         '$index',
                         style: TextStyle(
                           fontSize: 16.0,
-                          color: Colors.grey[600],
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                     ),
