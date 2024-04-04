@@ -67,8 +67,7 @@ class DiscoverCommunitiesBody extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-                Icon(Icons.arrow_right,
-                    color: Colors.black87), // Add your trailing icon here
+                Icon(Icons.arrow_right, color: Colors.black87),
               ],
             ),
             onPressed: () {
