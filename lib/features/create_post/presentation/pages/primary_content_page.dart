@@ -84,6 +84,7 @@ class _CreatePostState extends State<CreatePost> {
             formKey: _primaryContentForm,
             onChanged:updateContent,
             hintText: 'body text (optional)',
+            initialBody: '',
           ),
           Container(
             child: CreatePostHeader(

@@ -146,6 +146,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
             formKey: _finalContentForm,
             onChanged:  updateContent,
             hintText: 'body text (optional)',
+            initialBody: ''
           ),
           Container(
             child: CreatePostHeader(

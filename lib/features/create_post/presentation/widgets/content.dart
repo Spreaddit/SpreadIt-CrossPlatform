@@ -5,11 +5,13 @@ class PostContent extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final Function(String) onChanged;
   final String hintText;
+  final String? initialBody;
 
   const PostContent({
     required this.formKey,
     required this.onChanged,
     required this.hintText,
+    this.initialBody,
   });
 
   @override
@@ -24,7 +26,7 @@ class _PostcontentState extends State<PostContent> {
   void initState() {
     super.initState();
     print('PostContent initState');
-    _controller = TextEditingController();
+    _controller = TextEditingController(text:widget.initialBody);
     print(_controller);
     print('controller initialized');
     _controller.addListener(() {
