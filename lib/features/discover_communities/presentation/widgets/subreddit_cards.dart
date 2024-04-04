@@ -5,6 +5,7 @@ class SubredditCard extends StatelessWidget {
   final String title;
   final String description;
   final String numberOfMembers;
+  final String image;
 
   const SubredditCard({
     Key? key,
@@ -12,6 +13,7 @@ class SubredditCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.numberOfMembers,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -56,8 +58,7 @@ class SubredditCard extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            backgroundImage:
-                                NetworkImage('https://picsum.photos/200/300'),
+                            backgroundImage: NetworkImage(image),
                             radius: 25.0,
                           ),
                           SizedBox(width: 8.0),
