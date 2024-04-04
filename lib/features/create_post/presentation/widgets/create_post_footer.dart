@@ -4,10 +4,18 @@ import 'package:flutter/widgets.dart';
 import '../widgets/footer_icon.dart';
 
 class PostFooter extends StatefulWidget {
-  final VoidCallback toggleFooter;
+  final VoidCallback? toggleFooter;
+  final bool showAttachmentIcon;
+  final bool showPhotoIcon;
+  final bool showVideoIcon;
+  final bool showPollIcon;
 
   const PostFooter({
     required this.toggleFooter,
+    required this.showAttachmentIcon,
+    required this.showPhotoIcon,
+    required this.showVideoIcon,
+    required this.showPollIcon,
   });
 
   @override
@@ -20,38 +28,43 @@ class _PostFooterState extends State<PostFooter> {
     return Container(
       margin:EdgeInsets.only(bottom: 12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          FooterIcon(
-            icon: Icons.attachment_rounded,
-            onPressed: () {}
-            ),
-          FooterIcon(
-            icon: Icons.photo,
-            onPressed: () {}
-            ),
-          FooterIcon(
-            icon: Icons.ondemand_video_rounded,
-            onPressed: () {}
-            ),
-          FooterIcon(
-            icon: Icons.poll,
-            onPressed: () {}
-            ),
-          Expanded(
-            child:Padding(
-              padding: EdgeInsets.only(right:15),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: FooterIcon(
-                  icon: Icons.keyboard_arrow_down,
-                  onPressed: widget.toggleFooter,
-                  ),
+          if(widget.showAttachmentIcon) 
+            FooterIcon(
+              icon: Icons.attachment_rounded,
+              onPressed: () {}
+              ),
+          if(widget.showPhotoIcon)    
+            FooterIcon(
+              icon: Icons.photo,
+              onPressed: () {}
+              ),
+          if(widget.showVideoIcon)    
+            FooterIcon(
+              icon: Icons.ondemand_video_rounded,
+              onPressed: () {}
+              ),
+          if(widget.showPollIcon)    
+            FooterIcon(
+              icon: Icons.poll,
+              onPressed: () {}
+              ),
+          if(widget.toggleFooter != null)    
+            Expanded(
+              child:Padding(
+                padding: EdgeInsets.only(right:15),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: FooterIcon(
+                    icon: Icons.keyboard_arrow_down,
+                    onPressed: widget.toggleFooter!,
+                    ),
+                ),
               ),
             ),
-          ),
         ],
         ),
     );

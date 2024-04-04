@@ -154,7 +154,13 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               onIconPress : () { showDiscardButtomSheet(context);},
             ),
           ),
-          isPrimaryFooterVisible? PostFooter(toggleFooter: toggleFooter) : SecondaryPostFooter(),
+          isPrimaryFooterVisible? PostFooter(
+            toggleFooter: toggleFooter,
+            showAttachmentIcon: true,
+            showPhotoIcon: true,
+            showVideoIcon: true,
+            showPollIcon: true,
+            ) : SecondaryPostFooter(),
         ],)
     );
   }

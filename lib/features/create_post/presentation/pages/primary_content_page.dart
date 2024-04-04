@@ -92,7 +92,13 @@ class _CreatePostState extends State<CreatePost> {
               onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},
               ),
           ),
-          isPrimaryFooterVisible? PostFooter(toggleFooter: toggleFooter) : SecondaryPostFooter(),
+          isPrimaryFooterVisible? PostFooter(
+            toggleFooter: toggleFooter,
+            showAttachmentIcon: true,
+            showPhotoIcon: true,
+            showVideoIcon: true,
+            showPollIcon: true,
+            ) : SecondaryPostFooter(),
         ],)
     );
   }
