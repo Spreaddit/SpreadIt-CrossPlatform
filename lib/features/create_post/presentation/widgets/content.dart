@@ -4,10 +4,12 @@ class PostContent extends StatefulWidget {
 
   final GlobalKey<FormState> formKey;
   final Function(String) onChanged;
+  final String hintText;
 
   const PostContent({
     required this.formKey,
     required this.onChanged,
+    required this.hintText,
   });
 
   @override
@@ -49,7 +51,7 @@ class _PostcontentState extends State<PostContent> {
             maxLines: null,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'body text (optional)',
+              hintText: widget.hintText,
               hintStyle: TextStyle(
                 fontSize: 20,
                 ),
