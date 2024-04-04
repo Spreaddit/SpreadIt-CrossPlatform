@@ -1,4 +1,5 @@
  import '../../data/comments.dart';
+import '../../data/community.dart';
 
 ////////////////////////////////////// Comments dummy data ////////////////////////////////////////////////////////
 final List<Comment> comments = [
@@ -54,3 +55,36 @@ final List<Comment> comments = [
   ),
   // Add more comments as needed
 ];
+
+ List<Community> communities = [
+    Community(
+      profilePic: 'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
+      backgroundImage: 'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg',
+      name: 'Community Name 1',
+      members: 1000,
+    ),
+    Community(
+      profilePic: 'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
+      backgroundImage: 'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg',
+      name: 'Community Name 2',
+      members: 2000,
+    ),
+     Community(
+      profilePic: 'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
+      backgroundImage: 'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg',
+      name: 'Community Name 3',
+      members: 1000,
+    ),
+     Community(
+      profilePic: 'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
+      backgroundImage: 'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg',
+      name: 'Community Name 4',
+      members: 1000,
+    ),
+     Community(
+      profilePic: 'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
+      backgroundImage: 'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg',
+      name: 'Community Name 5',
+      members: 1000,
+    ),
+  ];

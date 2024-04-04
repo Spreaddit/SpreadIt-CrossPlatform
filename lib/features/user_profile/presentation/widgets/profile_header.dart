@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 class ProfileHeader extends StatelessWidget {
   final String backgroundImage;
@@ -128,15 +130,17 @@ class ProfileHeader extends StatelessWidget {
                           ),
                         if (!myProfile)
                           Container(
+                            padding: EdgeInsets.zero,
+                            margin:EdgeInsets.only(left:5),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white),
                             ),
                             child: IconButton(
-                              icon: Icon(Icons.message_rounded),
+                              icon: Icon(CupertinoIcons.chat_bubble_text_fill),
                               onPressed: onStartChatPressed,
                               color: Colors.white,
-                              iconSize: iconSize * 0.8,
+                              iconSize: iconSize * 0.75,
                             ),
                           ),
                         if (myProfile)

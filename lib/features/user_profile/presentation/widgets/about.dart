@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AboutWidget extends StatelessWidget {
@@ -82,7 +83,7 @@ class AboutWidget extends StatelessWidget {
                   TextButton.icon(
                     onPressed: onSendMessagePressed,
                     icon: Icon(
-                      Icons.message_outlined,
+                     CupertinoIcons.envelope,
                       color: Colors.black,
                     ),
                     label: Text(
@@ -95,7 +96,7 @@ class AboutWidget extends StatelessWidget {
                   TextButton.icon(
                     onPressed: onStartChatPressed,
                     icon: Icon(
-                      Icons.chat_bubble_outline_outlined,
+                     CupertinoIcons.chat_bubble_2_fill,
                       color: Colors.black,
                     ),
                     label: Text(
