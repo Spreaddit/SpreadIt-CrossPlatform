@@ -55,7 +55,6 @@ class _CategoryPageState extends State<CategoryPage> {
             return Text("${snapshot.error}");
           }
 
-          // By default, show a loading spinner.
           return CircularProgressIndicator();
         },
       ),
