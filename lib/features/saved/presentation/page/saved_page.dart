@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../../generic_widgets/custom_bar.dart';
-import '../widgets/comment_footer.dart';
+import '../../../generic_widgets/comment_footer.dart';
+import '../../data/comment.dart';
+import '../widgets/comments.dart';
+import '../widgets/comments_dummy.dart';
 
 class SavedPage extends StatefulWidget {
   const SavedPage({Key? key}) : super(key: key);
@@ -16,8 +19,9 @@ class _SavedPageState extends State<SavedPage> {
   bool _upvoted = true;
   bool _downvoted = true;
   int _number = 10;
+  final List<Comment> commentsList = comments;
 
-  
+
 
   void _onIndexChanged(int index) {
     setState(() {
@@ -34,17 +38,17 @@ class _SavedPageState extends State<SavedPage> {
           ),
         );
       case 1:
-        return SliverToBoxAdapter(
-          child: CommentFooter(
-            onMorePressed: () {
-              print('More button pressed');
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final comment = commentsList[index];
+              return CommentWidget(
+                comment: comment,
+                saved: true,
+
+              );
             },
-            onReplyPressed: () {
-              print('Reply button pressed');
-            },
-            number: _number,
-            upvoted: _upvoted,
-            downvoted: _downvoted,
+            childCount: commentsList.length,
           ),
         );
       default:
@@ -66,16 +70,21 @@ class _SavedPageState extends State<SavedPage> {
           },
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: CustomBar(
-              tabs: ['Posts', 'Comments'],
-              onIndexChanged: _onIndexChanged,
+      body: Container(
+        color: _selectedIndex == 1
+            ? Colors.grey[200]
+            : Colors.transparent, 
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: CustomBar(
+                tabs: ['Posts', 'Comments'],
+                onIndexChanged: _onIndexChanged,
+              ),
             ),
-          ),
-          _buildSelectedPage(),
-        ],
+            _buildSelectedPage(),
+          ],
+        ),
       ),
     );
   }

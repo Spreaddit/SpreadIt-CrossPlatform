@@ -21,9 +21,8 @@ class CommentFooter extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
-      margin: EdgeInsets.only(left: screenWidth * 0.35),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Row(
             children: [
