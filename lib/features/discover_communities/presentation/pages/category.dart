@@ -1,61 +1,63 @@
 import 'package:flutter/material.dart';
+import '../../data/community.dart';
+import '../../data/get_specific_category.dart';
+import '../widgets/subreddit_cards.dart';
 
-class CategoryPage extends StatelessWidget {
+class CategoryPage extends StatefulWidget {
   final String categoryName;
 
   CategoryPage({required this.categoryName});
+
+  @override
+  _CategoryPageState createState() => _CategoryPageState();
+}
+
+class _CategoryPageState extends State<CategoryPage> {
+  late Future<List<Community>> futureCommunities;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCommunities =
+        GetSpecificCommunity().getCommunities(widget.categoryName);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          categoryName,
+          widget.categoryName,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          CategoryItem(
-            title: 'Technology',
-            icon: Icons.computer,
-          ),
-          CategoryItem(
-            title: 'Sports',
-            icon: Icons.sports_soccer,
-          ),
-          CategoryItem(
-            title: 'Movies',
-            icon: Icons.movie,
-          ),
-          // Add more CategoryItems as needed
-        ],
+      body: FutureBuilder<List<Community>>(
+        future: futureCommunities,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return SubredditCard(
+                  index: index + 1,
+                  title: snapshot.data![index].name,
+                  description: snapshot.data![index].description,
+                  numberOfMembers:
+                      snapshot.data![index].membersCount.toString(),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+
+          // By default, show a loading spinner.
+          return CircularProgressIndicator();
+        },
       ),
-    );
-  }
-}
-
-class CategoryItem extends StatelessWidget {
-  final String title;
-  final IconData icon;
-
-  const CategoryItem({
-    required this.title,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      onTap: () {
-        // Handle category item tap
-        // You can navigate to a specific subreddit page or perform any other action here
-      },
     );
   }
 }
