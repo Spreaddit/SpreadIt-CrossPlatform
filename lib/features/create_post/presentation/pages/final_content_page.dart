@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import '../widgets/create_post_header.dart';
 import '../widgets/title.dart';
@@ -8,6 +12,10 @@ import '../widgets/content.dart';
 import '../widgets/create_post_footer.dart';
 import '../widgets/create_post_secondary_footer.dart';
 import '../widgets/showDiscardBottomSheet.dart';
+import '../pages/add_tags.dart';
+import '../widgets/rendered_tag.dart';
+import '../widgets/image_picker.dart';
+import '../widgets/video_picker.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
@@ -28,6 +36,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
 
+  File? image;
+  File? video;
+  
    void updateTitle(String value) {
     title = value;
     _finalTitleForm.currentState!.save();
@@ -52,11 +63,25 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
+  Future<void> pickImage() async {
+    final image = await pickImageFromFilePicker();
+    setState(() {
+      this.image = image;
+    });
+  }
+  
+  Future<void> pickVideo() async {
+    final video = await pickVideoFromFilePicker();
+    setState(() {
+      this.video = video;
+    });
+  }
+
   void navigateToPostToCommunity() {
     Navigator.of(context).pushNamed('/post-to-community');
   }
 
-  void navigateToAddTags() {
+  void navigateToAddTags(){
     Navigator.of(context).pushNamed('/add-tags');
   }
 
@@ -137,7 +162,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 child: Text('Add tags'),
               ),
              ),
-          ),
+          ),          
           PostTitle(
             formKey: _finalTitleForm,
             onChanged: updateTitle,
@@ -162,7 +187,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
             showPhotoIcon: true,
             showVideoIcon: true,
             showPollIcon: true,
-            ) : SecondaryPostFooter(),
+            pickImage: pickImage,
+            pickVideo: () {},
+            ) : SecondaryPostFooter(
+              onLinkPress: () {},
+              onImagePress: pickImage,
+              onVideoPress: pickVideo,
+              onPollPress: () {},
+            ),
         ],)
     );
   }
@@ -170,7 +202,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
 /* TODOs 
 1) a3mel en law ekhtart tag , yeshil el zorar bta3 add tags da w y7ot el tag makano
-2) deactivate post law mafish title
 3) asayyev kol haga f variable w akhod el haga ml pages elli ablaha 
 ---> a-make sure law ana aslan 3amla post men gowwa community mafish haga hakhodha men pages ablaha 
 4) navigations

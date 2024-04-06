@@ -16,7 +16,7 @@ class _TagsState extends State<Tags> {
 
 
   void navigateToFinalContentPage() {
-    Navigator.of(context).pushNamed('/final-content-page');
+    Navigator.pop(context, {'isSpoiler': isSpoiler, 'isNSFW': isNSFW});
   }
 
   @override
@@ -65,7 +65,25 @@ class _TagsState extends State<Tags> {
                   isNSFW = value;
                   });
                 },
-              ) : Spacer(),  
+              ) : Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text('Add tags',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
+                IconButton(
+                  onPressed: navigateToFinalContentPage,
+                  icon: Icon(Icons.cancel_rounded),
+                  iconSize: 40,
+                  color: Colors.grey,
+                  ),
+              ],
+              ),    
           ],),
       )
     );

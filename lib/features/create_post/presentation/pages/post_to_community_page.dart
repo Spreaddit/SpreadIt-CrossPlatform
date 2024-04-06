@@ -46,6 +46,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
   ];
 
   List<Map<String, dynamic>> filteredList = [];
+  bool isShowMorePressed = false;
 
   @override
   void initState() {
@@ -53,9 +54,26 @@ class _PostToCommunityState extends State<PostToCommunity> {
     filteredList = List.from(communityData);
   }
 
+  void _updateDisplayList() {
+    if (isShowMorePressed) {
+      filteredList = List.from(communityData);
+    } 
+    else 
+    {
+      filteredList = communityData.take(4).toList();
+    }
+  }
+
   void updateFilteredList(List<Map<String, dynamic>> filteredList) {
     setState(() {
       this.filteredList = List.from(filteredList);
+    });
+  }
+  
+  void toggleShowMorePressed () {
+    setState(() {
+      isShowMorePressed = !isShowMorePressed;
+      _updateDisplayList();
     });
   }
 
@@ -73,6 +91,8 @@ class _PostToCommunityState extends State<PostToCommunity> {
     List<Map<String, dynamic>> displayList =
       filteredList.isNotEmpty ? filteredList : communityData;
 
+    bool showSeeMoreButton = filteredList != communityData;  
+
     return Scaffold(
       body: Column(
         children: [
@@ -89,7 +109,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
           child: GestureDetector(
             onTap: navigateToFinalContentPage,
             child: ListView.builder(
-              itemCount: displayList.length,
+              itemCount: displayList.length ,
               itemBuilder: (context, index) {
                 return CommunitiesCard(
                   communityName: displayList[index]['communityName'],
@@ -100,26 +120,27 @@ class _PostToCommunityState extends State<PostToCommunity> {
               ),
           ),
         ),
-        Container(
-          width:370,
-          height:50,
-          child: OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              side:BorderSide(
-                color: Colors.blue,
-              )
-            ),
-            child: Text(
-              "See more",
-              style: TextStyle(
-                color: Colors.blue[900],
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        if(showSeeMoreButton)
+          Container(
+              width:370,
+              height:50,
+              child: OutlinedButton(
+                onPressed: toggleShowMorePressed,
+                style: OutlinedButton.styleFrom(
+                  side:BorderSide(
+                    color: Colors.blue,
+                  )
+                ),
+                child: Text(
+                  "See more",
+                  style: TextStyle(
+                    color: Colors.blue[900],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-            ),
-        ),
           ],
       ),
     );

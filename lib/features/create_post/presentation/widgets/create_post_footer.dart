@@ -9,6 +9,8 @@ class PostFooter extends StatefulWidget {
   final bool showPhotoIcon;
   final bool showVideoIcon;
   final bool showPollIcon;
+  final VoidCallback pickImage;
+  final VoidCallback pickVideo;
 
   const PostFooter({
     required this.toggleFooter,
@@ -16,6 +18,8 @@ class PostFooter extends StatefulWidget {
     required this.showPhotoIcon,
     required this.showVideoIcon,
     required this.showPollIcon,
+    required this.pickImage,
+    required this.pickVideo,
   });
 
   @override
@@ -40,12 +44,12 @@ class _PostFooterState extends State<PostFooter> {
           if(widget.showPhotoIcon)    
             FooterIcon(
               icon: Icons.photo,
-              onPressed: () {}
+              onPressed: widget.pickImage,
               ),
           if(widget.showVideoIcon)    
             FooterIcon(
               icon: Icons.ondemand_video_rounded,
-              onPressed: () {}
+              onPressed: widget.pickVideo,
               ),
           if(widget.showPollIcon)    
             FooterIcon(

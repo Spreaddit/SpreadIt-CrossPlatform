@@ -4,7 +4,18 @@ import 'package:flutter/widgets.dart';
 import '../widgets/secondary_footer_icon.dart';
 
 class SecondaryPostFooter extends StatefulWidget {
-  const SecondaryPostFooter({Key? key}) : super(key: key);
+
+  final VoidCallback onLinkPress;
+  final VoidCallback onImagePress;
+  final VoidCallback onVideoPress;
+  final VoidCallback onPollPress;
+
+  const SecondaryPostFooter({
+    required this.onLinkPress,
+    required this.onImagePress,
+    required this.onVideoPress,
+    required this.onPollPress,
+  });
 
   @override
   State<SecondaryPostFooter> createState() => _SecondaryPostFooterState();
@@ -35,22 +46,22 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
             SecondaryFooterIcon(
               icon: Icons.attachment_rounded,
               text: 'Link',
-              onPressed: () {},
+              onPressed: widget.onLinkPress,
               ),
             SecondaryFooterIcon(
               icon: Icons.photo,
               text: 'Image',
-              onPressed: () {},
+              onPressed: widget.onImagePress,
               ),
             SecondaryFooterIcon(
               icon: Icons.ondemand_video_rounded,
               text: 'Video',
-              onPressed: () {},
+              onPressed: widget.onVideoPress,
               ),
             SecondaryFooterIcon(
               icon: Icons.poll,
               text: 'Poll',
-              onPressed: () {},
+              onPressed: widget.onPollPress,
               ), 
           ],
           ),
