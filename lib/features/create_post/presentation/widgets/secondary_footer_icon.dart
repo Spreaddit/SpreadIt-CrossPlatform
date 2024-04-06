@@ -5,11 +5,13 @@ class SecondaryFooterIcon extends StatefulWidget {
   final IconData icon;
   final String text;
   final VoidCallback onPressed;
+  final bool isDisabled;
 
   const SecondaryFooterIcon({
     required this.icon,
     required this.text,
     required this.onPressed,
+    required this.isDisabled,
   });
 
   @override
@@ -22,15 +24,15 @@ class _SecondaryFooterIconState extends State<SecondaryFooterIcon> {
     return Column(
               children: [
                 CircleAvatar(
-                backgroundColor: const Color.fromARGB(255, 206, 206, 206),
+                backgroundColor: widget.isDisabled? const Color.fromARGB(255, 206, 206, 206) : Colors.blue,
                 radius: 20,
                 child: IconButton(
                   icon: Icon(
                     widget.icon,
                     size: 20,
-                    color: Colors.black,
+                    color: (widget.isDisabled || widget.isDisabled == null) ? Colors.black : Colors.white,
                     ),
-                  onPressed: widget.onPressed,
+                  onPressed: widget.isDisabled? null : widget.onPressed,
                 ),
               ),
               Text(widget.text),

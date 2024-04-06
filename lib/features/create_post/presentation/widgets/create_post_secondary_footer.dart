@@ -22,6 +22,15 @@ class SecondaryPostFooter extends StatefulWidget {
 }
 
 class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
+
+  IconData? lastPressedIcon;
+
+  void setLastPressedIcon (IconData passedIcon) {
+    setState(() {
+      lastPressedIcon = passedIcon;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,22 +55,38 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
             SecondaryFooterIcon(
               icon: Icons.attachment_rounded,
               text: 'Link',
-              onPressed: widget.onLinkPress,
+              onPressed: () {
+                widget.onLinkPress.call();
+                setLastPressedIcon(Icons.attachment_rounded);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.attachment_rounded,
               ),
             SecondaryFooterIcon(
               icon: Icons.photo,
               text: 'Image',
-              onPressed: widget.onImagePress,
+              onPressed: () {
+                widget.onImagePress.call();
+                setLastPressedIcon(Icons.photo);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.photo,
               ),
             SecondaryFooterIcon(
               icon: Icons.ondemand_video_rounded,
               text: 'Video',
-              onPressed: widget.onVideoPress,
+              onPressed: () {
+                widget.onVideoPress.call();
+                setLastPressedIcon(Icons.ondemand_video_rounded);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.ondemand_video_rounded,
               ),
             SecondaryFooterIcon(
               icon: Icons.poll,
               text: 'Poll',
-              onPressed: widget.onPollPress,
+              onPressed: () {
+                widget.onPollPress.call();
+                setLastPressedIcon(Icons.poll);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.poll,
               ), 
           ],
           ),

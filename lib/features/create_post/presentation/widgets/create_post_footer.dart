@@ -13,6 +13,7 @@ class PostFooter extends StatefulWidget {
   final VoidCallback? onImagePress;
   final VoidCallback? onVideoPress;
   final VoidCallback? onPollPress;
+  
 
   const PostFooter({
     required this.toggleFooter,
@@ -31,6 +32,15 @@ class PostFooter extends StatefulWidget {
 }
 
 class _PostFooterState extends State<PostFooter> {
+
+  IconData? lastPressedIcon;
+
+  void setLastPressedIcon (IconData passedIcon) {
+    setState(() {
+      lastPressedIcon = passedIcon;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,22 +53,38 @@ class _PostFooterState extends State<PostFooter> {
           if(widget.showAttachmentIcon) 
             FooterIcon(
               icon: Icons.attachment_rounded,
-              onPressed: widget.onLinkPress != null ? widget.onLinkPress! : () {},
+              onPressed: () {
+                widget.onLinkPress?.call();
+                setLastPressedIcon(Icons.attachment_rounded);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.attachment_rounded,
               ),
           if(widget.showPhotoIcon)    
             FooterIcon(
               icon: Icons.photo,
-              onPressed: widget.onImagePress != null ? widget.onImagePress! : () {},
+              onPressed: () {
+                widget.onImagePress?.call();
+                setLastPressedIcon(Icons.photo);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.photo,
               ),
           if(widget.showVideoIcon)    
             FooterIcon(
               icon: Icons.ondemand_video_rounded,
-              onPressed: widget.onVideoPress != null ? widget.onVideoPress! : () {},
+              onPressed: () {
+                widget.onVideoPress?.call();
+                setLastPressedIcon(Icons.ondemand_video_rounded);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.ondemand_video_rounded,
               ),
           if(widget.showPollIcon)    
             FooterIcon(
               icon: Icons.poll,
-              onPressed: widget.onPollPress != null ? widget.onPollPress! : () {},
+              onPressed: () {
+                widget.onPollPress?.call();
+                setLastPressedIcon(Icons.poll);
+              },
+              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.poll,
               ),
           if(widget.toggleFooter != null)    
             Expanded(
@@ -69,6 +95,7 @@ class _PostFooterState extends State<PostFooter> {
                   child: FooterIcon(
                     icon: Icons.keyboard_arrow_down,
                     onPressed: widget.toggleFooter!,
+                    isDisabled: false,
                     ),
                 ),
               ),

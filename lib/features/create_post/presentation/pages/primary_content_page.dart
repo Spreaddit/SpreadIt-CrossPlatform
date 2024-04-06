@@ -109,7 +109,7 @@ class _CreatePostState extends State<CreatePost> {
               child:Image.file(
                   image!,
                   height: 160,
-                  width: 160,
+                  width: double.infinity,
                   fit:BoxFit.cover,
               ),
             ),
@@ -147,9 +147,8 @@ class _CreatePostState extends State<CreatePost> {
 }
 
 /* TODOs 
-1) afsel functions el imageb wel video + a7ot soura 3al vm to test
+1) a7ot soura 3al vm to test
 2) a7ot actions lel footer
-3) law 3andi link a7ottelo makano bardou
 4) ab3at el haga di kollaha lel final content page 
 5) navigations
 6) unit testing 

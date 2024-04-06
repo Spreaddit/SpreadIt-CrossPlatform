@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class FooterIcon extends StatefulWidget {
 
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isDisabled;
 
   const FooterIcon({
     required this.icon,
     required this.onPressed,
+    required this.isDisabled,
   });
 
   @override
@@ -24,9 +26,10 @@ class _FooterIconState extends State<FooterIcon> {
             child: IconButton(
               icon: Icon(
                 widget.icon,
-                size: 25
+                size: 25,
+                color: widget.isDisabled? Colors.black54 : Colors.black,
                 ),
-              onPressed: widget.onPressed,
+              onPressed: (widget.onPressed != null && !widget.isDisabled) ? widget.onPressed! : null,
             ),
           );
   }
