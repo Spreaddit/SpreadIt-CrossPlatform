@@ -9,8 +9,10 @@ class PostFooter extends StatefulWidget {
   final bool showPhotoIcon;
   final bool showVideoIcon;
   final bool showPollIcon;
-  final VoidCallback pickImage;
-  final VoidCallback pickVideo;
+  final VoidCallback? onLinkPress;
+  final VoidCallback? onImagePress;
+  final VoidCallback? onVideoPress;
+  final VoidCallback? onPollPress;
 
   const PostFooter({
     required this.toggleFooter,
@@ -18,8 +20,10 @@ class PostFooter extends StatefulWidget {
     required this.showPhotoIcon,
     required this.showVideoIcon,
     required this.showPollIcon,
-    required this.pickImage,
-    required this.pickVideo,
+    this.onLinkPress,
+    this.onImagePress,
+    this.onVideoPress,
+    this.onPollPress,
   });
 
   @override
@@ -39,22 +43,22 @@ class _PostFooterState extends State<PostFooter> {
           if(widget.showAttachmentIcon) 
             FooterIcon(
               icon: Icons.attachment_rounded,
-              onPressed: () {}
+              onPressed: widget.onLinkPress != null ? widget.onLinkPress! : () {},
               ),
           if(widget.showPhotoIcon)    
             FooterIcon(
               icon: Icons.photo,
-              onPressed: widget.pickImage,
+              onPressed: widget.onImagePress != null ? widget.onImagePress! : () {},
               ),
           if(widget.showVideoIcon)    
             FooterIcon(
               icon: Icons.ondemand_video_rounded,
-              onPressed: widget.pickVideo,
+              onPressed: widget.onVideoPress != null ? widget.onVideoPress! : () {},
               ),
           if(widget.showPollIcon)    
             FooterIcon(
               icon: Icons.poll,
-              onPressed: () {}
+              onPressed: widget.onPollPress != null ? widget.onPollPress! : () {},
               ),
           if(widget.toggleFooter != null)    
             Expanded(
@@ -74,7 +78,3 @@ class _PostFooterState extends State<PostFooter> {
     );
   }
 }
-
-/* TODO
-1) el action bta3 kol icon
-2) el api bta3 el actions di */

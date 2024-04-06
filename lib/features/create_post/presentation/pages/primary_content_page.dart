@@ -133,8 +133,8 @@ class _CreatePostState extends State<CreatePost> {
             showPhotoIcon: true,
             showVideoIcon: true,
             showPollIcon: true,
-            pickImage: pickImage,
-            pickVideo: pickVideo,
+            onImagePress: pickImage,
+            onVideoPress: pickVideo,
             ) : SecondaryPostFooter(
               onLinkPress: () {},
               onImagePress: pickImage,

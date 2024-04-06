@@ -187,8 +187,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
             showPhotoIcon: true,
             showVideoIcon: true,
             showPollIcon: true,
-            pickImage: pickImage,
-            pickVideo: () {},
+            onImagePress: pickImage,
+            onVideoPress: () {},
             ) : SecondaryPostFooter(
               onLinkPress: () {},
               onImagePress: pickImage,
