@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/user_profile/images/image_picker.dart';
 import '../../../Account_Settings/presentation/widgets/switch_type_1.dart';
 import '../../../generic_widgets/custom_input.dart';
+import '../../data/update_user_info.dart';
 import '../widgets/social_link_bottom_sheet_model.dart';
 import '../widgets/social_media_selection_bottom_sheet.dart';
 
@@ -27,7 +27,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg';
   File? backgroundImageFile;
   File? profileImageFile;
-
 
   void updateUsername(String username, bool validation) {
     _username = username;
@@ -74,7 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final image = await pickImageFromFilePicker();
     setState(() {
       if (image != null) {
-        backgroundImageURl = null; 
+        backgroundImageURl = null;
         backgroundImageFile = image;
         print(backgroundImageFile);
       }
@@ -101,6 +100,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> saveProfile() async {
+    try {
+      // Call updateUserApi function to update user information
+      int statusCode = await updateUserApi(
+        accessToken: "your_access_token_here",
+        username: _username,
+        aboutUs: _about,
+        backgroundImage: backgroundImageFile != null ? backgroundImageFile! : backgroundImageURl!,
+        profilePicImage: profileImageFile != null ? profileImageFile! : profileImageURl!,
+        socialMedia: [],
+        contentVisibility: _switchValue1,
+        showActiveComments: _switchValue2,
+      );
+
+      if (statusCode == 200) {
+        print("User information updated successfully.");
+      } else if (statusCode == 500) {
+        print("Server error occurred while updating user information.");
+      } else {
+        print("Unexpected error occurred.");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -116,9 +141,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: () {
-              // Implement save logic
-            },
+            onPressed: saveProfile, // Call saveProfile function here
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
@@ -132,8 +155,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           children: [
             Container(
               margin: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.05,
-                vertical: MediaQuery.of(context).size.width * 0.05,
+                horizontal: 10,
+                vertical: 10,
               ),
               height: MediaQuery.of(context).size.height,
               child: FractionallySizedBox(
@@ -146,9 +169,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             image: FileImage(backgroundImageFile!),
                             fit: BoxFit.cover,
                           )
-                        : (backgroundImageURl != null && backgroundImageURl!.isNotEmpty)
+                        : (backgroundImageURl != null &&
+                                backgroundImageURl!.isNotEmpty)
                             ? DecorationImage(
-                                image: NetworkImage(backgroundImageURl!), // Use backgroundImageURl
+                                image: NetworkImage(backgroundImageURl!),
                                 fit: BoxFit.cover,
                               )
                             : DecorationImage(
@@ -157,45 +181,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 fit: BoxFit.cover,
                               ),
                   ),
-                  child: (backgroundImageFile == null && (backgroundImageURl == null || backgroundImageURl!.isEmpty))
-                      ? Center(
-                          child: Text(
-                            'No image available',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      : null,
                 ),
               ),
             ),
             Positioned(
-            top: kIsWeb
-                ? MediaQuery.of(context).size.height * 0.25 
-                : MediaQuery.of(context).size.height * 0.11,
-            right: kIsWeb? MediaQuery.of(context).size.width * 0.44 :MediaQuery.of(context).size.width * 0.25,
-            child: ElevatedButton(
-              onPressed: pickBackGroundImage,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-              child: Text(
-                'Change Background',
-                style: TextStyle(color: Colors.white),
+              top: kIsWeb ? screenHeight * 0.15 : screenHeight * 0.1,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: pickBackGroundImage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Change Background',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
             Padding(
               padding: EdgeInsets.only(
                   top: kIsWeb
-                      ? MediaQuery.of(context).size.height * 0.32
-                      : MediaQuery.of(context).size.height * 0.2),
+                      ? screenHeight * 0.35 - 40
+                      : screenHeight * 0.25 - 40),
               child: Center(
                 child: Column(
                   children: [
@@ -203,25 +219,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       alignment: Alignment.center,
                       children: [
                         CircleAvatar(
-                          radius: kIsWeb
-                              ? MediaQuery.of(context).size.height * 0.1
-                              : MediaQuery.of(context).size.width * 0.14,
+                          radius: 40,
                           backgroundImage: SelectImage(),
                         ),
                         Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
-                            width: kIsWeb
-                                ? MediaQuery.of(context).size.width * 0.025
-                                : MediaQuery.of(context).size.height * 0.05,
-                            height: kIsWeb
-                                ? MediaQuery.of(context).size.width * 0.025
-                                : MediaQuery.of(context).size.height * 0.05,
+                            width: 40,
+                            height:
+                                40, // Adjust the height to match the width for a circular shape
                             decoration: BoxDecoration(
                               color: Colors.blue,
                               shape: BoxShape.circle,
                             ),
+                            alignment:
+                                Alignment.center, // Adjust the alignment here
                             child: IconButton(
                               icon: Icon(Icons.add),
                               color: Colors.white,
