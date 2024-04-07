@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
@@ -171,21 +172,25 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 if (image != null)
                   Container(
                     alignment: Alignment.center,
-                    child:Image.file(
-                        image!,
-                        height: 160,
-                        width: double.infinity,
-                        fit:BoxFit.cover,
+                    height: 160,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: FileImage(image!),
+                          fit:BoxFit.cover,
+                        ),
                     ),
                   ), 
                 if (video != null)
-                  Container(
+                   Container(
                     alignment: Alignment.center,
-                    child:Image.file(
-                        video!,
-                        height: 160,
-                        width: double.infinity,
-                        fit:BoxFit.cover,
+                    height: 160,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: FileImage(video!),
+                          fit:BoxFit.cover,
+                        ),
                     ),
                   ), 
                 PostContent(

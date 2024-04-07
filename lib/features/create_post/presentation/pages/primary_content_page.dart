@@ -115,23 +115,27 @@ class _CreatePostState extends State<CreatePost> {
                   onChanged:updateTitle,
                 ),
                 if (image != null)
-                  Container(
+                   Container(
                     alignment: Alignment.center,
-                    child:Image.file(
-                        image!,
-                        height: 160,
-                        width: double.infinity,
-                        fit:BoxFit.cover,
+                    height: 160,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: FileImage(image!),
+                          fit:BoxFit.cover,
+                        ),
                     ),
-                  ), 
+                  ),
                 if (video != null)
-                  Container(
+                   Container(
                     alignment: Alignment.center,
-                    child:Image.file(
-                        video!,
-                        height: 160,
-                        width: double.infinity,
-                        fit:BoxFit.cover,
+                    height: 160,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: FileImage(video!),
+                          fit:BoxFit.cover,
+                        ),
                     ),
                   ),    
                 PostContent(
