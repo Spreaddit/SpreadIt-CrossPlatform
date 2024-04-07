@@ -51,15 +51,14 @@ class _PostToCommunityState extends State<PostToCommunity> {
   @override
   void initState() {
     super.initState();
-    filteredList = List.from(communityData);
+    _updateDisplayList();
   }
 
   void _updateDisplayList() {
     if (isShowMorePressed) {
       filteredList = List.from(communityData);
     } 
-    else 
-    {
+    else {
       filteredList = communityData.take(4).toList();
     }
   }
@@ -91,8 +90,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
     List<Map<String, dynamic>> displayList =
       filteredList.isNotEmpty ? filteredList : communityData;
 
-    bool showSeeMoreButton = filteredList != communityData;  
-
     return Scaffold(
       body: Column(
         children: [
@@ -120,7 +117,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
               ),
           ),
         ),
-        if(showSeeMoreButton)
           Container(
               width:370,
               height:50,
@@ -132,7 +128,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
                   )
                 ),
                 child: Text(
-                  "See more",
+                  !isShowMorePressed ? "See more" : "See less",
                   style: TextStyle(
                     color: Colors.blue[900],
                     fontSize: 20,
@@ -150,7 +146,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
 /*
 TODOs:
 1) agahhez el api call elli ha-get biha el communities 
-2) action l see more button 
 3) pass el community lel final content page 
 4) mock service 
 5) unit testing

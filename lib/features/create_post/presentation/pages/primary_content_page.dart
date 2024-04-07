@@ -32,10 +32,12 @@ class _CreatePostState extends State<CreatePost> {
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
+  bool isPollOptionValid = false;
   bool createPoll = false;
 
   File? image;
   File? video;
+  IconData? lastPressedIcon;
 
   void updateTitle(String value) {
     title = value;
@@ -58,14 +60,16 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
+  void setLastPressedIcon(IconData? passedIcon) {
+    setState(() {
+      lastPressedIcon = passedIcon;
+    });
+  }
+
   void toggleFooter() {
     setState(() {
       isPrimaryFooterVisible = !isPrimaryFooterVisible;
     });
-  }
-
-  void navigateToPostToCommunity() {
-      Navigator.of(context).pushNamed('/post-to-community');
   }
 
   Future<void> pickImage() async {
@@ -75,18 +79,21 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
-  void openPollWidow() {
-    setState(() {
-      createPoll = !createPoll;
-      print(createPoll);
-    });
-  }
-
   Future<void> pickVideo() async {
     final video = await pickVideoFromFilePicker();
     setState(() {
       this.video = video;
     });
+  }
+
+  void openPollWidow() {
+    setState(() {
+      createPoll = !createPoll;
+    });
+  }
+
+  void navigateToPostToCommunity() {
+      Navigator.of(context).pushNamed('/post-to-community');
   }
 
   @override
@@ -116,7 +123,17 @@ class _CreatePostState extends State<CreatePost> {
                         width: double.infinity,
                         fit:BoxFit.cover,
                     ),
-                  ),  
+                  ), 
+                if (video != null)
+                  Container(
+                    alignment: Alignment.center,
+                    child:Image.file(
+                        video!,
+                        height: 160,
+                        width: double.infinity,
+                        fit:BoxFit.cover,
+                    ),
+                  ),    
                 PostContent(
                   formKey: _primaryContentForm,
                   onChanged:updateContent,
@@ -124,18 +141,13 @@ class _CreatePostState extends State<CreatePost> {
                   initialBody: '',
                 ),
                 if (createPoll)
-                  Poll(),
+                  Poll(
+                    onPollCancel: openPollWidow,
+                    setLastPressedIcon: setLastPressedIcon,
+                  ),
               ],
             ),     
           ), 
-          /*Container(
-            child: CreatePostHeader(
-              buttonText: "Next",
-              onPressed: navigateToPostToCommunity,
-              isEnabled: isButtonEnabled,
-              onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},
-              ),
-          ),*/
           isPrimaryFooterVisible? PostFooter(
             toggleFooter: toggleFooter,
             showAttachmentIcon: true,
@@ -145,20 +157,24 @@ class _CreatePostState extends State<CreatePost> {
             onImagePress: pickImage,
             onVideoPress: pickVideo,
             onPollPress: openPollWidow,
+            lastPressedIcon: lastPressedIcon, 
+            setLastPressedIcon: setLastPressedIcon,
             ) : SecondaryPostFooter(
               onLinkPress: () {},
               onImagePress: pickImage,
               onVideoPress: pickVideo,
               onPollPress: openPollWidow,
+              lastPressedIcon: lastPressedIcon, 
+              setLastPressedIcon: setLastPressedIcon,
             ),
-        ],)
+        ],
+      ),
     );
   }
 }
 
 /* TODOs 
 1) a7ot soura 3al vm to test
-2) fadel poll bas
 3) ab3at el haga di kollaha lel final content page 
 4) navigations (almost done)
 5) unit testing 

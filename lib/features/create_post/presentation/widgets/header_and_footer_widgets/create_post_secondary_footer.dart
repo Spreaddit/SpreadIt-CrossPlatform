@@ -9,12 +9,16 @@ class SecondaryPostFooter extends StatefulWidget {
   final VoidCallback onImagePress;
   final VoidCallback onVideoPress;
   final VoidCallback onPollPress;
+  final IconData? lastPressedIcon; 
+  final Function(IconData?) setLastPressedIcon;
 
   const SecondaryPostFooter({
     required this.onLinkPress,
     required this.onImagePress,
     required this.onVideoPress,
     required this.onPollPress,
+    required this.lastPressedIcon,
+    required this.setLastPressedIcon,
   });
 
   @override
@@ -22,14 +26,6 @@ class SecondaryPostFooter extends StatefulWidget {
 }
 
 class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
-
-  IconData? lastPressedIcon;
-
-  void setLastPressedIcon (IconData passedIcon) {
-    setState(() {
-      lastPressedIcon = passedIcon;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
           Container(
             margin: EdgeInsets.all(10),
             child: Text(
-              lastPressedIcon == null ? 'What do you want to add?' : 'You can add one type of attachments for now',
+              widget.lastPressedIcon == null ? 'What do you want to add?' : 'You can add one type of attachments for now',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -57,36 +53,36 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
               text: 'Link',
               onPressed: () {
                 widget.onLinkPress.call();
-                setLastPressedIcon(Icons.attachment_rounded);
+                widget.setLastPressedIcon(Icons.attachment_rounded);
               },
-              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.attachment_rounded,
+              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.attachment_rounded,
               ),
             SecondaryFooterIcon(
               icon: Icons.photo,
               text: 'Image',
               onPressed: () {
                 widget.onImagePress.call();
-                setLastPressedIcon(Icons.photo);
+                widget.setLastPressedIcon(Icons.photo);
               },
-              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.photo,
+              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.photo,
               ),
             SecondaryFooterIcon(
               icon: Icons.ondemand_video_rounded,
               text: 'Video',
               onPressed: () {
                 widget.onVideoPress.call();
-                setLastPressedIcon(Icons.ondemand_video_rounded);
+                widget.setLastPressedIcon(Icons.ondemand_video_rounded);
               },
-              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.ondemand_video_rounded,
+              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.ondemand_video_rounded,
               ),
             SecondaryFooterIcon(
               icon: Icons.poll,
               text: 'Poll',
               onPressed: () {
                 widget.onPollPress.call();
-                setLastPressedIcon(Icons.poll);
+                widget.setLastPressedIcon(Icons.poll);
               },
-              isDisabled: lastPressedIcon != null && lastPressedIcon != Icons.poll,
+              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.poll,
               ), 
           ],
           ),

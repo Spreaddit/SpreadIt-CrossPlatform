@@ -6,7 +6,14 @@ import 'add_option_button.dart';
 import 'showDaysBottomSheet.dart';
 
 class Poll extends StatefulWidget {
-  const Poll({Key? key}) : super(key: key);
+
+  final VoidCallback? onPollCancel;
+  final Function(IconData?) setLastPressedIcon;
+
+  const Poll({
+    required this.onPollCancel,
+    required this.setLastPressedIcon,
+  });
 
   @override
   State<Poll> createState() => _PollState();
@@ -35,10 +42,15 @@ class _PollState extends State<Poll> {
   }
 
   void updateSelectedDay(int selectedDay) {
-  setState(() {
-    this.selectedDay = selectedDay;
-  });
-}
+    setState(() {
+      this.selectedDay = selectedDay;
+    });
+  }
+
+  void cancelPoll() {
+    widget.onPollCancel?.call();
+    widget.setLastPressedIcon(null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +96,7 @@ class _PollState extends State<Poll> {
               ),
               Spacer(),
               IconButton(
-                onPressed: () {},
+                onPressed: cancelPoll,
                 icon: Icon(Icons.cancel_rounded),
               ),  
             ],

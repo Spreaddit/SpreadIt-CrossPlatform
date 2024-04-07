@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +12,11 @@ import '../widgets/title.dart';
 import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
+import '../widgets/header_and_footer_widgets/community_and_rules_header.dart';
 import '../widgets/showDiscardBottomSheet.dart';
 import '../pages/add_tags.dart';
 import '../widgets/rendered_tag.dart';
+import '../../../generic_widgets/small_custom_button.dart';
 import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
 
@@ -35,9 +38,11 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
+  bool createPoll = false;
 
   File? image;
   File? video;
+  IconData? lastPressedIcon;
   
    void updateTitle(String value) {
     title = value;
@@ -54,6 +59,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void updateButtonState() {
     setState(() {
       isButtonEnabled = title.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(title);
+    });
+  }
+
+  void setLastPressedIcon(IconData? passedIcon) {
+    setState(() {
+      lastPressedIcon = passedIcon;
     });
   }
 
@@ -77,16 +88,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
-  void navigateToPostToCommunity() {
-    Navigator.of(context).pushNamed('/post-to-community');
+  void openPollWidow() {
+    setState(() {
+      createPoll = !createPoll;
+    });
   }
 
   void navigateToAddTags(){
     Navigator.of(context).pushNamed('/add-tags');
-  }
-
-  void navigateToRules() {
-    Navigator.of(context).pushNamed('/rules');
   }
 
   @override
@@ -94,91 +103,45 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            child: CreatePostHeader(
-              buttonText: "Post",
-              onPressed: navigateToPostToCommunity,
-              isEnabled: isButtonEnabled,
-              onIconPress : () { showDiscardButtomSheet(context);},
-            ),
-          ),
-          Container(
-           margin: EdgeInsets.all(10),
-           child:Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                child: CircleAvatar(
-                  radius: 10,
-                ),
-              ),
-              Text(
-                'r/AskReddit',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              InkWell(
-                onTap: navigateToRules, 
-                child: Container(
-                padding: EdgeInsets.all(5), 
-                child: Icon(Icons.keyboard_arrow_down),
-                ),
-              ),
-              Spacer(),
-              Container(
-                margin: EdgeInsets.only(right: 10),
-                child: InkWell(
-                  onTap: navigateToRules,
-                  child: Text(
-                    'Rules',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+          Expanded(
+            child: ListView(
+              children: [
+                Container(
+                  child: CreatePostHeader(
+                    buttonText: "Post",
+                    onPressed: () {},
+                    isEnabled: isButtonEnabled,
+                    onIconPress : () { showDiscardButtomSheet(context);},
                   ),
                 ),
-               ),
-              ),
-            ],
-            ), 
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              height: 20,
-              width:150,
-              margin: EdgeInsets.fromLTRB(15, 0, 10, 5),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 219, 219, 219),
-                  foregroundColor: Colors.grey,
+                Container(
+                 margin: EdgeInsets.all(10),
+                 child:  CommunityAndRulesHeader(
+                  communityIcon: "./assets/images/LogoSpreadIt.png",
+                  communityName: 'r/ask reddit',
+                  ),
                 ),
-                onPressed: navigateToAddTags,
-                child: Text('Add tags'),
-              ),
-             ),
-          ),          
-          PostTitle(
-            formKey: _finalTitleForm,
-            onChanged: updateTitle,
-          ),
-          PostContent(
-            formKey: _finalContentForm,
-            onChanged:  updateContent,
-            hintText: 'body text (optional)',
-            initialBody: ''
-          ),
-          Container(
-            child: CreatePostHeader(
-              buttonText: "Post",
-              onPressed: navigateToPostToCommunity,
-              isEnabled: isButtonEnabled,
-              onIconPress : () { showDiscardButtomSheet(context);},
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SmallButton(
+                    buttonText: 'Add tags',
+                    onPressed: navigateToAddTags,
+                    isEnabled: true,
+                    width: 150,
+                    height: 10,
+                  ),
+                ),          
+                PostTitle(
+                  formKey: _finalTitleForm,
+                  onChanged: updateTitle,
+                ),
+                PostContent(
+                  formKey: _finalContentForm,
+                  onChanged:  updateContent,
+                  hintText: 'body text (optional)',
+                  initialBody: ''
+                ),
+              ],
             ),
           ),
           isPrimaryFooterVisible? PostFooter(
@@ -188,14 +151,20 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
             showVideoIcon: true,
             showPollIcon: true,
             onImagePress: pickImage,
-            onVideoPress: () {},
+            onVideoPress: pickVideo,
+            onPollPress: openPollWidow,
+            lastPressedIcon: lastPressedIcon, 
+            setLastPressedIcon: setLastPressedIcon,
             ) : SecondaryPostFooter(
               onLinkPress: () {},
               onImagePress: pickImage,
               onVideoPress: pickVideo,
-              onPollPress: () {},
+              onPollPress: openPollWidow,
+              lastPressedIcon: lastPressedIcon, 
+              setLastPressedIcon: setLastPressedIcon,
             ),
-        ],)
+          ],
+        ),
     );
   }
 }
