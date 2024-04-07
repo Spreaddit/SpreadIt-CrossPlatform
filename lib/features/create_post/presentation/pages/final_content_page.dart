@@ -1,24 +1,20 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
-import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../widgets/header_and_footer_widgets/community_and_rules_header.dart';
-import '../widgets/showDiscardBottomSheet.dart';
-import '../pages/add_tags.dart';
-import '../widgets/rendered_tag.dart';
+import '../widgets/show_discard_bottomsheet.dart';
 import '../../../generic_widgets/small_custom_button.dart';
 import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
+import '../widgets/tags_widgets/rendered_tag.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
@@ -39,6 +35,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
   bool createPoll = false;
+  bool isNSFWAllowed = true;
+  bool isSpoiler = false;
+  bool isNSFW = false;
 
   File? image;
   File? video;
@@ -66,6 +65,20 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     setState(() {
       lastPressedIcon = passedIcon;
     });
+  }
+
+  void updateIsSpoiler() {
+    setState(() {
+      isSpoiler = !isSpoiler;
+    });
+    print(isSpoiler);
+  }
+
+  void updateIsNSFW () {
+    setState(() {
+      isNSFW = !isNSFW;
+    });
+    print(isNSFW);
   }
 
   void toggleFooter() {
@@ -125,12 +138,32 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                   alignment: Alignment.centerLeft,
                   child: SmallButton(
                     buttonText: 'Add tags',
-                    onPressed: navigateToAddTags,
+                    onPressed: () {
+                      showAddTagButtomSheet(
+                        context, 
+                        isSpoiler, 
+                        isNSFW, 
+                        isNSFWAllowed, 
+                        updateIsSpoiler,
+                        updateIsNSFW,
+                        );
+                      },
                     isEnabled: true,
                     width: 150,
                     height: 10,
                   ),
-                ),          
+                ),
+                if (isSpoiler && !isNSFW)
+                    RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler'),
+                if (!isSpoiler && isNSFW)
+                    RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'), 
+                if (isSpoiler && isNSFW)
+                  Row (
+                    children: [
+                      RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler'),
+                      RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'),
+                    ],
+                  ),             
                 PostTitle(
                   formKey: _finalTitleForm,
                   onChanged: updateTitle,

@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/pages/add_tags.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
@@ -59,7 +58,6 @@ class SpreadIt extends StatelessWidget {
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
         '/post-to-community': (context) => PostToCommunity(),    
-        '/add-tags':(context) => Tags(),
         '/final-content-page': (context) => FinalCreatePost(),
         '/primary-content-page': (context) => CreatePost(),
         '/rules': (context) => CommunityRules(),

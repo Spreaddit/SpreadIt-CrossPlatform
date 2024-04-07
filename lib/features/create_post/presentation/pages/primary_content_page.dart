@@ -10,7 +10,7 @@ import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../../../generic_widgets/validations.dart';
-import '../widgets/showDiscardBottomSheet.dart';
+import '../widgets/show_discard_bottomsheet.dart';
 import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/poll_widgets/poll.dart';
