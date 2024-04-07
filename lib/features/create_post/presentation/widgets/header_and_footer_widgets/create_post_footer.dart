@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../widgets/footer_icon.dart';
+import 'footer_icon.dart';
 
 class PostFooter extends StatefulWidget {
   final VoidCallback? toggleFooter;

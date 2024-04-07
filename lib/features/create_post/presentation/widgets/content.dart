@@ -25,12 +25,8 @@ class _PostcontentState extends State<PostContent> {
    @override
   void initState() {
     super.initState();
-    print('PostContent initState');
     _controller = TextEditingController(text:widget.initialBody);
-    print(_controller);
-    print('controller initialized');
     _controller.addListener(() {
-      print('PostContent onChanged listener');
       setState(() {
         widget.onChanged(_controller.text);
       });
@@ -45,33 +41,26 @@ class _PostcontentState extends State<PostContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child:Container(
-          padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
-          child:SingleChildScrollView(
-            child: TextFormField(  
-            maxLines: null,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: widget.hintText,
-              hintStyle: TextStyle(
-                fontSize: 20,
-                ),
+    return Container(
+            padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
+            child:SingleChildScrollView(
+              child: TextFormField(  
+              maxLines: null,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: widget.hintText,
+                hintStyle: TextStyle(
+                  fontSize: 20,
+                  ),
+              ),
+              style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: 15,
+              ),
+              controller: _controller,
+              ),
             ),
-            style: TextStyle(
-              decoration: TextDecoration.none,
-              fontSize: 15,
-            ),
-            controller: _controller,
-            ),
-          ),
-        ),
-        );
+    );
   }
 }
 
-/*
-TODOs:
-1) ashouf 7war el kalam el underlined da 
-2) a7ot el controller wel kalam da
-*/

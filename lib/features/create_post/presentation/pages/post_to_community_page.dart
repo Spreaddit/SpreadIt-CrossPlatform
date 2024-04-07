@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../generic_widgets/search_bar.dart';
-import '../widgets/buttonless_header.dart';
+import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/communities_search_card.dart';
 
 class PostToCommunity extends StatefulWidget { 
@@ -149,9 +149,9 @@ class _PostToCommunityState extends State<PostToCommunity> {
 
 /*
 TODOs:
-2) agahhez el api call elli ha-get biha el communities 
-3) action l see more button 
-4) (pass el community lel final content page )
-5) mock service 
-6) unit testing
+1) agahhez el api call elli ha-get biha el communities 
+2) action l see more button 
+3) pass el community lel final content page 
+4) mock service 
+5) unit testing
  */

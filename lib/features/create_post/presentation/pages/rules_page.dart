@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../generic_widgets/button.dart';
-import '../widgets/buttonless_header.dart';
+import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/expanded_rules.dart';
 
 

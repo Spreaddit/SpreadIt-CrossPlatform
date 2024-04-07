@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../widgets/secondary_footer_icon.dart';
+import 'secondary_footer_icon.dart';
 
 class SecondaryPostFooter extends StatefulWidget {
 
@@ -40,7 +40,7 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
           Container(
             margin: EdgeInsets.all(10),
             child: Text(
-              'What do you want to add?',
+              lastPressedIcon == null ? 'What do you want to add?' : 'You can add one type of attachments for now',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,

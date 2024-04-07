@@ -21,10 +21,7 @@ class _PostTitleState extends State<PostTitle> {
    @override
   void initState() {
     super.initState();
-    print('PostContent initState');
     _controller = TextEditingController();
-    print(_controller);
-    print('controller initialized');
     _controller.addListener(() {
       setState(() {
         widget.onChanged(_controller.text);
@@ -68,8 +65,3 @@ class _PostTitleState extends State<PostTitle> {
   }
 }
 
-/*
-TODOs:
-1) ashouf 7war el kalam el underlined da 
-2) a7ot el controller wel kalam da
-*/

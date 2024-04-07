@@ -6,16 +6,16 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
-import '../widgets/create_post_header.dart';
+import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
-import '../widgets/create_post_footer.dart';
-import '../widgets/create_post_secondary_footer.dart';
+import '../widgets/header_and_footer_widgets/create_post_footer.dart';
+import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../widgets/showDiscardBottomSheet.dart';
 import '../pages/add_tags.dart';
 import '../widgets/rendered_tag.dart';
-import '../widgets/image_picker.dart';
-import '../widgets/video_picker.dart';
+import '../widgets/photo_and_video_pickers/image_picker.dart';
+import '../widgets/photo_and_video_pickers/video_picker.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
@@ -202,9 +202,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
 /* TODOs 
 1) a3mel en law ekhtart tag , yeshil el zorar bta3 add tags da w y7ot el tag makano
-3) asayyev kol haga f variable w akhod el haga ml pages elli ablaha 
+2) asayyev kol haga f variable w akhod el haga ml pages elli ablaha 
 ---> a-make sure law ana aslan 3amla post men gowwa community mafish haga hakhodha men pages ablaha 
-4) navigations
-5) mock service 
-6) unit testing 
+3) navigations
+4) mock service 
+5) unit testing 
  */

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../../../generic_widgets/small_custom_button.dart';
+import '../../../../generic_widgets/small_custom_button.dart';
 
 
 class CreatePostHeader extends StatefulWidget {
