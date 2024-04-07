@@ -192,7 +192,7 @@ class _UserProfileState extends State<UserProfile> {
                       username: username,
                       userinfo: userinfo,
                       about: about,
-                      myProfile: false,
+                      myProfile: true,
                       followed: followStatus,
                       onStartChatPressed: () => {},
                       editprofile: () => navigateToEditProfile(context),

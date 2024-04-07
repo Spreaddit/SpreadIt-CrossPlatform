@@ -22,10 +22,8 @@ class CommentWidget extends StatelessWidget {
     print(accessToken);
     int statusCode = await unsavePost(id: comment.id, accessToken: accessToken);
     if (statusCode == 200) {
-      // Handle success, maybe update UI accordingly
       print('Post unsaved successfully.');
     } else {
-      // Handle error, display error message or retry logic
       print('Error occurred while unsaving post.');
     }
   }

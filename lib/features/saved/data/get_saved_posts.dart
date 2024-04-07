@@ -19,9 +19,7 @@ Future<List<Post>> getSavedPosts(String username, String page) async {
 
     final response = await Dio().get(requestURL);
     if (response.statusCode == 200) {
-      var ayhaga= (response.data as List).map((x) => Post.fromJson(x)).toList();
-      print('hello');
-      return ayhaga;
+      return (response.data as List).map((x) => Post.fromJson(x)).toList();
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
     } else if (response.statusCode == 400) {

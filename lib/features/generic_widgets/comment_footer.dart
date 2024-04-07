@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 
@@ -18,9 +19,10 @@ class CommentFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
+      padding: EdgeInsets.symmetric(vertical: kIsWeb? screenHeight * 0.02 :screenWidth * 0.02),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -46,14 +48,14 @@ class CommentFooter extends StatelessWidget {
               SizedBox(width: screenWidth * 0.01),
               UpVoteButton(
                 color: upvoted ? Colors.orange : Colors.grey,
-                width: screenWidth * 0.04,
-                height: screenWidth * 0.04,
+                width: screenHeight * 0.02,
+                height: screenHeight * 0.02,
               ),
               Text('$number'),
               DownVoteButton(
                 color: downvoted ? Colors.purple : Colors.grey,
-                width: screenWidth * 0.04,
-                height: screenWidth * 0.04,
+                width: screenHeight * 0.02,
+                height: screenHeight * 0.02,
               ),
             ],
           ),

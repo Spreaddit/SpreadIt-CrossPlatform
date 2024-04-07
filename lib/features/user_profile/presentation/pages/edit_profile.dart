@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:spreadit_crossplatform/features/user_profile/images/image_picker.dart';
 import '../../../Account_Settings/presentation/widgets/switch_type_1.dart';
 import '../../../generic_widgets/custom_input.dart';
 import '../widgets/social_link_bottom_sheet_model.dart';
 import '../widgets/social_media_selection_bottom_sheet.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -18,10 +21,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   var _change = false;
   bool _switchValue1 = false;
   bool _switchValue2 = false;
+  String? backgroundImageURl =
+      'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg';
+  String? profileImageURl =
+      'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg';
+  File? backgroundImageFile;
+  File? profileImageFile;
+
 
   void updateUsername(String username, bool validation) {
     _username = username;
-    _usernameForm.currentState!.save();
+    _usernameForm.currentState?.save();
     setState(() {
       _change = true;
     });
@@ -29,43 +39,73 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void updateAbout(String about, bool validation) {
     _about = about;
-    _aboutForm.currentState!.save();
+    _aboutForm.currentState?.save();
     setState(() {
       _change = true;
     });
   }
 
-
-void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
-  final selectedPlatform = await showModalBottomSheet<Map<String, dynamic>>(
-    context: context,
-    builder: (context) => SocialMediaSelectionBottomSheet(),
-  );
-
-  if (selectedPlatform != null) {
-    showModalBottomSheet<Map<String, dynamic>>(
+  void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
+    final selectedPlatform = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
-      isScrollControlled: true,
-      builder: ((context) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-         child: SocialMediaBottomSheet(
-          platformName: selectedPlatform['platformName'],
-          icon: selectedPlatform['icon'],
-          color: selectedPlatform['color'],
-        ),
-        );
-      }),
+      builder: (context) => SocialMediaSelectionBottomSheet(),
     );
-  }
-}
 
+    if (selectedPlatform != null) {
+      showModalBottomSheet<Map<String, dynamic>>(
+        context: context,
+        isScrollControlled: true,
+        builder: ((context) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SocialMediaBottomSheet(
+              platformName: selectedPlatform['platformName'],
+              icon: selectedPlatform['icon'],
+              color: selectedPlatform['color'],
+            ),
+          );
+        }),
+      );
+    }
+  }
+
+  Future<void> pickBackGroundImage() async {
+    final image = await pickImageFromFilePicker();
+    setState(() {
+      if (image != null) {
+        backgroundImageURl = null; 
+        backgroundImageFile = image;
+        print(backgroundImageFile);
+      }
+    });
+  }
+
+  Future<void> pickProfileImage() async {
+    final image = await pickImageFromFilePicker();
+    setState(() {
+      if (image != null) {
+        profileImageURl = null;
+        profileImageFile = image;
+      }
+    });
+  }
+
+  ImageProvider SelectImage() {
+    if (profileImageFile != null) {
+      return FileImage(profileImageFile!);
+    } else if (profileImageURl != null && profileImageURl!.isNotEmpty) {
+      return NetworkImage(profileImageURl!); // Use profileImageURl
+    } else {
+      return NetworkImage('https://addlogo.imageonline.co/image.jpg');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Edit Profile'),
         leading: IconButton(
@@ -98,21 +138,64 @@ void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
               height: MediaQuery.of(context).size.height,
               child: FractionallySizedBox(
                 alignment: Alignment.topCenter,
-                heightFactor: kIsWeb? 0.35:0.25,
+                heightFactor: kIsWeb ? 0.35 : 0.25,
                 child: Container(
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg'),
-                      fit: BoxFit.cover,
-                    ),
+                    image: backgroundImageFile != null
+                        ? DecorationImage(
+                            image: FileImage(backgroundImageFile!),
+                            fit: BoxFit.cover,
+                          )
+                        : (backgroundImageURl != null && backgroundImageURl!.isNotEmpty)
+                            ? DecorationImage(
+                                image: NetworkImage(backgroundImageURl!), // Use backgroundImageURl
+                                fit: BoxFit.cover,
+                              )
+                            : DecorationImage(
+                                image: NetworkImage(
+                                    'https://addlogo.imageonline.co/image.jpg'),
+                                fit: BoxFit.cover,
+                              ),
                   ),
+                  child: (backgroundImageFile == null && (backgroundImageURl == null || backgroundImageURl!.isEmpty))
+                      ? Center(
+                          child: Text(
+                            'No image available',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ),
+            Positioned(
+            top: kIsWeb
+                ? MediaQuery.of(context).size.height * 0.25 
+                : MediaQuery.of(context).size.height * 0.11,
+            right: kIsWeb? MediaQuery.of(context).size.width * 0.44 :MediaQuery.of(context).size.width * 0.25,
+            child: ElevatedButton(
+              onPressed: pickBackGroundImage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+              child: Text(
+                'Change Background',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
             Padding(
               padding: EdgeInsets.only(
-                  top:  kIsWeb? MediaQuery.of(context).size.height *0.32: MediaQuery.of(context).size.height * 0.2),
+                  top: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.32
+                      : MediaQuery.of(context).size.height * 0.2),
               child: Center(
                 child: Column(
                   children: [
@@ -120,17 +203,21 @@ void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
                       alignment: Alignment.center,
                       children: [
                         CircleAvatar(
-                          radius: kIsWeb? MediaQuery.of(context).size.height *0.1: MediaQuery.of(context).size.width * 0.14,
-                          backgroundImage: NetworkImage(
-                            'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
-                          ),
+                          radius: kIsWeb
+                              ? MediaQuery.of(context).size.height * 0.1
+                              : MediaQuery.of(context).size.width * 0.14,
+                          backgroundImage: SelectImage(),
                         ),
                         Positioned(
-                          bottom:  0,
-                          right:  0,
+                          bottom: 0,
+                          right: 0,
                           child: Container(
-                            width: kIsWeb? MediaQuery.of(context).size.width * 0.025 : MediaQuery.of(context).size.height * 0.05,
-                            height: kIsWeb? MediaQuery.of(context).size.width * 0.025:MediaQuery.of(context).size.height * 0.05,
+                            width: kIsWeb
+                                ? MediaQuery.of(context).size.width * 0.025
+                                : MediaQuery.of(context).size.height * 0.05,
+                            height: kIsWeb
+                                ? MediaQuery.of(context).size.width * 0.025
+                                : MediaQuery.of(context).size.height * 0.05,
                             decoration: BoxDecoration(
                               color: Colors.blue,
                               shape: BoxShape.circle,
@@ -139,7 +226,7 @@ void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
                               icon: Icon(Icons.add),
                               color: Colors.white,
                               onPressed: () {
-                                // Implement image selection logic
+                                pickProfileImage();
                               },
                             ),
                           ),
