@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../homepage/data/get_feed_posts.dart';
-import '../../../homepage/presentation/widgets/post_feed.dart';
+import 'package:spreadit_crossplatform/features/saved/presentation/widgets/posts_saved.dart';
 import '../../../generic_widgets/custom_bar.dart';
-import '../../../generic_widgets/comment_footer.dart';
-import '../../data/comment.dart';
-import '../widgets/comments.dart';
-import '../widgets/comments_dummy.dart';
+import '../../../user_profile/data/class_models/comments_class_model.dart';
+import '../../../user_profile/data/get_user_comments.dart';
+import '../../../user_profile/presentation/widgets/comments.dart';
 
 class SavedPage extends StatefulWidget {
   const SavedPage({Key? key}) : super(key: key);
@@ -16,12 +14,14 @@ class SavedPage extends StatefulWidget {
 
 class _SavedPageState extends State<SavedPage> {
   int _selectedIndex = 0;
-  bool _upvoted = true;
-  bool _downvoted = true;
-  int _number = 10;
-  final List<Comment> commentsList = comments;
+  List<Comment> commentsList = [];
+  String username = 'mimo';   // Get current username bgd using el singleton;
 
-
+  @override
+  void initState() {
+    super.initState();
+    fetchComments();
+  }
 
   void _onIndexChanged(int index) {
     setState(() {
@@ -29,12 +29,22 @@ class _SavedPageState extends State<SavedPage> {
     });
   }
 
+  Future<void> fetchComments() async {
+    try {
+      var data = await fetchUserComments(username,'saved');
+      setState(() {
+        commentsList = data;
+      });
+    } catch (e) {
+      print('Error fetching comments: $e');
+    }
+  }
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
         return SliverToBoxAdapter(
-          child: PostFeed(
-            postCategory: PostCategories.best,
+          child: PostSaved(
+            username:username,
           ),
         );
       case 1:

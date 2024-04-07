@@ -1,6 +1,6 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ProfileHeader extends StatelessWidget {
   final String backgroundImage;
@@ -37,7 +37,6 @@ class ProfileHeader extends StatelessWidget {
             iconSizePercentage;
     final double photosize = kIsWeb? screenHeight * 0.065 :
         (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
-    bool isWeb = kIsWeb;
     return Stack(
       children: [
         Container(

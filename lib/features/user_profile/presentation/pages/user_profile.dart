@@ -1,15 +1,18 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/comments_dummy.dart';
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
-import '../../data/comments.dart';
-import '../../data/community.dart';
+import '../../data/class_models/comments_class_model.dart';
+import '../../data/class_models/community_class_model.dart';
+import '../../data/date_conversion.dart';
 import '../widgets/about.dart';
 import '../widgets/active_community.dart';
 import '../widgets/comments.dart';
 import '../../../generic_widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import '../../data/user_info.dart';
+import '../../data/class_models/user_info_class_model.dart';
+import '../../data/get_user_comments.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -20,16 +23,58 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
-  String backgroundImage =
-      'https://t1.gstatic.com/licensed-image?q=tbn:ANd9GcRM0OQsITDDUQ-PCjobiXAyUfEQn1sOAkjorPKB2miR-sYx_aCjqMSevH2Y4WjIvPoA';
-  String profilePicture =
-      'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj';
-  String username = "mimo";
-  String userinfo = "u/mimo • 43 karma • Jun 6,2020";
-  String about = "Don't take ay haga seriously";
+  String backgroundImage = '';
+  String profilePicture = '';
+  String formattedDate = '';
+  UserInfo? userInfoFuture;
+  String userinfo = '';
+  String about = '';
+  String background = '';
+  bool followStatus = false;
+  bool myProfile = true; ////////// will be taken during navigation
+  String username = 'mimo'; ////////// will be taken during navigation
+  String postKarmaNo = '';
+  String commentKarmaNo = '';
+  List<Comment> commentsList = [];
+  List<Community> communitiesList = [];
 
-  final List<Comment> commentsList = comments;
-  final List<Community> communitiesList = communities;
+  @override
+  void initState() {
+    super.initState();
+    fetchUserInfoAsync();
+    fetchComments();
+  }
+
+  void fetchUserInfoAsync() async {
+    try {
+      userInfoFuture = await fetchUserInfo(username);
+      setState(() {
+        formattedDate = formatDate(userInfoFuture!.dateOfJoining);
+        userinfo =
+            'u/$username • ${userInfoFuture!.numberOfKarmas} Karma • $formattedDate';
+        communitiesList = userInfoFuture!.activeCommunities;
+        about = userInfoFuture!.about;
+        background = userInfoFuture!.background;
+        followStatus = userInfoFuture!.followStatus;
+        postKarmaNo = userInfoFuture!.postKarmaNo;
+        commentKarmaNo = userInfoFuture!.commentKarmaNo;
+        profilePicture = userInfoFuture!.avatar;
+      });
+    } catch (e) {
+      print('Error fetching user info: $e');
+    }
+  }
+
+  Future<void> fetchComments() async {
+    try {
+      var data = await fetchUserComments(username,'user');
+      setState(() {
+        commentsList = data;
+      });
+    } catch (e) {
+      print('Error fetching comments: $e');
+    }
+  }
 
   void _onIndexChanged(int index) {
     setState(() {
@@ -98,8 +143,8 @@ class _UserProfileState extends State<UserProfile> {
       case 2:
         return SliverToBoxAdapter(
           child: AboutWidget(
-            postKarmaNo: '100',
-            commentKarmaNo: '200',
+            postKarmaNo: postKarmaNo,
+            commentKarmaNo: commentKarmaNo,
             aboutText: about,
             onSendMessagePressed: () {},
             onStartChatPressed: () {},
@@ -108,7 +153,7 @@ class _UserProfileState extends State<UserProfile> {
         );
       default:
         return SliverToBoxAdapter(
-          child: Text('Posts'),
+          child: Text('User not found'),
         );
     }
   }
@@ -120,17 +165,38 @@ class _UserProfileState extends State<UserProfile> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: ProfileHeader(
-                backgroundImage: backgroundImage,
-                profilePicture: profilePicture,
-                username: username,
-                userinfo: userinfo,
-                about: about,
-                myProfile: true,
-                followed: true,
-                onStartChatPressed: () => {},
-                editprofile: () => navigateToEditProfile(context),
-              ),
+              child: userInfoFuture == null
+                  ? Container(
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints(
+                        maxWidth: 50.0,
+                        maxHeight: 200.0,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                            backgroundColor: Colors.grey,
+                            strokeWidth: 3,
+                          ),
+                          SizedBox(height: 8),
+                          Text('Loading'),
+                        ],
+                      ),
+                    )
+                  : ProfileHeader(
+                      backgroundImage: background,
+                      profilePicture: profilePicture,
+                      username: username,
+                      userinfo: userinfo,
+                      about: about,
+                      myProfile: false,
+                      followed: followStatus,
+                      onStartChatPressed: () => {},
+                      editprofile: () => navigateToEditProfile(context),
+                    ),
             ),
             SliverToBoxAdapter(
               child: CustomBar(
