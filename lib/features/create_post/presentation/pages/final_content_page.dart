@@ -168,6 +168,26 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                   formKey: _finalTitleForm,
                   onChanged: updateTitle,
                 ),
+                if (image != null)
+                  Container(
+                    alignment: Alignment.center,
+                    child:Image.file(
+                        image!,
+                        height: 160,
+                        width: double.infinity,
+                        fit:BoxFit.cover,
+                    ),
+                  ), 
+                if (video != null)
+                  Container(
+                    alignment: Alignment.center,
+                    child:Image.file(
+                        video!,
+                        height: 160,
+                        width: double.infinity,
+                        fit:BoxFit.cover,
+                    ),
+                  ), 
                 PostContent(
                   formKey: _finalContentForm,
                   onChanged:  updateContent,
@@ -203,7 +223,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 }
 
 /* TODOs 
-1) a3mel en law ekhtart tag , yeshil el zorar bta3 add tags da w y7ot el tag makano
 2) asayyev kol haga f variable w akhod el haga ml pages elli ablaha 
 ---> a-make sure law ana aslan 3amla post men gowwa community mafish haga hakhodha men pages ablaha 
 3) navigations
