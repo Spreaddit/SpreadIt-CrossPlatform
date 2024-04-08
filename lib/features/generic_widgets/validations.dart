@@ -48,3 +48,13 @@
     }
   }
 
+  bool validateLink(String url) {
+    final RegExp urlRegex = RegExp(
+    r'^(?:https?:\/\/)?' 
+    r'(?:www\.)?'         
+    r'[a-zA-Z0-9-]+\.'    
+    r'[a-zA-Z]{2,3}$'    
+    );
+    print(urlRegex.hasMatch(url));
+    return urlRegex.hasMatch(url);
+  }

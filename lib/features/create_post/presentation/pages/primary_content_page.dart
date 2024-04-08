@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -15,6 +16,7 @@ import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/poll_widgets/poll.dart';
 import '../widgets/link.dart';
+import '../widgets/image_and_video_widgets.dart';
 
 class CreatePost extends StatefulWidget {  
   const CreatePost({Key? key}) : super(key: key);
@@ -63,6 +65,7 @@ class _CreatePostState extends State<CreatePost> {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
     if (_primaryLinkForm.currentState != null) {
       _primaryLinkForm.currentState!.save();
+      updateButtonState();
     }
     });
   }
@@ -74,7 +77,7 @@ class _CreatePostState extends State<CreatePost> {
       });
     }
     else {
-      isButtonEnabled = validatePostTitle(title);  // TODO : add check link validity
+      isButtonEnabled = validatePostTitle(title); //&& validateLink(link!);  
     }
   }
 
@@ -101,6 +104,11 @@ class _CreatePostState extends State<CreatePost> {
     else {
       setLastPressedIcon(null);
     }
+  }
+
+  void cancelImageOrVideo (File? imageOrVideo) {
+    imageOrVideo = null;
+    setLastPressedIcon(null);
   }
 
   Future<void> pickImage() async {
@@ -155,29 +163,15 @@ class _CreatePostState extends State<CreatePost> {
                   initialBody: '',
                 ),
                 if (image != null)
-                   Container(
-                    alignment: Alignment.center,
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FileImage(image!),
-                          fit:BoxFit.cover,
-                        ),
-                    ),
+                  ImageOrVideoWidget(
+                    imageOrVideo: image!, 
+                    onIconPress: () {cancelImageOrVideo(image!);},
                   ),
                 if (video != null)
-                   Container(
-                    alignment: Alignment.center,
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FileImage(video!),
-                          fit:BoxFit.cover,
-                        ),
-                    ),
-                  ), 
+                   ImageOrVideoWidget(
+                    imageOrVideo: video!,
+                    onIconPress: () {cancelImageOrVideo(video!);},
+                  ),
                 if (isLinkAdded)
                    LinkTextField(
                     formKey: _primaryLinkForm,
@@ -185,13 +179,22 @@ class _CreatePostState extends State<CreatePost> {
                     hintText: 'URL',
                     initialBody: '',
                     onIconPress: addLink,
-                ),    
-                PostContent(
-                  formKey: _primaryContentForm,
-                  onChanged:updateContent,
-                  hintText: 'body text (optional)',
-                  initialBody: '',
-                ),
+                ), 
+                if (isLinkAdded && link != null && !validateLink(link!))
+                  Container(
+                    margin:EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                    ),
+                    child: Text('Oops, this link isn\'t valid. Double-check, and try again.'),
+                  ), 
+                if(!createPoll)    
+                  PostContent(
+                    formKey: _primaryContentForm,
+                    onChanged:updateContent,
+                    hintText: 'body text (optional)',
+                    initialBody: '',
+                  ),
                 if (createPoll)
                   Poll(
                     onPollCancel: openPollWidow,
@@ -227,7 +230,7 @@ class _CreatePostState extends State<CreatePost> {
 }
 
 /* TODOs 
-1) a7ot cancel icon 3al sowar wel video when uploaded
+0) link validations (el input fields etgannenet)
 2) ashouf el video msh shaghal leih
 3) ab3at el haga di kollaha lel final content page (almost done)
 5) unit testing 

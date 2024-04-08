@@ -18,6 +18,7 @@ import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/tags_widgets/rendered_tag.dart';
 import '../../../generic_widgets/validations.dart';
+import '../widgets/image_and_video_widgets.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
@@ -64,9 +65,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool isNSFW = false;
   bool finalIsLinkAdded = false ;     
 
-  File? image;
-  File? video;
-  String? link;
+  File? finalImage;
+  File? finalVideo;
+  String? finalLink;
   IconData? lastPressedIcon;
 
   @override
@@ -75,6 +76,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     communityName = widget.community[0]['communityName'];
     communityIcon = widget.community[0]['communityIcon'];
     finalIsLinkAdded = widget.isLinkAdded;
+    if(widget.image != null) {
+      finalImage = widget.image;
+    }
+    if(widget.video != null) {
+      finalVideo = widget.video;
+    }  
   }
   
    void updateTitle(String value) {
@@ -93,7 +100,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   void updateLink(String value) {
-    link = value;
+    finalLink = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
     if (_finalLinkForm.currentState != null) {
       _finalLinkForm.currentState!.save();
@@ -133,7 +140,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
-    void addLink() {
+  void addLink() {
     setState(() {
       finalIsLinkAdded = !finalIsLinkAdded;
     });
@@ -145,17 +152,22 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     }
   }
 
+  void cancelImageOrVideo (File? imageOrVideo) {
+    imageOrVideo = null;
+    setLastPressedIcon(null);
+  }
+
   Future<void> pickImage() async {
     final image = await pickImageFromFilePicker();
     setState(() {
-      this.image = image;
+      finalImage = image;
     });
   }
   
   Future<void> pickVideo() async {
     final video = await pickVideoFromFilePicker();
     setState(() {
-      this.video = video;
+      finalVideo = video;
     });
   }
 
@@ -233,29 +245,15 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                   onChanged: updateTitle,
                   initialBody: widget.title,
                 ),
-                if (image != null)
-                  Container(
-                    alignment: Alignment.center,
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FileImage(image!),
-                          fit:BoxFit.cover,
-                        ),
-                    ),
+                if (finalImage != null)
+                  ImageOrVideoWidget(
+                    imageOrVideo: finalImage!,
+                    onIconPress: () {cancelImageOrVideo(finalImage);},
                   ), 
-                if (video != null)
-                   Container(
-                    alignment: Alignment.center,
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FileImage(video!),
-                          fit:BoxFit.cover,
-                        ),
-                    ),
+                if (finalVideo != null)
+                   ImageOrVideoWidget(
+                    imageOrVideo: finalVideo!,
+                    onIconPress: () {cancelImageOrVideo(finalVideo);},
                   ),
                 if (finalIsLinkAdded)
                    LinkTextField(
@@ -301,7 +299,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 }
 
 /* TODOs 
-1) a7ot cancel icon 3al sowar wel video when uploaded
 2) ashouf el video msh shaghal leih
 3) a-check el wel poll wel image wel video byetne2lo walla laa aw han2elhom ezzay
 4) mock service 
