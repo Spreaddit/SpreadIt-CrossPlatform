@@ -43,7 +43,7 @@ class SpreadIt extends StatelessWidget {
           : null, 
       title: 'Spread It',
       theme: spreadItTheme,
-      home: HomePage(),
+      home: UserProfile(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),

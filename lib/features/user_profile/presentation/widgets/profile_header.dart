@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../../generic_widgets/bottom_model_sheet.dart';
+import '../../../generic_widgets/share.dart';
+
 class ProfileHeader extends StatelessWidget {
   final String backgroundImage;
   final String profilePicture;
@@ -35,13 +38,14 @@ class ProfileHeader extends StatelessWidget {
     final double iconSize =
         (screenWidth < screenHeight ? screenWidth : screenHeight) *
             iconSizePercentage;
-    final double photosize = kIsWeb? screenHeight * 0.065 :
-        (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
+    final double photosize = kIsWeb
+        ? screenHeight * 0.065
+        : (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
     return Stack(
       children: [
         Container(
           width: screenWidth,
-          height: kIsWeb? screenHeight*0.52:screenHeight * 0.5,
+          height: kIsWeb ? screenHeight * 0.52 : screenHeight * 0.5,
           child: ShaderMask(
             blendMode: BlendMode.srcATop,
             shaderCallback: (Rect bounds) {
@@ -52,7 +56,7 @@ class ProfileHeader extends StatelessWidget {
                   Colors.transparent,
                   Colors.black.withOpacity(0.9),
                 ],
-                stops: [0.0, 0.7], 
+                stops: [0.0, 0.7],
               ).createShader(bounds);
             },
             child: Image.network(
@@ -82,7 +86,15 @@ class ProfileHeader extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () {
-                          // Your onPressed logic here
+                          // TO DO : Update this when search is implemented
+                        },
+                        color: Colors.white,
+                        iconSize: iconSize,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        onPressed: () {
+                          sharePressed('hola');
                         },
                         color: Colors.white,
                         iconSize: iconSize,
@@ -91,7 +103,31 @@ class ProfileHeader extends StatelessWidget {
                         IconButton(
                           icon: Icon(Icons.more_vert),
                           onPressed: () {
-                            // Your onPressed logic here
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomBottomSheet(
+                                  icons: [
+                                    CupertinoIcons.envelope,
+                                    CupertinoIcons.add_circled,
+                                    Icons.block,
+                                    CupertinoIcons.flag,
+                                  ],
+                                  text: [
+                                    'Send a message',
+                                    'Add to custom feed',
+                                    'Block',
+                                    'Report a profile'
+                                  ],
+                                  onPressedList: [
+                                    () => {},
+                                    () => {},
+                                    () => {},
+                                    () => {},
+                                  ],
+                                );
+                              },
+                            );
                           },
                           color: Colors.white,
                           iconSize: iconSize,
@@ -101,16 +137,21 @@ class ProfileHeader extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: kIsWeb? screenHeight * 0.02 :20),
+                padding:
+                    EdgeInsets.only(left: kIsWeb ? screenHeight * 0.02 : 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: kIsWeb? screenHeight * 0.02 : screenHeight * 0.08),
+                    SizedBox(
+                        height:
+                            kIsWeb ? screenHeight * 0.02 : screenHeight * 0.08),
                     CircleAvatar(
                       radius: photosize,
                       backgroundImage: NetworkImage(profilePicture),
                     ),
-                    SizedBox(height: kIsWeb? screenHeight * 0.01 :screenHeight * 0.02),
+                    SizedBox(
+                        height:
+                            kIsWeb ? screenHeight * 0.01 : screenHeight * 0.02),
                     Row(
                       children: [
                         if (!myProfile)
@@ -173,7 +214,9 @@ class ProfileHeader extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: kIsWeb? screenHeight * 0.02 : screenHeight * 0.02),
+                    SizedBox(
+                        height:
+                            kIsWeb ? screenHeight * 0.02 : screenHeight * 0.02),
                     Text(
                       userinfo,
                       style: TextStyle(
@@ -183,7 +226,9 @@ class ProfileHeader extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: kIsWeb? screenHeight * 0.02 : screenHeight * 0.02),
+                    SizedBox(
+                        height:
+                            kIsWeb ? screenHeight * 0.02 : screenHeight * 0.02),
                     Text(
                       about,
                       style: TextStyle(

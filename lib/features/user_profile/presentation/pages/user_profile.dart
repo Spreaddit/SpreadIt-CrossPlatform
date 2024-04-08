@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../data/class_models/comments_class_model.dart';
 import '../../data/class_models/community_class_model.dart';
 import '../../data/date_conversion.dart';
+import '../../data/follow_unfollow_api.dart';
 import '../widgets/about.dart';
 import '../widgets/active_community.dart';
 import '../widgets/comments.dart';
@@ -23,6 +25,11 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
+  /////////////////////////////////Navigation ////////////////////////////////////////////////
+  bool myProfile = true; ////////// will be taken during navigation
+  String username = 'mimo'; ////////// will be taken during navigation
+
+  ////////////////////////////////////////////BACKEND///////////////////////////////////////////
   String backgroundImage = '';
   String profilePicture = '';
   String formattedDate = '';
@@ -30,14 +37,13 @@ class _UserProfileState extends State<UserProfile> {
   String userinfo = '';
   String about = '';
   String background = '';
-  bool followStatus = false;
-  bool myProfile = true; ////////// will be taken during navigation
-  String username = 'mimo'; ////////// will be taken during navigation
-  String displayName='mimo'; // get from backend
+  bool? followStatus; 
+  String displayName=''; 
   String postKarmaNo = '';
   String commentKarmaNo = '';
   List<Comment> commentsList = [];
   List<Community> communitiesList = [];
+  List<Map<String, dynamic>> socialMediaLinks=[];
 
   @override
   void initState() {
@@ -46,25 +52,61 @@ class _UserProfileState extends State<UserProfile> {
     fetchComments();
   }
 
-  void fetchUserInfoAsync() async {
-    try {
-      userInfoFuture = await fetchUserInfo(username);
-      setState(() {
-        formattedDate = formatDate(userInfoFuture!.dateOfJoining);
-        userinfo =
-            'u/$username • ${userInfoFuture!.numberOfKarmas} Karma • $formattedDate';
-        communitiesList = userInfoFuture!.activeCommunities;
-        about = userInfoFuture!.about;
-        background = userInfoFuture!.background;
-        followStatus = userInfoFuture!.followStatus;
-        postKarmaNo = userInfoFuture!.postKarmaNo;
-        commentKarmaNo = userInfoFuture!.commentKarmaNo;
-        profilePicture = userInfoFuture!.avatar;
-      });
-    } catch (e) {
-      print('Error fetching user info: $e');
-    }
+ void fetchUserInfoAsync() async {
+  try {
+    userInfoFuture = await fetchUserInfo(username);
+    setState(() {
+      formattedDate = formatDate(userInfoFuture!.dateOfJoining);
+      userinfo =
+          'u/${userInfoFuture!.username} • ${userInfoFuture!.numberOfKarmas} Karma • $formattedDate';
+      communitiesList = userInfoFuture!.activeCommunities;
+      about = userInfoFuture!.about;
+      background = userInfoFuture!.background;
+      followStatus = userInfoFuture!.followStatus;
+      postKarmaNo = userInfoFuture!.postKarmaNo;
+      commentKarmaNo = userInfoFuture!.commentKarmaNo;
+      profilePicture = userInfoFuture!.avatar;
+      displayName = userInfoFuture!.displayname; 
+      socialMediaLinks = userInfoFuture!.socialMedia.map((socialMedia) => {
+        'platformName': socialMedia.platform,
+        'headerName': socialMedia.displayname,
+        'url': socialMedia.url,
+      }).toList(); 
+    });
+  } catch (e) {
+    print('Error fetching user info: $e');
   }
+}
+
+Future<void> unfollowOrFollow() async {
+  try {
+     var response= await toggleFollow(isFollowing: followStatus!, username: username);
+    if (response==200)
+    {
+      setState(() {
+        followStatus = !followStatus!;
+      });
+    }
+    else if (response==400)
+    {
+          CustomSnackbar(content: 'Username is required').show(context);
+
+    }
+        else if (response==404)
+    {
+          CustomSnackbar(content: 'User not found').show(context);
+
+    }
+        else if (response==500)
+    {
+          CustomSnackbar(content: 'Internal server error').show(context);
+
+    }
+  } catch (e) {
+    print('Error toggling follow status: $e');
+  }
+}
+
 
   Future<void> fetchComments() async {
     try {
@@ -77,6 +119,7 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+
   void _onIndexChanged(int index) {
     setState(() {
       _selectedIndex = index;
@@ -84,6 +127,8 @@ class _UserProfileState extends State<UserProfile> {
   }
 
 void navigateToEditProfile(BuildContext context) {
+  print(displayName);
+  print(socialMediaLinks);
   Navigator.of(context).pushNamed(
     '/edit-profile',
     arguments: {
@@ -91,38 +136,7 @@ void navigateToEditProfile(BuildContext context) {
       'profileImageUrl':profilePicture,
       'about' : about,
       'displayname' :displayName,
-      'socialMediaLinks': [
-        {
-          'headerName': 'Group 1',
-          'platformName': 'Twitter',
-          'url': 'https://twitter.com/example'
-        },
-        {
-          'headerName': 'Group 1',
-          'platformName': 'Facebook',
-          'url': 'https://facebook.com/example'
-        },
-        {
-          'headerName': 'Group 2',
-          'platformName': 'Instagram',
-          'url': 'https://instagram.com/example1'
-        },
-        {
-          'headerName': 'Group 2',
-          'platformName': 'Instagram',
-          'url': 'https://instagram.com/example2'
-        },
-        {
-          'headerName': 'Group 2',
-          'platformName': 'Instagram',
-          'url': 'https://instagram.com/example3'
-        },
-        {
-          'headerName': 'Group 2',
-          'platformName': 'Instagram',
-          'url': 'https://instagram.com/example4'
-        },
-      ],
+      'socialMediaLinks': socialMediaLinks,
     },
   );
 }
@@ -234,8 +248,9 @@ void navigateToEditProfile(BuildContext context) {
                       username: username,
                       userinfo: userinfo,
                       about: about,
-                      myProfile: true,
-                      followed: followStatus,
+                      myProfile: false,
+                      followed: followStatus!,
+                      follow : unfollowOrFollow,
                       onStartChatPressed: () => {},
                       editprofile: () => navigateToEditProfile(context),
                     ),

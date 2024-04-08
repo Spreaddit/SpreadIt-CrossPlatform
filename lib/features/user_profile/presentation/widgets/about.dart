@@ -1,6 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+
 
 class AboutWidget extends StatelessWidget {
   final String postKarmaNo;

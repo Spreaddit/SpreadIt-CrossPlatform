@@ -102,6 +102,10 @@ class CommentWidget extends StatelessWidget {
                     fontSize: 14.0,
                   ),
                 ),
+                if (comment.media.isNotEmpty)
+                  SizedBox(height: screenHeight * 0.02),
+                if (comment.media.isNotEmpty) 
+                Image.network(comment.media[0]),
               ],
             ),
           ),
@@ -117,14 +121,10 @@ class CommentWidget extends StatelessWidget {
                         Icons.bookmarks_outlined,
                         CupertinoIcons.bell_solid
                       ],
-                      text: [
-                        'Share',
-                        'Unsave',
-                        'Get reply notifications'
-                      ],
+                      text: ['Share', 'Unsave', 'Get reply notifications'],
                       onPressedList: [
                         () => {},
-                        () => unsaveComment(), 
+                        () => unsaveComment(),
                         () => {}
                       ],
                     );
