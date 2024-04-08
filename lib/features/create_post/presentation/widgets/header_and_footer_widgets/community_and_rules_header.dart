@@ -21,7 +21,7 @@ class _CommunityAndRulesHeaderState extends State<CommunityAndRulesHeader> {
   }
 
   void navigateToPostToCommunity() {
-    Navigator.of(context).pushNamed('/post-to-community');
+    Navigator.pop(context);
   }
 
   @override

@@ -37,7 +37,7 @@ class _CommunityRulesState extends State<CommunityRules> {
   ];
 
   void navigateToFinalContentPage() {
-    Navigator.of(context).pushNamed('/final-content-page');
+    Navigator.pop(context);
   }
   @override
   Widget build(BuildContext context) {

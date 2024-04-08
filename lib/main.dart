@@ -38,7 +38,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: FinalCreatePost(),
+      home: CreatePost(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -57,8 +57,29 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
-        '/post-to-community': (context) => PostToCommunity(),    
-        '/final-content-page': (context) => FinalCreatePost(),
+        '/post-to-community': (context) { 
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return PostToCommunity(
+            title: args['title'],
+            content: args['content'],
+            link: args['link'],
+            image: args['image'],
+            video: args['video'],
+            isLinkAdded: args['isLinkAdded'],
+          );
+        },    
+        '/final-content-page': (context) { 
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return FinalCreatePost(
+            title: args['title'],
+            content: args['content'],
+            link: args['link'],
+            image: args['image'],
+            video: args['video'],
+            isLinkAdded: args['isLinkAdded'],
+            community : args['community'],
+          );
+        },
         '/primary-content-page': (context) => CreatePost(),
         '/rules': (context) => CommunityRules(),
       },

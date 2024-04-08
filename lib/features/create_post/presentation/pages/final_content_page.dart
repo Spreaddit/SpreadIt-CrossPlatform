@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -16,10 +17,29 @@ import '../../../generic_widgets/small_custom_button.dart';
 import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/tags_widgets/rendered_tag.dart';
+import '../../../generic_widgets/validations.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
-  const FinalCreatePost({Key? key}) : super(key: key);
+
+  final String title;
+  final String content;
+  final String? link;
+  final File? image;
+  final File? video;
+  final bool isLinkAdded;
+  final List<Map<String, dynamic>> community;
+
+  const FinalCreatePost({
+    Key? key,
+    required this.title,
+    required this.content,
+    this.link,
+    this.image,
+    this.video,
+    required this.isLinkAdded,
+    required this.community,
+    }) : super(key: key);
 
   @override
   State<FinalCreatePost> createState() => _FinalCreatePostState();
@@ -29,9 +49,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   final GlobalKey<FormState> _finalTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalContentForm = GlobalKey<FormState>();
+  final GlobalKey<FormState> _finalLinkForm = GlobalKey<FormState>();
 
-  String title = '';
-  String content ='';
+  String finalTitle = '';
+  String finalContent ='';
+  String communityName = '';
+  String communityIcon = '';
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
@@ -39,26 +62,48 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool isNSFWAllowed = true;
   bool isSpoiler = false;
   bool isNSFW = false;
+  bool finalIsLinkAdded = false ;     
 
   File? image;
   File? video;
+  String? link;
   IconData? lastPressedIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    communityName = widget.community[0]['communityName'];
+    communityIcon = widget.community[0]['communityIcon'];
+    finalIsLinkAdded = widget.isLinkAdded;
+  }
   
    void updateTitle(String value) {
-    title = value;
+    finalTitle = value;
     _finalTitleForm.currentState!.save();
     updateButtonState();
   }
 
   void updateContent(String value) {
-    content = value;
-    _finalContentForm.currentState!.save();
-      
+    finalContent = value;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    if (_finalContentForm.currentState != null) {
+      _finalContentForm.currentState!.save();
+    }
+    });
+  }
+
+  void updateLink(String value) {
+    link = value;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    if (_finalLinkForm.currentState != null) {
+      _finalLinkForm.currentState!.save();
+    }
+    });
   }
 
   void updateButtonState() {
     setState(() {
-      isButtonEnabled = title.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(title);
+      isButtonEnabled = validatePostTitle(finalTitle);   // TODO : check link validation
     });
   }
 
@@ -88,6 +133,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
+    void addLink() {
+    setState(() {
+      finalIsLinkAdded = !finalIsLinkAdded;
+    });
+    if (finalIsLinkAdded) {
+      setLastPressedIcon(Icons.attachment_rounded);
+    }
+    else {
+      setLastPressedIcon(null);
+    }
+  }
+
   Future<void> pickImage() async {
     final image = await pickImageFromFilePicker();
     setState(() {
@@ -106,6 +163,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     setState(() {
       createPoll = !createPoll;
     });
+  }
+
+  void extractCommunityData () {
+    Map<String, dynamic> communityData = widget.community[0];
+    communityName= communityData['communityName'];
+    communityIcon = communityData['communityIcon'];
   }
 
   void navigateToAddTags(){
@@ -131,8 +194,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 Container(
                  margin: EdgeInsets.all(10),
                  child:  CommunityAndRulesHeader(
-                  communityIcon: "./assets/images/LogoSpreadIt.png",
-                  communityName: 'r/ask reddit',
+                  communityIcon: communityIcon,
+                  communityName: communityName,
                   ),
                 ),
                 Align(
@@ -168,6 +231,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 PostTitle(
                   formKey: _finalTitleForm,
                   onChanged: updateTitle,
+                  initialBody: widget.title,
                 ),
                 if (image != null)
                   Container(
@@ -192,12 +256,20 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                           fit:BoxFit.cover,
                         ),
                     ),
-                  ), 
+                  ),
+                if (finalIsLinkAdded)
+                   LinkTextField(
+                    formKey: _finalLinkForm,
+                    onChanged: updateLink,
+                    hintText: 'URL',
+                    initialBody: widget.link,
+                    onIconPress: addLink,
+                  ),   
                 PostContent(
                   formKey: _finalContentForm,
                   onChanged:  updateContent,
                   hintText: 'body text (optional)',
-                  initialBody: ''
+                  initialBody: widget.content,
                 ),
               ],
             ),
@@ -208,13 +280,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
             showPhotoIcon: true,
             showVideoIcon: true,
             showPollIcon: true,
+            onLinkPress: addLink,
             onImagePress: pickImage,
             onVideoPress: pickVideo,
             onPollPress: openPollWidow,
             lastPressedIcon: lastPressedIcon, 
             setLastPressedIcon: setLastPressedIcon,
             ) : SecondaryPostFooter(
-              onLinkPress: () {},
+              onLinkPress: addLink,
               onImagePress: pickImage,
               onVideoPress: pickVideo,
               onPollPress: openPollWidow,
@@ -228,9 +301,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 }
 
 /* TODOs 
-2) asayyev kol haga f variable w akhod el haga ml pages elli ablaha 
----> a-make sure law ana aslan 3amla post men gowwa community mafish haga hakhodha men pages ablaha 
-3) navigations
+1) a7ot cancel icon 3al sowar wel video when uploaded
+2) ashouf el video msh shaghal leih
+3) a-check el wel poll wel image wel video byetne2lo walla laa aw han2elhom ezzay
 4) mock service 
 5) unit testing 
  */

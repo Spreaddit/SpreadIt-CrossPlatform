@@ -14,6 +14,7 @@ import '../widgets/show_discard_bottomsheet.dart';
 import '../widgets/photo_and_video_pickers/image_picker.dart';
 import '../widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/poll_widgets/poll.dart';
+import '../widgets/link.dart';
 
 class CreatePost extends StatefulWidget {  
   const CreatePost({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _CreatePostState extends State<CreatePost> {
 
   final GlobalKey<FormState> _primaryTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _primaryContentForm = GlobalKey<FormState>();
+  final GlobalKey<FormState> _primaryLinkForm = GlobalKey<FormState>();
 
   String title = '';
   String content = '';
@@ -34,9 +36,11 @@ class _CreatePostState extends State<CreatePost> {
   bool isButtonEnabled = false;
   bool isPollOptionValid = false;
   bool createPoll = false;
+  bool isLinkAdded = false;
 
   File? image;
   File? video;
+  String? link;
   IconData? lastPressedIcon;
 
   void updateTitle(String value) {
@@ -54,10 +58,24 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
-  void updateButtonState() {
-    setState(() {
-      isButtonEnabled = validatePostTitle(title);
+  void updateLink(String value) {
+    link = value;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    if (_primaryLinkForm.currentState != null) {
+      _primaryLinkForm.currentState!.save();
+    }
     });
+  }
+
+  void updateButtonState() {
+    if (link == null) {
+      setState(() {
+        isButtonEnabled = validatePostTitle(title);
+      });
+    }
+    else {
+      isButtonEnabled = validatePostTitle(title);  // TODO : add check link validity
+    }
   }
 
   void setLastPressedIcon(IconData? passedIcon) {
@@ -70,6 +88,19 @@ class _CreatePostState extends State<CreatePost> {
     setState(() {
       isPrimaryFooterVisible = !isPrimaryFooterVisible;
     });
+  }
+
+  void addLink() {
+    setState(() {
+      isLinkAdded = !isLinkAdded;
+      print(isLinkAdded);
+    });
+    if (isLinkAdded) {
+      setLastPressedIcon(Icons.attachment_rounded);
+    }
+    else {
+      setLastPressedIcon(null);
+    }
   }
 
   Future<void> pickImage() async {
@@ -93,7 +124,15 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   void navigateToPostToCommunity() {
-      Navigator.of(context).pushNamed('/post-to-community');
+    Navigator.of(context).pushNamed('/post-to-community', arguments: {
+      'title': title,
+      'content': content,
+      'link': link,
+      'image': image,
+      'video':video,
+      'isLinkAdded':isLinkAdded,
+      }
+   );
   }
 
   @override
@@ -113,6 +152,7 @@ class _CreatePostState extends State<CreatePost> {
                 PostTitle(
                   formKey: _primaryTitleForm,
                   onChanged:updateTitle,
+                  initialBody: '',
                 ),
                 if (image != null)
                    Container(
@@ -137,7 +177,15 @@ class _CreatePostState extends State<CreatePost> {
                           fit:BoxFit.cover,
                         ),
                     ),
-                  ),    
+                  ), 
+                if (isLinkAdded)
+                   LinkTextField(
+                    formKey: _primaryLinkForm,
+                    onChanged: updateLink,
+                    hintText: 'URL',
+                    initialBody: '',
+                    onIconPress: addLink,
+                ),    
                 PostContent(
                   formKey: _primaryContentForm,
                   onChanged:updateContent,
@@ -158,13 +206,14 @@ class _CreatePostState extends State<CreatePost> {
             showPhotoIcon: true,
             showVideoIcon: true,
             showPollIcon: true,
+            onLinkPress: addLink,
             onImagePress: pickImage,
             onVideoPress: pickVideo,
             onPollPress: openPollWidow,
             lastPressedIcon: lastPressedIcon, 
             setLastPressedIcon: setLastPressedIcon,
             ) : SecondaryPostFooter(
-              onLinkPress: () {},
+              onLinkPress: addLink,
               onImagePress: pickImage,
               onVideoPress: pickVideo,
               onPollPress: openPollWidow,
@@ -178,8 +227,8 @@ class _CreatePostState extends State<CreatePost> {
 }
 
 /* TODOs 
-1) a7ot soura 3al vm to test
-3) ab3at el haga di kollaha lel final content page 
-4) navigations (almost done)
+1) a7ot cancel icon 3al sowar wel video when uploaded
+2) ashouf el video msh shaghal leih
+3) ab3at el haga di kollaha lel final content page (almost done)
 5) unit testing 
  */
