@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -28,6 +29,8 @@ class FinalCreatePost extends StatefulWidget {
   final String? link;
   final File? image;
   final File? video;
+  final List<String> pollOptions;
+  final int selectedDay;
   final bool isLinkAdded;
   final List<Map<String, dynamic>> community;
 
@@ -38,6 +41,8 @@ class FinalCreatePost extends StatefulWidget {
     this.link,
     this.image,
     this.video,
+    required this.pollOptions,
+    required this.selectedDay,
     required this.isLinkAdded,
     required this.community,
     }) : super(key: key);
@@ -51,11 +56,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   final GlobalKey<FormState> _finalTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalContentForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalLinkForm = GlobalKey<FormState>();
+  List<GlobalKey<FormState>> finalFormKeys = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+  ];
 
   String finalTitle = '';
   String finalContent ='';
   String communityName = '';
   String communityIcon = '';
+  List<String> finalPollOptions = ['', ''];
+  List<String> finalInitialBody = ['',''];
+  int finalSelectedDay = 1;
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
@@ -81,7 +93,22 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     }
     if(widget.video != null) {
       finalVideo = widget.video;
-    }  
+    } 
+    if(widget.pollOptions.every((option) => option.isNotEmpty)) {
+      finalSelectedDay = widget.selectedDay;
+      finalInitialBody.clear();
+      finalPollOptions.clear();
+      finalInitialBody.addAll(widget.pollOptions);
+      finalPollOptions.addAll(widget.pollOptions);
+      if(finalPollOptions.length > 2) {
+        for(int i = 2; i < finalPollOptions.length; i++) {
+          GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
+          finalFormKeys.add(newFormKey); 
+        }
+      }
+      openPollWidow();
+      setLastPressedIcon(Icons.poll);
+    }
   }
   
    void updateTitle(String value) {
@@ -177,6 +204,27 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
+  void updatePollOption(int optionNumber, String value) {
+    setState(() {
+      finalPollOptions[optionNumber - 1] = value;
+      print(finalPollOptions[optionNumber-1]);
+    });
+    finalFormKeys[optionNumber-1].currentState!.save();
+  }
+
+  void updateSelectedDay(int selectedDay) {
+    setState(() {
+      finalSelectedDay = selectedDay;
+    });
+  }
+
+  void removePollOption(int index) {
+    setState(() {
+      finalPollOptions.removeAt(index);
+      finalFormKeys.removeAt(index);
+    });
+  }
+
   void extractCommunityData () {
     Map<String, dynamic> communityData = widget.community[0];
     communityName= communityData['communityName'];
@@ -269,6 +317,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                   hintText: 'body text (optional)',
                   initialBody: widget.content,
                 ),
+                if (createPoll)
+                  Poll(
+                    onPollCancel: openPollWidow,
+                    setLastPressedIcon: setLastPressedIcon,
+                    formkeys: finalFormKeys,
+                    pollOptions: finalPollOptions,
+                    selectedDay: finalSelectedDay,
+                    updatePollOption: updatePollOption,
+                    removePollOption: removePollOption,
+                    updateSelectedDay: updateSelectedDay,
+                    initialBody: finalInitialBody,
+                  ),
               ],
             ),
           ),

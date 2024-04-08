@@ -6,12 +6,14 @@ class PollOption extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final Function(String) onChanged;
   final VoidCallback? onIconPress;
+  final String? initialBody;
 
   const PollOption({
     required this.optionNumber,
     required this.formKey,
     required this.onChanged,
     this.onIconPress,
+    this.initialBody,
   });
 
   @override
@@ -25,7 +27,7 @@ class _PollOptionState extends State<PollOption> {
    @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
+    _controller = TextEditingController(text:widget.initialBody);
     _controller.addListener(() {
       setState(() {
         widget.onChanged(_controller.text);
@@ -46,6 +48,7 @@ class _PollOptionState extends State<PollOption> {
       child:Form(
         key: widget.formKey,
         child: TextFormField(
+          controller: _controller,
           decoration: InputDecoration(
             border: InputBorder.none,
             filled: true,

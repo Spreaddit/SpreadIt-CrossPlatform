@@ -12,6 +12,8 @@ class PostToCommunity extends StatefulWidget {
   final String? link;
   final File? image;
   final File? video;
+  final List<String> pollOptions;
+  final int selectedDay;
   final bool isLinkAdded;
   
   const PostToCommunity({
@@ -21,6 +23,8 @@ class PostToCommunity extends StatefulWidget {
     this.link,
     this.image,
     this.video,
+    required this.pollOptions,
+    required this.selectedDay,
     required this.isLinkAdded,
     }) : super(key: key);
 
@@ -95,7 +99,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
   }
 
   void navigateToFinalContentPage(Map<String, dynamic> selectedCommunity) {
-    print('entered navigate to final content page');
     Navigator.of(context).pushNamed('/final-content-page',
      arguments:{
       'title': widget.title,
@@ -103,14 +106,12 @@ class _PostToCommunityState extends State<PostToCommunity> {
       'link': widget.link,
       'image': widget.image,
       'video': widget.video,
+      'pollOptions': widget.pollOptions,
+      'selectedDay': widget.selectedDay,
       'isLinkAdded':widget.isLinkAdded,
       'community': [selectedCommunity], 
       }
     );
-  }
-
-  void navigateToPrimaryContentPage() {
-    Navigator.of(context).pushNamed('/primary-content-page');
   }
 
   @override
@@ -124,7 +125,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
         children: [
         ButtonlesHeader(
           text: "Post to",
-          onIconPress: navigateToPrimaryContentPage,
+          onIconPress:  () {Navigator.pop(context);},
         ),
         CustomSearchBar(
           hintText: 'Search for a community',

@@ -36,9 +36,6 @@ class _CommunityRulesState extends State<CommunityRules> {
 
   ];
 
-  void navigateToFinalContentPage() {
-    Navigator.pop(context);
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +43,7 @@ class _CommunityRulesState extends State<CommunityRules> {
         children: [
           ButtonlesHeader(
             text: "Community rules",
-            onIconPress: navigateToFinalContentPage,
+            onIconPress: () {Navigator.pop(context);},
           ),
           Container(
             margin: EdgeInsets.all(10),
@@ -72,7 +69,7 @@ class _CommunityRulesState extends State<CommunityRules> {
         ),
         //Spacer(),
         Button(
-          onPressed: navigateToFinalContentPage,
+          onPressed: () {Navigator.pop(context);},
           text: 'I understand',
           backgroundColor: Color.fromARGB(255, 13, 71, 161),
           foregroundColor: Colors.white,

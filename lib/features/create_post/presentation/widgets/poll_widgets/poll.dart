@@ -9,10 +9,24 @@ class Poll extends StatefulWidget {
 
   final VoidCallback? onPollCancel;
   final Function(IconData?) setLastPressedIcon;
+  final List<GlobalKey<FormState>> formkeys;
+  final List<String> pollOptions;
+  final int selectedDay;
+  final void Function(int, String) updatePollOption;
+  final void Function(int) removePollOption;
+  final void Function(int) updateSelectedDay;
+  final List<String> initialBody;
 
   const Poll({
     required this.onPollCancel,
     required this.setLastPressedIcon,
+    required this.formkeys,
+    required this.pollOptions,
+    required this.selectedDay,
+    required this.updatePollOption,
+    required this.removePollOption,
+    required this.updateSelectedDay,
+    required this.initialBody,
   });
 
   @override
@@ -20,32 +34,6 @@ class Poll extends StatefulWidget {
 }
 
 class _PollState extends State<Poll> {
-
-  List<String> optionTexts = ['', '']; 
-  List<GlobalKey<FormState>> formKeys = [
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>()
-  ]; 
-  int selectedDay = 1;
-
-  void updateOption(int optionNumber, String value) {
-    setState(() {
-      optionTexts[optionNumber - 1] = value; 
-    });
-  }
-
-  void removeOption(int index) {
-    setState(() {
-      optionTexts.removeAt(index);
-      formKeys.removeAt(index);
-    });
-  }
-
-  void updateSelectedDay(int selectedDay) {
-    setState(() {
-      this.selectedDay = selectedDay;
-    });
-  }
 
   void cancelPoll() {
     widget.onPollCancel?.call();
@@ -79,11 +67,11 @@ class _PollState extends State<Poll> {
                 ),
               ),
               InkWell(
-                onTap:  () => showDaysButtomSheet(context, selectedDay, updateSelectedDay),
+                onTap:  () => showDaysButtomSheet(context, widget.selectedDay, widget.updateSelectedDay),
                 child: Row(
                   children: [
                     Text(
-                      '$selectedDay days',
+                      '${widget.selectedDay} days',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -101,18 +89,21 @@ class _PollState extends State<Poll> {
               ),  
             ],
           ),
-          for (int i = 0; i < optionTexts.length; i++)
+          for (int i = 0; i < widget.pollOptions.length; i++)
             PollOption(
               optionNumber: i + 1,
-              formKey: formKeys[i],
-              onChanged: (value) => updateOption(i + 1, value),
-              onIconPress: () => removeOption(i),
+              formKey: widget.formkeys[i],
+              onChanged: (value) => widget.updatePollOption(i + 1, value),
+              onIconPress: () => widget.removePollOption(i),
+              initialBody: widget.initialBody[i],
             ),
           AddOptionButton(
             onPressed: () {
               setState(() {
-                optionTexts.add(''); 
-                formKeys.add(GlobalKey<FormState>()); 
+                widget.pollOptions.add(''); 
+                GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
+                widget.formkeys.add(newFormKey); 
+                widget.initialBody.add('');
               });
             },
           ),

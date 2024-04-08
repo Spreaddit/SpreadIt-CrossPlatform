@@ -65,6 +65,8 @@ class SpreadIt extends StatelessWidget {
             link: args['link'],
             image: args['image'],
             video: args['video'],
+            pollOptions: args['pollOptions'],
+            selectedDay:args['selectedDay'],
             isLinkAdded: args['isLinkAdded'],
           );
         },    
@@ -76,6 +78,8 @@ class SpreadIt extends StatelessWidget {
             link: args['link'],
             image: args['image'],
             video: args['video'],
+            pollOptions: args['pollOptions'],
+            selectedDay:args['selectedDay'],
             isLinkAdded: args['isLinkAdded'],
             community : args['community'],
           );

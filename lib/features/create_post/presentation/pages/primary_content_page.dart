@@ -30,9 +30,16 @@ class _CreatePostState extends State<CreatePost> {
   final GlobalKey<FormState> _primaryTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _primaryContentForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _primaryLinkForm = GlobalKey<FormState>();
+  List<GlobalKey<FormState>> formKeys = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+  ];
 
   String title = '';
   String content = '';
+  List<String> pollOptions = ['', ''];
+  List<String> initialBody = ['', ''];
+  int selectedDay = 1;
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
@@ -131,6 +138,26 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
+  void updatePollOption(int optionNumber, String value) {
+    setState(() {
+      pollOptions[optionNumber - 1] = value;
+    });
+    formKeys[optionNumber-1].currentState!.save();
+  }
+
+  void updateSelectedDay(int selectedDay) {
+    setState(() {
+      this.selectedDay = selectedDay;
+    });
+  }
+
+  void removePollOption(int index) {
+    setState(() {
+      pollOptions.removeAt(index);
+      formKeys.removeAt(index);
+    });
+  }
+
   void navigateToPostToCommunity() {
     Navigator.of(context).pushNamed('/post-to-community', arguments: {
       'title': title,
@@ -138,9 +165,11 @@ class _CreatePostState extends State<CreatePost> {
       'link': link,
       'image': image,
       'video':video,
+      'pollOptions': pollOptions,
+      'selectedDay': selectedDay,
       'isLinkAdded':isLinkAdded,
       }
-   );
+    );
   }
 
   @override
@@ -155,7 +184,7 @@ class _CreatePostState extends State<CreatePost> {
                   buttonText: "Next",
                   onPressed: navigateToPostToCommunity,
                   isEnabled: isButtonEnabled,
-                  onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},
+                  onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},  // if invalid , pop to home page
                 ),
                 PostTitle(
                   formKey: _primaryTitleForm,
@@ -187,18 +216,24 @@ class _CreatePostState extends State<CreatePost> {
                       color: Colors.grey,
                     ),
                     child: Text('Oops, this link isn\'t valid. Double-check, and try again.'),
-                  ), 
-                if(!createPoll)    
-                  PostContent(
-                    formKey: _primaryContentForm,
-                    onChanged:updateContent,
-                    hintText: 'body text (optional)',
-                    initialBody: '',
-                  ),
+                  ),    
+                PostContent(
+                  formKey: _primaryContentForm,
+                  onChanged:updateContent,
+                  hintText: 'body text (optional)',
+                  initialBody: '',
+                ),
                 if (createPoll)
                   Poll(
                     onPollCancel: openPollWidow,
                     setLastPressedIcon: setLastPressedIcon,
+                    formkeys: formKeys,
+                    pollOptions: pollOptions,
+                    selectedDay: selectedDay,
+                    updatePollOption: updatePollOption,
+                    removePollOption: removePollOption,
+                    updateSelectedDay: updateSelectedDay,
+                    initialBody: initialBody,
                   ),
               ],
             ),     
