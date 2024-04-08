@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 
 class UpVoteButton extends HookWidget {
   Color color;
@@ -88,12 +89,12 @@ class VoteButton extends HookWidget {
 }
 
 class ShareButton extends HookWidget {
-  int initialSharesCount; // TODO: to be changed to a state
-  ShareButton({
-    required this.initialSharesCount,
-  });
+  int initialSharesCount;
+  String message; // TODO: to be changed to a state
+  ShareButton({required this.initialSharesCount, required this.message});
 
   void onShareClick() {
+    sharePressed(message);
     print("share");
     //TODO: impement share logic
   }

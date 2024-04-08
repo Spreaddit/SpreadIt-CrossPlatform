@@ -8,6 +8,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
 
 class PostCardPage extends StatelessWidget {
   final Post post;
@@ -17,6 +18,8 @@ class PostCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PostCardTopBar(context,
+          'https://ladygeekgirl.files.wordpress.com/2016/08/steven-universe-pearl.png'),
       body: Column(
         children: [
           Expanded(

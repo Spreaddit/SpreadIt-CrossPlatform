@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 
 class Comment {
   final int commentId;
@@ -121,7 +124,40 @@ class _CommentCardState extends State<CommentCard> {
             ),
           ),
           CommentFooter(
-            onMorePressed: () => {},
+            onMorePressed: () => {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return CustomBottomSheet(icons: [
+                    Icons.share,
+                    Icons.notifications_on_rounded,
+                    Icons.save,
+                    Icons.copy,
+                    Icons.arrow_circle_up_rounded,
+                    Icons.block,
+                    Icons.flag
+                  ], text: [
+                    "Share",
+                    "Get Reply notifications",
+                    "Save",
+                    "Copy text",
+                    "Collapse thread",
+                    "Block account",
+                    "Report"
+                  ], onPressedList: [
+                    () {
+                      sharePressed(widget.comment.content);
+                    },
+                    getReplyNotifications,
+                    save,
+                    copyText,
+                    collapseThread,
+                    blockAccount,
+                    report
+                  ]);
+                },
+              ),
+            },
             onReplyPressed: () => {},
             number: widget.comment.votesCount,
             upvoted: false,
