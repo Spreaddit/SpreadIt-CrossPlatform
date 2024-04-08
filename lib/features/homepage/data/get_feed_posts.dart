@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 enum PostCategories {
   best,
   hot,
-  newposts,
+  newest,
   top,
   random,
   recent,
@@ -34,7 +34,7 @@ String postCategoryEndpoint({
         return "/best/";
       case PostCategories.hot:
         return "/hot/";
-      case PostCategories.newposts:
+      case PostCategories.newest:
         return "/new/";
       case PostCategories.top:
         return "/top/";
@@ -53,7 +53,7 @@ String postCategoryEndpoint({
     switch (action) {
       case PostCategories.hot:
         return "/subspreadit/$subspreaditName/hot/";
-      case PostCategories.newposts:
+      case PostCategories.newest:
         return "/subspreadit/$subspreaditName/new/";
       case PostCategories.top:
         return "/subspreadit/$subspreaditName/top/$timeSort";
