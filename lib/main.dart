@@ -4,6 +4,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/community/Presentation/Pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'firebase_options.dart';
@@ -34,7 +35,7 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: AccountSettingsPage(),
+      home: CommunityPage(communityName: "hardware"),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -53,7 +54,8 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
-        '/settings/account-settings/add-password': (context) => AddPasswordPage(), 
+        '/settings/account-settings/add-password': (context) =>
+            AddPasswordPage(),
       },
     );
   }
