@@ -14,6 +14,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/in
 /// This widget is responsible for displaying post header:
 /// (e.g., user info and date of posting)
 class _PostHeader extends HookWidget {
+  //Add Community and add username in postcard
   final String username;
   final String userId;
   final DateTime date;
@@ -156,10 +157,12 @@ class _PostInteractions extends HookWidget {
 /// and returns a postcard with its relevant info
 class PostWidget extends StatelessWidget {
   final Post post;
+  final bool isFullView;
   //TODO: final bool isJoinCommunityVisible;
 
   PostWidget({
     required this.post,
+    this.isFullView = false,
     //TODO:required this.isJoinCommunityVisible,
   });
 
@@ -169,6 +172,7 @@ class PostWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PostHeader(
+          //TODO: pass community
           username: post.username,
           userId: post.userId,
           date: post.date,

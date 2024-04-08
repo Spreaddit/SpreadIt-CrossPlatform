@@ -11,6 +11,9 @@ enum PostCategories {
   random,
   recent,
   views,
+  user,
+  save,
+  hide,
 }
 
 /// takes [PostCategories] as a parameter and
@@ -19,8 +22,13 @@ String postCategoryEndpoint({
   required PostCategories action,
   String? subspreaditName,
   String? timeSort = "",
+  String? username = "",
 }) {
-  if (subspreaditName != null) {
+  if (action == PostCategories.user) {
+    return "/posts/$username";
+  }
+
+  if (subspreaditName == null) {
     switch (action) {
       case PostCategories.best:
         return "/best/";
@@ -31,9 +39,13 @@ String postCategoryEndpoint({
       case PostCategories.top:
         return "/top/";
       case PostCategories.recent:
-        return "/best/recent-posts/";
+        return "/posts/"; //TODO: check history page options (Rehab - phase 3)
       case PostCategories.views:
         return "/sort/views/";
+      case PostCategories.save:
+        return "/posts/save/";
+      case PostCategories.hide:
+        return "/posts/hide/";
       default:
         return "";
     }
@@ -59,6 +71,7 @@ Future<List<Post>> getFeedPosts({
   required PostCategories category,
   String? subspreaditName,
   String? timeSort = "",
+  String? username = "",
 }) async {
   try {
     String requestURL = apiUrl +
@@ -66,6 +79,7 @@ Future<List<Post>> getFeedPosts({
           action: category,
           subspreaditName: subspreaditName,
           timeSort: timeSort,
+          username: username,
         );
 
     final response = await Dio().get(requestURL);

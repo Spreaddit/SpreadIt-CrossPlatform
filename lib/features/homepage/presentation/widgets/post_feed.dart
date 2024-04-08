@@ -18,8 +18,15 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 /// ```
 class PostFeed extends StatefulWidget {
   PostCategories postCategory;
+  String? subspreaditName;
+  String? timeSort = "";
+  String? username = "";
+
   PostFeed({
     required this.postCategory,
+    this.subspreaditName,
+    this.timeSort,
+    this.username,
   });
 
   @override
@@ -36,7 +43,13 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   Future<void> fetchData() async {
-    List<Post> fetchedItems = await getFeedPosts(widget.postCategory);
+    List<Post> fetchedItems = await getFeedPosts(
+      category: widget.postCategory,
+      subspreaditName: widget.subspreaditName,
+      timeSort: widget.timeSort,
+      username: widget.username,
+    );
+
     setState(() {
       if (fetchedItems.isEmpty) {
         CustomSnackbar(content: "an error occured. Please Refresh")
