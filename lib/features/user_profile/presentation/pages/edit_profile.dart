@@ -1,11 +1,14 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/user_profile/images/image_picker.dart';
 import '../../../Account_Settings/presentation/widgets/switch_type_1.dart';
 import '../../../generic_widgets/custom_input.dart';
+import '../../../generic_widgets/snackbar.dart';
 import '../../data/update_user_info.dart';
+import '../widgets/icon_picker.dart';
 import '../widgets/social_link_bottom_sheet_model.dart';
+import '../widgets/social_media_button.dart';
 import '../widgets/social_media_selection_bottom_sheet.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -14,34 +17,44 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final GlobalKey<FormState> _usernameForm = GlobalKey<FormState>();
+  final GlobalKey<FormState> _displaynameForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _aboutForm = GlobalKey<FormState>();
   var _about = '';
-  var _username = '';
-  var _change = false;
+  var _displayname = '';
   bool _switchValue1 = false;
   bool _switchValue2 = false;
-  String? backgroundImageURl =
-      'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg';
-  String? profileImageURl =
-      'https://www.shutterstock.com/blog/wp-content/uploads/sites/5/2020/02/Usign-Gradients-Featured-Image.jpg';
+  String? backgroundImageURl = '';
+  String? profileImageURl = '';
   File? backgroundImageFile;
   File? profileImageFile;
+  List<Map<String, dynamic>>? socialMediaLinks;
+  bool _socialMediaLinksLoaded = false;
+  var validUserName = true;
+  var invalidText = "";
 
-  void updateUsername(String username, bool validation) {
-    _username = username;
-    _usernameForm.currentState?.save();
-    setState(() {
-      _change = true;
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_socialMediaLinksLoaded) {
+      final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      socialMediaLinks = List<Map<String, dynamic>>.from(args['socialMediaLinks']);
+      _socialMediaLinksLoaded = true;
+      backgroundImageURl = args['backgroundImageUrl'];
+      profileImageURl = args['profileImageUrl'];
+      _about = args['about'] ;
+      _displayname = args['displayname'] ;
+    }
+  }
+
+
+  void updateDisplayname(String username, bool validation) {
+    _displayname = username;
+    _displaynameForm.currentState?.save();
   }
 
   void updateAbout(String about, bool validation) {
     _about = about;
     _aboutForm.currentState?.save();
-    setState(() {
-      _change = true;
-    });
   }
 
   void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
@@ -51,13 +64,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     if (selectedPlatform != null) {
-      showModalBottomSheet<Map<String, dynamic>>(
+      final selectedPlatforminfo =
+          await showModalBottomSheet<Map<String, dynamic>>(
         context: context,
         isScrollControlled: true,
         builder: ((context) {
           return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SocialMediaBottomSheet(
               platformName: selectedPlatform['platformName'],
               icon: selectedPlatform['icon'],
@@ -66,10 +79,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
           );
         }),
       );
+      if (selectedPlatforminfo != null) {
+        var links = [
+          {
+            'headerName': selectedPlatforminfo['headerName'],
+            'platformName': selectedPlatforminfo['platformName'],
+            'url': selectedPlatforminfo['url'],
+          }
+        ];
+        if (socialMediaLinks!.length < 5) {
+          setState(() {
+            socialMediaLinks = [...socialMediaLinks!, ...links];
+          });
+        } else {
+          CustomSnackbar(content: 'Maximum limit of 5 social media links reached.').show(context);
+        }
+      }
     }
   }
 
-  Future<void> pickBackGroundImage() async {
+  Future<void> pickBackgroundImage() async {
     final image = await pickImageFromFilePicker();
     setState(() {
       if (image != null) {
@@ -90,39 +119,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
 
-  ImageProvider SelectImage() {
+  ImageProvider selectImage() {
     if (profileImageFile != null) {
       return FileImage(profileImageFile!);
     } else if (profileImageURl != null && profileImageURl!.isNotEmpty) {
-      return NetworkImage(profileImageURl!); // Use profileImageURl
+      return NetworkImage(profileImageURl!); 
     } else {
       return NetworkImage('https://addlogo.imageonline.co/image.jpg');
     }
   }
 
-  Future<void> saveProfile() async {
+  void saveProfile() async {
     try {
-      // Call updateUserApi function to update user information
       int statusCode = await updateUserApi(
-        accessToken: "your_access_token_here",
-        username: _username,
+        displayName: _displayname,
         aboutUs: _about,
-        backgroundImage: backgroundImageFile != null ? backgroundImageFile! : backgroundImageURl!,
-        profilePicImage: profileImageFile != null ? profileImageFile! : profileImageURl!,
-        socialMedia: [],
+        backgroundImage: backgroundImageFile,
+        profilePicImage: profileImageFile,
+        backgroundImageUrl: backgroundImageURl,
+        profilePicImageUrl: profileImageURl,
+        socialMedia: socialMediaLinks!,
         contentVisibility: _switchValue1,
         showActiveComments: _switchValue2,
       );
 
       if (statusCode == 200) {
-        print("User information updated successfully.");
+        Navigator.pop(context);
       } else if (statusCode == 500) {
-        print("Server error occurred while updating user information.");
-      } else {
-        print("Unexpected error occurred.");
-      }
+         CustomSnackbar(content: 'Server Error').show(context);
+      } 
     } catch (e) {
-      print("Error: $e");
+      CustomSnackbar(content: 'Error updating').show(context);
     }
   }
 
@@ -141,7 +168,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: saveProfile, // Call saveProfile function here
+            onPressed: saveProfile,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
@@ -176,8 +203,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 fit: BoxFit.cover,
                               )
                             : DecorationImage(
-                                image: NetworkImage(
-                                    'https://addlogo.imageonline.co/image.jpg'),
+                                image: NetworkImage('https://addlogo.imageonline.co/image.jpg'),
                                 fit: BoxFit.cover,
                               ),
                   ),
@@ -192,7 +218,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: pickBackGroundImage,
+                    onPressed: pickBackgroundImage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       shape: RoundedRectangleBorder(
@@ -208,10 +234,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                  top: kIsWeb
-                      ? screenHeight * 0.35 - 40
-                      : screenHeight * 0.25 - 40),
+              padding: EdgeInsets.only( top: kIsWeb ? screenHeight * 0.35 - 40 : screenHeight * 0.25 - 40),
               child: Center(
                 child: Column(
                   children: [
@@ -220,21 +243,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundImage: SelectImage(),
+                          backgroundImage: selectImage(),
                         ),
                         Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
                             width: 40,
-                            height:
-                                40, // Adjust the height to match the width for a circular shape
+                            height: 40,
                             decoration: BoxDecoration(
                               color: Colors.blue,
                               shape: BoxShape.circle,
                             ),
-                            alignment:
-                                Alignment.center, // Adjust the alignment here
+                            alignment: Alignment.center,
                             child: IconButton(
                               icon: Icon(Icons.add),
                               color: Colors.white,
@@ -252,32 +273,91 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         SizedBox(height: 20),
                         CustomInput(
-                          formKey: _usernameForm,
-                          onChanged: updateUsername,
+                          formKey: _displaynameForm,
+                          onChanged: updateDisplayname,
                           label: 'Display name - optional',
                           placeholder: 'Display name - optional',
                           wordLimit: 30,
-                          tertiaryText:
-                              "This will be displayed to viewers of your profile page and does not change your username",
+                          initialBody: _displayname,
+                          tertiaryText: "This will be displayed to viewers of your profile page and does not change your username",
                         ),
+                       
                         SizedBox(height: 20),
                         CustomInput(
                           formKey: _aboutForm,
                           onChanged: updateAbout,
                           label: 'About you - optional',
                           placeholder: 'About you - optional',
+                          initialBody: _about,
                           height: screenHeight * 0.25,
                           wordLimit: 200,
                         ),
                         SizedBox(height: 20),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              _showSocialMediaSelectionBottomSheet(context);
-                            },
-                            icon: Icon(Icons.add),
-                            label: Text('Add Social Media'),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Social Links (5 max)',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "People who visit your Spreddit profile will be able to see this",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  _showSocialMediaSelectionBottomSheet(context);
+                                },
+                                icon: Icon(Icons.add),
+                                label: Text('Add Social Media'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 203, 201, 201),
+                                  foregroundColor: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Wrap(
+                            alignment: WrapAlignment.start,
+                            spacing: 10,
+                            children: socialMediaLinks!.asMap().entries.map(
+                              (entry) {
+                                final platformData = entry.value;
+                                final platformName =
+                                    platformData['platformName'];
+                                final iconName = PlatformIconMapper.getIconData(
+                                    platformName);
+                                final color =
+                                    PlatformIconMapper.getColor(platformName);
+
+                                return SocialMediaButton(
+                                  icon: iconName,
+                                  text: platformData['headerName'],
+                                  backgroundColor: color,
+                                  enableClear: true,
+                                  handleSelection: () {
+                                    setState(() {
+                                      socialMediaLinks!.removeAt(entry.key);
+                                    });
+                                  },
+                                );
+                              },
+                            ).toList(),
                           ),
                         ),
                         SizedBox(height: 20),

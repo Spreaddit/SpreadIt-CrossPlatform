@@ -33,6 +33,7 @@ class _UserProfileState extends State<UserProfile> {
   bool followStatus = false;
   bool myProfile = true; ////////// will be taken during navigation
   String username = 'mimo'; ////////// will be taken during navigation
+  String displayName='mimo'; // get from backend
   String postKarmaNo = '';
   String commentKarmaNo = '';
   List<Comment> commentsList = [];
@@ -82,9 +83,50 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
-  void navigateToEditProfile(BuildContext context) {
-    Navigator.of(context).pushNamed('/edit-profile');
-  }
+void navigateToEditProfile(BuildContext context) {
+  Navigator.of(context).pushNamed(
+    '/edit-profile',
+    arguments: {
+     'backgroundImageUrl':background,
+      'profileImageUrl':profilePicture,
+      'about' : about,
+      'displayname' :displayName,
+      'socialMediaLinks': [
+        {
+          'headerName': 'Group 1',
+          'platformName': 'Twitter',
+          'url': 'https://twitter.com/example'
+        },
+        {
+          'headerName': 'Group 1',
+          'platformName': 'Facebook',
+          'url': 'https://facebook.com/example'
+        },
+        {
+          'headerName': 'Group 2',
+          'platformName': 'Instagram',
+          'url': 'https://instagram.com/example1'
+        },
+        {
+          'headerName': 'Group 2',
+          'platformName': 'Instagram',
+          'url': 'https://instagram.com/example2'
+        },
+        {
+          'headerName': 'Group 2',
+          'platformName': 'Instagram',
+          'url': 'https://instagram.com/example3'
+        },
+        {
+          'headerName': 'Group 2',
+          'platformName': 'Instagram',
+          'url': 'https://instagram.com/example4'
+        },
+      ],
+    },
+  );
+}
+
 
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {

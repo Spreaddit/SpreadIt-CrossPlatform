@@ -3,53 +3,42 @@ import 'dart:io';
 import 'package:spreadit_crossplatform/api.dart';
 
 import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<int> updateUserApi({
-  required String accessToken,
-  required String username,
+  required String displayName,
   required String aboutUs,
-  required dynamic backgroundImage, // Accepts either a file or a string (URL)
-  required dynamic profilePicImage, // Accepts either a file or a string (URL)
-  required List<String> socialMedia,
+  File? backgroundImage,
+  File? profilePicImage, 
+  String? backgroundImageUrl,
+  String? profilePicImageUrl, 
+  required List<Map<String, dynamic>> socialMedia,
   required bool contentVisibility,
   required bool showActiveComments,
 }) async {
   try {
+    String? accessToken=UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/update?accessToken=$accessToken';
 
-    var formData = FormData();
-
-    formData.fields.addAll([
-      MapEntry('username', username),
-      MapEntry('aboutUs', aboutUs),
-      MapEntry('socialMedia', jsonEncode(socialMedia)),
-      MapEntry('contentVisibility', contentVisibility.toString()),
-      MapEntry('showActiveComments', showActiveComments.toString()),
-    ]);
-
-    if (backgroundImage is String) {
-      formData.fields.add(MapEntry('backgroundImageUrl', backgroundImage));
-    } else if (backgroundImage is File) {
-      formData.files.add(MapEntry('backgroundImage', await MultipartFile.fromFile(
-        backgroundImage.path,
-        filename: backgroundImage.path.split('/').last,
-      )));
-    } else {
-      throw ArgumentError('backgroundImage must be either a string (URL) or a file (FormData)');
+      var data = {
+      "displayName": displayName,
+      "aboutUs": aboutUs,
+      "backgroundImage": backgroundImageUrl,
+      "profilePicImage": profilePicImageUrl,
+      "socialMedia": socialMedia,
+      "contentVisibility": contentVisibility,
+      "showActiveComments": showActiveComments,
+    };
+    print(profilePicImage);
+    if (backgroundImage != null) {
+      data["backgroundImage"] = base64Encode(await backgroundImage.readAsBytes());
     }
 
-    if (profilePicImage is String) {
-      formData.fields.add(MapEntry('profilePicImageUrl', profilePicImage));
-    } else if (profilePicImage is File) {
-      formData.files.add(MapEntry('profilePicImage', await MultipartFile.fromFile(
-        profilePicImage.path,
-        filename: profilePicImage.path.split('/').last,
-      )));
-    } else {
-      throw ArgumentError('profilePicImage must be either a string (URL) or a file (FormData)');
+    if (profilePicImage != null) {
+      data["profilePicImage"] = base64Encode(await profilePicImage.readAsBytes());
     }
 
-    final response = await Dio().post(apiRoute, data: formData);
+    final response = await Dio().post(apiRoute, data: data);
 
     if (response.statusCode == 200) {
       print(response.statusMessage);

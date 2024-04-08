@@ -42,6 +42,7 @@ class CustomInput extends StatefulWidget {
   final String placeholder;
   final bool obscureText;
   final String invalidText;
+  final String? initialBody;
   final bool Function(String)? validateField;
   final bool validate;
   final double? height;
@@ -62,6 +63,7 @@ class CustomInput extends StatefulWidget {
     this.tertiaryText,
     this.wordLimit,
     this.backgroundColor = const Color.fromARGB(255, 251, 251, 251),
+    this.initialBody,
   });
 
   @override
@@ -70,45 +72,55 @@ class CustomInput extends StatefulWidget {
 
 class _CustomInputState extends State<CustomInput> {
   late TextEditingController _controller;
-  late String fieldValue = '';
   bool _isPasswordVisible = false;
   bool _isValid = true;
   late FocusNode _focusNode;
   bool _isFocused = true;
+  late int _remainingCharacters;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
-    _controller.addListener(() {
-      setState(() {
-        fieldValue = _controller.text;
-        if (widget.validate) {
-          _isValid = widget.validateField!(fieldValue);
-        }
-        widget.onChanged(fieldValue, _isValid);
-      });
-    });
+    _controller = TextEditingController(text: widget.initialBody);
+    _controller.addListener(_textChangedListener);
     _focusNode = FocusNode();
     _focusNode.addListener(() {
       setState(() {
         _isFocused = _focusNode.hasFocus;
       });
     });
+    
+    // Calculate remaining characters initially
+    if (widget.wordLimit != null) {
+      _remainingCharacters = widget.wordLimit! - _controller.text.length;
+    }
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
+  void _textChangedListener() {
+    setState(() {
+      if (widget.validate) {
+        _isValid = widget.validateField!(_controller.text);
+      }
+      widget.onChanged(_controller.text, _isValid);
 
-
+      // Update remaining characters
+      if (widget.wordLimit != null) {
+        _remainingCharacters = widget.wordLimit! - _controller.text.length;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+
     Widget inputField = Card(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       color: widget.backgroundColor,
@@ -159,8 +171,6 @@ class _CustomInputState extends State<CustomInput> {
                                 onPressed: () {
                                   setState(() {
                                     _controller.clear();
-                                    fieldValue = '';
-                                    widget.onChanged('', false);
                                   });
                                 },
                               )
@@ -168,6 +178,7 @@ class _CustomInputState extends State<CustomInput> {
                   ),
                   controller: _controller,
                   obscureText: widget.obscureText && !_isPasswordVisible,
+                  maxLines: widget.obscureText? 1:null, // Allow multiple lines
                 ),
               ],
             ),
@@ -209,10 +220,10 @@ class _CustomInputState extends State<CustomInput> {
                     ),
                   ),
                 if (widget.tertiaryText == null)
-                  SizedBox(width: screenWidth*0.6),
+                  SizedBox(width: screenWidth * 0.6),
                 if (widget.wordLimit != null)
                   Text(
-                    ' ${widget.wordLimit! - fieldValue.length}',
+                    ' $_remainingCharacters',
                     style: TextStyle(color: Colors.grey),
                   ),
               ],
@@ -222,4 +233,3 @@ class _CustomInputState extends State<CustomInput> {
     );
   }
 }
-

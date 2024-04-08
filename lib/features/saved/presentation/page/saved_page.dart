@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/saved/presentation/widgets/posts_saved.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import '../../../generic_widgets/custom_bar.dart';
+import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../../user_profile/data/class_models/comments_class_model.dart';
 import '../../../user_profile/data/get_user_comments.dart';
 import '../../../user_profile/presentation/widgets/comments.dart';
@@ -15,7 +16,7 @@ class SavedPage extends StatefulWidget {
 class _SavedPageState extends State<SavedPage> {
   int _selectedIndex = 0;
   List<Comment> commentsList = [];
-  String username = 'mimo';   // Get current username bgd using el singleton;
+  String username = 'mimo'; // Get current username bgd using el singleton;
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _SavedPageState extends State<SavedPage> {
 
   Future<void> fetchComments() async {
     try {
-      var data = await fetchUserComments(username,'saved');
+      var data = await fetchUserComments(username, 'saved');
       setState(() {
         commentsList = data;
       });
@@ -39,12 +40,13 @@ class _SavedPageState extends State<SavedPage> {
       print('Error fetching comments: $e');
     }
   }
+
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
         return SliverToBoxAdapter(
-          child: PostSaved(
-            username:username,
+          child: PostFeed(
+            postCategory: PostCategories.best,
           ),
         );
       case 1:
@@ -55,7 +57,6 @@ class _SavedPageState extends State<SavedPage> {
               return CommentWidget(
                 comment: comment,
                 saved: true,
-
               );
             },
             childCount: commentsList.length,
@@ -81,9 +82,7 @@ class _SavedPageState extends State<SavedPage> {
         ),
       ),
       body: Container(
-        color: _selectedIndex == 1
-            ? Colors.grey[200]
-            : Colors.transparent, 
+        color: _selectedIndex == 1 ? Colors.grey[200] : Colors.transparent,
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

@@ -17,7 +17,6 @@ class SocialMediaBottomSheetContent extends StatelessWidget {
   final GlobalKey<FormState> _linkForm = GlobalKey<FormState>();
   var _displayName = '';
   var _link = '';
-  var _change = false;
 
   void updateDisplay(String display, bool validation) {
     _displayName = display;
@@ -55,8 +54,11 @@ class SocialMediaBottomSheetContent extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Add functionality to save social media link
-                    Navigator.pop(context);
+                    Navigator.pop(context, {
+                      'headerName': _displayName,
+                      'platformName': platformName,
+                      'url': _link,
+                    });
                   },
                   child: Text('Save'),
                 ),
