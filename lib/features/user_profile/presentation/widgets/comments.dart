@@ -4,7 +4,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.d
 import '../../../../user_info.dart';
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
-import '../../../saved/data/unsave.dart';
+import '../../../saved/data/save_or_unsave.dart';
 import '../../data/class_models/comments_class_model.dart';
 
 class CommentWidget extends StatelessWidget {
@@ -17,10 +17,7 @@ class CommentWidget extends StatelessWidget {
   });
 
   void unsaveComment() async {
-    //String accessToken = UserSingleton().accessToken!; 
-    String accessToken ='AYHAGANOWc';   //easier for working now
-    print(accessToken);
-    int statusCode = await unsavePost(id: comment.id, accessToken: accessToken);
+    int statusCode = await saveOrUnsave(id: comment.id , type : 'comments');
     if (statusCode == 200) {
       print('Post unsaved successfully.');
     } else {
@@ -63,7 +60,7 @@ class CommentWidget extends StatelessWidget {
                   children: [
                     if (saved)
                       Text(
-                        '${comment.userName} • ',
+                        'u/${comment.user.username} • ',
                         style: TextStyle(
                           fontSize: 14.0,
                           color: Colors.grey,

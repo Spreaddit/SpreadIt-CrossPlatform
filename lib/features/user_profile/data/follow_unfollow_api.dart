@@ -7,6 +7,7 @@ Future<int> toggleFollow({
   required bool isFollowing,
 }) async {
   try {
+    
     String? accessToken=UserSingleton().accessToken;
     final String endpoint = isFollowing ? '/users/unfollow/$accessToken' : '/users/follow/$accessToken';
     final String requestURL = apiUrl + endpoint;
@@ -18,6 +19,11 @@ Future<int> toggleFollow({
     final Response response = await Dio().post(
       requestURL,
       data: data,
+        options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
     );
 
     if (response.statusCode == 200) {

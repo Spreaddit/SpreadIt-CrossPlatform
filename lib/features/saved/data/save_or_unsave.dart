@@ -1,23 +1,38 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
+import '../../../user_info.dart';
 
-/// Sends a POST request to unsave a post and handles response status codes.
-Future<int> unsavePost({
+/// Sends a POST request to unsave a post or comment and handles response status codes.
+Future<int> saveOrUnsave({
   required String id,
-  required String accessToken,
+  required String type,
 }) async {
   try {
-    var apiroute = "/posts/$id/unsave";
+    String apiroute;
+    String? accessToken = UserSingleton().accessToken; 
+    switch (type) {
+      case "posts":
+        apiroute = "/posts/$id/save";
+        break;
+      case "comments":
+        apiroute = "/comments/$id/save";
+        break;
+      default:
+        print("Invalid type");
+        return 400; 
+    }
+
     String requestURL = apiUrl + apiroute;
 
-    var data = {
-      "accessToken": accessToken,
-    };
 
     final response = await Dio().post(
       requestURL,
-      queryParameters: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
     );
 
     if (response.statusCode == 200) {
@@ -44,9 +59,9 @@ Future<int> unsavePost({
       }
     }
     print("Dio error occurred: $e");
-    rethrow;
+    return 500; 
   } catch (e) {
     print("Error occurred: $e");
-    return 404;
+    return 500; 
   }
 }
