@@ -5,36 +5,18 @@ import '../widgets/expanded_rules.dart';
 
 
 class CommunityRules extends StatefulWidget {
-  const CommunityRules({Key? key}) : super(key: key);
+
+  final List<dynamic> communityRules;
+
+  const CommunityRules({
+    required this.communityRules,
+  });
 
   @override
   State<CommunityRules> createState() => _CommunityRulesState();
 }
 
 class _CommunityRulesState extends State<CommunityRules> {
-
-  List<Map<String, dynamic>> rulesList = [
-    {
-      'title': 'Hate won\'t be tolerated',
-      'body': 'Hate, personal insults and incitinng violence are all against our rules',
-    },
-    {
-      'title':'Content quality',
-      'body':'The moderators reserve the right to remove any content if it is deemed to be too low quality for this subreddit',
-    },
-    {
-      'title': 'Personal insults',
-      'body': 'We don\'t tolerate personal insults in this community especially if those insults are come as part of a heated argument'
-    },
-    {
-      'title': 'All content must be related to programming',
-    },
-    {
-      'title': 'No NSFW content',
-      'body':' Elli haynazzel hagat keda hamawweto',
-    },
-
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +40,11 @@ class _CommunityRulesState extends State<CommunityRules> {
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,  
-            itemCount: rulesList.length,
+            itemCount: widget.communityRules.length,
             itemBuilder: (context, index) {
               return ExpandableListWidget(
-                title: rulesList[index]['title'],
-                body: rulesList[index]['body'],
+                title: widget.communityRules[index]['title'],
+                description: widget.communityRules[index]['description'],
                 );
               },
           ),
@@ -80,7 +62,5 @@ class _CommunityRulesState extends State<CommunityRules> {
   }
 }
 
-/* TODOs 
-a3mel el api elli byfetch el rules aslan  */
 
  

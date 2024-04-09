@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
@@ -65,6 +66,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String finalContent ='';
   String communityName = '';
   String communityIcon = '';
+  List<dynamic> communityRules = [];
   List<String> finalPollOptions = ['', ''];
   List<String> finalInitialBody = ['',''];
   int finalSelectedDay = 1;
@@ -82,11 +84,30 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String? finalLink;
   IconData? lastPressedIcon;
 
+  void mapCommunityData () {
+    communityName = widget.community[0]['communityName'];
+    communityIcon = widget.community[0]['communityIcon'];
+    communityRules = widget.community[0]['communityRules'];
+  }
+
+  void mapPoll () {
+    finalSelectedDay = widget.selectedDay;
+    finalInitialBody.clear();
+    finalPollOptions.clear();
+    finalInitialBody.addAll(widget.pollOptions);
+    finalPollOptions.addAll(widget.pollOptions);
+    if(finalPollOptions.length > 2) {
+      for(int i = 2; i < finalPollOptions.length; i++) {
+        GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
+        finalFormKeys.add(newFormKey); 
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    communityName = widget.community[0]['communityName'];
-    communityIcon = widget.community[0]['communityIcon'];
+    mapCommunityData();
     finalIsLinkAdded = widget.isLinkAdded;
     if(widget.image != null) {
       finalImage = widget.image;
@@ -95,17 +116,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       finalVideo = widget.video;
     } 
     if(widget.pollOptions.every((option) => option.isNotEmpty)) {
-      finalSelectedDay = widget.selectedDay;
-      finalInitialBody.clear();
-      finalPollOptions.clear();
-      finalInitialBody.addAll(widget.pollOptions);
-      finalPollOptions.addAll(widget.pollOptions);
-      if(finalPollOptions.length > 2) {
-        for(int i = 2; i < finalPollOptions.length; i++) {
-          GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
-          finalFormKeys.add(newFormKey); 
-        }
-      }
+      mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
     }
@@ -193,11 +204,11 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   
   Future<void> pickVideo() async {
     File? video = await pickVideoFromFilePicker.pickVideo();
-  if (video != null) {
-    setState(() {
-      finalVideo = video;
-    });
-   }
+    if (video != null) {
+      setState(() {
+        finalVideo = video;
+      });
+    }
   }
 
   void openPollWidow() {
@@ -237,6 +248,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     Navigator.of(context).pushNamed('/add-tags');
   }
 
+  void submit () async {
+   /* int response = await submitPost(
+      finalTitle, finalContent, communityName, pollOptions, finalSelectedDay, finalLink, images, videos, isSpoiler, isNSFW);
+    if ( response == 200 ) {
+
+    }*/
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -248,7 +267,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 Container(
                   child: CreatePostHeader(
                     buttonText: "Post",
-                    onPressed: () {},
+                    onPressed: submit,
                     isEnabled: isButtonEnabled,
                     onIconPress : () { showDiscardButtomSheet(context);},
                   ),
@@ -258,6 +277,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                  child:  CommunityAndRulesHeader(
                   communityIcon: communityIcon,
                   communityName: communityName,
+                  communityRules: communityRules,
                   ),
                 ),
                 Align(
@@ -362,6 +382,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
 /* TODOs 
 1) ashouf el video msh shaghal leih
-3) mock service 
-4) unit testing 
+2) mock service 
+3) unit testing 
  */

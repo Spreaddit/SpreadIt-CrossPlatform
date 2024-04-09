@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ExpandableListWidget extends StatefulWidget {
   final String title;
-  final String? body;
+  final String? description;
 
   const ExpandableListWidget({
     required this.title,
-    this.body,
+    this.description,
   });
 
   @override
@@ -25,7 +25,7 @@ class _ExpandableListWidgetState extends State<ExpandableListWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: (widget.body?.isNotEmpty ?? false)
+            onTap: (widget.description?.isNotEmpty ?? false)
                 ? () {
                     setState(() {
                       _isExpanded = !_isExpanded;
@@ -45,7 +45,7 @@ class _ExpandableListWidgetState extends State<ExpandableListWidget> {
                     ),
                   ),
                 ),
-                if (widget.body?.isNotEmpty ?? false)
+                if (widget.description?.isNotEmpty ?? false)
                   Icon(
                     _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                     size: 24,
@@ -57,7 +57,7 @@ class _ExpandableListWidgetState extends State<ExpandableListWidget> {
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 8),
-                child: Text(widget.body!), 
+                child: Text(widget.description!), 
               ),
             ),
         ],

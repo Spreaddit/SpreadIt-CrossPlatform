@@ -31,7 +31,7 @@ void showDiscardButtomSheet( BuildContext context) {
                 children: [
                   SmallButton(
                     buttonText: 'Discard',
-                    onPressed: () {Navigator.pop(context);},
+                    onPressed: () {returnToHomePage(context);},
                     isEnabled: true,
                     width: 160,
                     height: 30,
@@ -55,5 +55,9 @@ void showDiscardButtomSheet( BuildContext context) {
   );
 }
 
+void returnToHomePage (BuildContext context) {
+  Navigator.pop(context);
+  Navigator.of(context).pushNamed('/home');
+}
 
-
+/*TO DO : implementation of save api*/

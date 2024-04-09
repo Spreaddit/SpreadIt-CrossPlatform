@@ -129,11 +129,11 @@ class _CreatePostState extends State<CreatePost> {
 
   Future<void> pickVideo() async {
     File? video = await pickVideoFromFilePicker.pickVideo();
-  if (video != null) {
-    setState(() {
-      this.video = video;
-    });
-   }
+    if (video != null) {
+      setState(() {
+        this.video = video;
+      });
+    }
   }
 
   void openPollWidow() {
@@ -269,7 +269,5 @@ class _CreatePostState extends State<CreatePost> {
 }
 
 /* TODOs 
-1) link validations (el input fields etgannenet)
-2) ashouf el video msh shaghal leih
-4) unit testing 
+ unit testing 
  */

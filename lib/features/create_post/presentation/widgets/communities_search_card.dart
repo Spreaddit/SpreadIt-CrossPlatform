@@ -4,12 +4,10 @@ import 'package:flutter/widgets.dart';
 class CommunitiesCard extends StatefulWidget {
 
   final String communityName;
-  final String online;
   final String communityIcon;
 
   const CommunitiesCard({
     required this.communityName,
-    required this.online,
     required this.communityIcon,
   });
 
@@ -40,7 +38,6 @@ class _CommunitiesCardState extends State<CommunitiesCard> {
                   fontWeight: FontWeight.bold,
                   ),
                 ),
-            Text(widget.online),
               ],
             ),
           ],

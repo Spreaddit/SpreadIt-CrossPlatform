@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/create_post/data/get_communities_list.dart';
 import '../../../generic_widgets/search_bar.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/communities_search_card.dart';
@@ -34,46 +35,34 @@ class PostToCommunity extends StatefulWidget {
 
 class _PostToCommunityState extends State<PostToCommunity> {
 
-    List<Map<String, dynamic>> communityData = [
-    {
-      'communityName':'r/Egypt',
-      'online': '17 online',
-      'communityIcon': "./assets/images/LogoSpreadIt.png",
-    },
-    {
-      'communityName':'r/Developers',
-      'online': '30 online',
-      'communityIcon': "./assets/images/LogoSpreadIt.png",
-    },
-    {
-      'communityName':'r/AskReddit',
-      'online': '267 online',
-      'communityIcon': "./assets/images/LogoSpreadIt.png",
-    },
-    {
-      'communityName':'r/AskMasr',
-      'online': '24 online',
-      'communityIcon': "./assets/images/LogoSpreadIt.png",
-    },
-    {
-      'communityName':'r/Artists',
-      'online': '498 online',
-      'communityIcon': "./assets/images/LogoSpreadIt.png",
-    },
-    {
-      'communityName':'r/Emboidory',
-      'online': '3 online',
-      'communityIcon': "./assets/images/LogoSpreadIt.png",
-    },
-  ];
-
+  List communities = [];
+  List<Map<String, dynamic>> communityData = [];
   List<Map<String, dynamic>> filteredList = [];
   bool isShowMorePressed = false;
 
   @override
   void initState() {
     super.initState();
+    getCommunityData();
     _updateDisplayList();
+  }
+
+  void getCommunityData () async {
+    List<dynamic> communities = await getCommunitiesList();
+    setState(() {
+      this.communities = communities ;
+    });
+    mapCommunityData();
+  }
+
+  void mapCommunityData () {
+    communityData = communities.map((item) {
+      return {
+        'communityName': item['name'],
+        'communityIcon': item['image'],
+        'communityRules': item['rules'],
+      };
+    }).toList();
   }
 
   void _updateDisplayList() {
@@ -146,7 +135,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
                         },
                         child: CommunitiesCard(
                           communityName: displayList[index]['communityName'],
-                          online: displayList[index]['online'],
                           communityIcon: displayList[index]['communityIcon'],
                           ),
                       );
@@ -183,8 +171,5 @@ class _PostToCommunityState extends State<PostToCommunity> {
 }
 
 /*
-TODOs:
-1) agahhez el api call elli ha-get biha el communities  
-2) mock service 
-3) unit testing
+TODOs: unit testing
  */

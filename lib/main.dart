@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/pages/test_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'firebase_options.dart';
@@ -85,7 +86,12 @@ class SpreadIt extends StatelessWidget {
           );
         },
         '/primary-content-page': (context) => CreatePost(),
-        '/rules': (context) => CommunityRules(),
+        '/rules': (context) { 
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
+          return CommunityRules(
+            communityRules : args['communityRules'],
+          );
+        }
       },
     );
   }

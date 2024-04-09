@@ -4,10 +4,12 @@ class CommunityAndRulesHeader extends StatefulWidget {
 
   final String communityIcon;
   final String communityName;
+  final List<dynamic> communityRules;
 
   const CommunityAndRulesHeader({
     required this.communityIcon,
     required this.communityName,
+    required this.communityRules,
   });
 
   @override
@@ -17,7 +19,11 @@ class CommunityAndRulesHeader extends StatefulWidget {
 class _CommunityAndRulesHeaderState extends State<CommunityAndRulesHeader> {
 
   void navigateToRules() {
-    Navigator.of(context).pushNamed('/rules');
+    Navigator.of(context).pushNamed('/rules', 
+    arguments: {
+      'communityRules': widget.communityRules,
+      } 
+    );
   }
 
   void navigateToPostToCommunity() {
