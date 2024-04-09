@@ -22,8 +22,10 @@ class GetSpecificCommunity {
       }
 
       if (response.statusCode == 200) {
-        List<Community> communities =
-            (response.data as List).map((i) => Community.fromJson(i)).toList();
+        List<Community> communities = (response.data['communities'] as List)
+            .map((i) => Community.fromJson(i))
+            .toList();
+
         return communities;
       } else if (response.statusCode == 404) {
         throw Exception('No communities found for the specified category');
@@ -33,7 +35,7 @@ class GetSpecificCommunity {
         throw Exception('Bad request, invalid request paramters');
       }
     } catch (e) {
-      throw Exception('Failed to load communities: $e');
+      throw Exception('Failed to load communities: $e ');
     }
   }
 }

@@ -39,7 +39,7 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
             community2 = communities[(i * 2) + 1];
           }
           return Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width * 0.9,
             child: Column(
               children: [
                 SubredditCard(
