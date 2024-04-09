@@ -3,19 +3,19 @@ class User {
   String name;
   String username;
   String email;
-  String googleId;
-  DateTime birthDate;
-  String phone;
+  String? googleId;
+  DateTime? birthDate;
+  String? phone;
   String avatarUrl;
-  String backgroundPictureUrl;
-  String location;
-  String bio;
+  String? backgroundPictureUrl;
+  String? location;
+  String? bio;
   int followersCount;
   int followingCount;
   DateTime createdAt;
   String role;
   bool nsfw;
-  bool activeInCommunityVisibility;
+  bool? activeInCommunityVisibility;
   bool isVerified;
   String displayName;
   String about;
@@ -47,28 +47,32 @@ class User {
     required this.cakeDay,
   });
 
-  User.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        username = json['username'],
-        email = json['email'],
-        googleId = json['googleId'],
-        birthDate = DateTime.parse(json['birth_date']),
-        phone = json['phone'],
-        avatarUrl = json['avatar_url'],
-        backgroundPictureUrl = json['background_picture_url'],
-        location=json['location'],
-        bio = json['bio'],
-        followersCount = json['followers_count'] as int,
-        followingCount = json['following_count'] as int,
-        createdAt = DateTime.parse(json['created_at']),
-        role= json['role'],
-        nsfw = json['nsfw'] as bool,
-        activeInCommunityVisibility =json['activeInCommunityVisibility'] as bool,
-        isVerified= json['isVerified'] as bool,
-        displayName=json['displayName'],        
-        about = json['about'] as String,
-        cakeDay = DateTime.parse(json['cakeDay']),
-        subscribedCommunities = List<String>.from(json['subscribedCommunities']);
-
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      name: json['name'],
+      username: json['username'],
+      email: json['email'],
+      googleId: json['googleId'],
+      birthDate: json['birth_date'] != null ? DateTime.parse(json['birth_date']) : null,
+      phone: json['phone'],
+      avatarUrl: json['avatar_url'],
+      backgroundPictureUrl: json['background_picture_url'],
+      location: json['location'],
+      bio: json['bio'],
+      followersCount: json['followers_count'] as int,
+      followingCount: json['following_count'] as int,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
+      role: json['role'],
+      nsfw: json['nsfw'] as bool,
+      activeInCommunityVisibility: json['activeInCommunityVisibility'] as bool?,
+      isVerified: json['isVerified'] as bool,
+      displayName: json['displayName'],
+      about: json['about'],
+      cakeDay: json['cakeDay'] != null ? DateTime.parse(json['cakeDay']) : DateTime.now(),
+      subscribedCommunities: json['subscribedCommunities'] != null
+          ? List<String>.from(json['subscribedCommunities'])
+          : [],
+    );
+  }
 }
