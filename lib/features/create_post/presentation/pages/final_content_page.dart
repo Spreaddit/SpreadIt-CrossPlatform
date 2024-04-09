@@ -198,8 +198,11 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     }
   }
 
-  void cancelImageOrVideo (File? imageOrVideo) {
-    imageOrVideo = null;
+  void cancelImageOrVideo () {
+    setState(() {
+      finalImage = null;
+      finalVideo = null;
+    });
     setLastPressedIcon(null);
   }
 
@@ -337,12 +340,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 if (finalImage != null)
                   ImageOrVideoWidget(
                     imageOrVideo: finalImage!,
-                    onIconPress: () {cancelImageOrVideo(finalImage);},
+                    onIconPress: cancelImageOrVideo,
                   ), 
                 if (finalVideo != null)
                    ImageOrVideoWidget(
                     imageOrVideo: finalVideo!,
-                    onIconPress: () {cancelImageOrVideo(finalVideo);},
+                    onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)
                    LinkTextField(
