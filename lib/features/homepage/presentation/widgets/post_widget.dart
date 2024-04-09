@@ -61,9 +61,11 @@ class _PostHeader extends HookWidget {
       color: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        data: Theme.of(context).copyWith(
+          dividerColor: Colors.transparent,
+        ),
         child: ListTile(
-          contentPadding: EdgeInsets.only(top: 20),
+          contentPadding: EdgeInsets.only(top: -10),
           title: Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [

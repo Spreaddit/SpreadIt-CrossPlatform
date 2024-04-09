@@ -89,8 +89,15 @@ class _PostFeedState extends State<PostFeed> {
             shrinkWrap: true,
             itemCount: items.length,
             itemBuilder: (context, index) {
-              return PostWidget(
-                post: items[index],
+              return Column(
+                children: [
+                  PostWidget(post: items[index]),
+                  Divider(
+                    height: 20,
+                    thickness: 0.2,
+                    color: Colors.black,
+                  ),
+                ],
               );
             },
           )
