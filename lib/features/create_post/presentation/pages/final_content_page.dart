@@ -8,6 +8,7 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/widgets
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
@@ -30,9 +31,10 @@ class FinalCreatePost extends StatefulWidget {
   final String? link;
   final File? image;
   final File? video;
-  final List<String> pollOptions;
-  final int selectedDay;
-  final bool isLinkAdded;
+  final List<String>? pollOptions;
+  final int? selectedDay;
+  final bool? createPoll;
+  final bool? isLinkAdded;
   final List<Map<String, dynamic>> community;
 
   const FinalCreatePost({
@@ -42,9 +44,10 @@ class FinalCreatePost extends StatefulWidget {
     this.link,
     this.image,
     this.video,
-    required this.pollOptions,
-    required this.selectedDay,
-    required this.isLinkAdded,
+    this.pollOptions,
+    this.selectedDay,
+    this.createPoll,
+    this.isLinkAdded,
     required this.community,
     }) : super(key: key);
 
@@ -66,18 +69,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String finalContent ='';
   String communityName = '';
   String communityIcon = '';
-  List<dynamic> communityRules = [];
+  Map<String, String> communityRules = {};
   List<String> finalPollOptions = ['', ''];
   List<String> finalInitialBody = ['',''];
   int finalSelectedDay = 1;
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
-  bool createPoll = false;
   bool isNSFWAllowed = true;
   bool isSpoiler = false;
   bool isNSFW = false;
-  bool finalIsLinkAdded = false ;     
+  bool finalIsLinkAdded = false ;  
+  bool finalCreatePoll = false;   
 
   File? finalImage;
   File? finalVideo;
@@ -91,11 +94,13 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   void mapPoll () {
-    finalSelectedDay = widget.selectedDay;
+    if (widget.selectedDay != null) {
+     finalSelectedDay = widget.selectedDay!;
+    }
     finalInitialBody.clear();
     finalPollOptions.clear();
-    finalInitialBody.addAll(widget.pollOptions);
-    finalPollOptions.addAll(widget.pollOptions);
+    finalInitialBody.addAll(widget.pollOptions!);
+    finalPollOptions.addAll(widget.pollOptions!);
     if(finalPollOptions.length > 2) {
       for(int i = 2; i < finalPollOptions.length; i++) {
         GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
@@ -108,18 +113,21 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void initState() {
     super.initState();
     mapCommunityData();
-    finalIsLinkAdded = widget.isLinkAdded;
+    if(widget.isLinkAdded != null) {
+      finalIsLinkAdded = widget.isLinkAdded!;
+    }
     if(widget.image != null) {
       finalImage = widget.image;
     }
     if(widget.video != null) {
       finalVideo = widget.video;
-    } 
-    if(widget.pollOptions.every((option) => option.isNotEmpty)) {
+    }
+    if(widget.createPoll != null) { 
+      finalCreatePoll = widget.createPoll!;
       mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
-    }
+      }
   }
   
    void updateTitle(String value) {
@@ -213,7 +221,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   void openPollWidow() {
     setState(() {
-      createPoll = !createPoll;
+      finalCreatePoll = !finalCreatePoll;
     });
   }
 
@@ -248,12 +256,23 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     Navigator.of(context).pushNamed('/add-tags');
   }
 
-  void submit () async {
-   /* int response = await submitPost(
-      finalTitle, finalContent, communityName, pollOptions, finalSelectedDay, finalLink, images, videos, isSpoiler, isNSFW);
-    if ( response == 200 ) {
+  void returnToHomePage (BuildContext context) {
+    Navigator.of(context).pushNamed('/home');
+  }
 
-    }*/
+  void submit () async {
+   int response = await submitPost(
+      finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalVideo, isSpoiler, isNSFW);
+    if ( response == 201 ) {
+      CustomSnackbar(content: 'Posted successfully !').show(context);
+      returnToHomePage(context);
+    }
+    else if (response == 400) {
+      CustomSnackbar(content: 'Invalid post ID or post data').show(context);
+    }
+    else if (response == 500) {
+      CustomSnackbar(content: 'Internal server error').show(context);
+    }
   }
 
   @override
@@ -339,7 +358,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                   hintText: 'body text (optional)',
                   initialBody: widget.content,
                 ),
-                if (createPoll)
+                if (finalCreatePoll)
                   Poll(
                     onPollCancel: openPollWidow,
                     setLastPressedIcon: setLastPressedIcon,

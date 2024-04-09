@@ -171,6 +171,7 @@ class _CreatePostState extends State<CreatePost> {
       'video':video,
       'pollOptions': pollOptions,
       'selectedDay': selectedDay,
+      'createPoll': createPoll,
       'isLinkAdded':isLinkAdded,
       }
     );

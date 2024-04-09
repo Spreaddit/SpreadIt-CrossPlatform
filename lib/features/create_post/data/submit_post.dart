@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
@@ -8,46 +9,62 @@ Future <int> submitPost(
   String content,
   String community,
   List pollOptions,
-  String pollVotingLength,
-  String link,
-  String images,
-  String videos,
+  int selectedDays,
+  String? link,
+  File? images,
+  File? videos,
   bool isSpoiler,
   bool isNSFW,
  ) async {
   try {
-    const apiRoute = "/reset-password";
+    //String? accessToken = userSingleton().accessToken;
+    const apiRoute = "/posts";
     String apiUrl = apibase + apiRoute;
-    final response = await Dio().post(apiUrl, data: {
-      "title": title,
-      "content" : content,
-      "community":community,
-      "pollOptions":pollOptions,
-      "pollVotinglength":pollVotingLength,
-      "link":link,
-      "images":images,
-      "videos":videos,
-      "isSpoiler":isSpoiler,
-      "isNSFW":isNSFW,
-     }
-   );
-   if (response.statusCode == 201) {
-      print(response.statusCode);
-      print(response.statusMessage);
-      return 201;
-    } else if (response.statusCode == 400) {
-      print(response.statusMessage);
-      print(response.statusCode);
-      return 400;
-    } else if (response.statusCode == 500) {
-      print(response.statusMessage);
-      print(response.statusCode);
-      return 500;
-    } else {
-      print(response.statusMessage);
-      print(response.statusCode);
-      return 404;
+    String pollVotingLength = selectedDays.toString();
+    if (selectedDays == 1) {
+      pollVotingLength + ' Day';
     }
+    else {
+      pollVotingLength + ' Days';
+    }
+    final response = await Dio().post(
+      apiUrl,
+      options:Options(
+        headers: {
+          'Authorization' :'chahd',
+        }
+      ),
+      data: {
+        "title": title,
+        "content" : content,
+        "community":community,
+        "pollOptions":pollOptions,
+        "pollVotinglength":pollVotingLength,
+        "link":link,
+        "images":images,
+        "videos":videos,
+        "isSpoiler":isSpoiler,
+        "isNSFW":isNSFW,
+      }
+    );
+    if (response.statusCode == 201) {
+        print(response.data);
+        print(response.statusCode);
+        print(response.statusMessage);
+        return 201;
+      } else if (response.statusCode == 400) {
+        print(response.statusMessage);
+        print(response.statusCode);
+        return 400;
+      } else if (response.statusCode == 500) {
+        print(response.statusMessage);
+        print(response.statusCode);
+        return 500;
+      } else {
+        print(response.statusMessage);
+        print(response.statusCode);
+        return 404;
+      }
   } on DioException catch (e) {
     if (e.response != null) {
       if (e.response!.statusCode == 400) {

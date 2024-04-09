@@ -15,6 +15,7 @@ class PostToCommunity extends StatefulWidget {
   final File? video;
   final List<String> pollOptions;
   final int selectedDay;
+  final bool createPoll;
   final bool isLinkAdded;
   
   const PostToCommunity({
@@ -26,6 +27,7 @@ class PostToCommunity extends StatefulWidget {
     this.video,
     required this.pollOptions,
     required this.selectedDay,
+    required this.createPoll,
     required this.isLinkAdded,
     }) : super(key: key);
 
@@ -97,6 +99,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
       'video': widget.video,
       'pollOptions': widget.pollOptions,
       'selectedDay': widget.selectedDay,
+      'createPoll': widget.createPoll,
       'isLinkAdded':widget.isLinkAdded,
       'community': [selectedCommunity], 
       }
@@ -171,5 +174,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
 }
 
 /*
-TODOs: unit testing
+TODOs:
+ unit testing
  */

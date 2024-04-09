@@ -39,7 +39,22 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CreatePost(),
+      home: FinalCreatePost(
+        title: '', 
+        content: '', 
+        pollOptions: [], 
+        selectedDay: 1,
+        isLinkAdded: false, 
+        community: [{
+          'communityName': 'r/AskReddit', 
+          'communityIcon': './assets/images/LogoSpreadIt.png',
+          'communityRules' : {
+            'title': 'hate is not tolerated',
+            'description': 'yarab nekhlas baa ana zhe2t men om el bta3 da',
+            }
+          }
+        ]
+      ),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
@@ -68,6 +83,7 @@ class SpreadIt extends StatelessWidget {
             video: args['video'],
             pollOptions: args['pollOptions'],
             selectedDay:args['selectedDay'],
+            createPoll: args['createPoll'],
             isLinkAdded: args['isLinkAdded'],
           );
         },    
