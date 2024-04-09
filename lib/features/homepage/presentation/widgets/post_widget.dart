@@ -71,7 +71,7 @@ class _PostHeader extends HookWidget {
             children: [
               Text(
                 "r/$community",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               Text(dateFormatted.value),
             ],
@@ -116,7 +116,11 @@ class _PostBody extends StatelessWidget {
         dense: true,
         title: Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            letterSpacing: -0.5,
+          ),
         ),
         subtitle: _PostContent(
           postType: postType,
