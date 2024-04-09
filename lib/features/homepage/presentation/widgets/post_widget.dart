@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:video_player/video_player.dart';
 
-//TODO: create options tab for PostWidget(shows join community options when pressed)
+/*
+TODO: create options tab for PostWidget(shows join community options when pressed)
 
-// class PostOptions extends StatefulWidget {
-// bool isJoinCommunityVisible;
-// }
+class PostOptions extends StatefulWidget {
+bool isJoinCommunityVisible;
+}
+*/
 
 /// This widget is responsible for displaying post header:
 /// (e.g., user info and date of posting)
 class _PostHeader extends HookWidget {
-  //Add Community and add username in postcard
   final String username;
   final String userId;
   final DateTime date;
@@ -81,45 +83,47 @@ class _PostHeader extends HookWidget {
   }
 }
 
-class VideoPlayerScreen extends StatefulWidget {
-  const VideoPlayerScreen({Key? key}) : super(key: key);
+/// This widget is responsible for displaying post body:
+/// headline, description (optional) and an image (optional)
+class _PostBody extends StatelessWidget {
+  final String title;
+  final String postType;
+  final String? content;
+  final List<Attachment>? attachments;
+  final String? link;
+  final bool isFullView;
+  //TODO: Handle poll display
 
-  @override
-  State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
-}
-
-class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Create and store the VideoPlayerController. The VideoPlayerController
-    // offers several different constructors to play videos from assets, files,
-    // or the internet.
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4', //TODO:change parse link
-      ),
-    );
-
-    _initializeVideoPlayerFuture = _controller.initialize();
-  }
-
-  @override
-  void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-    _controller.dispose();
-
-    super.dispose();
-  }
+  _PostBody({
+    required this.title,
+    required this.postType,
+    this.content,
+    this.attachments,
+    this.link,
+    required this.isFullView,
+    //TODO: Handle poll display
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Complete the code in the next step.
-    return Container();
+    return Material(
+      color: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      child: ListTile(
+        dense: true,
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+        subtitle: _PostContent(
+          postType: postType,
+          content: content,
+          attachments: attachments,
+          link: link,
+          isFullView: isFullView,
+        ),
+      ),
+    );
   }
 }
 
@@ -128,10 +132,12 @@ class _PostContent extends StatelessWidget {
   final String? content;
   final List<Attachment>? attachments;
   final String? link;
+  final bool isFullView;
   //TODO: Handle poll display
 
   _PostContent({
     required this.postType,
+    required this.isFullView,
     this.content,
     this.attachments,
     this.link,
@@ -144,8 +150,8 @@ class _PostContent extends StatelessWidget {
         content != null && content!.isNotEmpty
             ? content![content!.length - 1]
             : "",
-        maxLines: 5,
         overflow: TextOverflow.ellipsis,
+        maxLines: !isFullView ? 5 : null,
       );
     } else if (postType == "attachment") {
       if (attachments!.isNotEmpty) {
@@ -166,8 +172,12 @@ class _PostContent extends StatelessWidget {
             }).toList(),
           );
         } else {
-          //HANDLE VIDEOS
+          return VideoPlayerScreen(videoURL: attachments![0].link);
         }
+      } else {
+        CustomSnackbar(content: "No Attachments Found").show(context);
+        print("Error fetching attachments from back");
+        return Text("Unable to load attachments");
       }
     } else if (postType == "link") {
       return AnyLinkPreview(
@@ -182,48 +192,139 @@ class _PostContent extends StatelessWidget {
         ),
       );
     } else {
+      return Text("Handle Poll Here");
       //TODO:HANDLE POLL CREATION
     }
   }
 }
 
-/// This widget is responsible for displaying post body:
-/// headline, description (optional) and an image (optional)
-class _PostBody extends StatelessWidget {
-  final String title;
-  final String postType;
-  final String? content;
-  final List<Attachment>? attachments;
-  final String? link;
-  //TODO: Handle poll display
+class VideoPlayerScreen extends StatefulWidget {
+  final String videoURL;
 
-  _PostBody({
-    required this.title,
-    required this.postType,
-    this.content,
-    this.attachments,
-    this.link,
-    //TODO: Handle poll display
-  });
+  const VideoPlayerScreen({
+    Key? key,
+    required this.videoURL,
+  }) : super(key: key);
+
+  @override
+  State<VideoPlayerScreen> createState() => _VideoAppState();
+}
+
+class _VideoAppState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+  late Duration videoLength;
+  late Duration videoPosition;
+  late double volume = 0.5;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(widget.videoURL),
+    )
+      ..addListener(() => setState(() {
+            videoPosition = _controller.value.position;
+          }))
+      ..initialize().then((_) => setState(() {
+            videoLength = _controller.value.duration;
+          }));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      child: ListTile(
-        dense: true,
-        title: Text(
-          title,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+    return MaterialApp(
+      title: 'Attachment Video',
+      home: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              if (_controller.value.isInitialized) ...[
+                AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                ),
+                VideoProgressIndicator(
+                  _controller,
+                  allowScrubbing: true,
+                  padding: EdgeInsets.all(10),
+                ),
+                Row(
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(_controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow),
+                      onPressed: () {
+                        setState(() {
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
+                        });
+                      },
+                    ),
+                    Text(
+                        '${convertToMinutesSeconds(videoPosition)} / ${convertToMinutesSeconds(videoLength)}'),
+                    SizedBox(width: 10),
+                    Icon(animatedVolumeIcon(volume)),
+                    Slider(
+                      value: volume,
+                      min: 0,
+                      max: 1,
+                      onChanged: (_volume) => setState(() {
+                        volume = _volume;
+                        _controller.setVolume(_volume);
+                      }),
+                    ),
+                    Spacer(),
+                    IconButton(
+                        icon: Icon(
+                          Icons.loop,
+                          color: _controller.value.isLooping
+                              ? const Color.fromARGB(255, 255, 68, 0)
+                              : Colors.black,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _controller
+                                .setLooping(!_controller.value.isLooping);
+                          });
+                        }),
+                  ],
+                )
+              ],
+            ],
+          ),
         ),
-        subtitle: _PostContent(
-            postType: postType,
-            content: content,
-            attachments: attachments,
-            link: link),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+}
+
+String convertToMinutesSeconds(Duration duration) {
+  final parsedMinutes = duration.inMinutes < 10
+      ? '0${duration.inMinutes}'
+      : duration.inMinutes.toString();
+
+  final seconds = duration.inSeconds % 60;
+
+  final parsedSeconds =
+      seconds < 10 ? '0${seconds % 60}' : (seconds % 60).toString();
+  return '$parsedMinutes:$parsedSeconds';
+}
+
+IconData animatedVolumeIcon(double volume) {
+  if (volume == 0) {
+    return Icons.volume_mute;
+  } else if (volume < 0.5) {
+    return Icons.volume_down;
+  } else {
+    return Icons.volume_up;
   }
 }
 
@@ -286,17 +387,18 @@ class PostWidget extends StatelessWidget {
           username: post.username,
           userId: post.userId,
           date: post.date,
-          profilePic: post.profilePic,
+          profilePic: post.userProfilePic,
           community: post.community,
         ),
         _PostBody(
           title: post.title,
-          content: post.content != null && post.content!.isNotEmpty
-              ? post.content![post.content!.length - 1]
+          content: post.content.isNotEmpty
+              ? post.content[post.content.length - 1]
               : "",
           attachments: post.attachments,
           link: post.link,
           postType: post.type,
+          isFullView: isFullView,
           //TODO: handle poll details
         ),
         _PostInteractions(
