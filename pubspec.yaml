@@ -18,8 +18,11 @@ dependencies:
   build_runner: ^2.4.8
   english_words: ^4.0.0
   provider: ^6.0.0
+  any_link_preview: ^3.0.1
 
   cupertino_icons: ^1.0.2
+
+  carousel_slider: ^4.2.1
 
   ionicons: ^0.2.2
 
@@ -41,6 +44,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   time_machine: ^0.9.17
   dartdoc: ^6.3.0
+  video_player: ^2.8.5
 
 dev_dependencies:
   flutter_test:
