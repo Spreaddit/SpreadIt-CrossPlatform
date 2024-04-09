@@ -81,7 +81,7 @@ Future<List<Post>> getFeedPosts({
           timeSort: timeSort,
           username: username,
         );
-
+    print("post Category Endpoint: $requestURL");
     final response = await Dio().get(requestURL);
     if (response.statusCode == 200) {
       return (response.data as List).map((x) => Post.fromJson(x)).toList();

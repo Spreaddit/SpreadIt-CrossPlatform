@@ -42,7 +42,7 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   void initState() {
-    var currentPostCategory = widget.postCategory;
+    currentPostCategory = widget.postCategory;
     super.initState();
     fetchData();
   }
