@@ -1,17 +1,16 @@
-import 'package:flutter/services.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
+class pickVideoFromFilePicker {
+  static Future<File?> pickVideo() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.video,
+    );
 
-Future<File?> pickVideoFromFilePicker() async {
-  try {
-    final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if (video == null) {
-      return null;
+    if (result != null) {
+      return File(result.files.single.path!);
     }
-    return File(video.path);
-  } on PlatformException catch (e) {
-    print('Failed to pick image $e');
+
     return null;
   }
 }

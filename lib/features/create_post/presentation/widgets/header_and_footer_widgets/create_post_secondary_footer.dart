@@ -49,13 +49,13 @@ class _SecondaryPostFooterState extends State<SecondaryPostFooter> {
           mainAxisSize: MainAxisSize.max,
           children: [
             SecondaryFooterIcon(
-              icon: Icons.attachment_rounded,
+              icon: Icons.link,
               text: 'Link',
               onPressed: () {
                 widget.onLinkPress.call();
-                widget.setLastPressedIcon(Icons.attachment_rounded);
+                widget.setLastPressedIcon(Icons.link);
               },
-              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.attachment_rounded,
+              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.link,
               ),
             SecondaryFooterIcon(
               icon: Icons.photo,

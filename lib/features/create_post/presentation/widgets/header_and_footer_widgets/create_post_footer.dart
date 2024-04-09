@@ -47,12 +47,12 @@ class _PostFooterState extends State<PostFooter> {
         children: [
           if(widget.showAttachmentIcon) 
             FooterIcon(
-              icon: Icons.attachment_rounded,
+              icon: Icons.link,
               onPressed: () {
                 widget.onLinkPress?.call();
-                widget.setLastPressedIcon(Icons.attachment_rounded);
+                widget.setLastPressedIcon(Icons.link);
               },
-              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.attachment_rounded,
+              isDisabled: widget.lastPressedIcon != null && widget.lastPressedIcon != Icons.link,
               ),
           if(widget.showPhotoIcon)    
             FooterIcon(

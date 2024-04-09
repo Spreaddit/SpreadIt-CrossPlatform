@@ -172,7 +172,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       finalIsLinkAdded = !finalIsLinkAdded;
     });
     if (finalIsLinkAdded) {
-      setLastPressedIcon(Icons.attachment_rounded);
+      setLastPressedIcon(Icons.link);
     }
     else {
       setLastPressedIcon(null);
@@ -192,10 +192,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
   
   Future<void> pickVideo() async {
-    final video = await pickVideoFromFilePicker();
+    File? video = await pickVideoFromFilePicker.pickVideo();
+  if (video != null) {
     setState(() {
       finalVideo = video;
     });
+   }
   }
 
   void openPollWidow() {
@@ -360,7 +362,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
 /* TODOs 
 1) ashouf el video msh shaghal leih
-2) a-check el image wel video byetne2lo walla laa aw han2elhom ezzay
 3) mock service 
 4) unit testing 
  */
