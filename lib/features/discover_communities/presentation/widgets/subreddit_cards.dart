@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './join_button.dart';
 
 class SubredditCard extends StatelessWidget {
   final int index;
@@ -86,17 +87,9 @@ class SubredditCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              // Handle join button tap
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromRGBO(0, 69, 172, 1.0),
-                              foregroundColor: Colors.white,
-                            ),
-                            child: Text('Join'),
-                          ),
+                          JoinButton(
+                            communityName: title,
+                          )
                         ],
                       ),
                       SizedBox(height: 8.0),
