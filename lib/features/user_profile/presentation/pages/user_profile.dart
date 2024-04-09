@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../../../generic_widgets/snackbar.dart';
@@ -44,6 +46,8 @@ class _UserProfileState extends State<UserProfile> {
   List<Comment> commentsList = [];
   List<Community> communitiesList = [];
   List<Map<String, dynamic>> socialMediaLinks=[];
+  File? backgroundImageFile;
+  File? profileImageFile;
 
   @override
   void initState() {
@@ -126,19 +130,31 @@ Future<void> unfollowOrFollow() async {
     });
   }
 
-void navigateToEditProfile(BuildContext context) {
-  print(displayName);
-  print(socialMediaLinks);
-  Navigator.of(context).pushNamed(
+void navigateToEditProfile(BuildContext context) async {
+
+final returnedData = await Navigator.of(context).pushNamed(
     '/edit-profile',
     arguments: {
-     'backgroundImageUrl':background,
-      'profileImageUrl':profilePicture,
-      'about' : about,
-      'displayname' :displayName,
+      'backgroundImageUrl': background,
+      'profileImageUrl': profilePicture,
+      'about': about,
+      'displayname': displayName,
       'socialMediaLinks': socialMediaLinks,
     },
   );
+  if (returnedData != null && returnedData is Map<String, dynamic>) {
+    setState(() {
+      backgroundImage = returnedData['backgroundImage']??'' ;
+      profilePicture = returnedData['profilePicImage']??'';
+      backgroundImageFile= returnedData['backgroundImageFile'];
+      profileImageFile= returnedData['profileImageFile'];
+      socialMediaLinks = returnedData['socialMedia'] ?? socialMediaLinks;
+      about = returnedData['about'] ?? about;
+      displayName = returnedData['displayname'] ?? displayName;
+      print('hola');
+      print('profilePicture $profilePicture profileImageFile $profileImageFile');
+    });
+  }
 }
 
 
@@ -245,10 +261,12 @@ void navigateToEditProfile(BuildContext context) {
                   : ProfileHeader(
                       backgroundImage: background,
                       profilePicture: profilePicture,
-                      username: username,
+                      backgroundImageFile : backgroundImageFile,
+                      profileImageFile : profileImageFile,
+                      username: displayName,
                       userinfo: userinfo,
                       about: about,
-                      myProfile: false,
+                      myProfile: true,
                       followed: followStatus!,
                       follow : unfollowOrFollow,
                       onStartChatPressed: () => {},

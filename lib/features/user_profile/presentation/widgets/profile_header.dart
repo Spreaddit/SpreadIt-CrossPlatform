@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
+import 'package:spreadit_crossplatform/features/user_profile/images/image_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/icon_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/social_media_button.dart';
 
@@ -20,6 +23,8 @@ class ProfileHeader extends StatefulWidget {
   final VoidCallback? follow;
   final VoidCallback? editprofile;
   final List<Map<String, dynamic>> socialMediaLinks;
+  File? backgroundImageFile;
+  File? profileImageFile;
 
   ProfileHeader({
     required this.backgroundImage,
@@ -33,6 +38,8 @@ class ProfileHeader extends StatefulWidget {
     this.follow,
     this.editprofile,
     this.socialMediaLinks = const [],
+    this.backgroundImageFile,
+    this.profileImageFile,
   });
 
   @override
@@ -174,7 +181,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                 : screenHeight * 0.08),
                         CircleAvatar(
                           radius: photosize,
-                          backgroundImage: NetworkImage(widget.profilePicture),
+                          backgroundImage: selectImage(widget.profileImageFile, widget.profilePicture),
                         ),
                         SizedBox(
                             height: kIsWeb

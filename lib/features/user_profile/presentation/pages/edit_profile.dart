@@ -36,16 +36,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_socialMediaLinksLoaded) {
-      final Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-      socialMediaLinks = List<Map<String, dynamic>>.from(args['socialMediaLinks']);
+      final Map<String, dynamic> args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      socialMediaLinks =
+          List<Map<String, dynamic>>.from(args['socialMediaLinks']);
       _socialMediaLinksLoaded = true;
       backgroundImageURl = args['backgroundImageUrl'];
       profileImageURl = args['profileImageUrl'];
-      _about = args['about'] ;
-      _displayname = args['displayname'] ;
+      _about = args['about'];
+      _displayname = args['displayname'];
     }
   }
-
 
   void updateDisplayname(String username, bool validation) {
     _displayname = username;
@@ -70,7 +71,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         isScrollControlled: true,
         builder: ((context) {
           return Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SocialMediaBottomSheet(
               platformName: selectedPlatform['platformName'],
               icon: selectedPlatform['icon'],
@@ -92,7 +94,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             socialMediaLinks = [...socialMediaLinks!, ...links];
           });
         } else {
-          CustomSnackbar(content: 'Maximum limit of 5 social media links reached.').show(context);
+          CustomSnackbar(
+                  content: 'Maximum limit of 5 social media links reached.')
+              .show(context);
         }
       }
     }
@@ -119,16 +123,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
 
-  ImageProvider selectImage() {
-    if (profileImageFile != null) {
-      return FileImage(profileImageFile!);
-    } else if (profileImageURl != null && profileImageURl!.isNotEmpty) {
-      return NetworkImage(profileImageURl!); 
-    } else {
-      return NetworkImage('https://addlogo.imageonline.co/image.jpg');
-    }
-  }
-
   void saveProfile() async {
     try {
       int statusCode = await updateUserApi(
@@ -143,11 +137,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
         showActiveComments: _switchValue2,
       );
 
+      var data = {
+        'backgroundImage': backgroundImageURl,
+        'backgroundImageFile' : backgroundImageFile,
+        'profilePicImage': profileImageURl,
+        'profileImageFile' :profileImageFile,
+        'socialMedia': socialMediaLinks,
+        'about' :_about,
+        'displayname' :_displayname,
+      };
+      print('data$data');
+
       if (statusCode == 200) {
-        Navigator.pop(context);
+        Navigator.of(context).pop(data);
       } else if (statusCode == 500) {
-         CustomSnackbar(content: 'Server Error').show(context);
-      } 
+        CustomSnackbar(content: 'Server Error').show(context);
+      }
     } catch (e) {
       CustomSnackbar(content: 'Error updating').show(context);
     }
@@ -203,7 +208,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 fit: BoxFit.cover,
                               )
                             : DecorationImage(
-                                image: NetworkImage('https://addlogo.imageonline.co/image.jpg'),
+                                image: NetworkImage(
+                                    'https://addlogo.imageonline.co/image.jpg'),
                                 fit: BoxFit.cover,
                               ),
                   ),
@@ -234,7 +240,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only( top: kIsWeb ? screenHeight * 0.35 - 40 : screenHeight * 0.25 - 40),
+              padding: EdgeInsets.only(
+                  top: kIsWeb
+                      ? screenHeight * 0.35 - 40
+                      : screenHeight * 0.25 - 40),
               child: Center(
                 child: Column(
                   children: [
@@ -243,7 +252,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundImage: selectImage(),
+                          backgroundImage: selectImage(profileImageFile, profileImageURl),
                         ),
                         Positioned(
                           bottom: 0,
@@ -279,9 +288,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           placeholder: 'Display name - optional',
                           wordLimit: 30,
                           initialBody: _displayname,
-                          tertiaryText: "This will be displayed to viewers of your profile page and does not change your username",
+                          tertiaryText:
+                              "This will be displayed to viewers of your profile page and does not change your username",
                         ),
-                       
                         SizedBox(height: 20),
                         CustomInput(
                           formKey: _aboutForm,

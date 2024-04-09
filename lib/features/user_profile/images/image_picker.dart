@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -16,3 +17,13 @@ Future<File?> pickImageFromFilePicker() async {
   }
 }
 
+
+  ImageProvider selectImage(File? ImageFile , String? ImageURL) {
+    if (ImageFile != null) {
+      return FileImage(ImageFile);
+    } else if (ImageURL != null && ImageURL.isNotEmpty) {
+      return NetworkImage(ImageURL);
+    } else {
+      return NetworkImage('https://addlogo.imageonline.co/image.jpg');
+    }
+  }
