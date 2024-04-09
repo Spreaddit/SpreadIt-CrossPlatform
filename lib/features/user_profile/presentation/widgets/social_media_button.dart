@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class SocialMediaButton extends StatelessWidget {
   final IconData icon;
   final String text;
-  final Color backgroundColor;
+  final Color iconColor;
+  final Color backgroundColor; 
   final bool enableClear;
   final VoidCallback? handleSelection;
   final VoidCallback? onClearPressed;
@@ -11,7 +12,8 @@ class SocialMediaButton extends StatelessWidget {
   const SocialMediaButton({
     required this.icon,
     required this.text,
-    required this.backgroundColor,
+    required this.iconColor,
+    this.backgroundColor = const Color(0xFFFBFBFB), 
     this.enableClear = false,
     this.handleSelection,
     this.onClearPressed,
@@ -21,18 +23,18 @@ class SocialMediaButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: handleSelection ?? () {},
-      icon: Icon(icon, color: backgroundColor),
+      icon: Icon(icon, color: iconColor),
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(text),
           if (enableClear)
             SizedBox(
-              width: 24, // Adjust this width as needed
-              height: 24, // Adjust this height as needed
+              width: 24, 
+              height: 24, 
               child: IconButton(
                 onPressed: onClearPressed,
-                icon: Icon(Icons.clear, size: 18), // Adjust the size here
+                icon: Icon(Icons.clear, size: 18),
                 padding: EdgeInsets.zero,
               ),
             ),
@@ -40,7 +42,7 @@ class SocialMediaButton extends StatelessWidget {
       ),
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(10.0),
-        backgroundColor: Color.fromARGB(255, 251, 251, 251),
+        backgroundColor: backgroundColor,
         foregroundColor: Colors.black,
       ),
     );

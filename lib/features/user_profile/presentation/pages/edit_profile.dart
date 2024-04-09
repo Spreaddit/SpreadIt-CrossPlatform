@@ -348,7 +348,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 return SocialMediaButton(
                                   icon: iconName,
                                   text: platformData['headerName'],
-                                  backgroundColor: color,
+                                  iconColor: color,
                                   enableClear: true,
                                   handleSelection: () {
                                     setState(() {

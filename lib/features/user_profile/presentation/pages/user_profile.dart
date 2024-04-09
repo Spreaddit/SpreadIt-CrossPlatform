@@ -253,6 +253,7 @@ void navigateToEditProfile(BuildContext context) {
                       follow : unfollowOrFollow,
                       onStartChatPressed: () => {},
                       editprofile: () => navigateToEditProfile(context),
+                      socialMediaLinks: socialMediaLinks,
                     ),
             ),
             SliverToBoxAdapter(

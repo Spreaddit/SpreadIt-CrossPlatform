@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
-import '../../../../user_info.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import '../../../generic_widgets/bottom_model_sheet.dart';
+import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
 import '../../../saved/data/save_or_unsave.dart';
 import '../../data/class_models/comments_class_model.dart';
@@ -16,12 +17,14 @@ class CommentWidget extends StatelessWidget {
     this.saved = false,
   });
 
-  void unsaveComment() async {
-    int statusCode = await saveOrUnsave(id: comment.id , type : 'comments');
+  void unsaveComment(BuildContext context) async {
+    int statusCode = await saveOrUnsave(id: comment.id, type: 'comments');
+    Navigator.pop(context);
     if (statusCode == 200) {
       print('Post unsaved successfully.');
     } else {
-      print('Error occurred while unsaving post.');
+      CustomSnackbar(content: "Error occured while trying to unsave")
+          .show(context);
     }
   }
 
@@ -101,8 +104,7 @@ class CommentWidget extends StatelessWidget {
                 ),
                 if (comment.media.isNotEmpty)
                   SizedBox(height: screenHeight * 0.02),
-                if (comment.media.isNotEmpty) 
-                Image.network(comment.media[0]),
+                if (comment.media.isNotEmpty) Image.network(comment.media[0]),
               ],
             ),
           ),
@@ -120,9 +122,14 @@ class CommentWidget extends StatelessWidget {
                       ],
                       text: ['Share', 'Unsave', 'Get reply notifications'],
                       onPressedList: [
-                        () => {},
-                        () => unsaveComment(),
-                        () => {}
+                        () {
+                          Navigator.pop(context); 
+                          sharePressed('Profile Link isa'); 
+                        },
+                        () => unsaveComment(context),
+                        () => {
+                              Navigator.pop(context),
+                            }
                       ],
                     );
                   },

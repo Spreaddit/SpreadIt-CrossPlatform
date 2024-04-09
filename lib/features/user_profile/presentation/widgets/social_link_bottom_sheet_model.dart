@@ -73,7 +73,7 @@ class SocialMediaBottomSheetContent extends StatelessWidget {
                   child: SocialMediaButton(
                     icon: icon,
                     text: platformName,
-                    backgroundColor: color,
+                    iconColor: color,
                   ),
                 ),
               ],
