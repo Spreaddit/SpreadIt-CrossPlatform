@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 
@@ -15,7 +14,7 @@ class JoinCommunityBtn extends StatefulWidget {
 
 class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
   late Map<String, dynamic> subscriptionData;
-  bool isJoined = Random().nextBool();
+  bool isJoined = false;
 
   @override
   void initState() {
@@ -23,14 +22,23 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
     fetchData();
   }
 
-  Future<void> fetchData() async {}
+  Future<void> fetchData() async {
+    String FAKE_TOKEN = "";
+    subscriptionData =
+        await getCommunitySubStatus(widget.communityName, FAKE_TOKEN);
+    if (subscriptionData["isSubscribed"] == -1) {
+      CustomSnackbar(content: "Failed to retrieve subscription data")
+          .show(context);
+    } else {
+      setState(() {
+        isJoined = subscriptionData["isSubscribed"];
+      });
+    }
+  }
 
   void handleBtnPress() {
     if (!isJoined) {
-      setState(() {
-        isJoined = true;
-      });
-      CustomSnackbar(content: "Successfully Joined").show(context);
+      subscribe();
     } else {
       showDialog(
         context: context,
@@ -57,6 +65,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
                   child: Button(
                     onPressed: () {
                       unsubscribe();
+                      Navigator.of(context).pop();
                     },
                     text: 'Leave',
                     backgroundColor: const Color.fromARGB(255, 255, 85, 0),
@@ -71,13 +80,39 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
     }
   }
 
-  void unsubscribe()
-  {
-    setState(() {
-      isJoined = false;
-    });
-    Navigator.of(context).pop();
-    CustomSnackbar(content: "Successfully Left").show(context);
+  void subscribe() async {
+    String userId = "";
+    var postRequestInfo = {"name": widget.communityName, "userId": userId};
+    var response = await postSubscribeRequest(postRequestInfo: postRequestInfo);
+    if (response == 200) {
+      setState(() {
+        isJoined = true;
+      });
+      CustomSnackbar(content: "Successfully Joined").show(context);
+    } else {
+      CustomSnackbar(content: "Failed to Join").show(context);
+    }
+  }
+
+  void unsubscribe() async {
+    String token = "";
+    var postRequestInfo = {
+      "communityName": widget.communityName,
+      "token": token
+    };
+    var response =
+        await postUnsubscribeRequest(postRequestInfo: postRequestInfo);
+    if (response == 200) {
+      setState(() {
+        isJoined = false;
+      });
+      CustomSnackbar(content: "Successfully Left").show(context);
+    } else {
+      print(response);
+      setState(() {
+        CustomSnackbar(content: "Failed to leave").show(context);
+      });
+    }
   }
 
   @override

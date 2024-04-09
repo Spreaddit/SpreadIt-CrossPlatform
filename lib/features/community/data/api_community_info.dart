@@ -28,7 +28,6 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
         queryParameters: {"communityName": communityName});
     if (response.statusCode == 200) {
       {
-        //print(response.data);
         print(response.statusMessage);
         return response.data;
       }
