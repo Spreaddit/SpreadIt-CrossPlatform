@@ -42,7 +42,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           List<Map<String, dynamic>>.from(args['socialMediaLinks']);
       _socialMediaLinksLoaded = true;
       backgroundImageURl = args['backgroundImageUrl'];
+      backgroundImageFile = args['backgroundImageFile'];
       profileImageURl = args['profileImageUrl'];
+      profileImageFile = args['profileImageFile'];
       _about = args['about'];
       _displayname = args['displayname'];
     }
@@ -146,8 +148,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         'about' :_about,
         'displayname' :_displayname,
       };
-      print('data$data');
-
       if (statusCode == 200) {
         Navigator.of(context).pop(data);
       } else if (statusCode == 500) {

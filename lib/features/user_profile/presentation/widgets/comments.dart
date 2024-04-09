@@ -90,10 +90,12 @@ class CommentWidget extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                             ),
-                            Image.asset(
+                            Center(
+                            child:Image.asset(
                               "assets/images/upvoteicon.png",
                               height: screenHeight * 0.015,
                               color: Colors.grey,
+                            ),
                             ),
                           ],
                         )

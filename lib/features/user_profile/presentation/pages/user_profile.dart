@@ -136,7 +136,9 @@ final returnedData = await Navigator.of(context).pushNamed(
     '/edit-profile',
     arguments: {
       'backgroundImageUrl': background,
+      'backgroundImageFile': backgroundImageFile,
       'profileImageUrl': profilePicture,
+      'profileImageFile': profileImageFile,
       'about': about,
       'displayname': displayName,
       'socialMediaLinks': socialMediaLinks,
@@ -151,8 +153,6 @@ final returnedData = await Navigator.of(context).pushNamed(
       socialMediaLinks = returnedData['socialMedia'] ?? socialMediaLinks;
       about = returnedData['about'] ?? about;
       displayName = returnedData['displayname'] ?? displayName;
-      print('hola');
-      print('profilePicture $profilePicture profileImageFile $profileImageFile');
     });
   }
 }

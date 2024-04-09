@@ -80,23 +80,23 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               width: screenWidth,
               height: _headerHeight,
               child: ShaderMask(
-                blendMode: BlendMode.srcATop,
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.9),
-                    ],
-                    stops: [0.0, 0.7],
-                  ).createShader(bounds);
-                },
-                child: Image.network(
-                  widget.backgroundImage,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  blendMode: BlendMode.srcATop,
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.9),
+                      ],
+                      stops: [0.0, 0.7],
+                    ).createShader(bounds);
+                  },
+                  child: Image(
+                    image: selectImage(
+                      widget.backgroundImageFile, widget.backgroundImage),
+                    fit: BoxFit.cover,
+                  )),
             ),
             Container(
               color: Colors.transparent,
@@ -181,7 +181,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                 : screenHeight * 0.08),
                         CircleAvatar(
                           radius: photosize,
-                          backgroundImage: selectImage(widget.profileImageFile, widget.profilePicture),
+                          backgroundImage: selectImage(
+                              widget.profileImageFile, widget.profilePicture),
                         ),
                         SizedBox(
                             height: kIsWeb
@@ -276,7 +277,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                         SizedBox(
+                        SizedBox(
                             height: kIsWeb
                                 ? screenHeight * 0.02
                                 : screenHeight * 0.02),
@@ -286,10 +287,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           children: widget.socialMediaLinks.asMap().entries.map(
                             (entry) {
                               final platformData = entry.value;
-                              final platformName =
-                                  platformData['platformName'];
-                              final iconName = PlatformIconMapper.getIconData(
-                                  platformName);
+                              final platformName = platformData['platformName'];
+                              final iconName =
+                                  PlatformIconMapper.getIconData(platformName);
                               final color =
                                   PlatformIconMapper.getColor(platformName);
                               return SocialMediaButton(
@@ -297,7 +297,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                 text: platformData['headerName'],
                                 iconColor: color,
                                 backgroundColor: Colors.white70,
-                                handleSelection: () {launchURL(platformData['url']);  },
+                                handleSelection: () {
+                                  launchURL(platformData['url']);
+                                },
                               );
                             },
                           ).toList(),
