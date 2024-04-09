@@ -103,7 +103,6 @@ class _CreatePostState extends State<CreatePost> {
   void addLink() {
     setState(() {
       isLinkAdded = !isLinkAdded;
-      print(isLinkAdded);
     });
     if (isLinkAdded) {
       setLastPressedIcon(Icons.attachment_rounded);
@@ -113,8 +112,11 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
-  void cancelImageOrVideo (File? imageOrVideo) {
-    imageOrVideo = null;
+  void cancelImageOrVideo () {
+    setState(() {
+      image = null;
+      video = null;
+    });
     setLastPressedIcon(null);
   }
 
@@ -194,12 +196,12 @@ class _CreatePostState extends State<CreatePost> {
                 if (image != null)
                   ImageOrVideoWidget(
                     imageOrVideo: image!, 
-                    onIconPress: () {cancelImageOrVideo(image!);},
+                    onIconPress: cancelImageOrVideo,
                   ),
                 if (video != null)
                    ImageOrVideoWidget(
                     imageOrVideo: video!,
-                    onIconPress: () {cancelImageOrVideo(video!);},
+                    onIconPress: cancelImageOrVideo,
                   ),
                 if (isLinkAdded)
                    LinkTextField(
@@ -265,8 +267,8 @@ class _CreatePostState extends State<CreatePost> {
 }
 
 /* TODOs 
-0) link validations (el input fields etgannenet)
+1) link validations (el input fields etgannenet)
 2) ashouf el video msh shaghal leih
 3) ab3at el haga di kollaha lel final content page (almost done)
-5) unit testing 
+4) unit testing 
  */

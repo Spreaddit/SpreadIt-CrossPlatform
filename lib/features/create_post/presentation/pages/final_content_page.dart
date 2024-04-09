@@ -359,8 +359,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 }
 
 /* TODOs 
-2) ashouf el video msh shaghal leih
-3) a-check el wel poll wel image wel video byetne2lo walla laa aw han2elhom ezzay
-4) mock service 
-5) unit testing 
+1) ashouf el video msh shaghal leih
+2) a-check el image wel video byetne2lo walla laa aw han2elhom ezzay
+3) mock service 
+4) unit testing 
  */
