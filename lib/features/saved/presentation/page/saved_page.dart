@@ -41,6 +41,12 @@ class _SavedPageState extends State<SavedPage> {
     }
   }
 
+  void removeCommentFromList(Comment comment) {
+    setState(() {
+      commentsList.remove(comment);
+    });
+  }
+
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
@@ -57,6 +63,7 @@ class _SavedPageState extends State<SavedPage> {
               return CommentWidget(
                 comment: comment,
                 saved: true,
+                onPressed: () => removeCommentFromList(comment),
               );
             },
             childCount: commentsList.length,
