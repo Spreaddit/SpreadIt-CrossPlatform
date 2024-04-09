@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
@@ -67,7 +68,7 @@ class _PostHeader extends HookWidget {
             alignment: WrapAlignment.spaceBetween,
             children: [
               Text(
-                username,
+                "r/$community",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(dateFormatted.value),
@@ -127,6 +128,78 @@ class _PostBody extends StatelessWidget {
   }
 }
 
+class _ImageCaruosel extends StatefulWidget {
+  final List<Attachment> attachments;
+  _ImageCaruosel({
+    required this.attachments,
+  });
+
+  @override
+  State<_ImageCaruosel> createState() => _ImageCaruoselState();
+}
+
+class _ImageCaruoselState extends State<_ImageCaruosel> {
+  int _currentImageIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: MediaQuery.of(context).size.width / (16 / 9),
+            aspectRatio: 16 / 9,
+            viewportFraction: 1,
+            enableInfiniteScroll: true,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentImageIndex = index;
+              });
+            },
+          ),
+          items: widget.attachments.map((i) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        10.0), // Adjust the border radius as needed
+                    child: Image(
+                      image: NetworkImage(i.link),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widget.attachments.asMap().entries.map((entry) {
+            return Container(
+              width: 20.0,
+              height: 5.0,
+              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: entry.key == _currentImageIndex
+                    ? Color.fromARGB(255, 255, 68, 0)
+                    : Colors.grey,
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
+
 class _PostContent extends StatelessWidget {
   final String postType;
   final String? content;
@@ -146,31 +219,16 @@ class _PostContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (postType == "post") {
+      print("post Category Endpoint in content: $content");
       return Text(
-        content != null && content!.isNotEmpty
-            ? content![content!.length - 1]
-            : "",
+        content ?? "",
         overflow: TextOverflow.ellipsis,
         maxLines: !isFullView ? 5 : null,
       );
     } else if (postType == "attachment") {
       if (attachments!.isNotEmpty) {
         if (attachments![0].type == "image") {
-          return CarouselSlider(
-            options: CarouselOptions(height: 400.0),
-            items: attachments!.map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(color: Colors.amber),
-                    child: Image(image: NetworkImage(i.link)),
-                  );
-                },
-              );
-            }).toList(),
-          );
+          return _ImageCaruosel(attachments: attachments!);
         } else {
           return VideoPlayerScreen(videoURL: attachments![0].link);
         }
@@ -212,89 +270,23 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoAppState extends State<VideoPlayerScreen> {
   late VideoPlayerController _controller;
-  late Duration videoLength;
-  late Duration videoPosition;
-  late double volume = 0.5;
+  late FlickManager flickManager;
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(
       Uri.parse(widget.videoURL),
-    )
-      ..addListener(() => setState(() {
-            videoPosition = _controller.value.position;
-          }))
-      ..initialize().then((_) => setState(() {
-            videoLength = _controller.value.duration;
-          }));
+    );
+    flickManager = FlickManager(videoPlayerController: _controller);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Attachment Video',
-      home: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              if (_controller.value.isInitialized) ...[
-                AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                ),
-                VideoProgressIndicator(
-                  _controller,
-                  allowScrubbing: true,
-                  padding: EdgeInsets.all(10),
-                ),
-                Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(_controller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow),
-                      onPressed: () {
-                        setState(() {
-                          _controller.value.isPlaying
-                              ? _controller.pause()
-                              : _controller.play();
-                        });
-                      },
-                    ),
-                    Text(
-                        '${convertToMinutesSeconds(videoPosition)} / ${convertToMinutesSeconds(videoLength)}'),
-                    SizedBox(width: 10),
-                    Icon(animatedVolumeIcon(volume)),
-                    Slider(
-                      value: volume,
-                      min: 0,
-                      max: 1,
-                      onChanged: (_volume) => setState(() {
-                        volume = _volume;
-                        _controller.setVolume(_volume);
-                      }),
-                    ),
-                    Spacer(),
-                    IconButton(
-                        icon: Icon(
-                          Icons.loop,
-                          color: _controller.value.isLooping
-                              ? const Color.fromARGB(255, 255, 68, 0)
-                              : Colors.black,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _controller
-                                .setLooping(!_controller.value.isLooping);
-                          });
-                        }),
-                  ],
-                )
-              ],
-            ],
-          ),
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
       ),
     );
   }
