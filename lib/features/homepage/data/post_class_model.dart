@@ -13,7 +13,7 @@ class Post {
   final List<String> content;
   final String community;
   final String type;
-  final List<PollOption> pollOptions;
+  final List<PollOptions> pollOptions;
   final String pollVotingLength;
   final DateTime pollExpiration;
   final bool isPollEnabled;
@@ -74,7 +74,7 @@ class Post {
       community: json['community'],
       type: json['type'],
       pollOptions: (json['pollOptions'] as List<dynamic>?)
-              ?.map((option) => PollOption.fromJson(option))
+              ?.map((option) => PollOptions.fromJson(option))
               .toList() ??
           [],
       pollVotingLength: json['pollVotingLength'],
@@ -96,17 +96,17 @@ class Post {
   }
 }
 
-class PollOption {
+class PollOptions {
   final String option;
   final int votes;
 
-  PollOption({
+  PollOptions({
     required this.option,
     required this.votes,
   });
 
-  factory PollOption.fromJson(Map<String, dynamic> json) {
-    return PollOption(
+  factory PollOptions.fromJson(Map<String, dynamic> json) {
+    return PollOptions(
       option: json['option'],
       votes: json['votes'],
     );

@@ -28,46 +28,50 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(5),
       child: ElevatedButton(
         onPressed: showSortingMenu,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
           shadowColor: Colors.transparent,
+          foregroundColor: Colors.transparent,
           padding: EdgeInsets.all(3),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(0),
           ),
         ),
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  icons[selectedCategory],
-                  color: Color.fromARGB(255, 70, 70, 70),
-                ),
-                SizedBox(
-                  width: 7,
-                ),
-                Text(
-                  "${PostCategories.values[selectedCategory].toString().split('.').last.toUpperCase()} POSTS",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(5),
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icons[selectedCategory],
                     color: Color.fromARGB(255, 70, 70, 70),
                   ),
-                ),
-              ],
-            ),
-            Icon(
-              Icons.keyboard_arrow_down_sharp,
-              color: Color.fromARGB(255, 70, 70, 70),
-            ),
-          ],
+                  SizedBox(
+                    width: 7,
+                  ),
+                  Text(
+                    "${PostCategories.values[selectedCategory].toString().split('.').last.toUpperCase()} POSTS",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 70, 70, 70),
+                    ),
+                  ),
+                ],
+              ),
+              Icon(
+                Icons.keyboard_arrow_down_sharp,
+                color: Color.fromARGB(255, 70, 70, 70),
+              ),
+            ],
+          ),
         ),
       ),
     );

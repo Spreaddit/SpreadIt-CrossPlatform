@@ -210,7 +210,7 @@ packages:
     source: hosted
     version: "4.10.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
@@ -438,6 +438,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  flutter_polls:
+    dependency: "direct main"
+    description:
+      name: flutter_polls
+      sha256: "29bf74ea5096946c2861f76f06d65a690013b8aa599c21ff6baf747b045074c4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -776,6 +784,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  percent_indicator:
+    dependency: transitive
+    description:
+      name: percent_indicator
+      sha256: c37099ad833a883c9d71782321cb65c3a848c21b6939b6185f0ff6640d05814c
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   platform:
     dependency: transitive
     description:
@@ -1166,13 +1182,13 @@ packages:
     source: hosted
     version: "3.1.1"
   uuid:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: uuid
-      sha256: cd210a09f7c18cbe5a02511718e0334de6559871052c90a90c0cca46a4aa81c8
+      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.3"
+    version: "4.4.0"
   vector_math:
     dependency: transitive
     description:

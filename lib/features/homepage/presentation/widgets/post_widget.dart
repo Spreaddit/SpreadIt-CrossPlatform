@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_polls/flutter_polls.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:video_player/video_player.dart';
+import 'package:collection/collection.dart';
+import 'package:uuid/uuid.dart';
 
 /*
 TODO: create options tab for PostWidget(shows join community options when pressed)
@@ -95,7 +99,10 @@ class _PostBody extends StatelessWidget {
   final List<Attachment>? attachments;
   final String? link;
   final bool isFullView;
-  //TODO: Handle poll display
+  final List<PollOptions>? pollOption;
+  final String? pollVotingLength;
+  final bool? isPollEnabled;
+  final int postId;
 
   _PostBody({
     required this.title,
@@ -104,7 +111,10 @@ class _PostBody extends StatelessWidget {
     this.attachments,
     this.link,
     required this.isFullView,
-    //TODO: Handle poll display
+    this.isPollEnabled,
+    this.pollOption,
+    this.pollVotingLength,
+    required this.postId,
   });
 
   @override
@@ -128,6 +138,10 @@ class _PostBody extends StatelessWidget {
           attachments: attachments,
           link: link,
           isFullView: isFullView,
+          pollOption: pollOption,
+          isPollEnabled: isPollEnabled ?? true,
+          pollVotingLength: pollVotingLength,
+          postId: postId,
         ),
       ),
     );
@@ -209,10 +223,13 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
 class _PostContent extends StatelessWidget {
   final String postType;
   final String? content;
+  final List<PollOptions>? pollOption;
+  final String? pollVotingLength;
+  final bool isPollEnabled;
   final List<Attachment>? attachments;
   final String? link;
   final bool isFullView;
-  //TODO: Handle poll display
+  final int postId;
 
   _PostContent({
     required this.postType,
@@ -220,6 +237,10 @@ class _PostContent extends StatelessWidget {
     this.content,
     this.attachments,
     this.link,
+    this.isPollEnabled = true,
+    this.pollOption,
+    this.pollVotingLength,
+    required this.postId,
   });
 
   @override
@@ -256,8 +277,35 @@ class _PostContent extends StatelessWidget {
         ),
       );
     } else {
-      return Text("Handle Poll Here");
-      //TODO:HANDLE POLL CREATION
+      return FlutterPolls(
+        pollTitle: Text(""),
+        pollId: Uuid().v1(),
+        onVoted: (chosenPollOption, newTotalVotes) {
+          return handlePolls(
+              postId: postId,
+              pollOption: PollOptions(
+                option:
+                    pollOption![int.parse(chosenPollOption.id ?? "0")].option,
+                votes: newTotalVotes,
+              ));
+        },
+        pollOptionsSplashColor: Colors.white,
+        pollEnded: !isPollEnabled,
+        votedProgressColor: Colors.grey,
+        votedBackgroundColor: Colors.grey.withOpacity(0.2),
+        leadingVotedProgessColor: Color.fromARGB(199, 255, 68, 0),
+        pollOptions: pollOption!.mapIndexed(
+          (index, option) {
+            return PollOption(
+              id: index.toString(),
+              title: Text(
+                option.option,
+              ),
+              votes: option.votes,
+            );
+          },
+        ).toList(),
+      );
     }
   }
 }
@@ -397,7 +445,10 @@ class PostWidget extends StatelessWidget {
           link: post.link,
           postType: post.type,
           isFullView: isFullView,
-          //TODO: handle poll details
+          pollOption: post.pollOptions,
+          isPollEnabled: post.isPollEnabled,
+          pollVotingLength: post.pollVotingLength,
+          postId: post.postId,
         ),
         _PostInteractions(
           votesCount: post.votesUpCount - post.votesDownCount,
