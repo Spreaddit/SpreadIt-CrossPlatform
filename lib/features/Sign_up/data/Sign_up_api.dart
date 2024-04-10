@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import '../../../user_info.dart';
 import '../../user.dart';
 
 /// Base URL for the API.
@@ -19,13 +20,10 @@ Future<int> signUpApi({
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
-      String accessToken = response.data['access_token'];
-      print("access token:$accessToken");
-      String tokenExpirationDate = response.data['access_token'];
-      print("token expiration date:$tokenExpirationDate");
       User user = User.fromJson(response.data['user']);
+      UserSingleton().setUser(user);
+      UserSingleton().setAccessToken(response.data['access_token'], DateTime.parse(response.data['token_expiration_date']));
 
-      // User user = User.fromJson(jsonDecode(jsonMap));
       print('User ID: ${user.id}');
       return 200;
     } else if (response.statusCode == 409) {
