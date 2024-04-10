@@ -26,6 +26,22 @@ class ReportModal {
       "Spam"
     ]);
 
+    extraText.addAll([
+      'Posts, comments, or behavior that breaks r/$communityName rules',
+      'Harassing, bullying, intimidationg, or abusing an individual or group of people with the result of discouraging them from participating.',
+      'Encouraging, glorifying or inciting violence or physical harm againts individuals or groups of people, places, or animals.',
+      'Promoting hate or inciting violence based on identity or vulnerability.',
+      'Sharing or soliciting content involving abuse, neglect, or sexualization of minors or any predatory or inappropriate behavior towards minors.',
+      'Sharing or threatening to share private, personal, or confidential information about someone.',
+      'Sharing, threatening to share, or soliciting intimate or sexually-explicit content of someone without their consent (including fake or "lookalike" pornography).',
+      'Soliciting or facilitating transactions or gifts of illegal or prohibited goods and services.',
+      'Impersonating an individual or entity in a misleading or deceptive way. This includes deepfakes, manipulated content, or false attributions.',
+      'Content posted to Reddit that infringes a copyright you own or control. (Note: Only the copyright owner or an authorized representative can submit a report.)',
+      'Content posted to Reddit that infringes a trademark you own or control. (Note: Only the trademark owner or an authorized representative can submit a report.)',
+      'Behavior or comments that make you think someone may be considering suicide or seriously hurting themselves.',
+      'Repeated, unwanted, or unsolicited manual or automated actions that negatively affect redditors, communities, and the Reddit platform.',
+    ]);
+
     hasSubReasons = List.generate(
       mainViolations.length,
       (int index) => (index == 3 || index == 7 || index == 11) ? false : true,
@@ -43,6 +59,7 @@ class ReportModal {
   var selectedIndex = -1;
   var selectedSubIndex = -1;
   final List<String> mainViolations = [];
+  final List<String> extraText = [];
   List<MainReportOption> mainReportOptions = [];
   List<bool> hasSubReasons = [];
 
@@ -92,6 +109,11 @@ class ReportModal {
                     ),
                     MainReportSection(mainReportOptions: mainReportOptions),
                     ModalBottomBar(
+                      extraTextTitle: (selectedIndex != -1)
+                          ? mainViolations[selectedIndex]
+                          : '',
+                      extraText:
+                          (selectedIndex != -1) ? extraText[selectedIndex] : '',
                       buttonText:
                           (selectedIndex == -1 || hasSubReasons[selectedIndex])
                               ? 'Next'
