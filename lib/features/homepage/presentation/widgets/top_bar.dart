@@ -75,18 +75,22 @@ class TopBar extends AppBar {
               ),
             ),
           ],
-          leading: IconButton(
-            onPressed: () {
-              if (currentPage != CurrentPage.home &&
-                  currentPage != CurrentPage.popular) {
-                Navigator.of(context).pushNamed('/home');
-              }
-            },
-            icon: Icon(
-              currentPage == CurrentPage.home ||
-                      currentPage == CurrentPage.popular
-                  ? Icons.menu
-                  : Icons.arrow_back,
+          leading: Builder(
+            builder: (context) => IconButton(
+              onPressed: () {
+                if (currentPage != CurrentPage.home &&
+                    currentPage != CurrentPage.popular) {
+                  Navigator.of(context).pushNamed('/home');
+                } else {
+                  Scaffold.of(context).openDrawer();
+                }
+              },
+              icon: Icon(
+                currentPage == CurrentPage.home ||
+                        currentPage == CurrentPage.popular
+                    ? Icons.menu
+                    : Icons.arrow_back,
+              ),
             ),
           ),
         );

@@ -352,28 +352,6 @@ class _VideoAppState extends State<VideoPlayerScreen> {
   }
 }
 
-String convertToMinutesSeconds(Duration duration) {
-  final parsedMinutes = duration.inMinutes < 10
-      ? '0${duration.inMinutes}'
-      : duration.inMinutes.toString();
-
-  final seconds = duration.inSeconds % 60;
-
-  final parsedSeconds =
-      seconds < 10 ? '0${seconds % 60}' : (seconds % 60).toString();
-  return '$parsedMinutes:$parsedSeconds';
-}
-
-IconData animatedVolumeIcon(double volume) {
-  if (volume == 0) {
-    return Icons.volume_mute;
-  } else if (volume < 0.5) {
-    return Icons.volume_down;
-  } else {
-    return Icons.volume_up;
-  }
-}
-
 /// This widget is responsible for displaying post interactions bottom bar
 /// count of shares, upvotes and comments is displayed here.
 class _PostInteractions extends HookWidget {
