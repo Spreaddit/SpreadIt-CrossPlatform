@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ModalBottomBar extends StatelessWidget {
-  ModalBottomBar(
-      {Key? key,
-      required this.buttonText,
-      required this.onPressed,
-      this.extraTextTitle = "",
-      this.extraText = ""})
-      : super(key: key);
+  ModalBottomBar({
+    Key? key,
+    required this.buttonText,
+    required this.onPressed,
+    this.extraTextTitle = "",
+    this.extraText = "",
+  }) : super(key: key);
 
   final String buttonText;
   final Function? onPressed;

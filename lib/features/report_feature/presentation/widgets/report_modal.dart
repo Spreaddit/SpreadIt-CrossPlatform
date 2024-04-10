@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/report_feature/data/api_report.dart';
 import 'package:spreadit_crossplatform/features/report_feature/data/violation_and_sub_violations.dart';
+import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/block_reported_user.dart';
 import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/main_report_option.dart';
 import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/main_report_section.dart';
 import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/modal_bottom_bar.dart';
 import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/sub_report_section.dart';
+import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 
 class ReportModal {
   ReportModal(this.buildContext, this.communityName, this.postId,
-      this.commentId, this.isReportingPost) {
+      this.commentId, this.isReportingPost, this.reportedUserName) {
     mainViolations.addAll([
       "Breaks r/$communityName rules",
       "Harassment",
@@ -58,8 +60,10 @@ class ReportModal {
   bool isReportingPost;
   var selectedIndex = -1;
   var selectedSubIndex = -1;
+  var blockIsChecked = false;
   final List<String> mainViolations = [];
   final List<String> extraText = [];
+  final String reportedUserName;
   List<MainReportOption> mainReportOptions = [];
   List<bool> hasSubReasons = [];
 
@@ -185,6 +189,7 @@ class ReportModal {
   }
 
   void showDonePage(BuildContext context) {
+    blockIsChecked = false;
     showModalBottomSheet(
         isScrollControlled: true,
         backgroundColor: Colors.white,
@@ -235,10 +240,18 @@ class ReportModal {
                       ),
                     ),
                     Spacer(),
+                    BlockReportedUser(
+                        reportedUserName: reportedUserName,
+                        onValChanged: (bool newVal) {
+                          setModalState(() {
+                            blockIsChecked = newVal;
+                          });
+                        },
+                        blockIsChecked: blockIsChecked),
                     ModalBottomBar(
                       buttonText: "Done",
                       onPressed: () {
-                        Navigator.pop(context);
+                        blockReportedUser(context);
                       },
                     )
                   ],
@@ -274,5 +287,16 @@ class ReportModal {
     } else {
       CustomSnackbar(content: "Failed to report").show(context);
     }
+  }
+
+  void blockReportedUser(BuildContext context) {
+    print(blockIsChecked);
+    if (blockIsChecked) {
+      // TODO CHECK WHETHER TO PASS ID OR USERNAME
+      // TODO ASK IF REQUEST RESPONSE STATUS SHOULD BE RETURNED HERE
+      interactWithUser(
+          userId: reportedUserName, action: InteractWithUsersActions.report);
+    }
+    Navigator.pop(context);
   }
 }
