@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
             ),
             PostFeed(
               postCategory: PostCategories.best,
+              showSortTypeChange: true,
             ),
           ]),
         ),

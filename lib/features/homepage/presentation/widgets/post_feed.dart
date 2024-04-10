@@ -81,8 +81,13 @@ class _PostFeedState extends State<PostFeed> {
       child: Column(
         children: [
           if (widget.showSortTypeChange)
-            SortTypeDropdown(
-              onCategoryChanged: onCategoryChanged,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SortTypeMenu(
+                  onCategoryChanged: onCategoryChanged,
+                ),
+              ],
             ),
           ListView.builder(
             physics: NeverScrollableScrollPhysics(),
