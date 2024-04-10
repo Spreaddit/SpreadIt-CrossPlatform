@@ -27,6 +27,16 @@ Future <int> submitPost(
     else {
       pollVotingLength + ' Days';
     }
+    File? fileType;
+    if(images != null) {
+      fileType = images;
+    }
+    else if(videos != null) {
+      fileType = videos;
+    }
+    else {
+      fileType = null;
+    }
     final response = await Dio().post(
       apiUrl,
       options:Options(
@@ -41,8 +51,7 @@ Future <int> submitPost(
         "pollOptions":pollOptions,
         "pollVotinglength":pollVotingLength,
         "link":link,
-        "images":images,
-        "videos":videos,
+        "fileType":fileType,
         "isSpoiler":isSpoiler,
         "isNSFW":isNSFW,
       }
