@@ -152,12 +152,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       _finalLinkForm.currentState!.save();
     }
     });
+    validateLink(finalLink!);
   }
 
   void updateButtonState() {
-    setState(() {
-      isButtonEnabled = validatePostTitle(finalTitle);   // TODO : check link validation
-    });
+    if (finalLink == null) {
+      setState(() {
+        isButtonEnabled = validatePostTitle(finalTitle);
+      });
+    }
+    else {
+      isButtonEnabled = validatePostTitle(finalTitle) && validateLink(finalLink!);  
+    }
   }
 
   void setLastPressedIcon(IconData? passedIcon) {
@@ -354,7 +360,15 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     hintText: 'URL',
                     initialBody: widget.link,
                     onIconPress: addLink,
-                  ),   
+                  ),
+                if (finalIsLinkAdded  && finalLink != null && !validateLink(finalLink!)) 
+                  Container(
+                    margin:EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                    ),
+                    child: Text('Oops, this link isn\'t valid. Double-check, and try again.'),
+                  ),      
                 PostContent(
                   formKey: _finalContentForm,
                   onChanged:  updateContent,

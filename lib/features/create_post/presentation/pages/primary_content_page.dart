@@ -84,7 +84,7 @@ class _CreatePostState extends State<CreatePost> {
       });
     }
     else {
-      isButtonEnabled = validatePostTitle(title); //&& validateLink(link!);  
+      isButtonEnabled = validatePostTitle(title) && validateLink(link!);  
     }
   }
 
