@@ -293,7 +293,7 @@ class _PostContent extends StatelessWidget {
         pollEnded: !isPollEnabled,
         votedProgressColor: Colors.grey,
         votedBackgroundColor: Colors.grey.withOpacity(0.2),
-        leadingVotedProgessColor: Color.fromARGB(199, 255, 68, 0),
+        leadingVotedProgessColor: Color.fromARGB(230, 255, 68, 0),
         pollOptions: pollOption!.mapIndexed(
           (index, option) {
             return PollOption(
