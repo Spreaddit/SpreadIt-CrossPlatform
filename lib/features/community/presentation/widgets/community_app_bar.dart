@@ -27,8 +27,8 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Image(
               image: (bannerImageLink != "")
                   ? NetworkImage(bannerImageLink)
-                  : NetworkImage(
-                      "https://cdn.pixabay.com/photo/2015/10/26/12/42/reddit-1007072_1280.jpg"),
+                  : AssetImage('assets/images/LogoSpreadIt.png')
+                      as ImageProvider,
               fit: BoxFit.cover,
             ),
           ),
@@ -66,12 +66,12 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: blurImage
           ? Padding(
-            padding: EdgeInsets.only(left: 8),
-            child: Text(
+              padding: EdgeInsets.only(left: 8),
+              child: Text(
                 "r/$communityName",
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-          )
+            )
           : null,
     );
   }

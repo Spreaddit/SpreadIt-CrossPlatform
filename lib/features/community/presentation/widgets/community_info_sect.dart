@@ -61,8 +61,8 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
                     CircleAvatar(
                       foregroundImage: (communityImageLink != "")
                           ? NetworkImage(communityImageLink)
-                          : NetworkImage(
-                              "https://cdn-icons-png.flaticon.com/512/5968/5968908.png"),
+                          : AssetImage('assets/images/LogoSpreadIt.png')
+                              as ImageProvider,
                     ),
                     SizedBox(
                       width: 8,

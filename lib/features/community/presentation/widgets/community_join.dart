@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class JoinCommunityBtn extends StatefulWidget {
   JoinCommunityBtn({Key? key, required this.communityName}) : super(key: key);
@@ -81,7 +83,8 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
   }
 
   void subscribe() async {
-    String userId = "";
+    User? currentUser = UserSingleton().getUser();
+    String? userId = currentUser?.id;
     var postRequestInfo = {"name": widget.communityName, "userId": userId};
     var response = await postSubscribeRequest(postRequestInfo: postRequestInfo);
     if (response == 200) {
@@ -95,10 +98,10 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
   }
 
   void unsubscribe() async {
-    String token = "";
+    String? accessToken = UserSingleton().getAccessToken();
     var postRequestInfo = {
       "communityName": widget.communityName,
-      "token": token
+      "token": accessToken
     };
     var response =
         await postUnsubscribeRequest(postRequestInfo: postRequestInfo);

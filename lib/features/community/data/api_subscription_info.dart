@@ -1,12 +1,22 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<Map<String, dynamic>> getCommunitySubStatus(
     String communityName, String userToken) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
-        '$communityApiUrlGalal/community/is-subscribed',
-        queryParameters: {"communityName": communityName, "token": userToken});
+      '$communityApiUrlGalal/community/is-subscribed',
+      queryParameters: {
+        "communityName": communityName,
+      },
+      options: Options(
+        headers: {
+          'token': accessToken,
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       {
         print(response.statusMessage);
