@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> getCommunitySubStatus(
       },
       options: Options(
         headers: {
-          'token': accessToken,
+          'token': 'Bearer $accessToken',
         },
       ),
     );
