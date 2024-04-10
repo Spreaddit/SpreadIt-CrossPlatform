@@ -19,10 +19,10 @@ class UpVoteButton extends HookWidget {
     return GestureDetector(
       child: IconButton(
         onPressed: upVote,
-        icon: Image.asset(
-          "assets/images/upvoteicon.png",
-          width: 18,
-          height: 24,
+        icon: Icon(
+          Icons.arrow_upward,
+          size: 24.0,
+          color: Color.fromARGB(255, 255, 68, 0),
         ),
       ),
     );
@@ -42,10 +42,9 @@ class DownVoteButton extends HookWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: downVote,
-      icon: Image.asset(
-        "assets/images/downvoteicon.png",
-        width: 18,
-        height: 24,
+      icon: Icon(
+        Icons.arrow_downward,
+        size: 24.0,
       ),
     );
   }
