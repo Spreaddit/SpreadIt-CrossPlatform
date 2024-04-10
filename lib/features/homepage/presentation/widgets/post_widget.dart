@@ -14,23 +14,12 @@ import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
-/*
-TODO: create options tab for PostWidget(shows join community options when pressed)
-
-class PostOptions extends StatefulWidget {
-bool isJoinCommunityVisible;
-}
-*/
-
-/// This widget is responsible for displaying post header:
-/// (e.g., user info and date of posting)
 class _PostHeader extends HookWidget {
   final String username;
   final String userId;
   final DateTime date;
   final String profilePic;
   final String community;
-  //TODO:final PostOptions options;
 
   _PostHeader({
     required this.username,
@@ -38,7 +27,6 @@ class _PostHeader extends HookWidget {
     required this.date,
     required this.profilePic,
     required this.community,
-    //TODO:required this.options,
   });
 
   @override
@@ -83,7 +71,7 @@ class _PostHeader extends HookWidget {
           leading: CircleAvatar(
             backgroundImage: NetworkImage(profilePic),
           ),
-          trailing: Icon(Icons.more_horiz),
+          trailing: Icon(Icons.more_vert), //TODO: render menu here
         ),
       ),
     );

@@ -13,15 +13,9 @@ class AllPage extends StatelessWidget {
         currentPage: CurrentPage.all,
         context: context,
       ),
-      body: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Container(
-          color: Colors.white,
-          child: PostFeed(
-            postCategory: PostCategories.best,
-            showSortTypeChange: true,
-          ),
-        ),
+      body: PostFeed(
+        postCategory: PostCategories.best,
+        showSortTypeChange: true,
       ),
       endDrawer: HomePageDrawer(),
     );

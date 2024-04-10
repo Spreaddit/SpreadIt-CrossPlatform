@@ -14,20 +14,9 @@ class PopularPage extends StatelessWidget {
         currentPage: CurrentPage.popular,
         context: context,
       ),
-      body: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            //TODO: IMPLEMENT TRENDS
-            children: [
-              PostFeed(
-                postCategory: PostCategories.hot,
-                showSortTypeChange: false,
-              ),
-            ],
-          ),
-        ),
+      body: PostFeed(
+        postCategory: PostCategories.best,
+        showSortTypeChange: false,
       ),
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),

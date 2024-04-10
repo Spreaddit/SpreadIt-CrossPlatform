@@ -77,46 +77,57 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (widget.showSortTypeChange)
-          Container(
-            color: const Color.fromARGB(255, 226, 226, 226),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SortTypeMenu(
-                  onCategoryChanged: onCategoryChanged,
-                  startSortIndex: widget.startSortIndex,
-                  endSortIndex: widget.endSortIndex,
-                ),
-              ],
-            ),
-          ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 0,
-          ),
-          child: ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  PostWidget(post: items[index]),
-                  Divider(
-                    height: 20,
-                    thickness: 0.2,
-                    color: Colors.black,
+    return RefreshIndicator(
+      onRefresh: () {
+        return fetchData();
+      },
+      child: SingleChildScrollView(
+        physics: ScrollPhysics(),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              if (widget.showSortTypeChange)
+                Container(
+                  color: const Color.fromARGB(255, 226, 226, 226),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SortTypeMenu(
+                        onCategoryChanged: onCategoryChanged,
+                        startSortIndex: widget.startSortIndex,
+                        endSortIndex: widget.endSortIndex,
+                      ),
+                    ],
                   ),
-                ],
-              );
-            },
+                ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 0,
+                ),
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        PostWidget(post: items[index]),
+                        Divider(
+                          height: 20,
+                          thickness: 0.2,
+                          color: Colors.black,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }
