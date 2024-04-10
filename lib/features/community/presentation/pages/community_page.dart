@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/community/data/api_community_inf
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_post_feed.dart';
+import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/report_modal.dart';
 
 class CommunityPage extends StatefulWidget {
   CommunityPage({Key? key, required this.communityName}) : super(key: key);
@@ -51,7 +52,13 @@ class _CommunityPageState extends State<CommunityPage> {
               ),
               CommunityPostFeed(
                 communityName: widget.communityName,
-              )
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ReportModal(context, widget.communityName, "0", "0", true);
+                },
+                child: Text("REPORT MEEEEEE"),
+              ),
             ],
           ),
         ),
