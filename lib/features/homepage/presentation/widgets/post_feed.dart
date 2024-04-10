@@ -23,6 +23,8 @@ class PostFeed extends StatefulWidget {
   String? timeSort;
   String? username;
   bool showSortTypeChange = false;
+  final int startSortIndex;
+  final int endSortIndex;
 
   PostFeed({
     required this.postCategory,
@@ -30,6 +32,8 @@ class PostFeed extends StatefulWidget {
     this.timeSort,
     this.username,
     this.showSortTypeChange = false,
+    this.startSortIndex = 0,
+    this.endSortIndex = 3,
   });
 
   @override
@@ -73,23 +77,28 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 0,
-      ),
-      child: Column(
-        children: [
-          if (widget.showSortTypeChange)
-            Row(
+    return Column(
+      children: [
+        if (widget.showSortTypeChange)
+          Container(
+            color: const Color.fromARGB(255, 226, 226, 226),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SortTypeMenu(
                   onCategoryChanged: onCategoryChanged,
+                  startSortIndex: widget.startSortIndex,
+                  endSortIndex: widget.endSortIndex,
                 ),
               ],
             ),
-          ListView.builder(
+          ),
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 0,
+          ),
+          child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: items.length,
@@ -105,9 +114,9 @@ class _PostFeedState extends State<PostFeed> {
                 ],
               );
             },
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }

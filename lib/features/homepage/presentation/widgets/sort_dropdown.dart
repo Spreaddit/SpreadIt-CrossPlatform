@@ -3,8 +3,14 @@ import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dar
 
 class SortTypeMenu extends StatefulWidget {
   final void Function(PostCategories) onCategoryChanged;
+  final int startSortIndex;
+  final int endSortIndex;
 
-  SortTypeMenu({required this.onCategoryChanged});
+  SortTypeMenu({
+    required this.onCategoryChanged,
+    required this.startSortIndex,
+    required this.endSortIndex,
+  });
 
   @override
   State<SortTypeMenu> createState() => _SortTypeMenuState();
@@ -20,17 +26,48 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
   ];
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: showSortingMenu,
-      child: ListTile(
-        leading: Icon(icons[selectedCategory]),
-        title: Text(PostCategories.values[selectedCategory].toString(),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            )),
-        trailing: Icon(
-          Icons.arrow_downward_outlined,
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(5),
+      child: ElevatedButton(
+        onPressed: showSortingMenu,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: EdgeInsets.all(3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        child: Flex(
+          direction: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  icons[selectedCategory],
+                  color: Color.fromARGB(255, 70, 70, 70),
+                ),
+                SizedBox(
+                  width: 7,
+                ),
+                Text(
+                  "${PostCategories.values[selectedCategory].toString().split('.').last.toUpperCase()} POSTS",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 70, 70, 70),
+                  ),
+                ),
+              ],
+            ),
+            Icon(
+              Icons.keyboard_arrow_down_sharp,
+              color: Color.fromARGB(255, 70, 70, 70),
+            ),
+          ],
         ),
       ),
     );
@@ -43,13 +80,13 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
       context: context,
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
-                  'Sort By:',
+                  'Sort By',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -58,11 +95,16 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 4,
+                  itemCount: widget.endSortIndex + 1,
                   itemBuilder: (context, index) {
                     return ListTile(
+                      tileColor: Colors.transparent,
                       leading: Icon(icons[index % icons.length]),
-                      title: Text(PostCategories.values[index].toString(),
+                      title: Text(
+                          PostCategories.values[index]
+                              .toString()
+                              .split('.')
+                              .last,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

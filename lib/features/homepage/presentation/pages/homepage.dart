@@ -14,18 +14,10 @@ class HomePage extends StatelessWidget {
         physics: ScrollPhysics(),
         child: Container(
           color: Colors.white,
-          child: Column(children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              child: Divider(
-                height: 0.5,
-              ),
-            ),
-            PostFeed(
-              postCategory: PostCategories.best,
-              showSortTypeChange: true,
-            ),
-          ]),
+          child: PostFeed(
+            postCategory: PostCategories.best,
+            showSortTypeChange: true,
+          ),
         ),
       ),
       endDrawer: HomePageDrawer(),
