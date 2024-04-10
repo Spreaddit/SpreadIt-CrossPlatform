@@ -4,7 +4,7 @@ class CommunityAndRulesHeader extends StatefulWidget {
 
   final String communityIcon;
   final String communityName;
-  final Map<String, String> communityRules;
+  final List<Map<String, String>> communityRules;
 
   const CommunityAndRulesHeader({
     required this.communityIcon,

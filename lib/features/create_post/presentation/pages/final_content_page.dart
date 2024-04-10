@@ -69,7 +69,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String finalContent ='';
   String communityName = '';
   String communityIcon = '';
-  Map<String, String> communityRules = {};
+  List<Map<String, String>> communityRules = [];
   List<String> finalPollOptions = ['', ''];
   List<String> finalInitialBody = ['',''];
   int finalSelectedDay = 1;

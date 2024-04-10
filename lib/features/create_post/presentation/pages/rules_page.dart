@@ -6,7 +6,7 @@ import '../widgets/expanded_rules.dart';
 
 class CommunityRules extends StatefulWidget {
 
-  final List<dynamic> communityRules;
+  final List<Map<String,String>> communityRules;
 
   const CommunityRules({
     required this.communityRules,
@@ -45,8 +45,8 @@ class _CommunityRulesState extends State<CommunityRules> {
               return ExpandableListWidget(
                 title: widget.communityRules[index]['title'],
                 description: widget.communityRules[index]['description'],
-                );
-              },
+              );
+            },
           ),
         ),
         //Spacer(),

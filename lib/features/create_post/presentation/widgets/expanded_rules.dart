@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ExpandableListWidget extends StatefulWidget {
-  final String title;
+  final String? title;
   final String? description;
 
   const ExpandableListWidget({
@@ -38,7 +38,7 @@ class _ExpandableListWidgetState extends State<ExpandableListWidget> {
                 Flexible(
                   fit: FlexFit.tight,
                   child: Text(
-                    widget.title,
+                    widget.title!,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

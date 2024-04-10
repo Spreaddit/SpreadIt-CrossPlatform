@@ -48,10 +48,16 @@ class SpreadIt extends StatelessWidget {
         community: [{
           'communityName': 'r/AskReddit', 
           'communityIcon': './assets/images/LogoSpreadIt.png',
-          'communityRules' : {
+          'communityRules' : [
+            {
             'title': 'hate is not tolerated',
             'description': 'yarab nekhlas baa ana zhe2t men om el bta3 da',
+            },
+            {
+            'title': '3ayza a3ayyat',
+            'description': 'kefaya 3alayy akeda abous ideiko',
             }
+          ]
           }
         ]
       ),
