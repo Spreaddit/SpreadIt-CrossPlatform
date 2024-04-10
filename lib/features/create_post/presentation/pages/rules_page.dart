@@ -6,7 +6,7 @@ import '../widgets/expanded_rules.dart';
 
 class CommunityRules extends StatefulWidget {
 
-  final List<Map<String,String>> communityRules;
+  final List<Map<String,dynamic>> communityRules;
 
   const CommunityRules({
     required this.communityRules,

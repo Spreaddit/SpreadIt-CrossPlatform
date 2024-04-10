@@ -69,7 +69,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String finalContent ='';
   String communityName = '';
   String communityIcon = '';
-  List<Map<String, String>> communityRules = [];
+  List<Map<String, dynamic>> communityRules = [];
   List<String> finalPollOptions = ['', ''];
   List<String> finalInitialBody = ['',''];
   int finalSelectedDay = 1;
@@ -90,7 +90,11 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void mapCommunityData () {
     communityName = widget.community[0]['communityName'];
     communityIcon = widget.community[0]['communityIcon'];
+    if (widget.community[0]['communityRules'] is List<Map<String, dynamic>>) {
     communityRules = widget.community[0]['communityRules'];
+  } else {
+    communityRules = (widget.community[0]['communityRules']).cast<Map<String,dynamic>>();
+  }
   }
 
   void mapPoll () {

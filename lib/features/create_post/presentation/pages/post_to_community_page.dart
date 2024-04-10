@@ -37,7 +37,7 @@ class PostToCommunity extends StatefulWidget {
 
 class _PostToCommunityState extends State<PostToCommunity> {
 
-  List communities = [];
+  List<Map<String,dynamic>> communities = [];
   List<Map<String, dynamic>> communityData = [];
   List<Map<String, dynamic>> filteredList = [];
   bool isShowMorePressed = false;
@@ -50,7 +50,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
   }
 
   void getCommunityData () async {
-    List<dynamic> communities = await getCommunitiesList();
+    List<Map<String,dynamic>> communities = await getCommunitiesList();
     setState(() {
       this.communities = communities ;
     });

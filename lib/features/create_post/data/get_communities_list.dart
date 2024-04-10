@@ -3,14 +3,15 @@ import 'package:spreadit_crossplatform/api.dart';
 
 String apibase = apiUrl;
 
-Future <List> getCommunitiesList() async {
+Future <List<Map<String,dynamic>>> getCommunitiesList() async {
   try {
+    print('entered get communities');
     var response = await Dio().get('$apiUrl/community/random-category');
     if(response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
       print(response.data as List);
-      return response.data as List;
+      return (response.data as List).cast<Map<String,dynamic>>();
     }
     else {
       print(response.statusMessage);
