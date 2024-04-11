@@ -56,7 +56,7 @@ class CommentWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    comment.postTitle,
+                    comment.postTitle!,
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class CommentWidget extends StatelessWidget {
                     children: [
                       if (saved)
                         Text(
-                          'u/${comment.user.username} • ',
+                          'u/${comment.user!.username} • ',
                           style: TextStyle(
                             fontSize: 14.0,
                             color: Colors.grey,
@@ -108,9 +108,9 @@ class CommentWidget extends StatelessWidget {
                       fontSize: 14.0,
                     ),
                   ),
-                  if (comment.media.isNotEmpty)
+                  if (comment.media!.isNotEmpty)
                     SizedBox(height: screenHeight * 0.02),
-                  if (comment.media.isNotEmpty) Image.network(comment.media[0]),
+                  if (comment.media!.isNotEmpty) Image.network(comment.media![0]),
                 ],
               ),
             ),

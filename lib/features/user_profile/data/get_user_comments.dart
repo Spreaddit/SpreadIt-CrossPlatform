@@ -5,19 +5,22 @@ import './class_models/comments_class_model.dart';
 
 String baseUrl = apiUrl;
 
-Future<List<Comment>> fetchUserComments(String username, String page) async {
+Future<List<Comment>> fetchUserComments(String username, String page , String postId) async {
   try {
      String? accessToken = UserSingleton().accessToken; 
     String apiroute = '';
     switch (page) {
       case 'saved':
-        apiroute = "/comments/saved";
+        apiroute = "/comments/saved/$username";
         break;
       case 'user':
-        apiroute = "/comments/user";
+        apiroute = "/comments/user/$username";
+        break;
+        case 'post':
+        apiroute = "/posts/comment/$postId";
         break;
     }
-    String apiUrl = "$baseUrl$apiroute/$username";
+    String apiUrl = "$baseUrl$apiroute";
 
     final response = await Dio().get(
       apiUrl,

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import '../../data/class_models/community_class_model.dart';
+import '../../../discover_communities/data/community.dart';
 
 class ActiveCommunity extends StatelessWidget {
   final Community community;
@@ -27,7 +27,7 @@ class ActiveCommunity extends StatelessWidget {
         child: Stack(
           children: [
             Image.network(
-              community.backgroundImage,
+              community.backgroundImage!,
               fit: BoxFit.cover,
               width: kIsWeb ? screenHeight * 0.35 : screenWidth * 0.4,
               height: kIsWeb ? screenWidth * 0.05 : screenHeight * 0.1,
@@ -43,7 +43,7 @@ class ActiveCommunity extends StatelessWidget {
                         left: kIsWeb ? screenHeight * 0.12 : screenWidth * 0.1),
                     child: CircleAvatar(
                       radius: photosize,
-                      backgroundImage: NetworkImage(community.profilePic),
+                      backgroundImage: NetworkImage(community.image),
                     ),
                   ),
                   SizedBox(height: kIsWeb ? screenHeight * 0.01 : 8),
@@ -54,7 +54,7 @@ class ActiveCommunity extends StatelessWidget {
                   ),
                   SizedBox(height: kIsWeb ? screenHeight * 0.007 : 4),
                   Text(
-                    '${community.members} members',
+                    '${community.membersCount} members',
                     style: TextStyle(color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),

@@ -32,7 +32,7 @@ class _SavedPageState extends State<SavedPage> {
 
   Future<void> fetchComments() async {
     try {
-      var data = await fetchUserComments(username, 'saved');
+      var data = await fetchUserComments(username, 'saved', '1');
       setState(() {
         commentsList = data;
       });

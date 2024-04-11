@@ -105,12 +105,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> pickBackgroundImage() async {
-    final image = await pickImageFromFilePicker();
-    setState(() {
+    final image = await pickImageFromFilePicker();  
+    setState(() { 
       if (image != null) {
         backgroundImageURl = null;
         backgroundImageFile = image;
-        print(backgroundImageFile);
       }
     });
   }

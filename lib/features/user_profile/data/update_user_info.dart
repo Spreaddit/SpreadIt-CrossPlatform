@@ -21,11 +21,11 @@ Future<int> updateUserApi({
     String apiRoute = '$apiUrl/user/update?accessToken=$accessToken';
 
       var data = {
-      "displayName": displayName,
-      "aboutUs": aboutUs,
-      "backgroundImage": backgroundImageUrl,
-      "profilePicImage": profilePicImageUrl,
-      "socialMedia": socialMedia,
+      "name": displayName,
+      "about": aboutUs,
+      "banner": backgroundImageUrl,
+      "avatar": profilePicImageUrl,
+      "socialLinks": socialMedia,
       "contentVisibility": contentVisibility,
       "showActiveComments": showActiveComments,
     };

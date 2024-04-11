@@ -1,33 +1,46 @@
-
-import '../../../user.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
 
 class Comment {
   final String id;
   final String content;
-  final User user;
-  final int likesCount;  
-  final int repliesCount; 
-  final bool isReply;
-  final List<String> media;
+  final User? user;
+  final int likesCount;
+  final int? repliesCount;
+  final bool? isReply;
+  final List<String>? media;
   final DateTime createdAt;
-  final bool isHidden;
-  final bool isSaved;
-  final String postTitle;
-  final String subredditName;
+  final bool? isHidden;
+  final bool? isSaved;
+  final String? postTitle;
+  final String? subredditName;
+  final List<Comment>? replies;
+  int? commentParentId;
+  bool isCollapsed;
+  final String? profilePic;
+  final String? userId;
+  final String? postId;
+  final String? username;
 
   Comment({
     required this.id,
     required this.content,
-    required this.user,
+    this.user,
     required this.likesCount,
-    required this.repliesCount,
-    required this.isReply,
-    required this.media,
+    this.repliesCount,
+    this.isReply,
+    this.media= const [],
     required this.createdAt,
-    required this.isHidden,
-    required this.isSaved,
-    required this.postTitle,
-    required this.subredditName,
+    this.isHidden,
+    this.isSaved,
+    this.postTitle,
+    this.subredditName,
+    this.replies = const [],
+    this.commentParentId = 1,
+    this.postId = '1',
+    this.userId='2',
+    this.isCollapsed = false,
+    this.profilePic = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+    this.username="rehab",
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {

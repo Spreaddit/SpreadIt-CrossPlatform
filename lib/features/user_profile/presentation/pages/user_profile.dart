@@ -1,12 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
 import '../../data/class_models/comments_class_model.dart';
-import '../../data/class_models/community_class_model.dart';
 import '../../data/date_conversion.dart';
 import '../../data/follow_unfollow_api.dart';
 import '../widgets/about.dart';
@@ -39,13 +39,14 @@ class _UserProfileState extends State<UserProfile> {
   String userinfo = '';
   String about = '';
   String background = '';
-  bool? followStatus; 
-  String displayName=''; 
+  bool? followStatus;
+  bool isVisible = false;
+  String displayName = '';
   String postKarmaNo = '';
   String commentKarmaNo = '';
   List<Comment> commentsList = [];
   List<Community> communitiesList = [];
-  List<Map<String, dynamic>> socialMediaLinks=[];
+  List<Map<String, dynamic>> socialMediaLinks = [];
   File? backgroundImageFile;
   File? profileImageFile;
 
@@ -54,67 +55,72 @@ class _UserProfileState extends State<UserProfile> {
     super.initState();
     fetchUserInfoAsync();
     fetchComments();
+    loadCommunities();
   }
 
- void fetchUserInfoAsync() async {
-  try {
-    userInfoFuture = await fetchUserInfo(username);
+  void loadCommunities() async {
+    GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
+    List<Community> loadedCommunities =
+        await getSpecificCommunity.getCommunities('🔥 Trending globally');
     setState(() {
-      formattedDate = formatDate(userInfoFuture!.dateOfJoining);
-      userinfo =
-          'u/${userInfoFuture!.username} • ${userInfoFuture!.numberOfKarmas} Karma • $formattedDate';
-      communitiesList = userInfoFuture!.activeCommunities;
-      about = userInfoFuture!.about;
-      background = userInfoFuture!.background;
-      followStatus = userInfoFuture!.followStatus;
-      postKarmaNo = userInfoFuture!.postKarmaNo;
-      commentKarmaNo = userInfoFuture!.commentKarmaNo;
-      profilePicture = userInfoFuture!.avatar;
-      displayName = userInfoFuture!.displayname; 
-      socialMediaLinks = userInfoFuture!.socialMedia.map((socialMedia) => {
-        'platformName': socialMedia.platform,
-        'headerName': socialMedia.displayname,
-        'url': socialMedia.url,
-      }).toList(); 
+      communitiesList = loadedCommunities;
+      print('hola');
+      print(communitiesList);
     });
-  } catch (e) {
-    print('Error fetching user info: $e');
   }
-}
 
-Future<void> unfollowOrFollow() async {
-  try {
-     var response= await toggleFollow(isFollowing: followStatus!, username: username);
-    if (response==200)
-    {
+  void fetchUserInfoAsync() async {
+    try {
+      userInfoFuture = await fetchUserInfo(username);
+
       setState(() {
-        followStatus = !followStatus!;
+        formattedDate = formatDate(userInfoFuture!.dateOfJoining);
+        userinfo =
+            'u/${userInfoFuture!.username} • ${userInfoFuture!.numberOfKarmas} Karma • $formattedDate';
+        about = userInfoFuture!.about;
+        background = userInfoFuture!.background;
+        followStatus = userInfoFuture!.followStatus;
+        postKarmaNo = userInfoFuture!.postKarmaNo;
+        commentKarmaNo = userInfoFuture!.commentKarmaNo;
+        profilePicture = userInfoFuture!.avatar;
+        displayName = userInfoFuture!.displayname;
+        isVisible = userInfoFuture!.isVisible;
+        socialMediaLinks = userInfoFuture!.socialMedia
+            .map((socialMedia) => {
+                  'platformName': socialMedia.platform,
+                  'headerName': socialMedia.displayname,
+                  'url': socialMedia.url,
+                })
+            .toList();
       });
+    } catch (e) {
+      print('Error fetching user info: $e');
     }
-    else if (response==400)
-    {
-          CustomSnackbar(content: 'Username is required').show(context);
-
-    }
-        else if (response==404)
-    {
-          CustomSnackbar(content: 'User not found').show(context);
-
-    }
-        else if (response==500)
-    {
-          CustomSnackbar(content: 'Internal server error').show(context);
-
-    }
-  } catch (e) {
-    print('Error toggling follow status: $e');
   }
-}
 
+  Future<void> unfollowOrFollow() async {
+    try {
+      var response =
+          await toggleFollow(isFollowing: followStatus!, username: username);
+      if (response == 200) {
+        setState(() {
+          followStatus = !followStatus!;
+        });
+      } else if (response == 400) {
+        CustomSnackbar(content: 'Username is required').show(context);
+      } else if (response == 404) {
+        CustomSnackbar(content: 'User not found').show(context);
+      } else if (response == 500) {
+        CustomSnackbar(content: 'Internal server error').show(context);
+      }
+    } catch (e) {
+      print('Error toggling follow status: $e');
+    }
+  }
 
   Future<void> fetchComments() async {
     try {
-      var data = await fetchUserComments(username,'user');
+      var data = await fetchUserComments(username, 'user', '1');
       setState(() {
         commentsList = data;
       });
@@ -123,40 +129,37 @@ Future<void> unfollowOrFollow() async {
     }
   }
 
-
   void _onIndexChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-void navigateToEditProfile(BuildContext context) async {
-
-final returnedData = await Navigator.of(context).pushNamed(
-    '/edit-profile',
-    arguments: {
-      'backgroundImageUrl': background,
-      'backgroundImageFile': backgroundImageFile,
-      'profileImageUrl': profilePicture,
-      'profileImageFile': profileImageFile,
-      'about': about,
-      'displayname': displayName,
-      'socialMediaLinks': socialMediaLinks,
-    },
-  );
-  if (returnedData != null && returnedData is Map<String, dynamic>) {
-    setState(() {
-      backgroundImage = returnedData['backgroundImage']??'' ;
-      profilePicture = returnedData['profilePicImage']??'';
-      backgroundImageFile= returnedData['backgroundImageFile'];
-      profileImageFile= returnedData['profileImageFile'];
-      socialMediaLinks = returnedData['socialMedia'] ?? socialMediaLinks;
-      about = returnedData['about'] ?? about;
-      displayName = returnedData['displayname'] ?? displayName;
-    });
+  void navigateToEditProfile(BuildContext context) async {
+    final returnedData = await Navigator.of(context).pushNamed(
+      '/edit-profile',
+      arguments: {
+        'backgroundImageUrl': background,
+        'backgroundImageFile': backgroundImageFile,
+        'profileImageUrl': profilePicture,
+        'profileImageFile': profileImageFile,
+        'about': about,
+        'displayname': displayName,
+        'socialMediaLinks': socialMediaLinks,
+      },
+    );
+    if (returnedData != null && returnedData is Map<String, dynamic>) {
+      setState(() {
+        backgroundImage = returnedData['backgroundImage'] ?? '';
+        profilePicture = returnedData['profilePicImage'] ?? '';
+        backgroundImageFile = returnedData['backgroundImageFile'];
+        profileImageFile = returnedData['profileImageFile'];
+        socialMediaLinks = returnedData['socialMedia'] ?? socialMediaLinks;
+        about = returnedData['about'] ?? about;
+        displayName = returnedData['displayname'] ?? displayName;
+      });
+    }
   }
-}
-
 
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
@@ -165,7 +168,7 @@ final returnedData = await Navigator.of(context).pushNamed(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (communitiesList.isNotEmpty)
+              if (communitiesList.isNotEmpty && isVisible)
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 15.0),
@@ -184,11 +187,11 @@ final returnedData = await Navigator.of(context).pushNamed(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: communitiesList.map((community) {
+                      children: communitiesList.map((communities) {
                         return Padding(
                           padding: EdgeInsets.only(right: 10.0),
                           child: ActiveCommunity(
-                            community: community,
+                            community: communities,
                           ),
                         );
                       }).toList(),
@@ -261,14 +264,14 @@ final returnedData = await Navigator.of(context).pushNamed(
                   : ProfileHeader(
                       backgroundImage: background,
                       profilePicture: profilePicture,
-                      backgroundImageFile : backgroundImageFile,
-                      profileImageFile : profileImageFile,
+                      backgroundImageFile: backgroundImageFile,
+                      profileImageFile: profileImageFile,
                       username: displayName,
                       userinfo: userinfo,
                       about: about,
                       myProfile: true,
                       followed: followStatus!,
-                      follow : unfollowOrFollow,
+                      follow: unfollowOrFollow,
                       onStartChatPressed: () => {},
                       editprofile: () => navigateToEditProfile(context),
                       socialMediaLinks: socialMediaLinks,
