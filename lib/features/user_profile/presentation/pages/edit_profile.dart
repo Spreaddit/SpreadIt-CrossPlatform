@@ -1,7 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/user_profile/images/image_picker.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import '../../../Account_Settings/presentation/widgets/switch_type_1.dart';
 import '../../../generic_widgets/custom_input.dart';
 import '../../../generic_widgets/snackbar.dart';
@@ -10,6 +12,7 @@ import '../widgets/icon_picker.dart';
 import '../widgets/social_link_bottom_sheet_model.dart';
 import '../widgets/social_media_button.dart';
 import '../widgets/social_media_selection_bottom_sheet.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -31,6 +34,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool _socialMediaLinksLoaded = false;
   var validUserName = true;
   var invalidText = "";
+  Uint8List? imageProfileWeb ;
+  Uint8List? imageBackgroundWeb;
+
 
   @override
   void didChangeDependencies() {
@@ -45,6 +51,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundImageFile = args['backgroundImageFile'];
       profileImageURl = args['profileImageUrl'];
       profileImageFile = args['profileImageFile'];
+      imageProfileWeb=args['profileImageWeb'];
+      imageBackgroundWeb=args['backgroundImageWeb'];
       _about = args['about'];
       _displayname = args['displayname'];
     }
@@ -105,17 +113,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> pickBackgroundImage() async {
-    final image = await pickImageFromFilePicker();  
-    setState(() { 
+    var image;
+    if (!kIsWeb) {
+      image = await pickImageFromFilePicker();
+       setState(() {
       if (image != null) {
         backgroundImageURl = null;
         backgroundImageFile = image;
       }
     });
+    }
+    if (kIsWeb) {
+      image = await pickImageFromFilePickerWeb();
+       setState(() {
+      if (image != null) {
+        backgroundImageURl = null;
+        imageBackgroundWeb = image;
+      }
+    });
+    }
+   
   }
 
-  Future<void> pickProfileImage() async {
-    final image = await pickImageFromFilePicker();
+ Future<void> pickProfileImage() async {
+  var image;
+  if (!kIsWeb) {
+    image = await pickImageFromFilePicker();
     setState(() {
       if (image != null) {
         profileImageURl = null;
@@ -123,6 +146,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }
     });
   }
+  if (kIsWeb) {
+    image = await pickImageFromFilePickerWeb();
+    setState(() {
+      if (image != null) {
+        profileImageURl = null;
+        imageProfileWeb = image;
+      }
+    });
+  }
+}
+
 
   void saveProfile() async {
     try {
@@ -131,7 +165,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         aboutUs: _about,
         backgroundImage: backgroundImageFile,
         profilePicImage: profileImageFile,
+        profileImageWeb : imageProfileWeb,
         backgroundImageUrl: backgroundImageURl,
+        backgroundImageWeb :imageBackgroundWeb,
         profilePicImageUrl: profileImageURl,
         socialMedia: socialMediaLinks!,
         contentVisibility: _switchValue1,
@@ -140,12 +176,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       var data = {
         'backgroundImage': backgroundImageURl,
-        'backgroundImageFile' : backgroundImageFile,
+        'backgroundImageFile': backgroundImageFile,
+        'backgroundImageWeb':imageBackgroundWeb,
+        'profileImageWeb':imageProfileWeb,
         'profilePicImage': profileImageURl,
-        'profileImageFile' :profileImageFile,
+        'profileImageFile': profileImageFile,
         'socialMedia': socialMediaLinks,
-        'about' :_about,
-        'displayname' :_displayname,
+        'about': _about,
+        'displayname': _displayname,
       };
       if (statusCode == 200) {
         Navigator.of(context).pop(data);
@@ -153,7 +191,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         CustomSnackbar(content: 'Server Error').show(context);
       }
     } catch (e) {
-      CustomSnackbar(content: 'Error updating').show(context);
+      CustomSnackbar(content: 'Error updating: $e').show(context);
     }
   }
 
@@ -195,22 +233,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 heightFactor: kIsWeb ? 0.35 : 0.25,
                 child: Container(
                   decoration: BoxDecoration(
-                    image: backgroundImageFile != null
-                        ? DecorationImage(
-                            image: FileImage(backgroundImageFile!),
+                    image: 
+                    DecorationImage(
+                            image: selectImage(
+                              backgroundImageFile, backgroundImageURl, imageBackgroundWeb),
                             fit: BoxFit.cover,
-                          )
-                        : (backgroundImageURl != null &&
-                                backgroundImageURl!.isNotEmpty)
-                            ? DecorationImage(
-                                image: NetworkImage(backgroundImageURl!),
-                                fit: BoxFit.cover,
-                              )
-                            : DecorationImage(
-                                image: NetworkImage(
-                                    'https://addlogo.imageonline.co/image.jpg'),
-                                fit: BoxFit.cover,
-                              ),
+                          ) 
                   ),
                 ),
               ),
@@ -251,7 +279,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundImage: selectImage(profileImageFile, profileImageURl),
+                          backgroundImage: selectImage(
+                              profileImageFile, profileImageURl, imageProfileWeb),
                         ),
                         Positioned(
                           bottom: 0,
@@ -346,8 +375,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             children: socialMediaLinks!.asMap().entries.map(
                               (entry) {
                                 final platformData = entry.value;
-                                final platformName =
-                                    platformData['platform'];
+                                final platformName = platformData['platform'];
                                 final iconName = PlatformIconMapper.getIconData(
                                     platformName);
                                 final color =

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:spreadit_crossplatform/api.dart';
 
 import 'package:dio/dio.dart';
@@ -12,6 +13,8 @@ Future<int> updateUserApi({
   File? profilePicImage,
   String? backgroundImageUrl,
   String? profilePicImageUrl,
+  Uint8List? profileImageWeb,
+  Uint8List? backgroundImageWeb,
   required List<Map<String, dynamic>> socialMedia,
   required bool contentVisibility,
   required bool showActiveComments,

@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
-import 'package:spreadit_crossplatform/features/user_profile/images/image_picker.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/icon_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/social_media_button.dart';
 
@@ -25,6 +26,8 @@ class ProfileHeader extends StatefulWidget {
   final List<Map<String, dynamic>> socialMediaLinks;
   File? backgroundImageFile;
   File? profileImageFile;
+  Uint8List? backgroundImageWeb;
+  Uint8List? profileImageWeb;
 
   ProfileHeader({
     required this.backgroundImage,
@@ -40,6 +43,8 @@ class ProfileHeader extends StatefulWidget {
     this.socialMediaLinks = const [],
     this.backgroundImageFile,
     this.profileImageFile,
+    this.backgroundImageWeb,
+    this.profileImageWeb,
   });
 
   @override
@@ -48,7 +53,6 @@ class ProfileHeader extends StatefulWidget {
 
 class _ProfileHeaderState extends State<ProfileHeader> {
   double _headerHeight = 0;
-
   @override
   void initState() {
     super.initState();
@@ -94,7 +98,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   },
                   child: Image(
                     image: selectImage(
-                      widget.backgroundImageFile, widget.backgroundImage),
+                      widget.backgroundImageFile, widget.backgroundImage,widget.backgroundImageWeb),
                     fit: BoxFit.cover,
                   )),
             ),
@@ -182,7 +186,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         CircleAvatar(
                           radius: photosize,
                           backgroundImage: selectImage(
-                              widget.profileImageFile, widget.profilePicture),
+                              widget.profileImageFile, widget.profilePicture,widget.profileImageWeb),
                         ),
                         SizedBox(
                             height: kIsWeb

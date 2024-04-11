@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
@@ -29,7 +30,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
   /////////////////////////////////Navigation ////////////////////////////////////////////////
-  bool myProfile = false; ////////// will be taken during navigation
+  bool myProfile = true; ////////// will be taken during navigation
   String username = 'mimo'; ////////// will be taken during navigation
 
   String backgroundImage = '';
@@ -49,6 +50,8 @@ class _UserProfileState extends State<UserProfile> {
   List<Map<String, dynamic>> socialMediaLinks = [];
   File? backgroundImageFile;
   File? profileImageFile;
+  Uint8List? imageBackgroundWeb;
+  Uint8List? imageProfileWeb;
 
   @override
   void initState() {
@@ -67,13 +70,14 @@ class _UserProfileState extends State<UserProfile> {
       communitiesList = loadedCommunities;
     });
   }
- void checkFollowStatus() async {
-  try {
-    followStatus= await isFollowed(username);
-  } catch (e) {
-    CustomSnackbar(content: 'internal server error').show(context);
+
+  void checkFollowStatus() async {
+    try {
+      followStatus = await isFollowed(username);
+    } catch (e) {
+      CustomSnackbar(content: 'Internal server error').show(context);
+    }
   }
-}
 
   void fetchUserInfoAsync() async {
     try {
@@ -146,6 +150,8 @@ class _UserProfileState extends State<UserProfile> {
       arguments: {
         'backgroundImageUrl': background,
         'backgroundImageFile': backgroundImageFile,
+        'backgroundImageWeb': imageBackgroundWeb,
+        'profileImageWeb': imageProfileWeb,
         'profileImageUrl': profilePicture,
         'profileImageFile': profileImageFile,
         'about': about,
@@ -159,9 +165,11 @@ class _UserProfileState extends State<UserProfile> {
         profilePicture = returnedData['profilePicImage'] ?? '';
         backgroundImageFile = returnedData['backgroundImageFile'];
         profileImageFile = returnedData['profileImageFile'];
-        socialMediaLinks = returnedData['socialMedia'] ?? socialMediaLinks;
-        about = returnedData['about'] ?? about;
-        displayName = returnedData['displayname'] ?? displayName;
+        imageBackgroundWeb = returnedData['backgroundImageWeb'];
+        imageProfileWeb = returnedData['profileImageWeb'];
+        socialMediaLinks = returnedData['socialMedia'] ?? [];
+        about = returnedData['about'] ?? '';
+        displayName = returnedData['displayname'] ?? '';
       });
     }
   }
@@ -270,6 +278,8 @@ class _UserProfileState extends State<UserProfile> {
                       backgroundImage: background,
                       profilePicture: profilePicture,
                       backgroundImageFile: backgroundImageFile,
+                      profileImageWeb: imageProfileWeb,
+                      backgroundImageWeb: imageBackgroundWeb,
                       profileImageFile: profileImageFile,
                       username: displayName,
                       userinfo: userinfo,
