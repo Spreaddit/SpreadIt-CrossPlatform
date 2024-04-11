@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Retrieves user information from the API endpoint '$apiUrl/user-info'.
@@ -45,8 +44,17 @@ Future<Map<String, dynamic>> getUserInfo() async {
 ///
 /// Throws an error if updating data fails.
 Future<int> updateUserInfo({required Map<String, dynamic> updatedData}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    final response = await Dio().put('$apiUrl/user-info', data: updatedData);
+    final response = await Dio().put(
+      '$apiUrl/user-info',
+      data: updatedData,
+      options: Options(
+        headers: {
+          'token': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return 1;

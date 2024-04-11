@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Retrieves community information from the API endpoint '$communityApiUrlGalal/community/get-info'.
 /// Takes the [String] parameter [communityName]
@@ -23,9 +24,17 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
     "dateCreated": "",
     "communityBanner": ""
   };
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    var response = await Dio().get('$communityApiUrlGalal/community/get-info',
-        queryParameters: {"communityName": communityName});
+    var response = await Dio().get(
+      '$communityApiUrlGalal/community/get-info',
+      queryParameters: {"communityName": communityName},
+      options: Options(
+        headers: {
+          'token': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       {
         print(response.statusMessage);

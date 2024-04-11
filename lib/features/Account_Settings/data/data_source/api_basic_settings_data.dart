@@ -1,17 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Retrieves basic account data from the API endpoint '$apiUrl/mobile/settings/general/account'.
 ///
 /// Returns a [Map] containing basic account information including 'email', 'gender', 'country',
 /// and 'connectedAccounts'.
-/// 
+///
 /// Returns an empty value for the keys if fetching fails.
 ///
 /// Throws an error if fetching data fails.
 Future<Map<String, dynamic>> getBasicData() async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    var response = await Dio().get('$apiUrl/mobile/settings/general/account');
+    var response = await Dio().get(
+      '$apiUrl/mobile/settings/general/account',
+      options: Options(
+        headers: {
+          'token': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       {
         print(response.data);
@@ -46,9 +55,17 @@ Future<Map<String, dynamic>> getBasicData() async {
 ///
 /// Throws an error if updating data fails.
 Future<int> updateBasicData({required Map<String, dynamic> updatedData}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    final response = await Dio()
-        .put('$apiUrl/mobile/settings/general/account', data: updatedData);
+    final response = await Dio().put(
+      '$apiUrl/mobile/settings/general/account',
+      data: updatedData,
+      options: Options(
+        headers: {
+          'token': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return 1;

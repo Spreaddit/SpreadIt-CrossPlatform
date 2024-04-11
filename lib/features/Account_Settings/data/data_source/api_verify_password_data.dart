@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Posts entered password data to the API endpoint '$apiUrl/settings/layout'.
 ///
@@ -15,9 +16,17 @@ import 'package:spreadit_crossplatform/api.dart';
 ///
 /// Returns 0 if an unknown error occurs.
 Future<int> postData({required Map<String, dynamic> enteredPassowrd}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    final response =
-        await Dio().post('$apiUrl/settings/layout', data: enteredPassowrd);
+    final response = await Dio().post(
+      '$apiUrl/settings/layout',
+      data: enteredPassowrd,
+      options: Options(
+        headers: {
+          'token': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;
