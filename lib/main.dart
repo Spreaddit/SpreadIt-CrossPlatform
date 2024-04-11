@@ -6,8 +6,6 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/pages/test_page.dart';
-import 'package:spreadit_crossplatform/features/community/Presentation/Pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
@@ -27,7 +25,6 @@ import 'features/Sign_up/Presentaion/pages/createusername.dart';
 import 'features/create_post/presentation/pages/primary_content_page.dart';
 import 'features/create_post/presentation/pages/rules_page.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -45,26 +42,27 @@ class SpreadIt extends StatelessWidget {
       title: 'Spread It',
       theme: spreadItTheme,
       home: FinalCreatePost(
-        title: '', 
-        content: '', 
-        pollOptions: [], 
+        title: '',
+        content: '',
+        pollOptions: [],
         selectedDay: 1,
-        isLinkAdded: false, 
-        community: [{
-          'communityName': 'r/AskReddit', 
-          'communityIcon': './assets/images/LogoSpreadIt.png',
-          'communityRules' : [
-            {
-            'title': 'hate is not tolerated',
-            'description': 'yarab nekhlas baa ana zhe2t men om el bta3 da',
-            },
-            {
-            'title': '3ayza a3ayyat',
-            'description': 'kefaya 3alayy akeda abous ideiko',
-            }
-          ]
+        isLinkAdded: false,
+        community: [
+          {
+            'communityName': 'r/AskReddit',
+            'communityIcon': './assets/images/LogoSpreadIt.png',
+            'communityRules': [
+              {
+                'title': 'hate is not tolerated',
+                'description': 'yarab nekhlas baa ana zhe2t men om el bta3 da',
+              },
+              {
+                'title': '3ayza a3ayyat',
+                'description': 'kefaya 3alayy akeda abous ideiko',
+              }
+            ]
           }
-        ]
+        ],
       ),
       routes: {
         '/home': (context) => HomePage(),
@@ -87,8 +85,9 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
-        '/post-to-community': (context) { 
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        '/post-to-community': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
           return PostToCommunity(
             title: args['title'],
             content: args['content'],
@@ -98,13 +97,14 @@ class SpreadIt extends StatelessWidget {
             video: args['video'],
             videoWeb: args['videoWeb'],
             pollOptions: args['pollOptions'],
-            selectedDay:args['selectedDay'],
+            selectedDay: args['selectedDay'],
             createPoll: args['createPoll'],
             isLinkAdded: args['isLinkAdded'],
           );
-        },    
-        '/final-content-page': (context) { 
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        },
+        '/final-content-page': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
           return FinalCreatePost(
             title: args['title'],
             content: args['content'],
@@ -114,19 +114,19 @@ class SpreadIt extends StatelessWidget {
             video: args['video'],
             videoWeb: args['videoWeb'],
             pollOptions: args['pollOptions'],
-            selectedDay:args['selectedDay'],
+            selectedDay: args['selectedDay'],
             isLinkAdded: args['isLinkAdded'],
-            community : args['community'],
+            community: args['community'],
           );
         },
         '/primary-content-page': (context) => CreatePost(),
-        '/rules': (context) { 
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String,dynamic>;
+        '/rules': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
           return CommunityRules(
-            communityRules : args['communityRules'],
+            communityRules: args['communityRules'],
           );
-        }
-
+        },
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
       },
