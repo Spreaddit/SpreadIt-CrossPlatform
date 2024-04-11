@@ -4,10 +4,10 @@ import 'package:spreadit_crossplatform/features/generic_widgets/custom_input.dar
 import 'package:spreadit_crossplatform/features/generic_widgets/header.dart';
 import 'package:spreadit_crossplatform/features/Sign_up/data/sign_up_api.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
-
+import '../../data/check_username.dart';
 import '../../../generic_widgets/snackbar.dart';
 
-/// This page allows users to create their usernames during the sign-up process.
+
 class CreateUsername extends StatefulWidget {
   const CreateUsername({Key? key}) : super(key: key);
 
@@ -28,17 +28,23 @@ class _CreateUsernameState extends State<CreateUsername> {
   var invalidText = "";
 
 
-  /// Callback function to update the username and its validation status.
-  void updateUsername(String username, bool validation) {
+  void updateUsername(String username, bool validation) async {
     _userName = username;
+      var responseCode = await checkUsernameAvailability(
+      username: _userName,
+    );
     setState(() {
       invalidText = validateusernametext(_userName);
+      if (invalidText=="Great name! it's not taken, so it's all yours." && responseCode ==false)
+      {
+        invalidText="Username is already Taken";
+      }
       validUserName = validation && invalidText == "Great name! it's not taken, so it's all yours.";
     });
     _usernameform.currentState!.save();
   }
 
-  /// Navigates to the home page after successful sign-up.
+
 void navigateToHomePage(BuildContext context) async {
   if (validUserName) {
     _usernameform.currentState!.save();
@@ -48,7 +54,7 @@ void navigateToHomePage(BuildContext context) async {
       password: _userPassword,
     );
     if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/home'); 
+      Navigator.of(context).pushNamed('/home'); // SHOULD BE HOME
     } 
     else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input" ).show(context); 

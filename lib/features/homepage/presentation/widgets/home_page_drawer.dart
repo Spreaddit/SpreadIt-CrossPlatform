@@ -13,7 +13,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.account_circle_outlined,
               'text': 'My profile',
-              'route': '/home'
+              'route': '/user-profile'
             },
             {
               'icon': Icons.group,
@@ -23,7 +23,7 @@ class HomePageDrawer extends StatelessWidget {
             {
               'icon': Icons.bookmarks_outlined,
               'text': 'Saved',
-              'route': '/home'
+              'route': '/saved'
             },
             {
               'icon': Icons.watch_later_outlined,

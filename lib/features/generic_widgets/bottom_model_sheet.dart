@@ -4,7 +4,6 @@ class CustomBottomSheet extends StatelessWidget {
   final List<IconData> icons;
   final List<String> text;
   final List<VoidCallback> onPressedList;
-
   CustomBottomSheet(
       {required this.icons, required this.text, required this.onPressedList});
 

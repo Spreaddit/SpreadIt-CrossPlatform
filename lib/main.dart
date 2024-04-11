@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
@@ -18,6 +19,8 @@ import 'package:spreadit_crossplatform/features/forget_username/presentation/pag
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/popular.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
+import 'features/saved/presentation/page/saved_page.dart';
+import 'features/user_profile/presentation/pages/edit_profile.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
@@ -29,6 +32,8 @@ import 'features/Sign_up/Presentaion/pages/sign_up_page.dart';
 import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
+import 'features/user_profile/presentation/pages/user_profile.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 void main() async {
@@ -45,6 +50,11 @@ class SpreadIt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: kIsWeb
+          ? const MaterialScrollBehavior().copyWith(
+              dragDevices: {PointerDeviceKind.mouse},
+            )
+          : null, 
       title: 'Spread It',
       theme: spreadItTheme,
       home: AllPage(),
@@ -69,6 +79,9 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
+        '/saved': (context) => SavedPage(),
+        '/user-profile': (context) => UserProfile(),
+        '/edit-profile': (context) => EditProfilePage(),
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),

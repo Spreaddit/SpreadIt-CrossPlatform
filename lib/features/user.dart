@@ -54,9 +54,7 @@ class User {
       username: json['username'],
       email: json['email'],
       googleId: json['googleId'],
-      birthDate: json['birth_date'] != null
-          ? DateTime.parse(json['birth_date'])
-          : null,
+      birthDate: json['birth_date'] != null ? DateTime.parse(json['birth_date']) : null,
       phone: json['phone'],
       avatarUrl: json['avatar_url'],
       backgroundPictureUrl: json['background_picture_url'],
@@ -64,18 +62,14 @@ class User {
       bio: json['bio'],
       followersCount: json['followers_count'] as int,
       followingCount: json['following_count'] as int,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : DateTime.now(),
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
       role: json['role'],
       nsfw: json['nsfw'] as bool,
       activeInCommunityVisibility: json['activeInCommunityVisibility'] as bool?,
       isVerified: json['isVerified'] as bool,
       displayName: json['displayName'],
       about: json['about'],
-      cakeDay: json['cakeDay'] != null
-          ? DateTime.parse(json['cakeDay'])
-          : DateTime.now(),
+      cakeDay: json['cakeDay'] != null ? DateTime.parse(json['cakeDay']) : DateTime.now(),
       subscribedCommunities: json['subscribedCommunities'] != null
           ? List<String>.from(json['subscribedCommunities'])
           : [],
