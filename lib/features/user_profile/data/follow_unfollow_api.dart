@@ -9,7 +9,7 @@ Future<int> toggleFollow({
   try {
     
     String? accessToken=UserSingleton().accessToken;
-    final String endpoint = isFollowing ? '/users/unfollow/$accessToken' : '/users/follow/$accessToken';
+    final String endpoint = isFollowing ? '/users/unfollow' : '/users/follow';
     final String requestURL = apiUrl + endpoint;
 
      var data = {

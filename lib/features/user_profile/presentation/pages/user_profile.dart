@@ -17,6 +17,7 @@ import '../widgets/profile_header.dart';
 import '../../data/get_user_info.dart';
 import '../../data/class_models/user_info_class_model.dart';
 import '../../data/get_user_comments.dart';
+import '../../data/get_follow_status.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -28,10 +29,9 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
   /////////////////////////////////Navigation ////////////////////////////////////////////////
-  bool myProfile = true; ////////// will be taken during navigation
+  bool myProfile = false; ////////// will be taken during navigation
   String username = 'mimo'; ////////// will be taken during navigation
 
-  ////////////////////////////////////////////BACKEND///////////////////////////////////////////
   String backgroundImage = '';
   String profilePicture = '';
   String formattedDate = '';
@@ -39,7 +39,7 @@ class _UserProfileState extends State<UserProfile> {
   String userinfo = '';
   String about = '';
   String background = '';
-  bool? followStatus;
+  bool? followStatus=false;
   bool isVisible = false;
   String displayName = '';
   String postKarmaNo = '';
@@ -56,6 +56,7 @@ class _UserProfileState extends State<UserProfile> {
     fetchUserInfoAsync();
     fetchComments();
     loadCommunities();
+    checkFollowStatus();
   }
 
   void loadCommunities() async {
@@ -66,6 +67,13 @@ class _UserProfileState extends State<UserProfile> {
       communitiesList = loadedCommunities;
     });
   }
+ void checkFollowStatus() async {
+  try {
+    followStatus= await isFollowed(username);
+  } catch (e) {
+    CustomSnackbar(content: 'internal server error').show(context);
+  }
+}
 
   void fetchUserInfoAsync() async {
     try {
@@ -77,7 +85,6 @@ class _UserProfileState extends State<UserProfile> {
             'u/${userInfoFuture!.username} • ${userInfoFuture!.numberOfKarmas} Karma • $formattedDate';
         about = userInfoFuture!.about;
         background = userInfoFuture!.background;
-        followStatus = userInfoFuture!.followStatus;
         postKarmaNo = userInfoFuture!.postKarmaNo;
         commentKarmaNo = userInfoFuture!.commentKarmaNo;
         profilePicture = userInfoFuture!.avatar;
@@ -221,7 +228,7 @@ class _UserProfileState extends State<UserProfile> {
             aboutText: about,
             onSendMessagePressed: () {},
             onStartChatPressed: () {},
-            myProfile: false,
+            myProfile: myProfile,
           ),
         );
       default:
@@ -267,7 +274,7 @@ class _UserProfileState extends State<UserProfile> {
                       username: displayName,
                       userinfo: userinfo,
                       about: about,
-                      myProfile: true,
+                      myProfile: myProfile,
                       followed: followStatus!,
                       follow: unfollowOrFollow,
                       onStartChatPressed: () => {},
