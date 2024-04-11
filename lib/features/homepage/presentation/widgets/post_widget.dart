@@ -3,14 +3,15 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_polls/flutter_polls.dart';
+import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_post_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
@@ -27,74 +28,22 @@ class _PostHeader extends StatefulWidget {
     required this.isUserProfile,
   });
 
+  @override
   State<_PostHeader> createState() => _PostHeaderState();
 }
 
 class _PostHeaderState extends State<_PostHeader> {
-  void onShowMenu() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomBottomSheet(icons: [
-          Icons.notifications_on_rounded,
-          Icons.save,
-          Icons.copy,
-          Icons.flag,
-          Icons.block,
-          Icons.hide_source_rounded,
-          if (widget.isUserProfile) Icons.new_releases_rounded,
-          Icons.warning_rounded,
-          Icons.delete,
-        ], text: [
-          "Subscribe to post",
-          "Save",
-          "Copy text",
-          "Report",
-          "Block account",
-          "Hide",
-          if (widget.isUserProfile)
-            widget.post.isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
-          widget.post.isNsfw ? "Unmark NSFW" : "Mark NSFW",
-          "Delete post",
-        ], onPressedList: [
-          subscribeToPost,
-          save,
-          copyText,
-          report,
-          blockAccount,
-          hide,
-          if (widget.isUserProfile)
-            widget.post.isSpoiler
-                ? () => unmarkSpoiler(context, widget.post.postId)
-                : () => markSpoiler(context, widget.post.postId),
-          widget.post.isNsfw
-              ? () => unmarkNSFW(context, widget.post.postId)
-              : () => markNSFW(context, widget.post.postId),
-          () => deletePost(context, widget.post.postId),
-        ]);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final sec30PassedToggler =
-        useState(false); //used for changing time without constant re-render
-    final dateFormatted = useState(dateToDuration(widget.post.date));
+    bool sec30PassedToggler =
+        false; //used for changing time without constant re-render
+    String dateFormatted = dateToDuration(widget.post.date);
 
-    useEffect(() {
-      dateFormatted.value = dateToDuration(widget.post.date);
-      print(dateFormatted.value);
-      return;
-    }, [sec30PassedToggler.value]);
-
-    useEffect(() {
-      final timer = Timer.periodic(Duration(seconds: 30), (timer) {
-        sec30PassedToggler.value = !sec30PassedToggler.value;
+    Timer.periodic(Duration(seconds: 30), (timer) {
+      setState(() {
+        dateFormatted = dateToDuration(widget.post.date);
       });
-
-      return timer.cancel;
-    }, []);
+    });
 
     return Material(
       color: Colors.transparent,
@@ -109,18 +58,116 @@ class _PostHeaderState extends State<_PostHeader> {
             alignment: WrapAlignment.spaceBetween,
             children: [
               Text(
-                "r/$widget.post.community",
+                "r/${widget.post.community}",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
-              Text(dateFormatted.value),
+              Text(dateFormatted),
             ],
+          ),
+          subtitle: GestureDetector(
+            onTap: () => Navigator.of(context).pushNamed(
+              '/user-profile',
+              arguments: {
+                'username': widget.post.username,
+              },
+            ),
+            child: Text(widget.post.community),
           ),
           leading: CircleAvatar(
             backgroundImage: NetworkImage(widget.post.userProfilePic),
           ),
-          trailing: Icon(Icons.more_vert), //TODO: render menu here
+          trailing: IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: onShowMenu,
+          ),
         ),
       ),
+    );
+  }
+
+  void onShowMenu() {
+    List<String> viewerOptions = [
+      "Subscribe to post",
+      "Save",
+      "Copy text",
+      "Report",
+      "Block account",
+      "Hide",
+    ];
+    List<String> writerOptions = [
+      "Subscribe to post",
+      "Save",
+      "Copy text",
+      "Report",
+      "Block account",
+      "Hide",
+      "Edit post",
+      widget.post.isSpoiler ? "Mark Spoiler" : "Unmark Spoiler",
+      widget.post.isNsfw ? "Unmark NSFW" : "Mark NSFW",
+      "Delete post",
+    ];
+
+    List<void Function()> writerActions = [
+      subscribeToPost,
+      () => savePost(
+            context,
+            widget.post.postId,
+          ), //TODO: conditional rendering based on whether its saved or not
+      copyText,
+      report,
+      blockAccount,
+      hide,
+      () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditPost(
+                postId: widget.post.postId.toString(),
+                postContent: widget.post.content.isNotEmpty
+                    ? widget.post.content[widget.post.content.length - 1]
+                    : "",
+                onContentChanged: widget.onContentChanged,
+              ),
+            ),
+          ),
+      widget.post.isSpoiler
+          ? () => unmarkSpoiler(context, widget.post.postId)
+          : () => markSpoiler(context, widget.post.postId),
+      widget.post.isNsfw
+          ? () => unmarkNSFW(context, widget.post.postId)
+          : () => markNSFW(context, widget.post.postId),
+      () => deletePost(context, widget.post.postId),
+    ];
+
+    List<void Function()> viewerActions = [
+      subscribeToPost,
+      () => savePost(
+            context,
+            widget.post.postId,
+          ), //TODO: conditional rendering based on whether its saved or not
+      copyText,
+      report,
+      blockAccount,
+      hide
+    ];
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomBottomSheet(
+          icons: [
+            Icons.notifications_on_rounded,
+            Icons.save,
+            Icons.copy,
+            Icons.flag,
+            Icons.block,
+            Icons.hide_source_rounded,
+            Icons.new_releases_rounded,
+            Icons.warning_rounded,
+            Icons.delete,
+          ],
+          text: widget.isUserProfile ? viewerOptions : writerOptions,
+          onPressedList: widget.isUserProfile ? viewerActions : writerActions,
+        );
+      },
     );
   }
 }
@@ -465,7 +512,7 @@ class _VideoAppState extends State<VideoPlayerScreen> {
 
 /// This widget is responsible for displaying post interactions bottom bar
 /// count of shares, upvotes and comments is displayed here.
-class _PostInteractions extends HookWidget {
+class _PostInteractions extends StatefulWidget {
   final int votesCount;
   final int sharesCount;
   final int commentsCount;
@@ -475,7 +522,11 @@ class _PostInteractions extends HookWidget {
     required this.sharesCount,
     required this.commentsCount,
   });
+  @override
+  State<_PostInteractions> createState() => _PostInteractionsState();
+}
 
+class _PostInteractionsState extends State<_PostInteractions> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -487,13 +538,15 @@ class _PostInteractions extends HookWidget {
           alignment: WrapAlignment.spaceAround,
           children: [
             VoteButton(
-              initialVotesCount: votesCount,
+              initialVotesCount: widget.votesCount,
             ),
             CommentButton(
-              initialCommensCount: commentsCount,
+              initialCommensCount: widget.commentsCount,
             ),
             ShareButton(
-                initialSharesCount: sharesCount, message: "LINK///////"),
+              initialSharesCount: widget.sharesCount,
+              message: "LINK///////",
+            ),
           ],
         ),
       ),
@@ -543,19 +596,26 @@ class _PostWidgetState extends State<PostWidget> {
           onContentChanged: onContentChanged,
           isUserProfile: widget.isUserProfile,
         ),
-        _PostBody(
-          title: widget.post.title,
-          content: content.isNotEmpty ? content[content.length - 1] : "",
-          attachments: widget.post.attachments,
-          link: widget.post.link,
-          postType: widget.post.type,
-          isFullView: widget.isFullView,
-          pollOption: widget.post.pollOptions,
-          isPollEnabled: widget.post.isPollEnabled,
-          pollVotingLength: widget.post.pollVotingLength,
-          postId: widget.post.postId,
-          isNsfw: widget.post.isNsfw,
-          isSpoiler: widget.post.isSpoiler,
+        GestureDetector(
+          onTap: () {
+            print("tapped");
+            Navigator.of(context)
+                .pushNamed('/post_card_page/${widget.post.postId}');
+          },
+          child: _PostBody(
+            title: widget.post.title,
+            content: content.isNotEmpty ? content[content.length - 1] : "",
+            attachments: widget.post.attachments,
+            link: widget.post.link,
+            postType: widget.post.type,
+            isFullView: widget.isFullView,
+            pollOption: widget.post.pollOptions,
+            isPollEnabled: widget.post.isPollEnabled,
+            pollVotingLength: widget.post.pollVotingLength,
+            postId: widget.post.postId,
+            isNsfw: widget.post.isNsfw,
+            isSpoiler: widget.post.isSpoiler,
+          ),
         ),
         _PostInteractions(
           votesCount: widget.post.votesUpCount - widget.post.votesDownCount,

@@ -35,7 +35,6 @@ import 'features/Sign_up/Presentaion/pages/createusername.dart';
 import 'features/user_profile/presentation/pages/user_profile.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -54,7 +53,7 @@ class SpreadIt extends StatelessWidget {
           ? const MaterialScrollBehavior().copyWith(
               dragDevices: {PointerDeviceKind.mouse},
             )
-          : null, 
+          : null,
       title: 'Spread It',
       theme: spreadItTheme,
       home: AllPage(),
@@ -85,14 +84,7 @@ class SpreadIt extends StatelessWidget {
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
-             '/post_card_page': (context) =>
-            PostCardPage(),
-        './post-card-page':(context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-          return PostCardPage(
-            post: args['post'],
-          );
-        },    
+        '/post_card_page/:post-id/': (context) => PostCardPage(),
       },
     );
   }
