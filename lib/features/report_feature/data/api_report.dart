@@ -40,7 +40,7 @@ Future<int> reportCommentRequest(String postId, String commentId,
       '$interactionsApiUrlGalal/comments/$commentId/report',
       data: postRequestInfo,
       options: Options(
-        headers: {'Authorization': '$accessToken'},
+        headers: {'Authorization': 'Bearer $accessToken'},
       ),
     );
     if (response.statusCode == 200) {
