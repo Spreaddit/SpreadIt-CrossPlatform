@@ -53,8 +53,8 @@ class _PostHeaderState extends State<_PostHeader> {
           "Block account",
           "Hide",
           if (widget.isUserProfile)
-            isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
-          isNSFW ? "Unmark NSFW" : "Mark NSFW",
+            widget.post.isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
+          widget.post.isNsfw ? "Unmark NSFW" : "Mark NSFW",
           "Delete post",
         ], onPressedList: [
           subscribeToPost,
@@ -80,10 +80,10 @@ class _PostHeaderState extends State<_PostHeader> {
   Widget build(BuildContext context) {
     final sec30PassedToggler =
         useState(false); //used for changing time without constant re-render
-    final dateFormatted = useState(dateToDuration(date));
+    final dateFormatted = useState(dateToDuration(widget.post.date));
 
     useEffect(() {
-      dateFormatted.value = dateToDuration(date);
+      dateFormatted.value = dateToDuration(widget.post.date);
       print(dateFormatted.value);
       return;
     }, [sec30PassedToggler.value]);
@@ -109,14 +109,14 @@ class _PostHeaderState extends State<_PostHeader> {
             alignment: WrapAlignment.spaceBetween,
             children: [
               Text(
-                "r/$community",
+                "r/$widget.post.community",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               Text(dateFormatted.value),
             ],
           ),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(profilePic),
+            backgroundImage: NetworkImage(widget.post.userProfilePic),
           ),
           trailing: Icon(Icons.more_vert), //TODO: render menu here
         ),
