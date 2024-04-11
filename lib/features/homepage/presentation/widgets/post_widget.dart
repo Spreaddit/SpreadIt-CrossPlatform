@@ -75,7 +75,7 @@ class _PostHeader extends HookWidget {
 
 class _PostBody extends StatelessWidget {
   final String headline;
-  final String? description;
+  String? description;
   final String? imageUrl;
 
   _PostBody({

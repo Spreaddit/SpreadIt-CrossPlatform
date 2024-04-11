@@ -1,1 +1,1 @@
-const apiUrl = "http://10.0.2.2:3001/M7MDREFAAT550/Spreadit/2.0.0";
+const apiUrl = "http://localhost:3001/AMIRAELGARF99/commentsUpdated/1.0.0";

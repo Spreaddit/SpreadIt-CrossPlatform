@@ -9,7 +9,6 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_reply.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
@@ -42,7 +41,8 @@ class _CommentHeader extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sec30PassedToggler = useState(false);
+    final sec30PassedToggler =
+        useState(false); //used for changing time without constant re-render
     final dateFormatted = useState(dateToDuration(date));
 
     useEffect(() {
@@ -201,56 +201,14 @@ class _CommentCardState extends State<CommentCard> {
                         );
                       },
                       onReplyPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            // Controller for the text field
-                            TextEditingController replyController =
-                                TextEditingController();
+                        /* AddReplyWidget(
+                            parentCommentId: comment.id, addReply: addReply);
+                        print("ghhh");*/
 
-                            return SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                  top: 20,
-                                  right: 20,
-                                  left: 20,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: replyController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Your reply...',
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        print('add reply');
-                                        // FocusScope.of(context).unfocus();
-                                        String newReply = replyController.text;
-                                        print(newReply);
-                                        Comment? nReply = await updateComments(
-                                            id: widget.comment.id,
-                                            content: newReply,
-                                            type: 'reply');
-                                        setState(() {
-                                          addReply(nReply!);
-                                          print('nReply ${nReply.content}');
-                                        });
-
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('Reply'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
+                        Navigator.of(context).pushNamed(
+                          '/edit_comment',
+                          arguments: {
+                            'comment': comment,
                           },
                         );
                       },

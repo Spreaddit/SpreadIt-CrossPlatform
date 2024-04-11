@@ -4,7 +4,7 @@ class Post {
   final String userId;
   final DateTime date;
   final String headline;
-  final String? description;
+  late final String? description;
   final String? imageUrl;
   final int votesCount;
   final int sharesCount;

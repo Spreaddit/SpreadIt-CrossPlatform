@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
@@ -7,21 +6,24 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 
-class PostCard extends StatefulWidget {
-  Post post;
-  List<Comment> comments;
-
-  PostCard({
-    required this.post,
-    required this.comments,
-  });
-
+class AddReplyWidget extends StatefulWidget {
+  String parentCommentId;
+  final Function(Comment) addReply;
+  AddReplyWidget({required this.parentCommentId, required this.addReply});
   @override
-  _PostCardState createState() => _PostCardState();
+  State<AddReplyWidget> createState() {
+    return _AddReplyWidgetState();
+  }
+
+  // Function to get the text from the input field
+  String getCommentText() {
+    return _AddReplyWidgetState()._commentController.text;
+  }
 }
 
-class _PostCardState extends State<PostCard> {
+class _AddReplyWidgetState extends State<AddReplyWidget> {
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _linkController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -78,48 +80,38 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      physics: ScrollPhysics(),
-      child: Container(
-        /* padding: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 0,
-        ),*/
-        child: Column(children: [
-          PostWidget(
-            post: widget.post,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                  top: BorderSide(
-                      color: Color.fromARGB(255, 216, 213, 213),
-                      width: screenHeight * 0.005)),
+    return ListTile(
+      title: Expanded(
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: TextFormField(
+            controller: _commentController,
+            maxLines: null,
+            decoration: InputDecoration(
+              labelText: "Add a comment",
+              suffixIcon: IconButton(
+                onPressed: () {
+                  // _showBottomSheet(context);
+                },
+                icon: Icon(Icons.link),
+              ),
             ),
           ),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: widget.comments.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  CommentCard(comment: widget.comments[index]),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                            color: Color.fromARGB(255, 216, 213, 213),
-                            width: screenHeight * 0.005),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ]),
+        ),
+      ),
+      trailing: OutlinedButton(
+        onPressed: () async {
+          print('add reply');
+          FocusScope.of(context).unfocus();
+          String newReply = _commentController.text;
+          Comment? nReply = await updateComments(
+              id: widget.parentCommentId, content: newReply, type: 'reply');
+          setState(() {
+            widget.addReply(nReply!);
+            print('nReply ${nReply.content}');
+          });
+        },
+        child: Text("Reply"),
       ),
     );
   }
