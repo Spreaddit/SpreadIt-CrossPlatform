@@ -25,7 +25,7 @@ Future<List<Comment>> getCommentReplies(String commentId) async {
     );
 
     if (response.statusCode == 200) {
-      List<dynamic> commentsJson = response.data['comment'];
+      List<dynamic> commentsJson = response.data['replies'];
 
       List<Comment> replies =
           commentsJson.map((json) => Comment.fromJson(json)).toList();

@@ -32,7 +32,7 @@ class _PostCardPageState extends State<PostCardPage> {
   Future<void> fetchComments() async {
     try {
       var data =
-          await FetchUserComments('post', 'post', "${widget.post!.postId}");
+          await fetchUserComments('user', 'post', "${widget.post!.postId}");
       setState(() {
         comments = data;
       });

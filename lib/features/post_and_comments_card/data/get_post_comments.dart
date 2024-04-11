@@ -69,7 +69,7 @@ List<Comment> getPostComments(int postId) {
 */
 String baseUrl = apiUrl;
 
-Future<List<Comment>> FetchUserComments(
+Future<List<Comment>> fetchUserComments(
     String? username, String page, String? postId) async {
   try {
     print("fetch");
@@ -98,7 +98,7 @@ Future<List<Comment>> FetchUserComments(
     );
     print(response.data);
     if (response.statusCode == 200) {
-      List<dynamic> commentsJson = response.data['comment'];
+      List<dynamic> commentsJson = response.data['comments'];
 
       List<Comment> comments =
           commentsJson.map((json) => Comment.fromJson(json)).toList();
