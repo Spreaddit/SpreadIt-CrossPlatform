@@ -6,19 +6,23 @@ import "../../data/oauth_service.dart";
 import '../../../generic_widgets/terms_and_cond_text.dart';
 import '../../../generic_widgets/button.dart';
 
+/// The startup page where users can either log in, sign up with email, or sign up with Google.
 class StartUpPage extends StatelessWidget {
+/// Navigates to the login page.
   void navigateToLogin(BuildContext context) {
     Navigator.of(context).pushNamed('/log-in-page');
   }
 
+/// Navigates to the sign-up page.
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
   }
 
+/// Handles sign-in with Google authentication.
   Future<void> handleSignIn(BuildContext context) async {
-    String access_token = await signInWithGoogle(context);
+    String accesstoken = await signInWithGoogle(context);
     var responseCode = await googleOAuthApi(
-      googleToken: access_token,
+      googleToken: accesstoken,
     );
     if (responseCode == 200) {
       Navigator.of(context).pushNamed('/home');

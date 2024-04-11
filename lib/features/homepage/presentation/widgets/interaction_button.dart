@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
+/// This Library is responsible for handling post interactions
+/// (e.g., votes, comments and shares)
+
+/// This widget is responsible for the display
+/// and state handling of an upvote button
+/// in a [PostWidget] card
 class UpVoteButton extends HookWidget {
   Color color;
   double width;
@@ -21,17 +28,19 @@ class UpVoteButton extends HookWidget {
     return GestureDetector(
       child: IconButton(
         onPressed: upVote,
-        icon: Image.asset(
-          "assets/images/upvoteicon.png",
-          width: width,
-          height: height,
-          color: color,
+        icon: Icon(
+          Icons.arrow_upward,
+          size: 24.0,
+          color: Color.fromARGB(255, 255, 68, 0),
         ),
       ),
     );
   }
 }
 
+/// This widget is responsible for the display
+/// and state handling of a downvote button
+/// in a [PostWidget] card
 class DownVoteButton extends HookWidget {
   Color color;
   double width;
@@ -50,16 +59,17 @@ class DownVoteButton extends HookWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: downVote,
-      icon: Image.asset(
-        "assets/images/downvoteicon.png",
-        width: width,
-        height: height,
-        color: color,
+      icon: Icon(
+        Icons.arrow_downward,
+        size: 24.0,
       ),
     );
   }
 }
 
+/// This widget is responsible for the display
+/// of [UpVoteButton] and [DownVoteButton]
+/// and the total vote count (upvotes - down votes)
 class VoteButton extends HookWidget {
   int initialVotesCount; // TODO: to be changed to a state
   VoteButton({
@@ -88,6 +98,9 @@ class VoteButton extends HookWidget {
   }
 }
 
+/// This widget is responsible for the display
+/// and state handling of a share button/share count
+/// in a [PostWidget] card
 class ShareButton extends HookWidget {
   int initialSharesCount;
   String message; // TODO: to be changed to a state
@@ -125,6 +138,9 @@ class ShareButton extends HookWidget {
   }
 }
 
+/// This widget is responsible for the display
+/// and state handling of a comment button/comment count
+/// in a [PostWidget] card
 class CommentButton extends HookWidget {
   int initialCommensCount; // TODO: to be changed to a state
   CommentButton({

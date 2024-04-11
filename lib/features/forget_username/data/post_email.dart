@@ -3,6 +3,9 @@ import 'package:spreadit_crossplatform/api.dart';
 
 String apibase = apiUrl;
 
+/// It takes the [email] from the input field and sends it to the backend to ensure that this user exists and send them an 
+/// email with the username 
+
 Future<int> sendEmail(String email) async {
   try {
     const apiRoute = "/forgot-username";

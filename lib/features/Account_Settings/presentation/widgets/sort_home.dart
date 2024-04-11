@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'settings_btn_bottom_sheet.dart';
 
+/// A widget that displays a bottom sheet with options to sort the home screen by various criteria.
+///
+/// It uses a [BottomModalBtn] that when pressed, displays the bottom sheet as well as update
+/// after a selected value is recorded.
 class SortHome extends StatefulWidget {
+  /// Creates a sort home widget.
   SortHome({Key? key}) : super(key: key);
 
+  /// List of available sorting options for the home screen.
   final List<String> homeSort = [
     "best",
     "hot",
@@ -17,17 +23,29 @@ class SortHome extends StatefulWidget {
   State<SortHome> createState() => _SortHomeState();
 }
 
+/// [SortHome] state.
 class _SortHomeState extends State<SortHome> {
+  /// Represents the selected sorting option for home page posts.
   String? _selectedHomeSort = "";
+
+  /// Represents the temporary selected sorting option for home page posts.
   String? _tempSelectedHomeSort = "";
+
+  /// Holds the fetched data related to user information.
   late Map<String, dynamic> data;
+
+  /// Represents the result of the API update call.
   int result = 1;
+
   @override
   void initState() {
     super.initState();
     setState(() {});
   }
 
+  /// Displays the Home sort bottom sheet.
+  ///
+  /// The option isn't updated until the 'Done' Button is pressed.
   void setHomeSort() {
     showModalBottomSheet(
       context: context,

@@ -6,7 +6,7 @@ import '../../../generic_widgets/header.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../generic_widgets/terms_and_cond_text.dart';
 import '../../data/log_in_api.dart';
-
+/// The login screen where users can enter their username and password to log in.
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
 
@@ -24,18 +24,22 @@ class LogInScreenState extends State<LogInScreen> {
   var validusername = true;
   var validPass = true;
 
+    /// Navigates to the forget password page.
   void navigateToForgetPassword(BuildContext context) {
     Navigator.of(context).pushNamed('/forget-password');
   }
 
+  /// Navigates to the forget username page.
   void navigateToForgetUsername(BuildContext context) {
     Navigator.of(context).pushNamed('/forget-username');
   }
 
+/// Navigates to the sign-up page.
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
   }
 
+/// Navigates to the home page after successful login.
   void navigateToHomePage(BuildContext context) async {
     if (validusername && validPass) {
       _usernameForm.currentState!.save();
@@ -46,7 +50,7 @@ class LogInScreenState extends State<LogInScreen> {
       password: _userPassword,
     );
     if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/home'); // should be Home page
+      Navigator.of(context).pushNamed('/home'); 
     } else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input").show(context);
     } else if (responseCode == 404) {
@@ -56,6 +60,7 @@ class LogInScreenState extends State<LogInScreen> {
     }
   }
 
+/// Callback function to update the username and its validation status.
   void updateUsername(String username, bool validation) {
     _username = username;
     validusername = validation;
@@ -63,6 +68,7 @@ class LogInScreenState extends State<LogInScreen> {
     updateValidStatus();
   }
 
+/// Callback function to update the password and its validation status.
   void updatePassword(String password, bool validation) {
     _userPassword = password;
     validPass = validation;
@@ -70,6 +76,7 @@ class LogInScreenState extends State<LogInScreen> {
     updateValidStatus();
   }
 
+/// Updates the validation status for both username and password.
   void updateValidStatus() {
     setState(() {
       _validPassAndUsername = _username.isNotEmpty && _userPassword.isNotEmpty;
