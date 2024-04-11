@@ -91,6 +91,8 @@ class _PostBody extends StatelessWidget {
   final String? pollVotingLength;
   final bool? isPollEnabled;
   final int postId;
+  final bool isSpoiler;
+  final bool isNsfw;
 
   _PostBody({
     required this.title,
@@ -103,6 +105,8 @@ class _PostBody extends StatelessWidget {
     this.pollOption,
     this.pollVotingLength,
     required this.postId,
+    this.isNsfw = false,
+    this.isSpoiler = false,
   });
 
   @override
@@ -120,16 +124,78 @@ class _PostBody extends StatelessWidget {
             letterSpacing: -0.5,
           ),
         ),
-        subtitle: _PostContent(
-          postType: postType,
-          content: content,
-          attachments: attachments,
-          link: link,
-          isFullView: isFullView,
-          pollOption: pollOption,
-          isPollEnabled: isPollEnabled ?? true,
-          pollVotingLength: pollVotingLength,
-          postId: postId,
+        subtitle: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Opacity(
+              opacity: 0.6,
+              child: Row(
+                children: [
+                  isNsfw
+                      ? Flex(
+                          direction: Axis.horizontal,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.eighteen_up_rating_rounded,
+                              color: Colors.purple,
+                              size: 16,
+                            ),
+                            Text(
+                              " Nswf",
+                              style: TextStyle(
+                                fontSize: 12,
+                                letterSpacing: -0.5,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.purple,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(""),
+                  SizedBox(
+                    width: isNsfw ? 10 : 0,
+                  ),
+                  isSpoiler
+                      ? Flex(
+                          direction: Axis.horizontal,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.explicit,
+                              size: 16,
+                            ),
+                            Text(
+                              " Spoiler",
+                              style: TextStyle(
+                                fontSize: 12,
+                                letterSpacing: -0.5,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(""),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            _PostContent(
+              postType: postType,
+              content: content,
+              attachments: attachments,
+              link: link,
+              isFullView: isFullView,
+              pollOption: pollOption,
+              isPollEnabled: isPollEnabled ?? true,
+              pollVotingLength: pollVotingLength,
+              postId: postId,
+              isNsfw: isNsfw,
+              isSpoiler: isSpoiler,
+            ),
+          ],
         ),
       ),
     );
@@ -218,6 +284,8 @@ class _PostContent extends StatelessWidget {
   final String? link;
   final bool isFullView;
   final int postId;
+  final bool isSpoiler;
+  final bool isNsfw;
 
   _PostContent({
     required this.postType,
@@ -229,18 +297,23 @@ class _PostContent extends StatelessWidget {
     this.pollOption,
     this.pollVotingLength,
     required this.postId,
+    this.isNsfw = false,
+    this.isSpoiler = false,
   });
 
   @override
   Widget build(BuildContext context) {
     if (postType == "post") {
-      print("post Category Endpoint in content: $content");
+      if ((isNsfw || isSpoiler) && !isFullView) return Text("");
+
       return Text(
         content ?? "",
         overflow: TextOverflow.ellipsis,
         maxLines: !isFullView ? 5 : null,
       );
     } else if (postType == "attachment") {
+      if ((isNsfw || isSpoiler) && !isFullView) return Text("");
+
       if (attachments!.isNotEmpty) {
         if (attachments![0].type == "image") {
           return _ImageCaruosel(attachments: attachments!);
@@ -253,6 +326,8 @@ class _PostContent extends StatelessWidget {
         return Text("Unable to load attachments");
       }
     } else if (postType == "link") {
+      if ((isNsfw || isSpoiler) && !isFullView) return Text("");
+
       return AnyLinkPreview(
         link: link ?? "",
         displayDirection: UIDirection.uiDirectionHorizontal,
@@ -265,6 +340,7 @@ class _PostContent extends StatelessWidget {
         ),
       );
     } else {
+      if ((isNsfw || isSpoiler) && !isFullView) return Text("");
       return FlutterPolls(
         pollTitle: Text(""),
         pollId: Uuid().v1(),
@@ -415,6 +491,8 @@ class PostWidget extends StatelessWidget {
           isPollEnabled: post.isPollEnabled,
           pollVotingLength: post.pollVotingLength,
           postId: post.postId,
+          isNsfw: post.isNsfw,
+          isSpoiler: post.isSpoiler,
         ),
         _PostInteractions(
           votesCount: post.votesUpCount - post.votesDownCount,
