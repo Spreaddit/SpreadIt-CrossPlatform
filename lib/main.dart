@@ -67,9 +67,9 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: PostCardPage(
-          post:
-              P), //AddReplyWidget(addReply: (R3){},parentCommentId: "67899"), //EditComment( comment:R3), //EditPost(post: P), //PostCardPage(post: P), //StartUpPage(),
+      home: EditComment(
+          comment:
+              R3), //AddReplyWidget(addReply: (R3){},parentCommentId: "67899"), //EditComment( comment:R3), //EditPost(post: P), //PostCardPage(post: P), //StartUpPage(),
       routes: {
         '/home': (context) => HomePage(),
         '/start-up-page': (context) => StartUpPage(),
