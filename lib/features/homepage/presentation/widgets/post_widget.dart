@@ -5,31 +5,76 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_polls/flutter_polls.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
-class _PostHeader extends HookWidget {
-  final String username;
-  final String userId;
-  final DateTime date;
-  final String profilePic;
-  final String community;
+class _PostHeader extends StatefulWidget {
+  Post post;
+  final bool isUserProfile;
   final void Function(String) onContentChanged;
 
   _PostHeader({
-    required this.username,
-    required this.userId,
-    required this.date,
-    required this.profilePic,
-    required this.community,
+    required this.post,
     required this.onContentChanged,
+    required this.isUserProfile,
   });
+
+  State<_PostHeader> createState() => _PostHeaderState();
+}
+
+class _PostHeaderState extends State<_PostHeader> {
+  void onShowMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomBottomSheet(icons: [
+          Icons.notifications_on_rounded,
+          Icons.save,
+          Icons.copy,
+          Icons.flag,
+          Icons.block,
+          Icons.hide_source_rounded,
+          if (widget.isUserProfile) Icons.new_releases_rounded,
+          Icons.warning_rounded,
+          Icons.delete,
+        ], text: [
+          "Subscribe to post",
+          "Save",
+          "Copy text",
+          "Report",
+          "Block account",
+          "Hide",
+          if (widget.isUserProfile)
+            isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
+          isNSFW ? "Unmark NSFW" : "Mark NSFW",
+          "Delete post",
+        ], onPressedList: [
+          subscribeToPost,
+          save,
+          copyText,
+          report,
+          blockAccount,
+          hide,
+          if (widget.isUserProfile)
+            widget.post.isSpoiler
+                ? () => widget.post.unmarkSpoiler(context, widget.post.postId)
+                : () => widget.post.markSpoiler(context, widget.post.postId),
+          widget.post.isNsfw
+              ? () => widget.post.unmarkNSFW(context, widget.post.postId)
+              : () => widget.post.markNSFW(context, widget.post.postId),
+          () => widget.post.deletePost(context, widget.post.postId),
+        ]);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -461,10 +506,12 @@ class _PostInteractions extends HookWidget {
 class PostWidget extends StatefulWidget {
   final Post post;
   final bool isFullView;
+  final bool isUserProfile;
 
   PostWidget({
     required this.post,
     this.isFullView = false,
+    required this.isUserProfile,
   });
 
   State<PostWidget> createState() => _PostWidgetState();
@@ -492,12 +539,9 @@ class _PostWidgetState extends State<PostWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PostHeader(
-          username: widget.post.username,
-          userId: widget.post.userId,
-          date: widget.post.date,
-          profilePic: widget.post.userProfilePic,
-          community: widget.post.community,
+          post: widget.post,
           onContentChanged: onContentChanged,
+          isUserProfile: widget.isUserProfile,
         ),
         _PostBody(
           title: widget.post.title,

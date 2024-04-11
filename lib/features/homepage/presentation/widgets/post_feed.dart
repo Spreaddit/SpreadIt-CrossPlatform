@@ -113,7 +113,10 @@ class _PostFeedState extends State<PostFeed> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        PostWidget(post: items[index]),
+                        PostWidget(
+                            post: items[index],
+                            isUserProfile:
+                                currentPostCategory == PostCategories.user),
                         Divider(
                           height: 20,
                           thickness: 0.2,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 
 class PostCardTopBar extends AppBar {
   PostCardTopBar(BuildContext context, String image)
