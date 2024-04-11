@@ -74,6 +74,12 @@ class SpreadIt extends StatelessWidget {
             AddPasswordPage(),
              '/post_card_page': (context) =>
             PostCardPage(),
+        './post-card-page':(context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return PostCardPage(
+            post: args['post'],
+          );
+        },    
       },
     );
   }
