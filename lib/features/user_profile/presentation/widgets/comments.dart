@@ -19,11 +19,14 @@ class CommentWidget extends StatelessWidget {
     this.onPressed,
   });
 
-  void unsaveComment(BuildContext context) async {
+void unsaveComment(BuildContext context) async {
     int statusCode = await saveOrUnsave(id: comment.id, type: 'comments');
     Navigator.pop(context);
     if (statusCode == 200) {
-      print('comment saved/unsaved successfully.');
+      print('Post unsaved successfully.');
+      if (onPressed != null) {
+        onPressed!();
+      }
     } else {
       CustomSnackbar(content: "Error occurred while trying to unsave").show(context);
     }
