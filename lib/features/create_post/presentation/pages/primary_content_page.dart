@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
@@ -12,8 +13,8 @@ import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/show_discard_bottomsheet.dart';
-import '../widgets/photo_and_video_pickers/image_picker.dart';
-import '../widgets/photo_and_video_pickers/video_picker.dart';
+import '../../../generic_widgets/photo_and_video_pickers/image_picker.dart';
+import '../../../generic_widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/poll_widgets/poll.dart';
 import '../widgets/link.dart';
 import '../widgets/image_and_video_widgets.dart';
@@ -48,7 +49,9 @@ class _CreatePostState extends State<CreatePost> {
   bool isLinkAdded = false;
 
   File? image;
+  Uint8List? imageWeb;
   File? video;
+  Uint8List? videoWeb;
   String? link;
   IconData? lastPressedIcon;
 
@@ -114,6 +117,8 @@ class _CreatePostState extends State<CreatePost> {
 
   void cancelImageOrVideo () {
     setState(() {
+      imageWeb = null;
+      videoWeb = null;
       image = null;
       video = null;
     });
@@ -121,10 +126,18 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> pickImage() async {
-    final image = await pickImageFromFilePicker();
-    setState(() {
-      this.image = image;
-    });
+    if(kIsWeb) {
+      final image = await pickImageFromFilePickerWeb();
+      setState(() {
+        imageWeb = image;
+      });
+    }
+    else {
+      final image = await pickImageFromFilePicker();
+      setState(() {
+        this.image = image;
+      });
+    }
   }
 
   Future<void> pickVideo() async {
@@ -168,7 +181,9 @@ class _CreatePostState extends State<CreatePost> {
       'content': content,
       'link': link,
       'image': image,
+      'imageWeb': imageWeb,
       'video':video,
+      'videoWeb':videoWeb,
       'pollOptions': pollOptions,
       'selectedDay': selectedDay,
       'createPoll': createPoll,
@@ -196,14 +211,16 @@ class _CreatePostState extends State<CreatePost> {
                   onChanged:updateTitle,
                   initialBody: '',
                 ),
-                if (image != null)
+                if (image != null || imageWeb != null)
                   ImageOrVideoWidget(
-                    imageOrVideo: image!, 
+                    imageOrVideo: image, 
+                    imageOrVideoWeb: imageWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
-                if (video != null)
+                if (video != null || videoWeb != null)
                    ImageOrVideoWidget(
-                    imageOrVideo: video!,
+                    imageOrVideo: video,
+                    imageOrVideoWeb: videoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (isLinkAdded)

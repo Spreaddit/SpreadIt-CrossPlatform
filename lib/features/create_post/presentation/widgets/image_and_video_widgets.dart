@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
 class ImageOrVideoWidget extends StatefulWidget {
 
-  final File imageOrVideo;
+  final File? imageOrVideo;
+  final Uint8List? imageOrVideoWeb;
   final VoidCallback onIconPress;
 
   const ImageOrVideoWidget({
     required this.imageOrVideo,
+    required this.imageOrVideoWeb,
     required this.onIconPress,
   });
 
@@ -26,10 +29,16 @@ class _ImageOrVideoWidgetState extends State<ImageOrVideoWidget> {
           height: 160,
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: FileImage(widget.imageOrVideo),
-              fit:BoxFit.cover,
-            ),
+            image: 
+            !kIsWeb ?
+              DecorationImage(
+                image: FileImage(widget.imageOrVideo!),
+                fit:BoxFit.cover,
+              ) :
+              DecorationImage(
+                image:MemoryImage(widget.imageOrVideoWeb!),
+                fit:BoxFit.cover,
+              ),
           ),
         ),
         Positioned(

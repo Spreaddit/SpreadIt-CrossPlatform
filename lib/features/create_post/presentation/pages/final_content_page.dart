@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -17,8 +20,8 @@ import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../widgets/header_and_footer_widgets/community_and_rules_header.dart';
 import '../widgets/show_discard_bottomsheet.dart';
 import '../../../generic_widgets/small_custom_button.dart';
-import '../widgets/photo_and_video_pickers/image_picker.dart';
-import '../widgets/photo_and_video_pickers/video_picker.dart';
+import '../../../generic_widgets/photo_and_video_pickers/image_picker.dart';
+import '../../../generic_widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/tags_widgets/rendered_tag.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/image_and_video_widgets.dart';
@@ -30,7 +33,9 @@ class FinalCreatePost extends StatefulWidget {
   final String content;
   final String? link;
   final File? image;
+  final Uint8List? imageWeb;
   final File? video;
+  final Uint8List? videoWeb;
   final List<String>? pollOptions;
   final int? selectedDay;
   final bool? createPoll;
@@ -43,7 +48,9 @@ class FinalCreatePost extends StatefulWidget {
     required this.content,
     this.link,
     this.image,
+    this.imageWeb,
     this.video,
+    this.videoWeb,
     this.pollOptions,
     this.selectedDay,
     this.createPoll,
@@ -83,7 +90,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool finalCreatePoll = false;   
 
   File? finalImage;
+  Uint8List? finalImageWeb;
   File? finalVideo;
+  Uint8List? finalVideoWeb;
   String? finalLink;
   IconData? lastPressedIcon;
 
@@ -123,8 +132,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     if(widget.image != null) {
       finalImage = widget.image;
     }
+    if(widget.imageWeb != null) {
+      finalImageWeb = widget.imageWeb;
+    }
     if(widget.video != null) {
       finalVideo = widget.video;
+    }
+    if(widget.videoWeb != null) {
+      finalVideoWeb = widget.videoWeb;
     }
     if(widget.createPoll != null) { 
       finalCreatePoll = widget.createPoll!;
@@ -210,6 +225,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   void cancelImageOrVideo () {
     setState(() {
+      finalImageWeb = null;
+      finalVideoWeb = null;
       finalImage = null;
       finalVideo = null;
     });
@@ -217,10 +234,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   Future<void> pickImage() async {
-    final image = await pickImageFromFilePicker();
-    setState(() {
-      finalImage = image;
-    });
+    if (kIsWeb) {
+      final image = await pickImageFromFilePickerWeb();
+      setState(() {
+        finalImageWeb = image;
+      });
+    }
+    else {
+      final image = await pickImageFromFilePicker();
+      setState(() {
+        finalImage = image;
+      });
+    }
   }
   
   Future<void> pickVideo() async {
@@ -275,7 +300,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   void submit () async {
    int response = await submitPost(
-      finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalVideo, isSpoiler, isNSFW);
+      finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalImageWeb, finalVideo, finalVideoWeb, isSpoiler, isNSFW);
     if ( response == 201 ) {
       CustomSnackbar(content: 'Posted successfully !').show(context);
       returnToHomePage(context);
@@ -347,14 +372,16 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                   onChanged: updateTitle,
                   initialBody: widget.title,
                 ),
-                if (finalImage != null)
+                if (finalImage != null || finalImageWeb != null)
                   ImageOrVideoWidget(
-                    imageOrVideo: finalImage!,
+                    imageOrVideo: finalImage,
+                    imageOrVideoWeb: finalImageWeb,
                     onIconPress: cancelImageOrVideo,
                   ), 
-                if (finalVideo != null)
+                if (finalVideo != null || finalVideoWeb != null)
                    ImageOrVideoWidget(
-                    imageOrVideo: finalVideo!,
+                    imageOrVideo: finalVideo,
+                    imageOrVideoWeb: finalVideoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)

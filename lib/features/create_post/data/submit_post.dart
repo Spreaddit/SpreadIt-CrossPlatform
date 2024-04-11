@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
 String apibase = apiUrl;
@@ -13,7 +14,9 @@ Future <int> submitPost(
   int selectedDays,
   String? link,
   File? images,
+  Uint8List? imageWeb,
   File? videos,
+  Uint8List? videoWeb,
   bool isSpoiler,
   bool isNSFW,
  ) async {

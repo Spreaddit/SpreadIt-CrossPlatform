@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/get_communities_list.dart';
 import '../../../generic_widgets/search_bar.dart';
@@ -12,7 +13,9 @@ class PostToCommunity extends StatefulWidget {
   final String content;
   final String? link;
   final File? image;
+  final Uint8List? imageWeb;
   final File? video;
+  final Uint8List? videoWeb;
   final List<String> pollOptions;
   final int selectedDay;
   final bool createPoll;
@@ -24,7 +27,9 @@ class PostToCommunity extends StatefulWidget {
     required this.content,
     this.link,
     this.image,
+    this.imageWeb,
     this.video,
+    this.videoWeb,
     required this.pollOptions,
     required this.selectedDay,
     required this.createPoll,
@@ -96,7 +101,9 @@ class _PostToCommunityState extends State<PostToCommunity> {
       'content': widget.content,
       'link': widget.link,
       'image': widget.image,
+      'imageWeb': widget.imageWeb,
       'video': widget.video,
+      'videoWeb':widget.videoWeb,
       'pollOptions': widget.pollOptions,
       'selectedDay': widget.selectedDay,
       'createPoll': widget.createPoll,
