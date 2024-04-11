@@ -22,9 +22,8 @@ class GetSpecificCommunity {
       }
 
       if (response.statusCode == 200) {
-        List<Community> communities = (response.data['communities'] as List)
-            .map((i) => Community.fromJson(i))
-            .toList();
+        List<Community> communities =
+            (response.data as List).map((i) => Community.fromJson(i)).toList();
 
         return communities;
       } else if (response.statusCode == 404) {
