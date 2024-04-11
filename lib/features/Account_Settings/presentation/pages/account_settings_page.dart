@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/connected_acc_only_dialog.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import '../widgets/connected_acc_btn.dart';
@@ -32,6 +34,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   late Map<String, dynamic> data;
   String currentEmail = "";
   String currentLocation = "";
+  bool connectedAccOnly = false;
 
   /// Calls the [fetchData] method to fetch user information.
   @override
@@ -49,8 +52,19 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     // Update the state with the fetched data.
     setState(() {
       currentEmail = data["email"];
+      connectedAccMode();
       currentLocation = data["country"];
     });
+  }
+
+  /// Modifies the page according to whether the user is connected using a connected account only or not.
+  void connectedAccMode() {
+    if (currentEmail == "") {
+      connectedAccOnly = true;
+      currentEmail = data["connectedAccounts"][0];
+    } else {
+      connectedAccOnly = false;
+    }
   }
 
   /// List of routes to navigate to different settings pages.
@@ -90,6 +104,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             );
           },
         ),
+      ).then(
+        (_) => fetchData(),
       );
     }
 
@@ -98,34 +114,28 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         iconData: Icons.settings_outlined,
         mainText: "Update email address",
         secondaryText: currentEmail,
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 200),
-              reverseTransitionDuration: Duration(milliseconds: 100),
-              pageBuilder: (_, __, ___) => routes[0],
-              transitionsBuilder: (_, animation, __, child) {
-                return ScaleTransition(
-                  scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                  child: child,
-                );
-              },
-            ),
-          );
-          await fetchData();
+        onPressed: () {
+          if (connectedAccOnly) {
+            ConnectedAccountOnlyDialog(context, 0, currentEmail);
+            fetchData();
+          } else {
+            navigateToPage(routes[0]);
+          }
         },
       ),
       ToPageBtn(
         iconData: Icons.settings_outlined,
-        mainText: "Change password",
-        onPressed: () => Navigator.of(context)
-            .pushNamed('/settings/account-settings/change-password'),
+        mainText: (connectedAccOnly) ? "Add password" : "Change password",
+        onPressed: () {
+          if (connectedAccOnly) {
+            ConnectedAccountOnlyDialog(context, 1, currentEmail);
+            fetchData().then((_) => print("Fetched the data"));
+          } else {
+            Navigator.of(context)
+                .pushNamed('/settings/account-settings/change-password')
+                .then((_) => fetchData());
+          }
+        },
       ),
       ToPageBtn(
         iconData: Icons.location_on_outlined,
@@ -133,27 +143,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         secondaryText: currentLocation,
         tertiaryText:
             "Specify a location to customize your recommendations and feed. Reddit does not track your precise geolocation data. Learn more",
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 200),
-              reverseTransitionDuration: Duration(milliseconds: 100),
-              pageBuilder: (_, __, ___) => routes[2],
-              transitionsBuilder: (_, animation, __, child) {
-                return ScaleTransition(
-                  scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  ),
-                  child: child,
-                );
-              },
-            ),
-          );
-          await fetchData();
+        onPressed: () {
+          navigateToPage(routes[2]);
         },
       ),
       SelectGender(),
