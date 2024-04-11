@@ -34,15 +34,28 @@ Future<int> updateUserApi({
       "isVisible": contentVisibility,
       "isActive": showActiveComments,
     };
-    print(profilePicImage);
     if (backgroundImage != null) {
-      data["backgroundImage"] =
-          base64Encode(await backgroundImage.readAsBytes());
+      List<int> bytes = await backgroundImage.readAsBytes();
+      String base64Image = base64Encode(bytes);
+      data['banner']=base64Image;
     }
 
     if (profilePicImage != null) {
-      data["profilePicImage"] =
-          base64Encode(await profilePicImage.readAsBytes());
+      List<int> bytes = await profilePicImage.readAsBytes();
+      String base64Image = base64Encode(bytes);
+      data['avatar']=base64Image;
+    }
+
+    if (profileImageWeb != null) {
+      List<int> bytes = profileImageWeb.cast<int>();
+      String base64Image = base64Encode(bytes);
+      data['avatar']=base64Image;
+    }
+
+    if (backgroundImageWeb != null) {
+      List<int> bytes = backgroundImageWeb.cast<int>();
+      String base64Image = base64Encode(bytes);
+      data['banner']=base64Image;
     }
 
     final response = await Dio().post(

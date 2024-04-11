@@ -8,6 +8,8 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unNS
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unspoiler_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/delete_post_bottomsheet.dart';
 
+import '../../../saved/data/save_or_unsave.dart';
+
 void getReplyNotifications() {
   //TODO: get reply notifications logic
 }
@@ -92,3 +94,25 @@ void unmarkNSFW (BuildContext context, int postId) async {
 void deletePost (BuildContext context, int postId) {
   deletePostButtomSheet(context, postId);
 }
+
+void savePost(BuildContext context, int postId) async {
+    int statusCode = await saveOrUnsave(id: '$postId', type: 'savepost');
+    Navigator.pop(context);
+    if (statusCode == 200) {
+      print('Post unsaved successfully.');
+    } else {
+      CustomSnackbar(content: "Error occurred while trying to unsave").show(context);
+    }
+  }
+
+void unsavePost(BuildContext context, int postId) async {
+    int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
+    Navigator.pop(context);
+    if (statusCode == 200) {
+      print('Post unsaved successfully.');
+
+    } else {
+      CustomSnackbar(content: "Error occurred while trying to unsave").show(context);
+    }
+  }
+
