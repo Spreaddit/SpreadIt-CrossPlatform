@@ -124,18 +124,78 @@ class _PostBody extends StatelessWidget {
             letterSpacing: -0.5,
           ),
         ),
-        subtitle: _PostContent(
-          postType: postType,
-          content: content,
-          attachments: attachments,
-          link: link,
-          isFullView: isFullView,
-          pollOption: pollOption,
-          isPollEnabled: isPollEnabled ?? true,
-          pollVotingLength: pollVotingLength,
-          postId: postId,
-          isNsfw: isNsfw,
-          isSpoiler: isSpoiler,
+        subtitle: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Opacity(
+              opacity: 0.6,
+              child: Row(
+                children: [
+                  isNsfw
+                      ? Flex(
+                          direction: Axis.horizontal,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.eighteen_up_rating_rounded,
+                              color: Colors.purple,
+                              size: 16,
+                            ),
+                            Text(
+                              " Nswf",
+                              style: TextStyle(
+                                fontSize: 12,
+                                letterSpacing: -0.5,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.purple,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(""),
+                  SizedBox(
+                    width: isNsfw ? 10 : 0,
+                  ),
+                  isSpoiler
+                      ? Flex(
+                          direction: Axis.horizontal,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.explicit,
+                              size: 16,
+                            ),
+                            Text(
+                              " Spoiler",
+                              style: TextStyle(
+                                fontSize: 12,
+                                letterSpacing: -0.5,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(""),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            _PostContent(
+              postType: postType,
+              content: content,
+              attachments: attachments,
+              link: link,
+              isFullView: isFullView,
+              pollOption: pollOption,
+              isPollEnabled: isPollEnabled ?? true,
+              pollVotingLength: pollVotingLength,
+              postId: postId,
+              isNsfw: isNsfw,
+              isSpoiler: isSpoiler,
+            ),
+          ],
         ),
       ),
     );
