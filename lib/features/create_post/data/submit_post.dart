@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
@@ -27,12 +28,12 @@ Future <int> submitPost(
     else {
       pollVotingLength + ' Days';
     }
-    File? fileType;
+    String? fileType;
     if(images != null) {
-      fileType = images;
+      fileType = base64Encode(await images.readAsBytes());
     }
     else if(videos != null) {
-      fileType = videos;
+      fileType = base64Encode(await videos.readAsBytes());
     }
     else {
       fileType = null;
