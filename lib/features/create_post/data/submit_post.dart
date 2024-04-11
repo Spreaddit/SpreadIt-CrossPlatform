@@ -19,6 +19,7 @@ Future <int> submitPost(
  ) async {
   try {
     //String? accessToken = userSingleton().accessToken;
+    String accessToken = 'chahd';
     const apiRoute = "/posts";
     String apiUrl = apibase + apiRoute;
     String pollVotingLength = selectedDays.toString();
@@ -42,7 +43,7 @@ Future <int> submitPost(
       apiUrl,
       options:Options(
         headers: {
-          'Authorization' :'chahd',
+          'Authorization' :'Bearer $accessToken',
         }
       ),
       data: {
