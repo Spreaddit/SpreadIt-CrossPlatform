@@ -21,11 +21,21 @@ class _PostHeader extends StatefulWidget {
   Post post;
   final bool isUserProfile;
   final void Function(String) onContentChanged;
+  bool isNsfw;
+  bool isSpoiler;
+  final void Function(bool) onNsfwChanged;
+  final void Function(bool) onSpoilerChanged;
+  final void Function() onDeleted;
 
   _PostHeader({
     required this.post,
     required this.onContentChanged,
     required this.isUserProfile,
+    required this.isNsfw,
+    required this.isSpoiler,
+    required this.onSpoilerChanged,
+    required this.onNsfwChanged,
+    required this.onDeleted,
   });
 
   @override
@@ -102,8 +112,8 @@ class _PostHeaderState extends State<_PostHeader> {
       "Block account",
       "Hide",
       "Edit post",
-      widget.post.isSpoiler ? "Mark Spoiler" : "Unmark Spoiler",
-      widget.post.isNsfw ? "Unmark NSFW" : "Mark NSFW",
+      widget.isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
+      widget.isNsfw ? "Unmark NSFW" : "Mark NSFW",
       "Delete post",
     ];
 
@@ -129,13 +139,25 @@ class _PostHeaderState extends State<_PostHeader> {
               ),
             ),
           ),
-      widget.post.isSpoiler
-          ? () => unmarkSpoiler(context, widget.post.postId)
-          : () => markSpoiler(context, widget.post.postId),
-      widget.post.isNsfw
-          ? () => unmarkNSFW(context, widget.post.postId)
-          : () => markNSFW(context, widget.post.postId),
-      () => deletePost(context, widget.post.postId),
+      widget.isSpoiler
+          ? () => {
+                widget.onSpoilerChanged(!widget.isSpoiler),
+                unmarkSpoiler(context, widget.post.postId),
+              }
+          : () => {
+                widget.onSpoilerChanged(!widget.isSpoiler),
+                markSpoiler(context, widget.post.postId),
+              },
+      widget.isNsfw
+          ? () => {
+                widget.onNsfwChanged(!widget.isNsfw),
+                unmarkNSFW(context, widget.post.postId),
+              }
+          : () => {
+                widget.onNsfwChanged(!widget.isNsfw),
+                markNSFW(context, widget.post.postId),
+              },
+      () => deletePost(context, widget.post.postId, widget.onDeleted),
     ];
 
     List<void Function()> viewerActions = [
@@ -160,6 +182,7 @@ class _PostHeaderState extends State<_PostHeader> {
             Icons.flag,
             Icons.block,
             Icons.hide_source_rounded,
+            Icons.edit,
             Icons.new_releases_rounded,
             Icons.warning_rounded,
             Icons.delete,
@@ -572,11 +595,23 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   late List<String> content;
+  late bool isNsfw;
+  late bool isSpoiler;
+  late bool isDeleted = false;
+
   @override
   void initState() {
     super.initState();
     setState(() {
+      isNsfw = widget.post.isNsfw;
+      isSpoiler = widget.post.isSpoiler;
       content = widget.post.type == "post" ? widget.post.content : [];
+    });
+  }
+
+  void onDeleted() {
+    setState(() {
+      isDeleted = true;
     });
   }
 
@@ -586,43 +621,66 @@ class _PostWidgetState extends State<PostWidget> {
     });
   }
 
+  void onChangeSpoiler(bool newIsSpoiler) {
+    setState(() {
+      isSpoiler = newIsSpoiler;
+    });
+  }
+
+  void onChangeNsfw(bool newIsNsfw) {
+    setState(() {
+      isNsfw = newIsNsfw;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _PostHeader(
-          post: widget.post,
-          onContentChanged: onContentChanged,
-          isUserProfile: widget.isUserProfile,
-        ),
-        GestureDetector(
-          onTap: () {
-            print("tapped");
-            Navigator.of(context)
-                .pushNamed('/post_card_page/${widget.post.postId}');
-          },
-          child: _PostBody(
-            title: widget.post.title,
-            content: content.isNotEmpty ? content[content.length - 1] : "",
-            attachments: widget.post.attachments,
-            link: widget.post.link,
-            postType: widget.post.type,
-            isFullView: widget.isFullView,
-            pollOption: widget.post.pollOptions,
-            isPollEnabled: widget.post.isPollEnabled,
-            pollVotingLength: widget.post.pollVotingLength,
-            postId: widget.post.postId,
-            isNsfw: widget.post.isNsfw,
-            isSpoiler: widget.post.isSpoiler,
-          ),
-        ),
-        _PostInteractions(
-          votesCount: widget.post.votesUpCount - widget.post.votesDownCount,
-          sharesCount: widget.post.sharesCount,
-          commentsCount: widget.post.commentsCount,
-        )
-      ],
-    );
+    return !isDeleted
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _PostHeader(
+                post: widget.post,
+                onContentChanged: onContentChanged,
+                isUserProfile: widget.isUserProfile,
+                isNsfw: isNsfw,
+                isSpoiler: isSpoiler,
+                onNsfwChanged: onChangeNsfw,
+                onSpoilerChanged: onChangeSpoiler,
+                onDeleted: onDeleted,
+              ),
+              GestureDetector(
+                onTap: () {
+                  print("tapped");
+                  Navigator.of(context)
+                      .pushNamed('/post_card_page/${widget.post.postId}');
+                },
+                child: _PostBody(
+                  title: widget.post.title,
+                  content:
+                      content.isNotEmpty ? content[content.length - 1] : "",
+                  attachments: widget.post.attachments,
+                  link: widget.post.link,
+                  postType: widget.post.type,
+                  isFullView: widget.isFullView,
+                  pollOption: widget.post.pollOptions,
+                  isPollEnabled: widget.post.isPollEnabled,
+                  pollVotingLength: widget.post.pollVotingLength,
+                  postId: widget.post.postId,
+                  isNsfw: isNsfw,
+                  isSpoiler: isSpoiler,
+                ),
+              ),
+              _PostInteractions(
+                votesCount:
+                    widget.post.votesUpCount - widget.post.votesDownCount,
+                sharesCount: widget.post.sharesCount,
+                commentsCount: widget.post.commentsCount,
+              )
+            ],
+          )
+        : Center(
+            child: Text("Post Has Been Deleted"),
+          );
   }
 }
