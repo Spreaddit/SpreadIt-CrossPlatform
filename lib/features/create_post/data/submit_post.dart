@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:spreadit_crossplatform/api.dart';
@@ -34,10 +35,24 @@ Future <int> submitPost(
     }
     String? fileType;
     if(images != null) {
-      fileType = base64Encode(await images.readAsBytes());
+      List<int> bytes = await images.readAsBytes();
+      String base64Image = base64Encode(bytes);
+      fileType = base64Image;
     }
     else if(videos != null) {
-      fileType = base64Encode(await videos.readAsBytes());
+      List<int> bytes = await videos.readAsBytes();
+      String base64Image = base64Encode(bytes);
+      fileType = base64Image;
+    }
+    else if (imageWeb != null) {
+      List<int> bytes = imageWeb.cast<int>();
+      String base64Image = base64Encode(bytes);
+      fileType = base64Image;
+    }
+    else if (videoWeb != null) {
+      List<int> bytes = videoWeb.cast<int>();
+      String base64Image = base64Encode(bytes);
+      fileType = base64Image;
     }
     else {
       fileType = null;

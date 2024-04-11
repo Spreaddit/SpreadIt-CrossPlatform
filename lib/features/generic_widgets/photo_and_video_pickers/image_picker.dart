@@ -28,7 +28,6 @@ Future<Uint8List?> pickImageFromFilePickerWeb() async {
  { 
   FilePickerResult? result = await FilePicker.platform.pickFiles();
 if (result != null) {
-  print(result.files.single.bytes);
   return result.files.single.bytes;
 }
   }
