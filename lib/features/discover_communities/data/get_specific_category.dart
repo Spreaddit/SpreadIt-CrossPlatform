@@ -38,4 +38,5 @@ class GetSpecificCommunity {
       throw Exception('Failed to load communities: $e ');
     }
   }
+
 }

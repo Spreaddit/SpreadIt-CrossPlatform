@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 /// This Library is responsible for handling post interactions
@@ -27,11 +28,10 @@ class UpVoteButton extends HookWidget {
     return GestureDetector(
       child: IconButton(
         onPressed: upVote,
-        icon: Image.asset(
-          "assets/images/upvoteicon.png",
-          width: width,
-          height: height,
-          color: color,
+        icon: Icon(
+          Icons.arrow_upward,
+          size: 24.0,
+          color: Color.fromARGB(255, 255, 68, 0),
         ),
       ),
     );
@@ -59,11 +59,9 @@ class DownVoteButton extends HookWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: downVote,
-      icon: Image.asset(
-        "assets/images/downvoteicon.png",
-        width: width,
-        height: height,
-        color: color,
+      icon: Icon(
+        Icons.arrow_downward,
+        size: 24.0,
       ),
     );
   }
@@ -104,12 +102,12 @@ class VoteButton extends HookWidget {
 /// and state handling of a share button/share count
 /// in a [PostWidget] card
 class ShareButton extends HookWidget {
-  int initialSharesCount; // TODO: to be changed to a state
-  ShareButton({
-    required this.initialSharesCount,
-  });
+  int initialSharesCount;
+  String message; // TODO: to be changed to a state
+  ShareButton({required this.initialSharesCount, required this.message});
 
   void onShareClick() {
+    sharePressed(message);
     print("share");
     //TODO: impement share logic
   }

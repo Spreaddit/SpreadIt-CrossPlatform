@@ -24,7 +24,7 @@ import 'package:flutter/material.dart';
 /// ```
 
 class Button extends StatefulWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
   final Color backgroundColor;
   final Color foregroundColor;

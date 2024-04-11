@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class CustomBottomSheet extends StatelessWidget {
   final List<IconData> icons;
   final List<String> text;
-  final List<VoidCallback> onPressedList; 
-  
-  CustomBottomSheet({required this.icons, required this.text, required this.onPressedList});
+  final List<VoidCallback> onPressedList;
+  CustomBottomSheet(
+      {required this.icons, required this.text, required this.onPressedList});
 
   @override
   Widget build(BuildContext context) {
