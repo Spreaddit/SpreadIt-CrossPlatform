@@ -1,41 +1,72 @@
 import 'package:flutter/material.dart';
 
-//TODO: change to render different bars when in different
-//tabs(e.g., home, community, chat, etc)
+enum CurrentPage {
+  home,
+  popular,
+  community,
+  all,
+}
+
 class TopBar extends AppBar {
-  TopBar()
-      : super(
+  final CurrentPage currentPage;
+  final BuildContext context;
+
+  TopBar({
+    this.currentPage = CurrentPage.home,
+    required this.context,
+  }) : super(
           toolbarHeight: 60,
-          surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.transparent,
-          title: Container(
-            width: 160,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(18, 0, 0, 0),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 5,
-            ),
-            child: Row(
-              children: [
-                Text("Home"),
-                IconButton(
-                  onPressed:
-                      () {}, //TODO: implement different categories of posts
-                  icon: Icon(Icons.arrow_drop_down),
+          elevation: 0,
+          title: currentPage == CurrentPage.home ||
+                  currentPage == CurrentPage.popular
+              ? Container(
+                  width: 160,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(18, 0, 0, 0),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  child: DropdownButton<CurrentPage>(
+                    value: currentPage,
+                    underline: Container(
+                      height: 0,
+                      color: Colors.transparent,
+                    ),
+                    onChanged: (newValue) {
+                      Navigator.of(context)
+                          .pushNamed('/${newValue.toString().split('.').last}');
+                    },
+                    items: CurrentPage.values
+                        .where((category) =>
+                            category.index == 0 || category.index == 1)
+                        .map<DropdownMenuItem<CurrentPage>>(
+                          (newPage) => DropdownMenuItem<CurrentPage>(
+                            value: newPage,
+                            child: Text(newPage.toString().split('.').last),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                )
+              : Center(
+                  child: Text(
+                    currentPage.toString().split('.').last,
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                 ),
-              ],
-            ),
-          ),
           actions: [
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.search),
+              icon: Icon(
+                Icons.search,
+              ),
             ),
             Builder(
               builder: (context) => IconButton(
@@ -44,9 +75,23 @@ class TopBar extends AppBar {
               ),
             ),
           ],
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.menu),
+          leading: Builder(
+            builder: (context) => IconButton(
+              onPressed: () {
+                if (currentPage != CurrentPage.home &&
+                    currentPage != CurrentPage.popular) {
+                  Navigator.of(context).pushNamed('/home');
+                } else {
+                  Scaffold.of(context).openDrawer();
+                }
+              },
+              icon: Icon(
+                currentPage == CurrentPage.home ||
+                        currentPage == CurrentPage.popular
+                    ? Icons.menu
+                    : Icons.arrow_back,
+              ),
+            ),
           ),
         );
 }

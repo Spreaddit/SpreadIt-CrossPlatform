@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/community/Presentation/Pages/community_page.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/pages/popular.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -33,9 +38,12 @@ class SpreadIt extends StatelessWidget {
     return MaterialApp(
       title: 'Spread It',
       theme: spreadItTheme,
-      home: StartUpPage(),
+      home: AllPage(),
       routes: {
         '/home': (context) => HomePage(),
+        '/discover': (context) => DiscoverCommunitiesPage(),
+        '/popular': (context) => PopularPage(),
+        '/all': (context) => AllPage(),
         '/start-up-page': (context) => StartUpPage(),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
@@ -52,6 +60,8 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
+        '/settings/account-settings/add-password': (context) =>
+            AddPasswordPage(),
       },
     );
   }

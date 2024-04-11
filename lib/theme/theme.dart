@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-const redditOrange = Color.fromARGB(255, 255, 68, 0);
+const redditOrange = Color.fromARGB(255, 255, 72, 0);
 const redditBlack = Color(0x00000000);
 const redditGrey = Color.fromRGBO(206, 227, 248, 1);
 
 ThemeData spreadItTheme = ThemeData(
-    primaryColor: redditOrange,
-    primaryColorLight: redditGrey,
-    primaryColorDark: redditBlack,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: redditOrange,
-      primary: redditOrange,
-      secondary: redditGrey,
-    ),);
+  fontFamily: GoogleFonts.notoSans().fontFamily,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: redditOrange,
+    primary: Colors.black,
+    secondary: redditGrey,
+    surfaceTint: Colors.transparent,
+  ),
+);
