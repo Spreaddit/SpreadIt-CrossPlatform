@@ -446,8 +446,7 @@ class _PostInteractions extends HookWidget {
               initialCommensCount: commentsCount,
             ),
             ShareButton(
-              initialSharesCount: sharesCount,
-            ),
+                initialSharesCount: sharesCount, message: "LINK///////"),
           ],
         ),
       ),
