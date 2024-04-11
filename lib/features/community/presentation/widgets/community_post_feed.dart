@@ -18,7 +18,7 @@ class _CommunityPostFeedState extends State<CommunityPostFeed> {
   String communityBannerLink = "";
   List<PostCategories> mainPostCategories = [
     PostCategories.hot,
-    PostCategories.newposts,
+    PostCategories.newest,
     PostCategories.top
   ];
   List<PostCategories> topPostCategories = [

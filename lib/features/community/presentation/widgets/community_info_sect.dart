@@ -130,9 +130,6 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
               },
             ),
           ),
-          PostFeed(
-            postCategory: PostCategories.best,
-          ),
         ],
       ),
     );

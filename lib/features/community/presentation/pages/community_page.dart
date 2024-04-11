@@ -3,6 +3,8 @@ import 'package:spreadit_crossplatform/features/community/data/api_community_inf
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_post_feed.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/report_modal.dart';
 
 class CommunityPage extends StatefulWidget {
@@ -50,8 +52,12 @@ class _CommunityPageState extends State<CommunityPage> {
               CommunityInfoSection(
                 communityName: widget.communityName,
               ),
-              CommunityPostFeed(
-                communityName: widget.communityName,
+              PostFeed(
+                postCategory: PostCategories.hot,
+                subspreaditName: widget.communityName,
+                startSortIndex: 1,
+                endSortIndex: 3,
+                showSortTypeChange: true,
               ),
               ElevatedButton(
                 onPressed: () {
