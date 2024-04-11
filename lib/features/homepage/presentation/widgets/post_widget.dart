@@ -304,12 +304,16 @@ class _PostContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (postType == "post") {
+      if ((isNsfw || isSpoiler) && !isFullView) return Text("");
+
       return Text(
         content ?? "",
         overflow: TextOverflow.ellipsis,
         maxLines: !isFullView ? 5 : null,
       );
     } else if (postType == "attachment") {
+      if ((isNsfw || isSpoiler) && !isFullView) return Text("");
+
       if (attachments!.isNotEmpty) {
         if (attachments![0].type == "image") {
           return _ImageCaruosel(attachments: attachments!);
