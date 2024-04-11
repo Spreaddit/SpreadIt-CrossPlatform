@@ -22,11 +22,11 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // Verify that the ElevatedButton is rendered
-    expect(find.byType(ElevatedButton), findsOneWidget);
+    // Verify that the ElevatedButton are rendered
+    expect(find.byType(ElevatedButton), findsAtLeast(1));
 
     // Tap the ElevatedButton to trigger ReportModal
-    await tester.tap(find.byType(ElevatedButton));
+    await tester.tap(find.byType(ElevatedButton).at(1));
     await tester.pumpAndSettle();
     // Verify that the MainReportSection is rendered
     expect(find.byType(MainReportSection), findsOneWidget);
