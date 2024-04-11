@@ -10,8 +10,14 @@ import 'package:spreadit_crossplatform/features/report_feature/presentation/widg
 import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 
 class ReportModal {
-  ReportModal(this.buildContext, this.communityName, this.postId,
-      this.commentId, this.isReportingPost, this.reportedUserName) {
+  ReportModal(
+      this.buildContext,
+      this.communityName,
+      this.postId,
+      this.commentId,
+      this.isReportingPost,
+      this.isReportingUser,
+      this.reportedUserName) {
     mainViolations.addAll([
       "Breaks r/$communityName rules",
       "Harassment",
@@ -50,20 +56,27 @@ class ReportModal {
       growable: false,
     );
 
-    showMainPage(buildContext);
+    if (isReportingUser) {
+      showReportUserPage(buildContext);
+    } else {
+      showMainPage(buildContext);
+    }
   }
 
   BuildContext buildContext;
   String communityName;
+  final String reportedUserName;
   String postId;
   String commentId;
   bool isReportingPost;
-  var selectedIndex = -1;
+  bool isReportingUser;
+  var selectedUserReportIndex = -1;
+  var selectedMainIndex = -1;
   var selectedSubIndex = -1;
   var blockIsChecked = false;
+  List<String> userProfileViolations = [];
   final List<String> mainViolations = [];
   final List<String> extraText = [];
-  final String reportedUserName;
   List<MainReportOption> mainReportOptions = [];
   List<bool> hasSubReasons = [];
 
@@ -76,14 +89,64 @@ class ReportModal {
         index: index,
         onSelect: () {
           setModalState(() {
-            selectedIndex = index;
+            selectedMainIndex = index;
           });
         },
-        selectedContainerIndex: selectedIndex,
+        selectedContainerIndex: selectedMainIndex,
         optionHasImage: (index == 0) ? true : false,
       ),
       growable: false,
     );
+  }
+
+  void showReportUserPage(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(10),
+          ),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+            return FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    AppBar(
+                      title: Text("Report profile"),
+                    ),
+                    SubReportSection(
+                      isReportingUser: true,
+                      communityName: communityName,
+                      selectedIndex: 0,
+                      onIndexChange: (int newSubVal) {
+                        setModalState(() {
+                          selectedUserReportIndex = newSubVal;
+                        });
+                      },
+                    ),
+                    ModalBottomBar(
+                      buttonText: "Next",
+                      onPressed: (selectedUserReportIndex == -1)
+                          ? null
+                          : () {
+                              showMainPage(context);
+                            },
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+        });
   }
 
   void showMainPage(BuildContext context) {
@@ -113,19 +176,20 @@ class ReportModal {
                     ),
                     MainReportSection(mainReportOptions: mainReportOptions),
                     ModalBottomBar(
-                      extraTextTitle: (selectedIndex != -1)
-                          ? mainViolations[selectedIndex]
+                      extraTextTitle: (selectedMainIndex != -1)
+                          ? mainViolations[selectedMainIndex]
                           : '',
-                      extraText:
-                          (selectedIndex != -1) ? extraText[selectedIndex] : '',
-                      buttonText:
-                          (selectedIndex == -1 || hasSubReasons[selectedIndex])
-                              ? 'Next'
-                              : 'Submit Report',
-                      onPressed: (selectedIndex == -1)
+                      extraText: (selectedMainIndex != -1)
+                          ? extraText[selectedMainIndex]
+                          : '',
+                      buttonText: (selectedMainIndex == -1 ||
+                              hasSubReasons[selectedMainIndex])
+                          ? 'Next'
+                          : 'Submit Report',
+                      onPressed: (selectedMainIndex == -1)
                           ? null
                           : () {
-                              if (hasSubReasons[selectedIndex]) {
+                              if (hasSubReasons[selectedMainIndex]) {
                                 showSecondPage(context);
                               } else {
                                 report(context);
@@ -167,7 +231,7 @@ class ReportModal {
                     ),
                     SubReportSection(
                       communityName: communityName,
-                      selectedIndex: selectedIndex,
+                      selectedIndex: selectedMainIndex,
                       onIndexChange: (int newSubVal) {
                         setModalState(() {
                           selectedSubIndex = newSubVal;
@@ -262,12 +326,13 @@ class ReportModal {
         });
   }
 
-  void report(BuildContext context) async {
+  void reportPostOrComment(BuildContext context) async {
     int response;
     var postRequestInfo = {
-      "reason": mainViolations[selectedIndex],
-      "sureason": (hasSubReasons[selectedIndex] && selectedSubIndex != -1)
-          ? violationsList[selectedIndex]["subViolations"][selectedSubIndex]
+      "reason": mainViolations[selectedMainIndex],
+      "sureason": (hasSubReasons[selectedMainIndex] && selectedSubIndex != -1)
+          ? subViolationsList[selectedMainIndex]["subViolations"]
+              [selectedSubIndex]
           : ""
     };
     if (isReportingPost) {
@@ -280,7 +345,7 @@ class ReportModal {
     bool reportSuccessful = (response == 200);
     if (reportSuccessful) {
       Navigator.pop(context);
-      if (hasSubReasons[selectedIndex]) {
+      if (hasSubReasons[selectedMainIndex]) {
         Navigator.pop(context);
       }
       showDonePage(context);
@@ -289,10 +354,27 @@ class ReportModal {
     }
   }
 
+  void reportUser(BuildContext context) async {
+    //TODO HANDLE REPORTING USER
+    Navigator.pop(context);
+    Navigator.pop(context);
+    if (hasSubReasons[selectedMainIndex]) {
+      Navigator.pop(context);
+    }
+    showDonePage(context);
+  }
+
+  void report(BuildContext context) async {
+    if (isReportingUser) {
+      reportUser(context);
+    } else {
+      reportPostOrComment(context);
+    }
+  }
+
   void blockReportedUser(BuildContext context) {
     print(blockIsChecked);
     if (blockIsChecked) {
-      // TODO CHECK WHETHER TO PASS ID OR USERNAME
       // TODO ASK IF REQUEST RESPONSE STATUS SHOULD BE RETURNED HERE
       interactWithUser(
           userId: reportedUserName, action: InteractWithUsersActions.report);

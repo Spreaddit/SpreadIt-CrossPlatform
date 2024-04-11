@@ -55,9 +55,17 @@ class _CommunityPageState extends State<CommunityPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  ReportModal(context, widget.communityName, "0", "0", true, 'galal');
+                  ReportModal(context, widget.communityName, "0", "0", true,
+                      false, 'galal');
                 },
-                child: Text("REPORT MEEEEEE"),
+                child: Text("REPORT MEEEEEE (POST / COMMENT)"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ReportModal(context, widget.communityName, "0", "0", false,
+                      true, 'galal');
+                },
+                child: Text("REPORT MEEEEEE (USER)"),
               ),
             ],
           ),

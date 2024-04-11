@@ -8,10 +8,12 @@ class SubReportSection extends StatefulWidget {
     required this.communityName,
     required this.selectedIndex,
     required this.onIndexChange,
+    this.isReportingUser = false,
   }) : super(key: key);
 
   final String communityName;
   final int selectedIndex;
+  final bool isReportingUser;
   final Function(int) onIndexChange;
 
   @override
@@ -22,15 +24,21 @@ class _SubReportSectionState extends State<SubReportSection> {
   List<dynamic> communityRules = [];
   int listItemCount = 0;
   int selectedRadioIndex = -1;
+  List<Map<String, dynamic>> selectedViolationsList = [];
 
   @override
   void initState() {
     super.initState();
-    if (widget.selectedIndex == 0) {
+    if (widget.isReportingUser) {
+      selectedViolationsList = userViolationsList;
+    } else {
+      selectedViolationsList = subViolationsList;
+    }
+    if (widget.selectedIndex == 0 && !widget.isReportingUser) {
       fetchData();
     } else {
       listItemCount =
-          violationsList[widget.selectedIndex]["subViolations"].length;
+          selectedViolationsList[widget.selectedIndex]["subViolations"].length;
     }
   }
 
@@ -39,10 +47,10 @@ class _SubReportSectionState extends State<SubReportSection> {
     setState(() {
       communityRules = communityData["rules"];
       listItemCount = communityRules.length;
-      violationsList[0]["subViolations"] =
+      selectedViolationsList[0]["subViolations"] =
           List.generate(communityRules.length, (index) => "");
       for (int i = 0; i < communityRules.length; i++) {
-        violationsList[0]["subViolations"][i] = communityRules[i]["title"];
+        selectedViolationsList[0]["subViolations"][i] = communityRules[i]["title"];
       }
     });
   }
@@ -62,7 +70,7 @@ class _SubReportSectionState extends State<SubReportSection> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      violationsList[widget.selectedIndex]["mainViolation"],
+                      selectedViolationsList[widget.selectedIndex]["mainViolation"],
                       softWrap: true,
                       style: TextStyle(fontSize: 17, height: 1),
                     ),
@@ -77,14 +85,14 @@ class _SubReportSectionState extends State<SubReportSection> {
                     itemBuilder: (context, index) {
                       return RadioListTile(
                         controlAffinity: ListTileControlAffinity.trailing,
-                        title: Text(violationsList[widget.selectedIndex]
+                        title: Text(selectedViolationsList[widget.selectedIndex]
                             ["subViolations"][index]),
                         value: index,
                         groupValue: selectedRadioIndex,
                         onChanged: (int? value) {
                           setState(() {
                             selectedRadioIndex = value ?? selectedRadioIndex;
-                            violationsList[widget.selectedIndex]
+                            selectedViolationsList[widget.selectedIndex]
                                 ["subViolations"][index];
                             widget.onIndexChange(selectedRadioIndex);
                           });
@@ -92,7 +100,6 @@ class _SubReportSectionState extends State<SubReportSection> {
                       );
                     },
                   ),
-                  
                 ],
               ),
             );

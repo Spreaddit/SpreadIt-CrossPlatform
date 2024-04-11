@@ -1,4 +1,4 @@
-List<Map<String, dynamic>> violationsList = [
+List<Map<String, dynamic>> subViolationsList = [
   {
     "mainViolation": "Which community rule does this violate?",
     "subViolations": []
@@ -50,10 +50,7 @@ List<Map<String, dynamic>> violationsList = [
       "Someone else's"
     ]
   },
-  {
-    "mainViolation": "Self-harm or suicide",
-    "subViolations": []
-  },
+  {"mainViolation": "Self-harm or suicide", "subViolations": []},
   {
     "mainViolation": "What type of spam is this?",
     "subViolations": [
@@ -64,5 +61,12 @@ List<Map<String, dynamic>> violationsList = [
       "Harmful bots",
       "Other"
     ]
+  },
+];
+
+List<Map<String, dynamic>> userViolationsList = [
+  {
+    "mainViolation": "What do you want to report?",
+    "subViolations": ["Username"]
   },
 ];
