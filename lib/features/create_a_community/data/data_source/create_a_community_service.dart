@@ -21,7 +21,10 @@ abstract class RestClient {
   ///
   /// The [community] parameter is the community to be created.
   @POST("/communities/create")
-  Future<HttpResponse> createCommunity(@Body() Community community);
+  Future<HttpResponse> createCommunity(
+    @Body() Community community,
+    @Header("Authorization") String token,
+  );
 }
 
 /// Community is a class that represents a community with a name.

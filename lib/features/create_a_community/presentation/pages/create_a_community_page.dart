@@ -219,7 +219,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     final community = Community(_communityName);
 
     try {
-      final response = await client.createCommunity(community);
+      final response = await client.createCommunity(community, "ExampleToken");
       setState(() {
         _responseStatus = response.response.statusCode;
       });

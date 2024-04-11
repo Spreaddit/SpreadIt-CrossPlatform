@@ -8,6 +8,11 @@ class GetSpecificCommunity {
   Future<List<Community>> getCommunities(String category) async {
     try {
       Response response;
+      Options options = Options(
+        headers: {
+          'Authorization': 'Bearer exampleToken',
+        },
+      );
       if (category == '🔥 Trending globally' || category == '🌍 Top globally') {
         response = await dio.get(
           '$apiUrl/community/random-category',
@@ -18,6 +23,7 @@ class GetSpecificCommunity {
           queryParameters: {
             'category': category,
           },
+          options: options,
         );
       }
 
