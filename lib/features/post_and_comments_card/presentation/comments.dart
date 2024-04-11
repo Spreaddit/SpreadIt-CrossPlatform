@@ -11,7 +11,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/in
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_reply.dart';
+
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_replies.dart';
 
@@ -112,13 +112,6 @@ class _CommentCardState extends State<CommentCard> {
     }
   }
 
-  void addReply(Comment newReply) {
-    setState(() {
-      widget.comment.replies!.add(newReply);
-      print('newComment${newReply.content}');
-    });
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -201,14 +194,13 @@ class _CommentCardState extends State<CommentCard> {
                         );
                       },
                       onReplyPressed: () {
+                        TextEditingController replyController =
+                            TextEditingController();
+
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
                           builder: (BuildContext context) {
-                            // Controller for the text field
-                            TextEditingController replyController =
-                                TextEditingController();
-
                             return SingleChildScrollView(
                               child: Container(
                                 padding: EdgeInsets.only(
@@ -230,20 +222,25 @@ class _CommentCardState extends State<CommentCard> {
                                     SizedBox(height: 20),
                                     ElevatedButton(
                                       onPressed: () async {
-                                        print('add reply');
-                                        // FocusScope.of(context).unfocus();
-                                        String newReply = replyController.text;
-                                        print(newReply);
-                                        Comment? nReply = await updateComments(
+                                        if (replyController.text != "") {
+                                          print('add reply');
+                                          Navigator.pop(context);
+                                          String newReply =
+                                              replyController.text;
+                                          print(newReply);
+                                          Comment? nReply =
+                                              await updateComments(
                                             id: widget.comment.id,
                                             content: newReply,
-                                            type: 'reply');
-                                        setState(() {
-                                          addReply(nReply!);
-                                          print('nReply ${nReply.content}');
-                                        });
-
-                                        Navigator.pop(context);
+                                            type: 'reply',
+                                          );
+                                          setState(() {
+                                            widget.comment.replies!
+                                                .add(nReply!);
+                                            print(
+                                                'newComment${nReply!.content}');
+                                          });
+                                        }
                                       },
                                       child: Text('Reply'),
                                     ),
@@ -252,7 +249,9 @@ class _CommentCardState extends State<CommentCard> {
                               ),
                             );
                           },
-                        );
+                        ).whenComplete(() {
+                          replyController.dispose();
+                        });
                       },
                       number: comment.likesCount,
                       upvoted: false,
@@ -263,15 +262,13 @@ class _CommentCardState extends State<CommentCard> {
               ),
             ],
           ),
-          if (!comment.isCollapsed &&
-              comment.replies != null) // && !widget.collapseThreadFlag)
+          if (!comment.isCollapsed && comment.replies != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: comment.replies!.map((reply) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Recursively build nested replies
                     Container(
                       child: CommentCard(comment: reply),
                       decoration: BoxDecoration(

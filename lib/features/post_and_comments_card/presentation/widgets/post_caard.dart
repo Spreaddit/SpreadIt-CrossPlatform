@@ -82,10 +82,6 @@ class _PostCardState extends State<PostCard> {
     return SingleChildScrollView(
       physics: ScrollPhysics(),
       child: Container(
-        /* padding: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 0,
-        ),*/
         child: Column(children: [
           PostWidget(
             post: widget.post,

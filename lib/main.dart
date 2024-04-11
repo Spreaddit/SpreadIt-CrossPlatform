@@ -10,7 +10,7 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_reply.dart';
+
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'firebase_options.dart';
@@ -37,7 +37,7 @@ Post P = Post(
     description:
         "This is my last straw, I quit I am gonna kms and it's your fault I hate this subject af I will never ever choose this track by any means </3.",
     profilePic:
-        "https://static.vecteezy.com/system/resources/previews/008/385/797/non_2x/reddit-social-media-icon-abstract-logo-design-illustration-free-vector.jpg");
+        "https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3JtMjA4YmF0Y2gxNS1leWUtMDEuanBn.jpg");
 Comment R3 = Comment(
     id: "2",
     userId: "hafagab",

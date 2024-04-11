@@ -24,7 +24,6 @@ class AddCommentWidget extends StatefulWidget {
     return _AddCommentWidgetState();
   }
 
-  // Function to get the text from the input field
   String getCommentText() {
     return _AddCommentWidgetState()._commentController.text;
   }
@@ -108,19 +107,21 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
       ),
       trailing: OutlinedButton(
         onPressed: () async {
-          print('add comment');
-          FocusScope.of(context).unfocus();
-          String newComment = _commentController.text;
-          Comment? nComment = await updateComments(
-            id: widget.postId,
-            content: newComment,
-            type: 'comment',
-          );
-          setState(() {
-            // commentsList.add(nComment!);
-            widget.addComment(nComment!);
-            print('nComment${nComment.content}');
-          });
+          if (_commentController.text != "") {
+            print('add comment');
+            FocusScope.of(context).unfocus();
+            String newComment = _commentController.text;
+            _commentController.clear();
+            Comment? nComment = await updateComments(
+              id: widget.postId,
+              content: newComment,
+              type: 'comment',
+            );
+            setState(() {
+              widget.addComment(nComment!);
+              print('nComment${nComment.content}');
+            });
+          }
         },
         child: Text("Post"),
       ),

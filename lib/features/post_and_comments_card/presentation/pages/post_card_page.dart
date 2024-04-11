@@ -22,17 +22,10 @@ class PostCardPage extends StatefulWidget {
 class _PostCardPageState extends State<PostCardPage> {
   List<Comment> comments = [];
 
-  /* Future<void> fetchData() async {
-    List<Comment> fetchedComments = await getPostComments(widget.post!.postId);
-    setState(() {
-      comments = fetchedComments;
-    });
-  }*/
-
   Future<void> fetchComments() async {
     try {
       var data =
-          await fetchUserComments('user', 'post', "${widget.post!.postId}");
+          await fetchCommentsData('user', 'post', "${widget.post!.postId}");
       setState(() {
         comments = data;
       });
@@ -52,7 +45,7 @@ class _PostCardPageState extends State<PostCardPage> {
   @override
   void initState() {
     super.initState();
-    // fetchData();
+
     fetchComments();
   }
 
@@ -60,37 +53,40 @@ class _PostCardPageState extends State<PostCardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PostCardTopBar(context,
-          'https://ladygeekgirl.files.wordpress.com/2016/08/steven-universe-pearl.png'), //take the users pfp
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Divider(
-                        height: 0.5,
+          'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'), //String? accessToken = UserSingleton().user.avatar;
+      body: Container(
+        margin: EdgeInsets.all(10), // Add margin to the entire Column
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        child: Divider(
+                          height: 0.5,
+                        ),
                       ),
-                    ),
-                    PostCard(
-                      post: widget.post!,
-                      comments: comments,
-                    ),
-                  ],
+                      PostCard(
+                        post: widget.post!,
+                        comments: comments,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          AddCommentWidget(
-            commentsList: comments,
-            postId: widget.post!.postId.toString(),
-            addComment: addComment,
-          ),
-        ],
+            AddCommentWidget(
+              commentsList: comments,
+              postId: widget.post!.postId.toString(),
+              addComment: addComment,
+            ),
+          ],
+        ),
       ),
     );
   }

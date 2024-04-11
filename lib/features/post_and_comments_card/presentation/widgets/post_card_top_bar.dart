@@ -16,7 +16,7 @@ class PostCardTopBar extends AppBar {
                 IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
-                    // Your onPressed logic here
+                    // Search onPressed logic here
                   },
                   color: Colors.white,
                 ),
