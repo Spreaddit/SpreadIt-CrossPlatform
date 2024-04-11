@@ -24,6 +24,15 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
     Icons.new_label_outlined,
     Icons.trending_up_outlined,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      selectedCategory = widget.startSortIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -99,13 +108,14 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: widget.endSortIndex + 1,
+                  itemCount: widget.endSortIndex + 1 - widget.startSortIndex,
                   itemBuilder: (context, index) {
                     return ListTile(
                       tileColor: Colors.transparent,
-                      leading: Icon(icons[index % icons.length]),
+                      leading: Icon(
+                          icons[index + widget.startSortIndex % icons.length]),
                       title: Text(
-                          PostCategories.values[index]
+                          PostCategories.values[index + widget.startSortIndex]
                               .toString()
                               .split('.')
                               .last,
@@ -114,7 +124,7 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
                             fontWeight: FontWeight.bold,
                           )),
                       onTap: () {
-                        _changeSortType(index);
+                        _changeSortType(index + widget.startSortIndex);
                         Navigator.pop(context);
                       },
                     );
