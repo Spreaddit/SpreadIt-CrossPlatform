@@ -212,7 +212,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
               PostFeed(
-                postCategory: PostCategories.best,
+                postCategory: PostCategories.user,
               ),
             ],
           ),
