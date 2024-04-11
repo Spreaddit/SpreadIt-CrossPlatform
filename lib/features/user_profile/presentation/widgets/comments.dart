@@ -19,7 +19,7 @@ class CommentWidget extends StatelessWidget {
     this.onPressed,
   });
 
-  void unsaveComment(BuildContext context) async {
+void unsaveComment(BuildContext context) async {
     int statusCode = await saveOrUnsave(id: comment.id, type: 'comments');
     Navigator.pop(context);
     if (statusCode == 200) {
