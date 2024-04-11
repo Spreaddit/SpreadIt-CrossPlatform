@@ -287,14 +287,14 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           children: widget.socialMediaLinks.asMap().entries.map(
                             (entry) {
                               final platformData = entry.value;
-                              final platformName = platformData['platformName'];
+                              final platformName = platformData['platform'];
                               final iconName =
                                   PlatformIconMapper.getIconData(platformName);
                               final color =
                                   PlatformIconMapper.getColor(platformName);
                               return SocialMediaButton(
                                 icon: iconName,
-                                text: platformData['headerName'],
+                                text: platformData['displayName'],
                                 iconColor: color,
                                 backgroundColor: Colors.white70,
                                 handleSelection: () {

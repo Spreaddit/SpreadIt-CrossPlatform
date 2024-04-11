@@ -86,8 +86,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if (selectedPlatforminfo != null) {
         var links = [
           {
-            'headerName': selectedPlatforminfo['headerName'],
-            'platformName': selectedPlatforminfo['platformName'],
+            'platform': selectedPlatforminfo['platform'],
+            'displayName': selectedPlatforminfo['displayName'],
             'url': selectedPlatforminfo['url'],
           }
         ];
@@ -347,7 +347,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               (entry) {
                                 final platformData = entry.value;
                                 final platformName =
-                                    platformData['platformName'];
+                                    platformData['platform'];
                                 final iconName = PlatformIconMapper.getIconData(
                                     platformName);
                                 final color =
@@ -355,7 +355,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                                 return SocialMediaButton(
                                   icon: iconName,
-                                  text: platformData['headerName'],
+                                  text: platformData['displayName'],
                                   iconColor: color,
                                   enableClear: true,
                                   handleSelection: () {

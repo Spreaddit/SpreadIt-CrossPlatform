@@ -64,8 +64,6 @@ class _UserProfileState extends State<UserProfile> {
         await getSpecificCommunity.getCommunities('🔥 Trending globally');
     setState(() {
       communitiesList = loadedCommunities;
-      print('hola');
-      print(communitiesList);
     });
   }
 
@@ -87,9 +85,9 @@ class _UserProfileState extends State<UserProfile> {
         isVisible = userInfoFuture!.isVisible;
         socialMediaLinks = userInfoFuture!.socialMedia
             .map((socialMedia) => {
-                  'platformName': socialMedia.platform,
-                  'headerName': socialMedia.displayname,
+                  'platform': socialMedia.platform,
                   'url': socialMedia.url,
+                  'displayName': socialMedia.displayname,
                 })
             .toList();
       });

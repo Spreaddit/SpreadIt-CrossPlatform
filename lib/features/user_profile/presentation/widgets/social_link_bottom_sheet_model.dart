@@ -55,8 +55,8 @@ class SocialMediaBottomSheetContent extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, {
-                      'headerName': _displayName,
-                      'platformName': platformName,
+                      'displayName': _displayName,
+                      'platform': platformName,
                       'url': _link,
                     });
                   },

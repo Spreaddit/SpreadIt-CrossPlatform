@@ -9,33 +9,37 @@ Future<int> updateUserApi({
   required String displayName,
   required String aboutUs,
   File? backgroundImage,
-  File? profilePicImage, 
+  File? profilePicImage,
   String? backgroundImageUrl,
-  String? profilePicImageUrl, 
+  String? profilePicImageUrl,
   required List<Map<String, dynamic>> socialMedia,
   required bool contentVisibility,
   required bool showActiveComments,
 }) async {
   try {
-    String? accessToken=UserSingleton().accessToken;
+    String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/update?accessToken=$accessToken';
-
-      var data = {
+    //String? username = UserSingleton().user!.username;
+    String username='mimo';
+    var data = {
+      "username": username,
       "name": displayName,
-      "about": aboutUs,
-      "banner": backgroundImageUrl,
       "avatar": profilePicImageUrl,
+      "banner": backgroundImageUrl,
+      "about": aboutUs,
       "socialLinks": socialMedia,
-      "contentVisibility": contentVisibility,
-      "showActiveComments": showActiveComments,
+      "isVisible": contentVisibility,
+      "isActive": showActiveComments,
     };
     print(profilePicImage);
     if (backgroundImage != null) {
-      data["backgroundImage"] = base64Encode(await backgroundImage.readAsBytes());
+      data["backgroundImage"] =
+          base64Encode(await backgroundImage.readAsBytes());
     }
 
     if (profilePicImage != null) {
-      data["profilePicImage"] = base64Encode(await profilePicImage.readAsBytes());
+      data["profilePicImage"] =
+          base64Encode(await profilePicImage.readAsBytes());
     }
 
     final response = await Dio().post(apiRoute, data: data);
