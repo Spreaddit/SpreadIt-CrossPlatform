@@ -65,12 +65,12 @@ class _PostHeaderState extends State<_PostHeader> {
           hide,
           if (widget.isUserProfile)
             widget.post.isSpoiler
-                ? () => widget.post.unmarkSpoiler(context, widget.post.postId)
-                : () => widget.post.markSpoiler(context, widget.post.postId),
+                ? () => unmarkSpoiler(context, widget.post.postId)
+                : () => markSpoiler(context, widget.post.postId),
           widget.post.isNsfw
-              ? () => widget.post.unmarkNSFW(context, widget.post.postId)
-              : () => widget.post.markNSFW(context, widget.post.postId),
-          () => widget.post.deletePost(context, widget.post.postId),
+              ? () => unmarkNSFW(context, widget.post.postId)
+              : () => markNSFW(context, widget.post.postId),
+          () => deletePost(context, widget.post.postId),
         ]);
       },
     );

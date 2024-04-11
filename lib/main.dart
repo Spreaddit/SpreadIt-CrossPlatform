@@ -30,6 +30,7 @@ import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -71,6 +72,8 @@ class SpreadIt extends StatelessWidget {
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
+             '/post_card_page': (context) =>
+            PostCardPage(),
       },
     );
   }

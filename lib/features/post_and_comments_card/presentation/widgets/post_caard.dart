@@ -85,6 +85,7 @@ class _PostCardState extends State<PostCard> {
         child: Column(children: [
           PostWidget(
             post: widget.post,
+            isUserProfile: false,
           ),
           Container(
             decoration: BoxDecoration(
