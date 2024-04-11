@@ -1,9 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Retrieves contact settings data from the API endpoint '$apiUrl/mobile/settings/contact'.
+///
+/// Returns a [List] of boolean values representing notifications settings.
+///
+/// Returns a [List] of false boolean values if fetching fails.
+///
+/// Throws an error if fetching data fails.
 Future<List> getData() async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    var response = await Dio().get('$apiUrl/mobile/settings/contact');
+    var response = await Dio().get(
+      '$apiUrl/mobile/settings/contact',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       {
         Map<String, dynamic> data = response.data['notifications'];
@@ -23,7 +39,18 @@ Future<List> getData() async {
   }
 }
 
+/// Updates contact settings data on the API endpoint '$apiUrl/mobile/settings/contact'.
+///
+/// [updatedList] is a [List] of boolean values representing updated notification settings
+/// in the following order: inboxMessages, chatMessages, chatRequests, mentions,
+/// commentsOnYourPost, commentsYouFollow, upvotes, repliesToComments, newFollowers,
+/// cakeDay, and modNotifications.
+///
+/// Returns the status code of the update operation or 0 in case of no response status code.
+///
+/// Throws an error if updating data fails.
 Future<int> updateData({required List<dynamic> updatedList}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
     Map<String, bool> notificationsMap = {
       "inboxMessages": updatedList[0],
@@ -39,8 +66,15 @@ Future<int> updateData({required List<dynamic> updatedList}) async {
       "modNotifications": updatedList[10],
     };
     var data = {"notifications": notificationsMap};
-    final response =
-        await Dio().put('$apiUrl/mobile/settings/contact', data: data);
+    final response = await Dio().put(
+      '$apiUrl/mobile/settings/contact',
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;

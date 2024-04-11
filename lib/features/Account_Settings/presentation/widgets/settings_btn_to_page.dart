@@ -1,6 +1,19 @@
 import 'package:flutter/material.dart';
 
+/// A button widget used for navigating to another page.
 class ToPageBtn extends StatefulWidget {
+  /// Creates a custom button widget.
+  ///
+  /// This is a template for buttons in the Settings page and sub-pages 
+  /// that are used to navigate to other pages.
+  ///
+  /// Parameters:
+  /// - [iconData] : [IconData] The icon data for the primary icon [required].
+  /// - [mainText] : [String] The main text displayed on the button [required].
+  /// - [onPressed] : [VoidCallback] Callback function invoked when the button is pressed [required].
+  /// - [secondaryIconData] : [IconData] The icon data for the secondary icon (default is [Icons.arrow_forward]).
+  /// - [secondaryText] : [String] The optional secondary text displayed below the main text (default is an empty string).
+  /// - [tertiaryText] : [String] The optional tertiary text displayed below the secondary text (default is an empty string).
   const ToPageBtn({
     Key? key,
     required this.iconData,
@@ -22,6 +35,7 @@ class ToPageBtn extends StatefulWidget {
   State<ToPageBtn> createState() => _ToPageBtnState();
 }
 
+/// [ToPageBtn] state.
 class _ToPageBtnState extends State<ToPageBtn> {
   @override
   Widget build(BuildContext context) {

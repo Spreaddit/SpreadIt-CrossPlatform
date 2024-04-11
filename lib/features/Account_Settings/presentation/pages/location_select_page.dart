@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/Account_Settings/presentation/data/data_source/api_user_info_data.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_user_info_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import '../data/data_source/api_basic_settings_data.dart';
+import '../../data/data_source/api_basic_settings_data.dart';
 
+/// A page for users to select their location.
 class SelectLocationPage extends StatelessWidget {
+  /// Constructs a [SelectLocationPage] instance.
   SelectLocationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    /// List of available locations.
     List<String> availableLocations = [
       "Use approximate location (based on IP)",
       "No location specified",

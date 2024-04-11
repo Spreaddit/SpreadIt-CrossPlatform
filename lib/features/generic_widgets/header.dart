@@ -1,5 +1,21 @@
 import 'package:flutter/material.dart';
 
+/// A header widget for displaying the logo and a title with optional back and action buttons.
+/// This widget consists of a row containing a back button, the app logo, a title, and an optional action button.   
+/// Required parameters:   
+/// -title: The title displayed in the header.   
+/// Optional parameters:   
+/// -buttonText: Text displayed on the action button. Defaults to an empty string.   
+/// -onPressed: Callback function triggered when the action button is pressed.   
+/// ```dart
+/// Header(
+///   title: 'Page Title',
+///   buttonText: 'Action',
+///   onPressed: () {
+///     // Handle action button press
+///   },
+/// )
+/// ```
 class Header extends StatelessWidget {
   final String buttonText;
   final String title;

@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
+///describes different user_to_user interactions
 enum InteractWithUsersActions { follow, unfollow, block, report }
 
+/// takes [InteractWithUsersActions] as a parameter and
+/// returns its respective endpoint
 String interactionType(InteractWithUsersActions action) {
   switch (action) {
     case InteractWithUsersActions.follow:
@@ -16,6 +19,11 @@ String interactionType(InteractWithUsersActions action) {
   }
 }
 
+/// Takes the following parameters:
+/// - [InteractWithUsersActions] (representing a user_to_user interaction)
+/// - [userId] (represnting the user with which the logged in user interacted)
+/// and sends a post request to its respective endpoint
+/// to update the user_to_user interactions
 void interactWithUser(
     {required String userId,
     required InteractWithUsersActions action,

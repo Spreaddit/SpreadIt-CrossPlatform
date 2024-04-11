@@ -7,6 +7,11 @@ import '../../../generic_widgets/custom_input.dart';
 import '../../../generic_widgets/header.dart';
 import '../../../generic_widgets/validations.dart';
 
+/// This class renders the [ResetPassword] page.
+/// It displays the user info and 3 input fields where the user writes his `currentPassword`, `newPassword` and `confirmedPassword`.
+/// It also contains a button `save` that the user presses to send his input to the backend.
+/// Finally it contains a navigation button to redirect the user to ForgetPassword page in case the user forgot his current password.
+
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
 
