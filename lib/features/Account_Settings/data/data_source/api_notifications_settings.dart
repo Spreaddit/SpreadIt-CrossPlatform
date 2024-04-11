@@ -16,7 +16,7 @@ Future<List> getData() async {
       '$apiUrl/mobile/settings/contact',
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -71,7 +71,7 @@ Future<int> updateData({required List<dynamic> updatedList}) async {
       data: data,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );

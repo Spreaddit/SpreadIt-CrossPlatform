@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> getCommunitySubStatus(
       },
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -41,7 +41,7 @@ Future<int> postSubscribeRequest(
       data: postRequestInfo,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -74,7 +74,7 @@ Future<int> postUnsubscribeRequest(
       data: postRequestInfo,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );

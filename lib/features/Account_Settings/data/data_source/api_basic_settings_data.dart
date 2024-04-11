@@ -17,7 +17,7 @@ Future<Map<String, dynamic>> getBasicData() async {
       '$apiUrl/mobile/settings/general/account',
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -62,7 +62,7 @@ Future<int> updateBasicData({required Map<String, dynamic> updatedData}) async {
       data: updatedData,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );

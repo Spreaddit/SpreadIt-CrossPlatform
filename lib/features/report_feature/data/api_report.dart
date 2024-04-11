@@ -11,7 +11,7 @@ Future<int> reportPostRequest(String postId,
       data: postRequestInfo,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -47,7 +47,9 @@ Future<int> reportCommentRequest(String postId, String commentId,
       '$interactionsApiUrlGalal/comments/$commentId/report',
       data: postRequestInfo,
       options: Options(
-        headers: {'Authorization': 'Bearer $accessToken'},
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
       ),
     );
     if (response.statusCode == 200) {

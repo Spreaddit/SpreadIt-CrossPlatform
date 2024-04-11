@@ -16,7 +16,7 @@ Future<Map<String, dynamic>> getData() async {
       '$apiUrl/mobile/settings/blocking-permissions',
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -58,7 +58,7 @@ Future<int> updateData({
       data: data,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );

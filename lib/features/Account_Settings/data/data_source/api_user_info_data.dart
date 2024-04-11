@@ -16,7 +16,7 @@ Future<Map<String, dynamic>> getUserInfo() async {
       '$apiUrl/user-info',
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -51,7 +51,7 @@ Future<int> updateUserInfo({required Map<String, dynamic> updatedData}) async {
       data: updatedData,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );

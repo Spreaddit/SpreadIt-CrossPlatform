@@ -31,7 +31,7 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
       queryParameters: {"communityName": communityName},
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );

@@ -23,7 +23,7 @@ Future<int> postData({required Map<String, dynamic> enteredPassowrd}) async {
       data: enteredPassowrd,
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
