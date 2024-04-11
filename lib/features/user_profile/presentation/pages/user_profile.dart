@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/data/get_feed_posts.dart';
@@ -29,10 +30,7 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
-  /////////////////////////////////Navigation ////////////////////////////////////////////////
-  bool myProfile = true; ////////// will be taken during navigation
-  String username = 'mimo'; ////////// will be taken during navigation
-
+  late bool myProfile = true;
   String backgroundImage = '';
   String profilePicture = '';
   String formattedDate = '';
@@ -40,7 +38,7 @@ class _UserProfileState extends State<UserProfile> {
   String userinfo = '';
   String about = '';
   String background = '';
-  bool? followStatus=false;
+  bool? followStatus = false;
   bool isVisible = false;
   String displayName = '';
   String postKarmaNo = '';
@@ -52,14 +50,25 @@ class _UserProfileState extends State<UserProfile> {
   File? profileImageFile;
   Uint8List? imageBackgroundWeb;
   Uint8List? imageProfileWeb;
+  late String username;
 
-  @override
-  void initState() {
-    super.initState();
+    void didChangeDependencies() {
+    super.didChangeDependencies();
+    final Map<String, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    username = args?['username'] ?? '';
+    username = username == '' ? UserSingleton().user!.username : username;
+    myProfile = username == UserSingleton().user!.username;
     fetchUserInfoAsync();
     fetchComments();
     loadCommunities();
     checkFollowStatus();
+    }
+
+  @override
+  void initState() {
+    super.initState();
+
   }
 
   void loadCommunities() async {
@@ -73,7 +82,7 @@ class _UserProfileState extends State<UserProfile> {
 
   void checkFollowStatus() async {
     try {
-      followStatus = await isFollowed(username);
+      followStatus = await isFollowed(username!);
     } catch (e) {
       CustomSnackbar(content: 'Internal server error').show(context);
     }
@@ -81,7 +90,7 @@ class _UserProfileState extends State<UserProfile> {
 
   void fetchUserInfoAsync() async {
     try {
-      userInfoFuture = await fetchUserInfo(username);
+      userInfoFuture = await fetchUserInfo(username!);
 
       setState(() {
         formattedDate = formatDate(userInfoFuture!.dateOfJoining);
@@ -110,7 +119,7 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> unfollowOrFollow() async {
     try {
       var response =
-          await toggleFollow(isFollowing: followStatus!, username: username);
+          await toggleFollow(isFollowing: followStatus!, username: username!);
       if (response == 200) {
         setState(() {
           followStatus = !followStatus!;
@@ -129,7 +138,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Future<void> fetchComments() async {
     try {
-      var data = await fetchUserComments(username, 'user', '1');
+      var data = await fetchUserComments(username!, 'user', '1');
       setState(() {
         commentsList = data;
       });
