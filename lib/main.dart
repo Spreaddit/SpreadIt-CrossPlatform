@@ -30,32 +30,6 @@ import 'features/Sign_up/Presentaion/pages/log_in_page.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import 'features/Sign_up/Presentaion/pages/createusername.dart';
 
-Post P = Post(
-    postId: 1,
-    username: "Ahmed/m",
-    userId: "vfhj",
-    date: DateTime(2024, 3, 1),
-    headline: "SW WILL BE MY END",
-    votesCount: 8,
-    sharesCount: 9,
-    commentsCount: 5,
-    description:
-        "This is my last straw, I quit I am gonna kms and it's your fault I hate this subject af I will never ever choose this track by any means </3.",
-    profilePic:
-        "https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3JtMjA4YmF0Y2gxNS1leWUtMDEuanBn.jpg");
-Comment R3 = Comment(
-    id: "2",
-    userId: "hafagab",
-    postId: "bzjnnjamz",
-    username: "meeeee/u",
-    profilePic: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-    likesCount: 5,
-    createdAt: DateTime(2024, 3, 1),
-    content: "AWWWWWWWWWWWWWWWWWW!",
-    replies: [],
-    commentParentId: 2,
-    isReply: true);
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -94,7 +68,7 @@ class SpreadIt extends StatelessWidget {
             NotificationsPageUI(),
         '/settings/account-settings/change-password': (context) =>
             ResetPassword(),
-        '/edit_comment': (context) => EditComment()
+        '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
       },

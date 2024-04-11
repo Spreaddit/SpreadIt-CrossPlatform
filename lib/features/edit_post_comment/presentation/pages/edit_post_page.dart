@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/data/update_edited_post.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_footer.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_header.dart';
@@ -9,8 +7,15 @@ import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 
 class EditPost extends StatefulWidget {
-  Post? post;
-  EditPost({this.post});
+  String postId;
+  String postContent;
+  final void Function(String) onContentChanged;
+
+  EditPost({
+    required this.postId,
+    this.postContent = "",
+    required this.onContentChanged,
+  });
 
   @override
   State<EditPost> createState() {
@@ -25,7 +30,7 @@ class _EditPostState extends State<EditPost> {
   String? content;
   bool isEnabled = true;
   void setContent(String? C) {
-    content = widget.post!.description;
+    content = widget.postContent;
   }
 
   @override
@@ -62,10 +67,10 @@ class _EditPostState extends State<EditPost> {
             buttonText: "Save",
             onPressed: () async {
               print("pressed");
-              widget.post!.description = content!;
-              await updateEditedPost(
-                  postId: "${widget.post!.postId}", content: content);
-              print("this is the content${widget.post!.description}");
+              widget.postContent = content!;
+              widget.onContentChanged(content!);
+              await updateEditedPost(content: content, postId: widget.postId);
+              print("this is the content${widget.postContent}");
               print("content before fetching$content");
               //navigate to post card page with edited post
             },
@@ -77,10 +82,11 @@ class _EditPostState extends State<EditPost> {
         body: Column(
           children: [
             GenericContent(
-                initialBody: widget.post!.description,
-                bodyHint: "Add a post",
-                formKey: _finalContentForm,
-                onChanged: updateContent),
+              initialBody: widget.postContent,
+              bodyHint: "Add a post",
+              formKey: _finalContentForm,
+              onChanged: updateContent,
+            ),
             GenericFooter(
               toggleFooter: null,
               showAttachmentIon: true,

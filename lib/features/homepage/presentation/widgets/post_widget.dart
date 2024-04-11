@@ -20,6 +20,7 @@ class _PostHeader extends HookWidget {
   final DateTime date;
   final String profilePic;
   final String community;
+  final void Function(String) onContentChanged;
 
   _PostHeader({
     required this.username,
@@ -27,6 +28,7 @@ class _PostHeader extends HookWidget {
     required this.date,
     required this.profilePic,
     required this.community,
+    required this.onContentChanged,
   });
 
   @override
@@ -456,7 +458,7 @@ class _PostInteractions extends HookWidget {
 
 /// This widget takes an instance of [Post] as a paremeter
 /// and returns a postcard with its relevant info
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   final Post post;
   final bool isFullView;
 
@@ -465,38 +467,56 @@ class PostWidget extends StatelessWidget {
     this.isFullView = false,
   });
 
+  State<PostWidget> createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
+  late List<String> content;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      content = widget.post.type == "post" ? widget.post.content : [];
+    });
+  }
+
+  void onContentChanged(String newContent) {
+    setState(() {
+      content.add(newContent);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PostHeader(
-          username: post.username,
-          userId: post.userId,
-          date: post.date,
-          profilePic: post.userProfilePic,
-          community: post.community,
+          username: widget.post.username,
+          userId: widget.post.userId,
+          date: widget.post.date,
+          profilePic: widget.post.userProfilePic,
+          community: widget.post.community,
+          onContentChanged: onContentChanged,
         ),
         _PostBody(
-          title: post.title,
-          content: post.content.isNotEmpty
-              ? post.content[post.content.length - 1]
-              : "",
-          attachments: post.attachments,
-          link: post.link,
-          postType: post.type,
-          isFullView: isFullView,
-          pollOption: post.pollOptions,
-          isPollEnabled: post.isPollEnabled,
-          pollVotingLength: post.pollVotingLength,
-          postId: post.postId,
-          isNsfw: post.isNsfw,
-          isSpoiler: post.isSpoiler,
+          title: widget.post.title,
+          content: content.isNotEmpty ? content[content.length - 1] : "",
+          attachments: widget.post.attachments,
+          link: widget.post.link,
+          postType: widget.post.type,
+          isFullView: widget.isFullView,
+          pollOption: widget.post.pollOptions,
+          isPollEnabled: widget.post.isPollEnabled,
+          pollVotingLength: widget.post.pollVotingLength,
+          postId: widget.post.postId,
+          isNsfw: widget.post.isNsfw,
+          isSpoiler: widget.post.isSpoiler,
         ),
         _PostInteractions(
-          votesCount: post.votesUpCount - post.votesDownCount,
-          sharesCount: post.sharesCount,
-          commentsCount: post.commentsCount,
+          votesCount: widget.post.votesUpCount - widget.post.votesDownCount,
+          sharesCount: widget.post.sharesCount,
+          commentsCount: widget.post.commentsCount,
         )
       ],
     );
