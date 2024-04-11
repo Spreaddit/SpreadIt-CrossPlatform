@@ -1,17 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Retrieves data from the API endpoint '$apiUrl/mobile/settings/blocking-permissions'.
 ///
 /// Returns a [Map] containing the fetched data, with keys 'blockedAccounts' and 'allowFollow'.
-/// 
+///
 /// Returns an empty value for 'blockedAccounts', false for 'allowFollow' if the operation fails.
 ///
 /// Throws an error if fetching data fails.
 Future<Map<String, dynamic>> getData() async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
-    var response =
-        await Dio().get('$apiUrl/mobile/settings/blocking-permissions');
+    var response = await Dio().get(
+      '$apiUrl/mobile/settings/blocking-permissions',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       {
         print(response.data);
@@ -42,10 +50,18 @@ Future<int> updateData({
   required List<dynamic> blkedList,
   required bool updatedVal,
 }) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
     var data = {"blockedAccounts": blkedList, "allowFollow": updatedVal};
-    final response = await Dio()
-        .put('$apiUrl/mobile/settings/blocking-permissions', data: data);
+    final response = await Dio().put(
+      '$apiUrl/mobile/settings/blocking-permissions',
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;

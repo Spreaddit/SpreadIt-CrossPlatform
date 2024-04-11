@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> getCommunitySubStatus(
       },
       options: Options(
         headers: {
-          'token': 'Bearer $accessToken',
+          'Authorization': 'Bearer $accessToken',
         },
       ),
     );
@@ -34,10 +34,17 @@ Future<Map<String, dynamic>> getCommunitySubStatus(
 
 Future<int> postSubscribeRequest(
     {required Map<String, dynamic> postRequestInfo}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-        '$communityApiUrlGalal/community/subscribe',
-        data: postRequestInfo);
+      '$communityApiUrlGalal/community/subscribe',
+      data: postRequestInfo,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;
@@ -60,10 +67,17 @@ Future<int> postSubscribeRequest(
 
 Future<int> postUnsubscribeRequest(
     {required Map<String, dynamic> postRequestInfo}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-        '$communityApiUrlGalal/community/unsubscribe',
-        data: postRequestInfo);
+      '$communityApiUrlGalal/community/unsubscribe',
+      data: postRequestInfo,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;

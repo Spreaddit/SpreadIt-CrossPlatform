@@ -7,6 +7,7 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_post_feed.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 
 class CustomBindings extends AutomatedTestWidgetsFlutterBinding {
   @override
@@ -29,8 +30,8 @@ void main() {
     // Verify that the CommunityInfoSection is rendered
     expect(find.byType(CommunityInfoSection), findsOneWidget);
 
-    // Verify that the CommunityPostFeed is rendered
-    expect(find.byType(CommunityPostFeed), findsOneWidget);
+    // Verify that the PostFeed is rendered
+    expect(find.byType(PostFeed), findsOneWidget);
   });
 
   testWidgets('CommunityAboutPage widget test', (WidgetTester tester) async {

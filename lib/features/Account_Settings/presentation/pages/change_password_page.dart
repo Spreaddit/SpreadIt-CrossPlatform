@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
-import 'package:spreadit_crossplatform/features/Sign_up/data/oauth_service.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import '../../data/data_source/api_user_info_data.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
