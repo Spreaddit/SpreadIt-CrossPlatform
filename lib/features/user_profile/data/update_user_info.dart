@@ -18,9 +18,9 @@ Future<int> updateUserApi({
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String apiRoute = '$apiUrl/user/update?accessToken=$accessToken';
+    String apiRoute = '$apiUrl/user/profile-info';
     //String? username = UserSingleton().user!.username;
-    String username='mimo';
+    String username = 'mimo';
     var data = {
       "username": username,
       "name": displayName,
@@ -42,7 +42,15 @@ Future<int> updateUserApi({
           base64Encode(await profilePicImage.readAsBytes());
     }
 
-    final response = await Dio().post(apiRoute, data: data);
+    final response = await Dio().post(
+      apiRoute,
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
 
     if (response.statusCode == 200) {
       print(response.statusMessage);

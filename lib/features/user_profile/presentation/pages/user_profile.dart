@@ -14,7 +14,7 @@ import '../widgets/active_community.dart';
 import '../widgets/comments.dart';
 import '../../../generic_widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
-import '../../data/user_info.dart';
+import '../../data/get_user_info.dart';
 import '../../data/class_models/user_info_class_model.dart';
 import '../../data/get_user_comments.dart';
 

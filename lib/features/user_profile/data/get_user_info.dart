@@ -1,15 +1,22 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import './class_models/user_info_class_model.dart';
 
 String baseUrl = apiUrl;
 
 Future<UserInfo> fetchUserInfo(String username) async {
     try {
-      const apiroute = "/user-info";
+      String? accessToken=UserSingleton().accessToken;
+      const apiroute = "/user/profile-info";
       String apiUrl = "$baseUrl$apiroute/$username";
 
-      final response = await Dio().get(apiUrl);
+      final response = await Dio().get(apiUrl ,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),);
       if (response.statusCode == 200) {
         return UserInfo.fromJson(response.data);
       } else if (response.statusCode == 401) {

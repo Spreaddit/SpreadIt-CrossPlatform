@@ -10,22 +10,25 @@ Future<int> saveOrUnsave({
 }) async {
   try {
     String apiroute;
-    String? accessToken = UserSingleton().accessToken; 
+    String? accessToken = UserSingleton().accessToken;
+    //String userId= UserSingleton().user!.id;
+    String userId = '2';
     switch (type) {
-      case "posts":
-        apiroute = "/posts/$id/save";
+      case "savepost":
+        apiroute = "/posts/$id/save?userId=$userId";
+        break;
+      case "unsavepost":
+        apiroute = "/posts/$id/unsave?userId=$userId";
         break;
       case "comments":
         apiroute = "/comments/$id/save";
         break;
       default:
         print("Invalid type");
-        return 400; 
+        return 400;
     }
 
-    String requestURL = apiUrl + apiroute;
-
-
+    String requestURL = '$apiUrl$apiroute';
     final response = await Dio().post(
       requestURL,
       options: Options(
@@ -59,9 +62,9 @@ Future<int> saveOrUnsave({
       }
     }
     print("Dio error occurred: $e");
-    return 500; 
+    return 500;
   } catch (e) {
     print("Error occurred: $e");
-    return 500; 
+    return 500;
   }
 }
