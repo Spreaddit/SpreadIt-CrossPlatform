@@ -25,9 +25,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
   }
 
   Future<void> fetchData() async {
-    String FAKE_TOKEN = "";
-    subscriptionData =
-        await getCommunitySubStatus(widget.communityName, FAKE_TOKEN);
+    subscriptionData = await getCommunitySubStatus(widget.communityName);
     if (subscriptionData["isSubscribed"] == -1) {
       CustomSnackbar(content: "Failed to retrieve subscription data")
           .show(context);

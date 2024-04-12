@@ -143,13 +143,14 @@ class ShareButton extends HookWidget {
 /// in a [PostWidget] card
 class CommentButton extends HookWidget {
   int initialCommensCount; // TODO: to be changed to a state
+  final void Function() onCommentsPressed;
   CommentButton({
     required this.initialCommensCount,
+    required this.onCommentsPressed,
   });
 
   void onCommentClick() {
-    print("share");
-    //TODO: impement share logic
+    onCommentsPressed();
   }
 
   @override

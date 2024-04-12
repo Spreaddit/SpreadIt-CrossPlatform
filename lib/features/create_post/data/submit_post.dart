@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
@@ -22,8 +23,7 @@ Future <int> submitPost(
   bool isNSFW,
  ) async {
   try {
-    //String? accessToken = userSingleton().accessToken;
-    String accessToken = 'chahd';
+    String? accessToken = UserSingleton().accessToken;
     const apiRoute = "/posts";
     String apiUrl = apibase + apiRoute;
     String pollVotingLength = selectedDays.toString();

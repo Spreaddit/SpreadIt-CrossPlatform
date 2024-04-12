@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/spoi
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unNSFW_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unspoiler_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/delete_post_bottomsheet.dart';
+import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/report_modal.dart';
 
 import '../../../saved/data/save_or_unsave.dart';
 
@@ -29,8 +30,10 @@ void blockAccount() {
   //TODO:Block logic
 }
 
-void report() {
-  //TODO:Report logic
+void report(BuildContext context, String communityName, String postId,
+    String commentId, String username, bool isPost) {
+  ReportModal(
+      context, communityName, postId, commentId, isPost, false, username);
 }
 
 void markSpoiler(BuildContext context, int postId) async {

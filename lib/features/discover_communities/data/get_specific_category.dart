@@ -15,11 +15,11 @@ class GetSpecificCommunity {
       );
       if (category == '🔥 Trending globally' || category == '🌍 Top globally') {
         response = await dio.get(
-          '$communityApiUrlGalal/community/random-category',
+          '$apiUrl/community/random-category',
         );
       } else {
         response = await dio.get(
-          '$communityApiUrlGalal/community/get-specific-category',
+          '$apiUrl/community/get-specific-category',
           queryParameters: {
             'category': category,
           },

@@ -3,11 +3,11 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<Map<String, dynamic>> getCommunitySubStatus(
-    String communityName, String userToken) async {
+    String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
-      '$communityApiUrlGalal/community/is-subscribed',
+      '$apiUrl/community/is-subscribed',
       queryParameters: {
         "communityName": communityName,
       },
@@ -37,7 +37,7 @@ Future<int> postSubscribeRequest(
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-      '$communityApiUrlGalal/community/subscribe',
+      '$apiUrl/community/subscribe',
       data: postRequestInfo,
       options: Options(
         headers: {
@@ -70,7 +70,7 @@ Future<int> postUnsubscribeRequest(
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-      '$communityApiUrlGalal/community/unsubscribe',
+      '$apiUrl/community/unsubscribe',
       data: postRequestInfo,
       options: Options(
         headers: {

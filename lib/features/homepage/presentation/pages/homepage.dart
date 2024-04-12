@@ -76,7 +76,6 @@ class _HomePageState extends State<HomePage> {
         context: context,
         onChangeHomeCategory: changeSelectedIndex,
       ),
-      //TODO: render popular
       AppBar(
         title: Text('Communities'),
       ),

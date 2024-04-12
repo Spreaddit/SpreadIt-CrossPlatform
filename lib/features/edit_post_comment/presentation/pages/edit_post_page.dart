@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/w
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_body.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 class EditPost extends StatefulWidget {
   String postId;
@@ -72,10 +73,14 @@ class _EditPostState extends State<EditPost> {
               await updateEditedPost(content: content, postId: widget.postId);
               print("this is the content${widget.postContent}");
               print("content before fetching$content");
-              //navigate to post card page with edited post
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             isEnabled: isEnabled,
-            onIconPress: () {}, //navigate to pst card page
+            onIconPress: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
             showHeaderTitle: true,
           ),
         ),

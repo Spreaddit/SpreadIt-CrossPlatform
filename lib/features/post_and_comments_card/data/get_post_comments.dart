@@ -1,12 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
-import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String baseUrl = apiUrl;
 
@@ -14,8 +9,7 @@ Future<List<Comment>> fetchCommentsData(
     String? username, String page, String? postId) async {
   try {
     print("fetch");
-    //String? accessToken = UserSingleton().accessToken;
-    String? accessToken = 'ayhaga';
+    String? accessToken = UserSingleton().accessToken;
     String apiroute = '';
     switch (page) {
       case 'saved':

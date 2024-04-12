@@ -26,7 +26,7 @@ String postCategoryEndpoint({
   String? username = "",
 }) {
   if (action == PostCategories.user) {
-    return "/posts/$username";
+    return "/postss/$username";
   }
 
   if (subspreaditName == null) {

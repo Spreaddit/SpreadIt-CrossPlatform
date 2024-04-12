@@ -52,7 +52,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: HomePage(),
+      home: StartUpPage(),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
@@ -82,7 +82,6 @@ class SpreadIt extends StatelessWidget {
               currentPage: CurrentPage.discover,
             ),
         '/all': (context) => AllPage(),
-        '/start-up-page': (context) => StartUpPage(),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),
