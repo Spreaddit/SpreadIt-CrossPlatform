@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/api.dart';
 
 class GetSpecificCommunity {
   Dio dio = Dio();
-  String? accessToken= UserSingleton().accessToken; 
+  String? accessToken = UserSingleton().accessToken;
   Future<List<Community>> getCommunities(String category) async {
     try {
       Response response;
@@ -18,6 +18,7 @@ class GetSpecificCommunity {
       if (category == '🔥 Trending globally' || category == '🌍 Top globally') {
         response = await dio.get(
           '$apiUrl/community/random-category',
+          options: options,
         );
       } else {
         response = await dio.get(
@@ -45,5 +46,4 @@ class GetSpecificCommunity {
       throw Exception('Failed to load communities: $e ');
     }
   }
-
 }
