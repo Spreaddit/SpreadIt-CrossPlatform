@@ -57,9 +57,6 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     var socialMediaJson = json['socialLinks'] as List;
-    json.forEach((key, value) {
-      print('$key: $value (${value.runtimeType})');
-    });
     List<SocialMedia> socialLinks = socialMediaJson
         .map((socialMediaJson) => SocialMedia.fromJson(socialMediaJson))
         .toList();

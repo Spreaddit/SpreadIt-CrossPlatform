@@ -1,16 +1,18 @@
+import 'package:spreadit_crossplatform/user_info.dart';
+
 import 'community.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
 class GetSpecificCommunity {
   Dio dio = Dio();
-
+  String? accessToken= UserSingleton().accessToken; 
   Future<List<Community>> getCommunities(String category) async {
     try {
       Response response;
       Options options = Options(
         headers: {
-          'Authorization': 'Bearer exampleToken',
+          'Authorization': 'Bearer $accessToken',
         },
       );
       if (category == '🔥 Trending globally' || category == '🌍 Top globally') {
