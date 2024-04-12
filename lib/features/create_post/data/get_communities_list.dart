@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-String apibase = communityApiUrlChahd;
+String apibase = apiUrl;
 
 Future<List<Map<String, dynamic>>> getCommunitiesList() async {
   try {

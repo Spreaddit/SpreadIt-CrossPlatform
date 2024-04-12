@@ -32,21 +32,21 @@ String postCategoryEndpoint({
   if (subspreaditName == null) {
     switch (action) {
       case PostCategories.best:
-        return "/best/";
+        return "/home/best/";
       case PostCategories.hot:
-        return "/hot/";
+        return "/home/hot/";
       case PostCategories.newest:
-        return "/new/";
+        return "/home/new/";
       case PostCategories.top:
-        return "/top/";
+        return "/home/top/";
       case PostCategories.recent:
-        return "/posts/"; //TODO: check history page options (Rehab - phase 3)
+        return "/home/posts/"; //TODO: check history page options (Rehab - phase 3)
       case PostCategories.views:
-        return "/sort/views/";
+        return "/home/sort/views/";
       case PostCategories.save:
-        return "/posts/save/";
+        return "/home/posts/save/";
       case PostCategories.hide:
-        return "/posts/hide/";
+        return "/home/posts/hide/";
       default:
         return "";
     }
@@ -76,6 +76,7 @@ Future<List<Post>> getFeedPosts({
 }) async {
   try {
     String? accessToken = UserSingleton().getAccessToken();
+    print(accessToken);
 
     String requestURL = apiUrl +
         postCategoryEndpoint(

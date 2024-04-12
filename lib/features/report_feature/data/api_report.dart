@@ -7,7 +7,7 @@ Future<int> reportPostRequest(String postId,
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-      '$interactionsApiUrlGalal/posts/$postId/report',
+      '$apiUrl/posts/$postId/report',
       data: postRequestInfo,
       options: Options(
         headers: {
@@ -44,7 +44,7 @@ Future<int> reportCommentRequest(String postId, String commentId,
     /* String currentSwaggerUrl =
         '$interactionsApiUrlGalal/posts/$postId/comments/$commentId/report'; */
     final response = await Dio().post(
-      '$interactionsApiUrlGalal/comments/$commentId/report',
+      '$apiUrl/comments/$commentId/report',
       data: postRequestInfo,
       options: Options(
         headers: {

@@ -188,8 +188,9 @@ class _PostHeaderState extends State<_PostHeader> {
             MaterialPageRoute(
               builder: (context) => EditPost(
                 postId: widget.post.postId.toString(),
-                postContent: widget.post.content.isNotEmpty
-                    ? widget.post.content[widget.post.content.length - 1]
+                postContent: widget.post.content != null &&
+                        widget.post.content!.isNotEmpty
+                    ? widget.post.content![widget.post.content!.length - 1]
                     : "",
                 onContentChanged: widget.onContentChanged,
               ),
@@ -432,7 +433,7 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image(
-                      image: NetworkImage(i.link),
+                      image: NetworkImage(i.link!),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -507,7 +508,7 @@ class _PostContent extends StatelessWidget {
         if (attachments![0].type == "image") {
           return _ImageCaruosel(attachments: attachments!);
         } else {
-          return VideoPlayerScreen(videoURL: attachments![0].link);
+          return VideoPlayerScreen(videoURL: attachments![0].link!);
         }
       } else {
         CustomSnackbar(content: "No Attachments Found").show(context);
@@ -552,9 +553,9 @@ class _PostContent extends StatelessWidget {
             return PollOption(
               id: index.toString(),
               title: Text(
-                option.option,
+                option.option!,
               ),
-              votes: option.votes,
+              votes: option.votes!,
             );
           },
         ).toList(),
@@ -691,9 +692,11 @@ class _PostWidgetState extends State<PostWidget> {
   void initState() {
     super.initState();
     setState(() {
-      isNsfw = widget.post.isNsfw;
-      isSpoiler = widget.post.isSpoiler;
-      content = widget.post.type == "post" ? widget.post.content : [];
+      isNsfw = widget.post.isNsfw!;
+      isSpoiler = widget.post.isSpoiler!;
+      content = widget.post.content != null && widget.post.content!.isNotEmpty
+          ? widget.post.content!
+          : [];
     });
   }
 
@@ -752,12 +755,14 @@ class _PostWidgetState extends State<PostWidget> {
                   }
                 },
                 child: _PostBody(
-                  title: widget.post.title,
-                  content:
-                      content.isNotEmpty ? content[content.length - 1] : "",
+                  title: widget.post.title!,
+                  content: widget.post.content != null &&
+                          widget.post.content!.isNotEmpty
+                      ? widget.post.content![widget.post.content!.length - 1]
+                      : "",
                   attachments: widget.post.attachments,
                   link: widget.post.link,
-                  postType: widget.post.type,
+                  postType: widget.post.type!,
                   isFullView: widget.isFullView,
                   pollOption: widget.post.pollOptions,
                   isPollEnabled: widget.post.isPollEnabled,
@@ -771,9 +776,9 @@ class _PostWidgetState extends State<PostWidget> {
                 postId: widget.post.postId,
                 isUserProfile: widget.isUserProfile,
                 votesCount:
-                    widget.post.votesUpCount - widget.post.votesDownCount,
-                sharesCount: widget.post.sharesCount,
-                commentsCount: widget.post.commentsCount,
+                    widget.post.votesUpCount! - widget.post.votesDownCount!,
+                sharesCount: widget.post.sharesCount!,
+                commentsCount: widget.post.commentsCount!,
                 isFullView: widget.isFullView,
               )
             ],
