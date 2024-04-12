@@ -18,11 +18,11 @@ import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
 class _PostHeader extends StatefulWidget {
-  Post post;
+  final Post post;
   final bool isUserProfile;
   final void Function(String) onContentChanged;
-  bool isNsfw;
-  bool isSpoiler;
+  final bool isNsfw;
+  final bool isSpoiler;
   final void Function(bool) onNsfwChanged;
   final void Function(bool) onSpoilerChanged;
   final void Function() onDeleted;
@@ -43,18 +43,28 @@ class _PostHeader extends StatefulWidget {
 }
 
 class _PostHeaderState extends State<_PostHeader> {
+  late String dateFormatted;
+  late Timer timer;
   @override
-  Widget build(BuildContext context) {
-    bool sec30PassedToggler =
-        false; //used for changing time without constant re-render
-    String dateFormatted = dateToDuration(widget.post.date);
-
-    Timer.periodic(Duration(seconds: 30), (timer) {
+  void initState() {
+    super.initState();
+    setState(() {
+      dateFormatted = dateToDuration(widget.post.date);
+    });
+    timer = Timer.periodic(Duration(seconds: 30), (timer) {
       setState(() {
         dateFormatted = dateToDuration(widget.post.date);
       });
     });
+  }
 
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       surfaceTintColor: Colors.transparent,
@@ -171,24 +181,34 @@ class _PostHeaderState extends State<_PostHeader> {
       blockAccount,
       hide
     ];
+
+    List<IconData> writerIcons = [
+      Icons.notifications_on_rounded,
+      Icons.save,
+      Icons.copy,
+      Icons.flag,
+      Icons.block,
+      Icons.hide_source_rounded,
+      Icons.edit,
+      Icons.new_releases_rounded,
+      Icons.warning_rounded,
+      Icons.delete,
+    ];
+    List<IconData> viewerIcons = [
+      Icons.notifications_on_rounded,
+      Icons.save,
+      Icons.copy,
+      Icons.flag,
+      Icons.block,
+      Icons.hide_source_rounded,
+    ];
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return CustomBottomSheet(
-          icons: [
-            Icons.notifications_on_rounded,
-            Icons.save,
-            Icons.copy,
-            Icons.flag,
-            Icons.block,
-            Icons.hide_source_rounded,
-            Icons.edit,
-            Icons.new_releases_rounded,
-            Icons.warning_rounded,
-            Icons.delete,
-          ],
-          text: widget.isUserProfile ? viewerOptions : writerOptions,
-          onPressedList: widget.isUserProfile ? viewerActions : writerActions,
+          icons: widget.isUserProfile ? writerIcons : viewerIcons,
+          text: widget.isUserProfile ? writerOptions : viewerOptions,
+          onPressedList: widget.isUserProfile ? writerActions : viewerActions,
         );
       },
     );
@@ -357,8 +377,7 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
                     color: const Color.fromARGB(255, 255, 255, 255),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        10.0), // Adjust the border radius as needed
+                    borderRadius: BorderRadius.circular(10.0),
                     child: Image(
                       image: NetworkImage(i.link),
                       fit: BoxFit.cover,
@@ -622,7 +641,9 @@ class _PostWidgetState extends State<PostWidget> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        settings: RouteSettings(name: '/post-card-page/$postId/$isUserProfile'),
+        settings: RouteSettings(
+          name: '/post-card-page/$postId/$isUserProfile',
+        ),
         builder: (context) => PostCardPage(
           postId: postId,
           isUserProfile: isUserProfile,
@@ -668,10 +689,12 @@ class _PostWidgetState extends State<PostWidget> {
               GestureDetector(
                 onTap: () {
                   print("tapped");
-                  navigateToPostCardPage(
-                    widget.post.postId,
-                    widget.isUserProfile,
-                  );
+                  if (!widget.isFullView) {
+                    navigateToPostCardPage(
+                      widget.post.postId,
+                      widget.isUserProfile,
+                    );
+                  }
                 },
                 child: _PostBody(
                   title: widget.post.title,

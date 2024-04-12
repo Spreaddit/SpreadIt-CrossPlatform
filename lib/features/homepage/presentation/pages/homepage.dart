@@ -7,57 +7,77 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/le
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 
-/// first page after login, displaying user feed
 class HomePage extends StatefulWidget {
+  final CurrentPage currentPage;
+  HomePage({
+    Key? key,
+    this.currentPage = CurrentPage.home,
+  }) : super(key: key);
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int selectedIndex = 0;
-  CurrentPage currentPage = CurrentPage.home;
+  late CurrentPage currentPage;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      currentPage = widget.currentPage;
+    });
+  }
 
   void changeSelectedIndex(int newIndex) {
     setState(() {
-      selectedIndex = newIndex;
+      currentPage = CurrentPage.values[newIndex];
     });
-    setState(() {});
-    switch (selectedIndex) {
-      case 0:
+    switch (currentPage) {
+      case (CurrentPage.home):
         Navigator.of(context).pushNamed(
           '/home',
-          arguments: {'currentPage': CurrentPage.home},
         );
         break;
-      case 1:
-        Navigator.pushReplacementNamed(context, '/discover');
+      case CurrentPage.discover:
+        Navigator.of(context).pushNamed(
+          '/discover',
+        );
         break;
-      case 2:
-        Navigator.pushReplacementNamed(context, '/primary-content-page');
+      case CurrentPage.createPost:
+        Navigator.of(context).pushNamed(
+          '/primary-content-page',
+        );
         break;
-      case 3:
+      case CurrentPage.chat:
+        // Handle case when "Chat" icon is tapped
         break;
-      case 4:
+      case CurrentPage.inbox:
+        // Handle case when "Inbox" icon is tapped
         break;
+      case CurrentPage.popular:
+        Navigator.of(context).pushNamed(
+          '/popular',
+        );
+        break;
+      case CurrentPage.all:
+        Navigator.of(context).pushNamed(
+          '/all',
+        );
     }
-  }
-
-  void onChangeHomeCategory(CurrentPage newPage) {
-    setState(() {
-      currentPage = newPage;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final List<PreferredSizeWidget?> appBars = [
       TopBar(
-          currentPage: currentPage,
-          context: context,
-          onChangeHomeCategory: onChangeHomeCategory),
+        currentPage: widget.currentPage,
+        context: context,
+        onChangeHomeCategory: changeSelectedIndex,
+      ),
       //TODO: render popular
       AppBar(
-        title: Text('Communties'),
+        title: Text('Communities'),
       ),
       null,
       AppBar(
@@ -76,11 +96,16 @@ class _HomePageState extends State<HomePage> {
       CreatePost(),
       Text("chat"),
       Text("Inbox"),
+      PostFeed(
+        //TODO: implement trending searches in popular
+        postCategory: PostCategories.hot,
+        showSortTypeChange: false,
+      ),
     ];
 
     return Scaffold(
-      appBar: appBars[selectedIndex],
-      body: screens[selectedIndex],
+      appBar: appBars[widget.currentPage.index % 5],
+      body: screens[widget.currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),
       bottomNavigationBar: BottomNavigationBar(
@@ -106,7 +131,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Inbox',
           ),
         ],
-        currentIndex: selectedIndex,
+        currentIndex: widget.currentPage.index % 5,
         selectedItemColor: const Color.fromARGB(255, 255, 72, 0),
         onTap: (index) => changeSelectedIndex(index),
         unselectedItemColor: Colors.black,
