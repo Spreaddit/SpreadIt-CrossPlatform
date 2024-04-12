@@ -3,9 +3,6 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/data/update_ed
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_footer.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_header.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_body.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
-import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 class EditPost extends StatefulWidget {
   String postId;

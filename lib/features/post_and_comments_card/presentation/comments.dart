@@ -9,6 +9,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_replies.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class Media {
   final String type;
@@ -96,6 +97,7 @@ class CommentCard extends StatefulWidget {
 
 class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
+  late bool isUserProfile;
 
   Future<void> fetchReplies() async {
     if (!_repliesFetched) {
@@ -114,6 +116,8 @@ class _CommentCardState extends State<CommentCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    isUserProfile = UserSingleton().user != null &&
+        widget.comment.username == UserSingleton().user!.username;
     fetchReplies();
   }
 
