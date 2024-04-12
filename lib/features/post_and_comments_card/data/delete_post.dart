@@ -7,7 +7,12 @@ String apibase = apiUrl;
 Future<int> deletePost(String postId) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    var response = await Dio().delete('$apiUrl/posts/$postId');
+    var response = await Dio().delete('$apiUrl/posts/$postId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ));
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);

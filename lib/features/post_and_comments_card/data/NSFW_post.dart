@@ -7,7 +7,12 @@ String apibase = apiUrl;
 Future<int> NSFWPost(String postId) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    var response = await Dio().post('$apiUrl/posts/$postId/nsfw');
+    var response = await Dio().post('$apiUrl/posts/$postId/nsfw',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ));
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);

@@ -45,7 +45,7 @@ class Comment {
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: json['_id'],
+      id: json['id'],
       content: json['content'],
       user: User.fromJson(json['user']),
       likesCount: json['likes_count'],

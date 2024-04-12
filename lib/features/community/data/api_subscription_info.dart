@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-Future<Map<String, dynamic>> getCommunitySubStatus(
-    String communityName) async {
+Future<Map<String, dynamic>> getCommunitySubStatus(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
@@ -35,10 +34,13 @@ Future<Map<String, dynamic>> getCommunitySubStatus(
 Future<int> postSubscribeRequest(
     {required Map<String, dynamic> postRequestInfo}) async {
   String? accessToken = UserSingleton().getAccessToken();
+  print(postRequestInfo['name']);
   try {
     final response = await Dio().post(
       '$apiUrl/community/subscribe',
-      data: postRequestInfo,
+      data: {
+        "communityName": postRequestInfo['name'],
+      },
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

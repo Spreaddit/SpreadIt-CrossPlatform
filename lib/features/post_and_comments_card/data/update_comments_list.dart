@@ -28,7 +28,7 @@ Future<Comment?> updateComments({
     String apiUrl = apibase + apiRoute;
     final response = await Dio().post(apiUrl,
         options: Options(headers: {
-          'Authorization': 'Bearer: $accessToken',
+          'Authorization': 'Bearer $accessToken',
         }),
         data: {
           "content": content,
