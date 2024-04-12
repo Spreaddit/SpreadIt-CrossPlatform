@@ -22,8 +22,7 @@ Future<int> updateUserApi({
   try {
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/profile-info';
-    //String? username = UserSingleton().user!.username;
-    String username = 'mimo';
+    String? username = UserSingleton().user!.username;
     var data = {
       "username": username,
       "name": displayName,
@@ -58,7 +57,7 @@ Future<int> updateUserApi({
       data['banner']=base64Image;
     }
 
-    final response = await Dio().post(
+    final response = await Dio().put(
       apiRoute,
       data: data,
       options: Options(
