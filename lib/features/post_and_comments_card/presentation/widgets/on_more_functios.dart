@@ -36,7 +36,7 @@ void report(BuildContext context, String communityName, String postId,
       context, communityName, postId, commentId, isPost, false, username);
 }
 
-void markSpoiler(BuildContext context, int postId) async {
+void markSpoiler(BuildContext context, String postId) async {
   int response = await spoilerPost(postId);
   if (response == 200) {
     Navigator.pop(context);
@@ -49,7 +49,7 @@ void markSpoiler(BuildContext context, int postId) async {
   }
 }
 
-void unmarkSpoiler(BuildContext context, int postId) async {
+void unmarkSpoiler(BuildContext context, String postId) async {
   int response = await unspoilerPost(postId);
   if (response == 200) {
     Navigator.pop(context);
@@ -62,7 +62,7 @@ void unmarkSpoiler(BuildContext context, int postId) async {
   }
 }
 
-void markNSFW(BuildContext context, int postId) async {
+void markNSFW(BuildContext context, String postId) async {
   int response = await NSFWPost(postId);
   if (response == 200) {
     Navigator.pop(context);
@@ -75,7 +75,7 @@ void markNSFW(BuildContext context, int postId) async {
   }
 }
 
-void unmarkNSFW(BuildContext context, int postId) async {
+void unmarkNSFW(BuildContext context, String postId) async {
   int response = await unNSFWPost(postId);
   if (response == 200) {
     Navigator.pop(context);
@@ -88,12 +88,13 @@ void unmarkNSFW(BuildContext context, int postId) async {
   }
 }
 
-void deletePost(BuildContext context, int postId, void Function() onDeleted) {
+void deletePost(
+    BuildContext context, String postId, void Function() onDeleted) {
   deletePostButtomSheet(context, postId, onDeleted);
 }
 
-void savePost(BuildContext context, int postId) async {
-  int statusCode = await saveOrUnsave(id: '$postId', type: 'savepost');
+void savePost(BuildContext context, String postId) async {
+  int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
   Navigator.pop(context);
   if (statusCode == 200) {
     print('Post unsaved successfully.');
@@ -103,7 +104,7 @@ void savePost(BuildContext context, int postId) async {
   }
 }
 
-void unsavePost(BuildContext context, int postId) async {
+void unsavePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
   Navigator.pop(context);
   if (statusCode == 200) {

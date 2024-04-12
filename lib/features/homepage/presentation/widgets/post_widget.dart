@@ -21,7 +21,7 @@ import 'package:uuid/uuid.dart';
 
 void navigateToPostCardPage(
   BuildContext context,
-  int postId,
+  String postId,
   bool isUserProfile,
 ) {
   Navigator.push(
@@ -115,12 +115,15 @@ class _PostHeaderState extends State<_PostHeader> {
             ],
           ),
           subtitle: GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(
+            onTap: () => {Navigator.of(context).pushNamed(
               '/user-profile',
               arguments: {
                 'username': widget.post.username,
               },
             ),
+            print('username: ${widget.post.username}'),
+
+            },
             child: Text(widget.post.username),
           ),
           leading: CircleAvatar(
@@ -281,7 +284,7 @@ class _PostBody extends StatelessWidget {
   final List<PollOptions>? pollOption;
   final String? pollVotingLength;
   final bool? isPollEnabled;
-  final int postId;
+  final String postId;
   final bool isSpoiler;
   final bool isNsfw;
 
@@ -473,7 +476,7 @@ class _PostContent extends StatelessWidget {
   final List<Attachment>? attachments;
   final String? link;
   final bool isFullView;
-  final int postId;
+  final String postId;
   final bool isSpoiler;
   final bool isNsfw;
 
@@ -493,7 +496,8 @@ class _PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (postType == "post") {
+    print(postType);
+    if (postType == "Post") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
 
       return Text(
@@ -501,7 +505,7 @@ class _PostContent extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: !isFullView ? 5 : 2000,
       );
-    } else if (postType == "attachment") {
+    } else if (postType == "Images & Video") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
 
       if (attachments!.isNotEmpty) {
@@ -515,7 +519,7 @@ class _PostContent extends StatelessWidget {
         print("Error fetching attachments from back");
         return Text("Unable to load attachments");
       }
-    } else if (postType == "link") {
+    } else if (postType == "Link") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
 
       return AnyLinkPreview(
@@ -613,7 +617,7 @@ class _PostInteractions extends StatefulWidget {
   final int sharesCount;
   final int commentsCount;
   final bool isUserProfile;
-  final int postId;
+  final String postId;
   final bool isFullView;
 
   _PostInteractions({

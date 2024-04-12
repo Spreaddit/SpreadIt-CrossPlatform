@@ -26,7 +26,7 @@ String postCategoryEndpoint({
   String? username = "",
 }) {
   if (action == PostCategories.user) {
-    return "/postss/$username";
+    return "/posts/username/$username";
   }
 
   if (subspreaditName == null) {
@@ -95,7 +95,10 @@ Future<List<Post>> getFeedPosts({
       ),
     );
     if (response.statusCode == 200) {
-      return (response.data as List).map((x) => Post.fromJson(x)).toList();
+      List<Post> posts =
+          (response.data as List).map((x) => Post.fromJson(x)).toList();
+      print("posts after json parsing:$posts");
+      return (posts);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
     } else if (response.statusCode == 400) {
@@ -126,7 +129,7 @@ Future<List<Post>> getFeedPosts({
 /// Takes [PostCategories] as a paremeter
 /// and fetches its respective [Post] List
 Future<Post?> getPostById({
-  required int postId,
+  required String postId,
 }) async {
   try {
     String? accessToken = UserSingleton().getAccessToken();

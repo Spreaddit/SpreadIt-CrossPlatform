@@ -4,7 +4,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future <int> spoilerPost(int postId) async {
+Future <int> spoilerPost(String postId) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().post('$apiUrl/posts/$postId/spoiler');

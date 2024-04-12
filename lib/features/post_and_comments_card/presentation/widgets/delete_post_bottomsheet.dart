@@ -4,8 +4,8 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/dele
 import '../../../generic_widgets/small_custom_button.dart';
 
 void deletePostButtomSheet(
-    BuildContext context, int postID, void Function() onDeleted) {
-  void handleDeletePost(int postId) async {
+    BuildContext context, String postId, void Function() onDeleted) {
+  void handleDeletePost(String postId) async {
     int response = await deletePost(postId);
     if (response == 200) {
       CustomSnackbar(content: 'Your post is deleted successfully')
@@ -61,7 +61,7 @@ void deletePostButtomSheet(
                     SmallButton(
                       buttonText: 'Delete',
                       onPressed: () {
-                        handleDeletePost(postID);
+                        handleDeletePost(postId);
                         onDeleted();
                       },
                       isEnabled: true,

@@ -62,15 +62,15 @@ class SpreadIt extends StatelessWidget {
 
         if (pathSegments.contains('post-card-page') &&
             pathSegments.length >= 3) {
-          final postId = int.tryParse(pathSegments[pathSegments.length - 2]);
+          final postId = pathSegments[pathSegments.length - 2];
           final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
 
-          if (postId != null) {
+
             return MaterialPageRoute(
               builder: (_) =>
                   PostCardPage(postId: postId, isUserProfile: isUserProfile),
             );
-          }
+        
         }
       },
       routes: {

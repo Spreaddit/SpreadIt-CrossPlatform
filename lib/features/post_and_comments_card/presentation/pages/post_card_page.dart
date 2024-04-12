@@ -8,7 +8,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
 
 class PostCardPage extends StatefulWidget {
-  final int postId;
+  final String postId;
   final bool isUserProfile;
 
   const PostCardPage(

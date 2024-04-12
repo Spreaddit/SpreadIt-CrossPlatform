@@ -222,6 +222,7 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               PostFeed(
                 postCategory: PostCategories.user,
+                username: username,
               ),
             ],
           ),

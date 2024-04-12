@@ -4,7 +4,7 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 
 Future<bool> handlePolls({
   required PollOptions pollOption,
-  required int postId,
+  required String postId,
 }) async {
   try {
     String requestURL = "$apiUrl/posts/$postId/poll/vote";

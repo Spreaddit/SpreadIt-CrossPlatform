@@ -1,5 +1,5 @@
 class Post {
-  final int postId;
+  final String postId;
   final String userId;
   final String username;
   final String userProfilePic;
@@ -58,11 +58,16 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
+    print('inner json $json');
+    json.forEach((key, value) {
+      print('$key: $value (${value.runtimeType})');
+    });
     return Post(
-      postId: json['postId'],
+      postId: json['_id'],
       userId: json['userId'],
-      username: json['username'],
-      userProfilePic: json['userProfilePic'],
+      username: json['username'] ?? "anonymous",
+      userProfilePic:
+          "https://i.pinimg.com/200x/16/ed/ff/16edfff4cfc69f8c58054793e2947aa0.jpg",
       votesUpCount: json['votesUpCount'],
       votesDownCount: json['votesDownCount'],
       sharesCount: json['sharesCount'],
