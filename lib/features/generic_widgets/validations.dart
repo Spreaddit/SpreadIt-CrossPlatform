@@ -63,3 +63,11 @@ String validateusernametext(String value) {
   }
   return "Great name! it's not taken, so it's all yours.";
 }
+
+bool validateInputLength(String value ,int length) {
+    if (length - value.length < 0)
+    {    
+      return false;
+    }    
+    return true;
+}

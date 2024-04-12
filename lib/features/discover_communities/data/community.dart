@@ -5,19 +5,22 @@ class Community extends Equatable {
   final String description;
   final String image;
   final int membersCount;
+  final String? backgroundImage;     
 
   Community({
     required this.name,
-    required this.description,
+    this.description='', 
     required this.image,
     required this.membersCount,
+    this.backgroundImage,   
   });
 
   Community.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         description = json['description'],
         image = json['image'],
-        membersCount = json['memberscount'];
+        membersCount = json['memberscount'],
+        backgroundImage= json['communityBanner']; 
 
   @override
   List<Object?> get props => [

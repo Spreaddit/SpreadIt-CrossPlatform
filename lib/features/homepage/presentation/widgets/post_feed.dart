@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -75,6 +76,12 @@ class _PostFeedState extends State<PostFeed> {
     fetchData();
   }
 
+  void navigateToPostCardPage(Post post) {
+    Navigator.of(context).pushNamed('./post-card-page', arguments: {
+      'post': post,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -113,7 +120,13 @@ class _PostFeedState extends State<PostFeed> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        PostWidget(post: items[index]),
+                        GestureDetector(
+                          onTap: () {navigateToPostCardPage(items[index]);},
+                          child: PostWidget(
+                              post: items[index],
+                              isUserProfile:
+                                  currentPostCategory == PostCategories.user),
+                        ),
                         Divider(
                           height: 20,
                           thickness: 0.2,
