@@ -15,6 +15,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -115,14 +116,14 @@ class _PostHeaderState extends State<_PostHeader> {
             ],
           ),
           subtitle: GestureDetector(
-            onTap: () => {Navigator.of(context).pushNamed(
-              '/user-profile',
-              arguments: {
-                'username': widget.post.username,
-              },
-            ),
-            print('username: ${widget.post.username}'),
-
+            onTap: () => {
+              Navigator.of(context).pushNamed(
+                '/user-profile',
+                arguments: {
+                  'username': widget.post.username,
+                },
+              ),
+              print('username: ${widget.post.username}'),
             },
             child: Text(widget.post.username),
           ),
@@ -521,16 +522,16 @@ class _PostContent extends StatelessWidget {
       }
     } else if (postType == "Link") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
-
+      print(link);
       return AnyLinkPreview(
-        link: link ?? "",
+        link: "https://www.geeksforgeeks.org/",
         displayDirection: UIDirection.uiDirectionHorizontal,
-        bodyMaxLines: 5,
-        bodyTextOverflow: TextOverflow.ellipsis,
-        titleStyle: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
+        cache: Duration(hours: 1),
+        backgroundColor: Colors.grey[300],
+        proxyUrl: "https://corsproxy.io/?",
+        errorWidget: Container(
+          color: Colors.grey[300],
+          child: Text('Oops!'),
         ),
       );
     } else {
