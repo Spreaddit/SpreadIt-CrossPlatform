@@ -11,7 +11,6 @@ import 'package:spreadit_crossplatform/features/discover_communities/presentatio
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'features/saved/presentation/page/saved_page.dart';
@@ -53,7 +52,27 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: LogInScreen(),
+      home: HomePage(),
+      onGenerateRoute: (settings) {
+        final List<String>? pathSegments = settings.name?.split('/');
+        print(pathSegments);
+        if (pathSegments == null || pathSegments.isEmpty) {
+          return null;
+        }
+
+        if (pathSegments.contains('post-card-page') &&
+            pathSegments.length >= 3) {
+          final postId = int.tryParse(pathSegments[pathSegments.length - 2]);
+          final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
+
+          if (postId != null) {
+            return MaterialPageRoute(
+              builder: (_) =>
+                  PostCardPage(postId: postId, isUserProfile: isUserProfile),
+            );
+          }
+        }
+      },
       routes: {
         '/home': (context) => HomePage(),
         '/discover': (context) => DiscoverCommunitiesBody(),
@@ -122,7 +141,6 @@ class SpreadIt extends StatelessWidget {
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
-        '/post_card_page/:post-id/': (context) => PostCardPage(),
       },
     );
   }

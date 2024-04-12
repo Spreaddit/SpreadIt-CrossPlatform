@@ -76,12 +76,6 @@ class _PostFeedState extends State<PostFeed> {
     fetchData();
   }
 
-  void navigateToPostCardPage(Post post) {
-    Navigator.of(context).pushNamed('./post-card-page', arguments: {
-      'post': post,
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -120,13 +114,10 @@ class _PostFeedState extends State<PostFeed> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {navigateToPostCardPage(items[index]);},
-                          child: PostWidget(
-                              post: items[index],
-                              isUserProfile:
-                                  currentPostCategory == PostCategories.user),
-                        ),
+                        PostWidget(
+                            post: items[index],
+                            isUserProfile:
+                                currentPostCategory == PostCategories.user),
                         Divider(
                           height: 20,
                           thickness: 0.2,

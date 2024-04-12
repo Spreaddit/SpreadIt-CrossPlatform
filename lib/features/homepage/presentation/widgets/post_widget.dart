@@ -589,7 +589,7 @@ class PostWidget extends StatefulWidget {
     this.isFullView = false,
     required this.isUserProfile,
   });
-
+  @override
   State<PostWidget> createState() => _PostWidgetState();
 }
 
@@ -613,6 +613,22 @@ class _PostWidgetState extends State<PostWidget> {
     setState(() {
       isDeleted = true;
     });
+  }
+
+  void navigateToPostCardPage(
+    int postId,
+    bool isUserProfile,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        settings: RouteSettings(name: '/post-card-page/$postId/$isUserProfile'),
+        builder: (context) => PostCardPage(
+          postId: postId,
+          isUserProfile: isUserProfile,
+        ),
+      ),
+    );
   }
 
   void onContentChanged(String newContent) {
@@ -652,8 +668,10 @@ class _PostWidgetState extends State<PostWidget> {
               GestureDetector(
                 onTap: () {
                   print("tapped");
-                  Navigator.of(context)
-                      .pushNamed('/post_card_page/${widget.post.postId}');
+                  navigateToPostCardPage(
+                    widget.post.postId,
+                    widget.isUserProfile,
+                  );
                 },
                 child: _PostBody(
                   title: widget.post.title,

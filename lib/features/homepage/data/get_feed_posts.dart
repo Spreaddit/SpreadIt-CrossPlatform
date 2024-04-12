@@ -121,3 +121,51 @@ Future<List<Post>> getFeedPosts({
     return [];
   }
 }
+
+/// Takes [PostCategories] as a paremeter
+/// and fetches its respective [Post] List
+Future<Post?> getPostById({
+  required int postId,
+}) async {
+  try {
+    String? accessToken = UserSingleton().getAccessToken();
+
+    String requestURL = "$apiUrl/posts/$postId";
+    print("post Category Endpoint: $requestURL");
+    final response = await Dio().get(
+      requestURL,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      print(response.data);
+      return Post.fromJson(response.data);
+    } else if (response.statusCode == 409) {
+      print("Conflict: ${response.statusMessage}");
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
+    } else {
+      print("Internal Server Error: ${response.statusCode}");
+    }
+    return null;
+  } on DioException catch (e) {
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+      } else if (e.response!.statusCode == 409) {
+        print("Conflict: ${e.response!.statusMessage}");
+      } else {
+        print("Internal Server Error: ${e.response!.statusMessage}");
+      }
+      return null;
+    }
+    rethrow;
+  } catch (e) {
+    //TO DO: show error message to user
+    print("Error occurred: $e");
+    return null;
+  }
+}

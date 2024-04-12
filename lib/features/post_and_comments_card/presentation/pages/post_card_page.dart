@@ -12,20 +12,24 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
 
 class PostCardPage extends StatefulWidget {
-  Post? post;
+  final int postId;
+  final bool isUserProfile;
 
-  PostCardPage({this.post});
+  const PostCardPage(
+      {Key? key, required this.postId, required this.isUserProfile})
+      : super(key: key);
+
   @override
   State<PostCardPage> createState() => _PostCardPageState();
 }
 
 class _PostCardPageState extends State<PostCardPage> {
   List<Comment> comments = [];
+  Post? post;
 
   Future<void> fetchComments() async {
     try {
-      var data =
-          await fetchCommentsData('user', 'post', "${widget.post!.postId}");
+      var data = await fetchCommentsData('user', 'post', "${widget.postId}");
       setState(() {
         comments = data;
       });
@@ -42,11 +46,28 @@ class _PostCardPageState extends State<PostCardPage> {
     });
   }
 
+  Future<void> fetchPost() async {
+    Post? fetchedPost = await getPostById(
+      postId: widget.postId,
+    );
+    if (fetchedPost != null) {
+      setState(() {
+        post = fetchedPost;
+        print(post.toString());
+      });
+    } else {
+      print("no post found");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-
-    fetchComments();
+    fetchPost().then((post) {
+      fetchComments().then((comments) {
+        setState(() {});
+      });
+    });
   }
 
   @override
@@ -71,10 +92,13 @@ class _PostCardPageState extends State<PostCardPage> {
                           height: 0.5,
                         ),
                       ),
-                      PostCard(
-                        post: widget.post!,
-                        comments: comments,
-                      ),
+                      post != null
+                          ? PostCard(
+                              post: post!,
+                              comments: comments,
+                              isUserProfile: widget.isUserProfile,
+                            )
+                          : Text(""),
                     ],
                   ),
                 ),
@@ -82,7 +106,7 @@ class _PostCardPageState extends State<PostCardPage> {
             ),
             AddCommentWidget(
               commentsList: comments,
-              postId: widget.post!.postId.toString(),
+              postId: widget.postId.toString(),
               addComment: addComment,
             ),
           ],

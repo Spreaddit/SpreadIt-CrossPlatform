@@ -10,11 +10,13 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 
 class PostCard extends StatefulWidget {
   Post post;
+  bool isUserProfile;
   List<Comment> comments;
 
   PostCard({
     required this.post,
     required this.comments,
+    required this.isUserProfile,
   });
 
   @override
@@ -85,7 +87,8 @@ class _PostCardState extends State<PostCard> {
         child: Column(children: [
           PostWidget(
             post: widget.post,
-            isUserProfile: false,
+            isFullView: true,
+            isUserProfile: widget.isUserProfile,
           ),
           Container(
             decoration: BoxDecoration(
