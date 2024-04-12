@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// describes the way reddit posts are categorized and/or sorted
 enum PostCategories {
@@ -74,6 +75,8 @@ Future<List<Post>> getFeedPosts({
   String? username = "",
 }) async {
   try {
+    String? accessToken = UserSingleton().getAccessToken();
+
     String requestURL = apiUrl +
         postCategoryEndpoint(
           action: category,
@@ -82,7 +85,14 @@ Future<List<Post>> getFeedPosts({
           username: username,
         );
     print("post Category Endpoint: $requestURL");
-    final response = await Dio().get(requestURL);
+    final response = await Dio().get(
+      requestURL,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       return (response.data as List).map((x) => Post.fromJson(x)).toList();
     } else if (response.statusCode == 409) {

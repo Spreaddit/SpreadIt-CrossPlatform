@@ -13,7 +13,6 @@ import 'package:spreadit_crossplatform/features/forget_username/presentation/pag
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/pages/popular.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'features/saved/presentation/page/saved_page.dart';
 import 'features/user_profile/presentation/pages/edit_profile.dart';
@@ -54,33 +53,10 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: FinalCreatePost(
-        title: '',
-        content: '',
-        pollOptions: [],
-        selectedDay: 1,
-        isLinkAdded: false,
-        community: [
-          {
-            'communityName': 'r/AskReddit',
-            'communityIcon': './assets/images/LogoSpreadIt.png',
-            'communityRules': [
-              {
-                'title': 'hate is not tolerated',
-                'description': 'yarab nekhlas baa ana zhe2t men om el bta3 da',
-              },
-              {
-                'title': '3ayza a3ayyat',
-                'description': 'kefaya 3alayy akeda abous ideiko',
-              }
-            ]
-          }
-        ],
-      ),
+      home: LogInScreen(),
       routes: {
         '/home': (context) => HomePage(),
-        '/discover': (context) => DiscoverCommunitiesPage(),
-        '/popular': (context) => PopularPage(),
+        '/discover': (context) => DiscoverCommunitiesBody(),
         '/all': (context) => AllPage(),
         '/start-up-page': (context) => StartUpPage(),
         '/log-in-page': (context) => LogInScreen(),

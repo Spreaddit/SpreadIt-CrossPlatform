@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 enum CurrentPage {
   home,
   popular,
-  community,
   all,
 }
 
 class TopBar extends AppBar {
   final CurrentPage currentPage;
   final BuildContext context;
+  final void Function(CurrentPage)? onChangeHomeCategory;
 
   TopBar({
     this.currentPage = CurrentPage.home,
     required this.context,
+    this.onChangeHomeCategory,
   }) : super(
           toolbarHeight: 60,
           backgroundColor: Colors.transparent,
@@ -40,8 +41,8 @@ class TopBar extends AppBar {
                       color: Colors.transparent,
                     ),
                     onChanged: (newValue) {
-                      Navigator.of(context)
-                          .pushNamed('/${newValue.toString().split('.').last}');
+                      onChangeHomeCategory!(
+                          CurrentPage.values[1 - currentPage.index]);
                     },
                     items: CurrentPage.values
                         .where((category) =>
