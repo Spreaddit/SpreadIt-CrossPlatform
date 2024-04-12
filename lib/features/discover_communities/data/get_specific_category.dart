@@ -15,11 +15,11 @@ class GetSpecificCommunity {
       );
       if (category == '🔥 Trending globally' || category == '🌍 Top globally') {
         response = await dio.get(
-          '$apiUrl/community/random-category',
+          '$communityApiUrlGalal/community/random-category',
         );
       } else {
         response = await dio.get(
-          '$apiUrl/community/get-specific-category',
+          '$communityApiUrlGalal/community/get-specific-category',
           queryParameters: {
             'category': category,
           },
@@ -43,4 +43,5 @@ class GetSpecificCommunity {
       throw Exception('Failed to load communities: $e ');
     }
   }
+
 }

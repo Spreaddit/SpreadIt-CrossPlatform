@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -113,7 +114,10 @@ class _PostFeedState extends State<PostFeed> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        PostWidget(post: items[index]),
+                        PostWidget(
+                            post: items[index],
+                            isUserProfile:
+                                currentPostCategory == PostCategories.user),
                         Divider(
                           height: 20,
                           thickness: 0.2,
