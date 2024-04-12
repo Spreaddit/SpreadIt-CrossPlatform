@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/connected_acc_only_dialog.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
@@ -11,7 +10,6 @@ import '../widgets/settings_btn_to_page.dart';
 import '../widgets/settings_section_body.dart';
 import '../widgets/settings_section_title.dart';
 import 'update_email_page.dart';
-import 'change_password_page.dart';
 import 'location_select_page.dart';
 import '../pages/manage_notifications_page.dart';
 import '../../data/data_source/api_basic_settings_data.dart';

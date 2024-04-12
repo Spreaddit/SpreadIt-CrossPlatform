@@ -38,6 +38,19 @@ bool validateusername(String value) {
   return true;
 }
 
+  bool validatePostTitle(String value) {
+    if(value.isNotEmpty && !RegExp(r'^[\W_]+$').hasMatch(value)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  bool validateLink(String url) {
+    RegExp regex = RegExp(r'^.{4,}\.[a-zA-Z]{2,3}$');
+    return regex.hasMatch(url);
+  }
 /// Provides a detailed error message based on the validation result for the username.
 /// Returns an appropriate error message if the username does not meet the required criteria.
 /// Otherwise, returns a success message indicating the username is available.

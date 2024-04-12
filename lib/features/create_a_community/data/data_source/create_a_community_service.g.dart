@@ -13,7 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= apiUrl;
+    baseUrl ??= 'http://10.0.2.2:3000/FAROUQDIAA52/Module3/1.0.0';
   }
 
   final Dio _dio;
@@ -21,10 +21,14 @@ class _RestClient implements RestClient {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<dynamic>> createCommunity(Community community) async {
+  Future<HttpResponse<dynamic>> createCommunity(
+    Community community,
+    String token,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(community.toJson());
     final _result =

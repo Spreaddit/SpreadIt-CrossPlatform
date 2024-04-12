@@ -4,10 +4,17 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<int> reportPostRequest(String postId,
     {required Map<String, dynamic> postRequestInfo}) async {
+  String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-        '$interactionsApiUrlGalal/posts/$postId/report',
-        data: postRequestInfo);
+      '$interactionsApiUrlGalal/posts/$postId/report',
+      data: postRequestInfo,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;
@@ -40,7 +47,9 @@ Future<int> reportCommentRequest(String postId, String commentId,
       '$interactionsApiUrlGalal/comments/$commentId/report',
       data: postRequestInfo,
       options: Options(
-        headers: {'Authorization': 'Bearer $accessToken'},
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
       ),
     );
     if (response.statusCode == 200) {
