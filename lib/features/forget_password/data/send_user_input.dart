@@ -1,17 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-/// It takes the [usernameOrEmail] from the input field and sends it to the backend to ensure that this user exists and send them an 
-/// email with the password 
+/// It takes the [usernameOrEmail] from the input field and sends it to the backend to ensure that this user exists and send them an
+/// email with the password
 
 Future<int> sendUserInput(String usernameOrEmail) async {
   try {
     const apiRoute = "/app/forgot-password";
     String apiUrl = apibase + apiRoute;
-    final response =
-        await Dio().post(apiUrl, data: {"usernameOremail": usernameOrEmail});
+    String? accessToken = UserSingleton().getAccessToken();
+
+    final response = await Dio().post(
+      apiUrl,
+      data: {"usernameOremail": usernameOrEmail},
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       print(response.statusCode);
       print(response.statusMessage);
