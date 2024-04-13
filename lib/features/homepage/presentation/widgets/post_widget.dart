@@ -160,7 +160,7 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
     List<String> writerOptions = [
       "Subscribe to post",
-      "Save",
+      "Unsave",
       "Copy text",
       "Hide",
       "Edit post",
@@ -171,7 +171,7 @@ class _PostHeaderState extends State<_PostHeader> {
 
     List<void Function()> writerActions = [
       subscribeToPost,
-      () => savePost(
+      () => unsavePost(
             context,
             widget.post.postId,
           ), //TODO: conditional rendering based on whether its saved or not

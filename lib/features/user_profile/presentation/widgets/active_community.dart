@@ -1,10 +1,17 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../../../discover_communities/data/community.dart';
-
+/// The `ActiveCommunity` class is responsible for displaying information about an active community.
+///
+/// This widget is typically used within user profile pages to showcase communities that the user is active in.
 class ActiveCommunity extends StatelessWidget {
+  /// The community object containing information such as name, background image URL, image URL, and member count.
   final Community community;
 
+  /// Constructor for the `ActiveCommunity` class.
+  ///
+  /// Parameters:
+  /// - `community`: The community object containing information such as name, background image URL, image URL, and member count.
   ActiveCommunity({
     required this.community,
   });

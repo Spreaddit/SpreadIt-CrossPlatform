@@ -1,10 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Base URL for the API.
 String apibase = apiUrl;
 
+/// Function to update the content of a comment.
+///
+/// Parameters:
+/// - [commentId]: The ID of the comment to be updated.
+/// - [content]: The updated content of the comment.
+/// - [media]: Media attachments associated with the comment.
+///
+/// Throws a DioException if an error occurs during the Dio request.
 Future<void> updateEditedComment({
   required String commentId,
   required String? content,
@@ -13,13 +22,13 @@ Future<void> updateEditedComment({
   try {
     String? accessToken = UserSingleton().accessToken;
 
-    var apiRoute = "/comments/:$commentId/edit";
+    var apiRoute = "/comments/$commentId/edit";
     String apiUrl = apibase + apiRoute;
 
     final response = await Dio().post(
       apiUrl,
       options: Options(headers: {
-        'Authorization': 'Bearer: $accessToken',
+        'Authorization': 'Bearer $accessToken',
       }),
       data: {
         "content": content,

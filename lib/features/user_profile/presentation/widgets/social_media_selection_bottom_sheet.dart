@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'social_media_button.dart';
 
+/// A bottom sheet widget for selecting social media platforms.
 class SocialMediaSelectionBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,7 @@ class SocialMediaSelectionBottomSheet extends StatelessWidget {
                 spacing: 5.0,
                 runSpacing: 5.0,
                 children: [
+                  // Generate social media buttons for various platforms
                   SocialMediaButton(
                     icon: Icons.facebook,
                     text: 'Facebook',
@@ -101,6 +103,11 @@ class SocialMediaSelectionBottomSheet extends StatelessWidget {
     );
   }
 
+  /// Handles the selection of a social media platform.
+  ///
+  /// When a social media button is pressed, this function is called to
+  /// pop the bottom sheet and return the selected platform's information
+  /// to the caller.
   void _handleSelection(BuildContext context, String platform, IconData icon, Color color) {
     Navigator.pop(context, {
       'platformName': platform,

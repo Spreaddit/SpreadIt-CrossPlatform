@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Customized app bar for the top of the post card.
 class PostCardTopBar extends AppBar {
+  /// Customized app bar for the top of the post card.
   PostCardTopBar(BuildContext context, String image)
       : super(
           toolbarHeight: 60,
@@ -12,7 +14,7 @@ class PostCardTopBar extends AppBar {
                 IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
-                    // Search onPressed logic here
+                    //TODO: Search onPressed logic here
                   },
                   color: Colors.white,
                 ),

@@ -1,5 +1,5 @@
-import 'dart:typed_data';
 
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -12,13 +12,18 @@ import '../widgets/icon_picker.dart';
 import '../widgets/social_link_bottom_sheet_model.dart';
 import '../widgets/social_media_button.dart';
 import '../widgets/social_media_selection_bottom_sheet.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
+/// This file defines the EditProfilePage, which allows users to edit their profile details.
+/// It includes functionality for updating display name, about section, profile image,
+/// background image, social media links, and other settings.
+
+/// EditProfilePage is a StatefulWidget representing the page for editing user profile.
 class EditProfilePage extends StatefulWidget {
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
+/// State class for EditProfilePage widget.
 class _EditProfilePageState extends State<EditProfilePage> {
   final GlobalKey<FormState> _displaynameForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _aboutForm = GlobalKey<FormState>();
@@ -34,10 +39,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   bool _socialMediaLinksLoaded = false;
   var validUserName = true;
   var invalidText = "";
-  Uint8List? imageProfileWeb ;
+  Uint8List? imageProfileWeb;
   Uint8List? imageBackgroundWeb;
 
-
+  /// passing the arguments from the user profile page
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -51,30 +56,47 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundImageFile = args['backgroundImageFile'];
       profileImageURl = args['profileImageUrl'];
       profileImageFile = args['profileImageFile'];
-      imageProfileWeb=args['profileImageWeb'];
-      imageBackgroundWeb=args['backgroundImageWeb'];
+      imageProfileWeb = args['profileImageWeb'];
+      imageBackgroundWeb = args['backgroundImageWeb'];
       _about = args['about'];
       _displayname = args['displayname'];
     }
   }
 
+  /// Updates the display name with the provided [username].
+  ///
+  /// The [validation] parameter indicates whether the update should trigger validation checks.
   void updateDisplayname(String username, bool validation) {
     _displayname = username;
     _displaynameForm.currentState?.save();
   }
 
+  /// Updates the about section with the provided [about] text.
+  ///
+  /// The [validation] parameter indicates whether the update should trigger validation checks.
   void updateAbout(String about, bool validation) {
     _about = about;
     _aboutForm.currentState?.save();
   }
 
+  /// Shows a bottom sheet for selecting social media platforms.
+  ///
+  /// This function opens a modal bottom sheet where users can select a social media platform
+  /// and then choose specific details for the selected platform.
+  ///
+  /// Once a platform is selected, the function adds the selected social media link to the list
+  /// of social media links displayed on the page.
+  ///
+  /// [context]: The build context.
   void _showSocialMediaSelectionBottomSheet(BuildContext context) async {
+    // Show modal bottom sheet for selecting a social media platform
     final selectedPlatform = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       builder: (context) => SocialMediaSelectionBottomSheet(),
     );
 
     if (selectedPlatform != null) {
+      /// Show modal bottom sheet for selecting platform details
       final selectedPlatforminfo =
           await showModalBottomSheet<Map<String, dynamic>>(
         context: context,
@@ -92,6 +114,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         }),
       );
       if (selectedPlatforminfo != null) {
+        /// Add the selected social media link to the list
         var links = [
           {
             'platform': selectedPlatforminfo['platform'],
@@ -112,52 +135,65 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  /// Allows the user to pick a background image.
+  ///
+  /// This function opens a file picker for selecting a background image.
+  /// The selected image is then updated in the UI.
   Future<void> pickBackgroundImage() async {
     var image;
     if (!kIsWeb) {
       image = await pickImageFromFilePicker();
-       setState(() {
-      if (image != null) {
-        backgroundImageURl = null;
-        backgroundImageFile = image;
-      }
-    });
+      setState(() {
+        if (image != null) {
+          backgroundImageURl = null;
+          backgroundImageFile = image;
+        }
+      });
     }
     if (kIsWeb) {
       image = await pickImageFromFilePickerWeb();
-       setState(() {
-      if (image != null) {
-        backgroundImageURl = null;
-        imageBackgroundWeb = image;
-      }
-    });
+      setState(() {
+        if (image != null) {
+          backgroundImageURl = null;
+          imageBackgroundWeb = image;
+        }
+      });
     }
-   
   }
 
- Future<void> pickProfileImage() async {
-  var image;
-  if (!kIsWeb) {
-    image = await pickImageFromFilePicker();
-    setState(() {
-      if (image != null) {
-        profileImageURl = null;
-        profileImageFile = image;
-      }
-    });
+  /// Allows the user to pick a profile image.
+  ///
+  /// This function opens a file picker for selecting a profile image.
+  /// The selected image is then updated in the UI.
+  Future<void> pickProfileImage() async {
+    var image;
+    if (!kIsWeb) {
+      image = await pickImageFromFilePicker();
+      setState(() {
+        if (image != null) {
+          profileImageURl = null;
+          profileImageFile = image;
+        }
+      });
+    }
+    if (kIsWeb) {
+      image = await pickImageFromFilePickerWeb();
+      setState(() {
+        if (image != null) {
+          profileImageURl = null;
+          imageProfileWeb = image;
+        }
+      });
+    }
   }
-  if (kIsWeb) {
-    image = await pickImageFromFilePickerWeb();
-    setState(() {
-      if (image != null) {
-        profileImageURl = null;
-        imageProfileWeb = image;
-      }
-    });
-  }
-}
 
-
+  /// Saves the updated profile details.
+  ///
+  /// This function sends the updated profile details to the backend API for saving.
+  /// It handles scenarios like updating display name, about section, background image,
+  /// profile image, social media links, content visibility, and active community display.
+  ///
+  /// It also handles error scenarios and displays appropriate messages using [CustomSnackbar].
   void saveProfile() async {
     try {
       int statusCode = await updateUserApi(
@@ -165,9 +201,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         aboutUs: _about,
         backgroundImage: backgroundImageFile,
         profilePicImage: profileImageFile,
-        profileImageWeb : imageProfileWeb,
+        profileImageWeb: imageProfileWeb,
         backgroundImageUrl: backgroundImageURl,
-        backgroundImageWeb :imageBackgroundWeb,
+        backgroundImageWeb: imageBackgroundWeb,
         profilePicImageUrl: profileImageURl,
         socialMedia: socialMediaLinks!,
         contentVisibility: _switchValue1,
@@ -177,8 +213,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       var data = {
         'backgroundImage': backgroundImageURl,
         'backgroundImageFile': backgroundImageFile,
-        'backgroundImageWeb':imageBackgroundWeb,
-        'profileImageWeb':imageProfileWeb,
+        'backgroundImageWeb': imageBackgroundWeb,
+        'profileImageWeb': imageProfileWeb,
         'profilePicImage': profileImageURl,
         'profileImageFile': profileImageFile,
         'socialMedia': socialMediaLinks,
@@ -233,12 +269,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 heightFactor: kIsWeb ? 0.35 : 0.25,
                 child: Container(
                   decoration: BoxDecoration(
-                    image: 
-                    DecorationImage(
-                            image: selectImage(
-                              backgroundImageFile, backgroundImageURl, imageBackgroundWeb),
-                            fit: BoxFit.cover,
-                          ) 
+                    image: DecorationImage(
+                      image: selectImage(
+                        backgroundImageFile, backgroundImageURl, imageBackgroundWeb),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

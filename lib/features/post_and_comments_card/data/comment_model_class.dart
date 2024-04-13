@@ -1,26 +1,47 @@
 import 'package:spreadit_crossplatform/features/user.dart';
 
+/// A class representing a comment in a Flutter application.
 class Comment {
+  /// Unique identifier for the comment.
   final String id;
+  /// The text content of the comment.
   String content;
+  /// The user who made the comment.
   final User? user;
+  /// Number of likes the comment has received.
   final int likesCount;
+  /// Number of replies the comment has received.
   final int? repliesCount;
+  /// Indicates if the comment is a reply to another comment.
   final bool? isReply;
-  final List<String>? media;
+  /// List of media (such as images) associated with the comment.
+  final List<Media>? media;
+  /// Date and time when the comment was created.
   final DateTime createdAt;
+  /// Indicates if the comment is hidden from view.
   final bool? isHidden;
+  /// Indicates if the comment is saved by the user.
   final bool? isSaved;
+  /// Title of the post to which the comment belongs.
   final String? postTitle;
+  /// Name of the subreddit (community) where the comment was posted.
   final String? subredditName;
+  /// List of replies to the comment.
   List<Comment>? replies;
-  int? commentParentId;
+  /// ID of the parent comment if this comment is a reply.
+  final int? commentParentId;
+  /// Indicates if the comment is collapsed (hidden from view) by the user.
   bool isCollapsed;
+  /// URL of the profile picture of the user who made the comment.
   final String? profilePic;
+  /// ID of the user who made the comment.
   final String? userId;
+  /// ID of the post to which the comment belongs.
   final String? postId;
+  /// Username of the user who made the comment.
   final String? username;
 
+  /// Constructor for creating a Comment object.
   Comment({
     required this.id,
     required this.content,
@@ -43,8 +64,12 @@ class Comment {
     this.username = "rehab",
   });
 
+  /// Factory constructor for creating a Comment object from JSON data.
   factory Comment.fromJson(Map<String, dynamic> json) {
+    // Extracting the username from the user data.
     String usernameFetched = User.fromJson(json['user']).username;
+    String avatarFetched = User.fromJson(json['user']).avatarUrl!;
+    // Creating a Comment object from JSON data.
     return Comment(
       id: json['id'],
       content: json['content'],
@@ -52,13 +77,42 @@ class Comment {
       likesCount: json['likes_count'],
       repliesCount: json['replies_count'],
       isReply: json['is_reply'],
-      // media: List<String>.from(json['media']),
+      media: (json['media'] != null) ? List<Media>.from(json['media'].map((x) => Media.fromJson(x))) : null,
       createdAt: DateTime.parse(json['created_at'] as String),
       isHidden: json['is_hidden'] as bool,
       isSaved: json['is_saved'] as bool,
-      postTitle: json['post_title'],
-      subredditName: json['community_title'],
+      postTitle: json['post_title'] ?? "ayhaga",
+      subredditName: json['community_title']??"ayhaga",
       username: usernameFetched,
+      profilePic: avatarFetched,
     );
+  }
+}
+
+/// A class representing media (such as images) associated with a comment.
+class Media {
+  final String type;
+  final String link;
+  final String id;
+
+  /// Constructor for creating a Media object.
+  Media({required this.type, required this.link, required this.id});
+
+  /// Factory method for creating a Media object from JSON data.
+  factory Media.fromJson(Map<String, dynamic> json) {
+    return Media(
+      type: json['type'],
+      link: json['link'],
+      id: json['_id'],
+    );
+  }
+
+  /// Converts the Media object to a JSON representation.
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'link': link,
+      '_id': id,
+    };
   }
 }
