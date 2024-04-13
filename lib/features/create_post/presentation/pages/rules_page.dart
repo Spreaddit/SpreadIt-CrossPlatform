@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import '../../../generic_widgets/button.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/expanded_rules.dart';
 
 class CommunityRules extends StatefulWidget {
-  final List<String?> communityRules;
+  final List<Rule?>? communityRules;
 
   const CommunityRules({
     required this.communityRules,
@@ -39,12 +40,13 @@ class _CommunityRulesState extends State<CommunityRules> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: widget.communityRules.length,
+              itemCount: widget.communityRules!.length,
               itemBuilder: (context, index) {
                 return ExpandableListWidget(
-                    title: widget.communityRules[index], //['title'],
-                    description: widget.communityRules[index] //['description'],
-                    );
+                  title: widget.communityRules![index]!.title,
+                  description: widget
+                      .communityRules![index]!.description, //['description'],
+                );
               },
             ),
           ),
