@@ -183,8 +183,8 @@ class _CommentCardState extends State<CommentCard> {
                                 Icons.save,
                                 if (isUserProfile) Icons.edit,
                                 Icons.copy,
-                                Icons.block,
-                                Icons.flag
+                                if (!isUserProfile) Icons.block,
+                                if (!isUserProfile) Icons.flag
                               ],
                               text: [
                                 "Share",
@@ -192,15 +192,18 @@ class _CommentCardState extends State<CommentCard> {
                                 "Save",
                                 if (isUserProfile) "Edit Comment",
                                 "Copy text",
-                                "Block account",
-                                "Report"
+                                if (!isUserProfile) "Block account",
+                                if (!isUserProfile) "Report"
                               ],
                               onPressedList: [
                                 () {
                                   sharePressed(comment.content);
                                 },
                                 getReplyNotifications,
-                                save,
+                                () => saveOrUnsaveComment(
+                                      context,
+                                      comment.id,
+                                    ),
                                 if (isUserProfile)
                                   () => Navigator.push(
                                         context,
@@ -214,17 +217,19 @@ class _CommentCardState extends State<CommentCard> {
                                       context,
                                       widget.comment.content,
                                     ),
-                                () => blockAccount(
-                                      widget.comment.username!,
-                                    ),
-                                () => report(
-                                      context,
-                                      widget.community,
-                                      widget.comment.postId!,
-                                      widget.comment.id,
-                                      widget.comment.username!,
-                                      false,
-                                    ),
+                                if (!isUserProfile)
+                                  () => blockAccount(
+                                        widget.comment.username!,
+                                      ),
+                                if (!isUserProfile)
+                                  () => report(
+                                        context,
+                                        widget.community,
+                                        widget.comment.postId!,
+                                        widget.comment.id,
+                                        widget.comment.username!,
+                                        false,
+                                      ),
                               ],
                             );
                           },

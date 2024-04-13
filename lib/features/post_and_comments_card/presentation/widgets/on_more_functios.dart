@@ -125,3 +125,14 @@ void unsavePost(BuildContext context, String postId) async {
         .show(context);
   }
 }
+
+void saveOrUnsaveComment(BuildContext context, String id) async {
+  int statusCode = await saveOrUnsave(id: id, type: 'comments');
+  Navigator.pop(context);
+  if (statusCode == 200) {
+    print('Comment unsaved/saved successfully.');
+  } else {
+    CustomSnackbar(content: "Error occurred while trying to unsave/save")
+        .show(context);
+  }
+}
