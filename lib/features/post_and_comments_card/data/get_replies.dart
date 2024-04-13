@@ -10,9 +10,7 @@ Future<List<Comment>> getCommentReplies(String commentId) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     String apiroute = '';
-
-    apiroute = "/comments/:$commentId/replies";
-
+    apiroute = "/comments/$commentId/replies";
     String apiUrl = "$baseUrl$apiroute";
 
     final response = await Dio().get(
@@ -25,6 +23,7 @@ Future<List<Comment>> getCommentReplies(String commentId) async {
     );
 
     if (response.statusCode == 200) {
+      print('${response.data}');
       List<dynamic> commentsJson = response.data['replies'];
 
       List<Comment> replies =

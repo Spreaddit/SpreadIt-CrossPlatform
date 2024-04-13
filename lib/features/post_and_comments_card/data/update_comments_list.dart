@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'comment_model_class.dart';
 
@@ -35,8 +34,15 @@ Future<Comment?> updateComments({
           "attachments": media,
         });
     if (response.statusCode == 201) {
-      Comment recievedComment = Comment.fromJson(response.data['comment']);
-      print('posted comment $recievedComment');
+      Comment recievedComment;
+      if (type == 'comment') {
+        recievedComment = Comment.fromJson(response.data['comment']);
+      }
+      else 
+      {
+        recievedComment = Comment.fromJson(response.data['reply']);
+      }
+      print('posted reply $recievedComment');
 
       print(response.data);
       print(response.statusCode);

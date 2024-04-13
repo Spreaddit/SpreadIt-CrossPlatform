@@ -1,8 +1,6 @@
-import 'dart:io';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
@@ -21,7 +19,7 @@ Future<void> updateEditedPost({
     final response = await Dio().put(
       apiUrl,
       options: Options(headers: {
-        'Authorization': 'Bearer: $accessToken',
+        'Authorization': 'Bearer $accessToken',
       }),
       data: {
         "content": content,

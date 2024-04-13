@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
@@ -13,13 +13,13 @@ Future<void> updateEditedComment({
   try {
     String? accessToken = UserSingleton().accessToken;
 
-    var apiRoute = "/comments/:$commentId/edit";
+    var apiRoute = "/comments/$commentId/edit";
     String apiUrl = apibase + apiRoute;
 
     final response = await Dio().post(
       apiUrl,
       options: Options(headers: {
-        'Authorization': 'Bearer: $accessToken',
+        'Authorization': 'Bearer $accessToken',
       }),
       data: {
         "content": content,

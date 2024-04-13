@@ -69,10 +69,13 @@ class _EditCommentState extends State<EditComment> {
                   commentId: widget.comment!.id, content: content);
               print("this is the content${widget.comment!.content}");
               print("content before fetching$content");
-              //navigate to post card page with edited comment
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+
             },
             isEnabled: isEnabled,
-            onIconPress: () {}, //navigate to pst card page
+            onIconPress: () {Navigator.of(context).pop();
+              Navigator.of(context).pop();}, 
             showHeaderTitle: true,
           ),
         ),

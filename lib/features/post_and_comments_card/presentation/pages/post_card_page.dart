@@ -6,6 +6,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class PostCardPage extends StatefulWidget {
   final String postId;
@@ -70,8 +71,8 @@ class _PostCardPageState extends State<PostCardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PostCardTopBar(context,
-          'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'), //String? accessToken = UserSingleton().user.avatar;
-      body: Container(
+          UserSingleton().user!.avatarUrl!), 
+        body: Container(
         margin: EdgeInsets.all(10),
         child: Column(
           children: [

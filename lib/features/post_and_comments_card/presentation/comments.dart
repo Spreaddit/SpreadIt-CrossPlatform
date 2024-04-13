@@ -1,25 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_replies.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
-
-class Media {
-  final String type;
-  final String link;
-
-  Media({
-    required this.type,
-    required this.link,
-  });
-}
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 
 class _CommentHeader extends HookWidget {
   final String username;
@@ -27,6 +18,7 @@ class _CommentHeader extends HookWidget {
   final String postId;
   final DateTime date;
   final String profilePic;
+  
 
   _CommentHeader({
     required this.username,
@@ -170,6 +162,7 @@ class _CommentCardState extends State<CommentCard> {
                                 Icons.share,
                                 Icons.notifications_on_rounded,
                                 Icons.save,
+                                if(isUserProfile) Icons.edit,
                                 Icons.copy,
                                 Icons.block,
                                 Icons.flag
@@ -178,6 +171,7 @@ class _CommentCardState extends State<CommentCard> {
                                 "Share",
                                 "Get Reply notifications",
                                 "Save",
+                                if (isUserProfile)"Edit Comment",
                                 "Copy text",
                                 "Block account",
                                 "Report"
@@ -188,6 +182,15 @@ class _CommentCardState extends State<CommentCard> {
                                 },
                                 getReplyNotifications,
                                 save,
+                                if (isUserProfile)
+                                  () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditComment(
+                                            comment: widget.comment,
+                                          ),
+                                        ),
+                                      ),
                                 copyText,
                                 blockAccount,
                                 () => report(
