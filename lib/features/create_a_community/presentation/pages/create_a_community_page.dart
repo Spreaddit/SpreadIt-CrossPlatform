@@ -103,7 +103,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             ),
           ),
           Visibility(
-            visible: _responseStatus == 204,
+            visible: _responseStatus == 403,
             child: Text(
               'Community Name Already taken!',
             ),
