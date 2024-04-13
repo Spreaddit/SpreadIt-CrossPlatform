@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// [FooterIcon] : a template for how each icon is displayed
+
 class FooterIcon extends StatefulWidget {
 
   final IconData icon;

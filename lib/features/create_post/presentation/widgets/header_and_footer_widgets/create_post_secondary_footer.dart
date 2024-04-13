@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'secondary_footer_icon.dart';
 
+/// [SecondaryPostFooter] : renders the secondary footer of the create content page
+
 class SecondaryPostFooter extends StatefulWidget {
 
   final VoidCallback onLinkPress;

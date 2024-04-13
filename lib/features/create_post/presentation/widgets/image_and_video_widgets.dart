@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
+
+/// [ImageOrVideoWidget] : a template of how the images or videos will be displayed to the user upon upload
+
 class ImageOrVideoWidget extends StatefulWidget {
 
   final File? imageOrVideo;

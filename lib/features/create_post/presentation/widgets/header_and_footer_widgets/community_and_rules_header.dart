@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 
+
+/// [CommunityAndRulesHeader] : a template for the header which contains the [communityIcon], [communityName] and [Rules] button to allow the user 
+/// to vie community rules
+/// 
 class CommunityAndRulesHeader extends StatefulWidget {
 
   final String communityIcon;

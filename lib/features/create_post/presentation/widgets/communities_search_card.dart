@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// [CommunitiesCard] : a template of how the community data is displayed in [PostToCommunity] page
+
 class CommunitiesCard extends StatefulWidget {
 
   final String communityName;

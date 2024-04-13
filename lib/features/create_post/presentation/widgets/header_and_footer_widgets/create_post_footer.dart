@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'footer_icon.dart';
 
+/// [PostFooter] : the footer which contains the icons and the action to be taken when each icon is pressed
+
 class PostFooter extends StatefulWidget {
   final VoidCallback? toggleFooter;
   final bool showAttachmentIcon;

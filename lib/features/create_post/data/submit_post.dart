@@ -7,6 +7,21 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// This function takes all the post parameters such as [title], [content], [link], [image], [video], [poll],and [tags]to submit them to the backend.
+/// The parameters are: 
+/// 1) [title] : the post title.
+/// 2) [content] : the text content (body).
+/// 3) [community] : the name of the community the post is post to.
+/// 4) [pollOptions] : a list containing the poll options created by the user.
+/// 5) [selectedDays] : how long th epoll will be available for voting.
+/// 6) [link] : a url to a page.
+/// 7) [images] : images uploaded by the user on mobile.
+/// 8) [imageWeb] : images uploaded by the user on web.
+/// 9) [videos] : the videos uploaded by the user on mobile.
+/// 10) [videoWeb] : the videos uploaded by the user on web.
+/// 11) [isSpoiler] : a boolean to indicate if the post is marked as spoiler.
+/// 12) [isNSFW] : a boolean to indicate if the post is marked as NSFW.
+
 String apibase = apiUrl;
 
 Future<int> submitPost(
