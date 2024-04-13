@@ -17,9 +17,13 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   void initState() {
-    super.initState();
-    futureCommunities =
-        GetSpecificCommunity().getCommunities(widget.categoryName);
+    try {
+      super.initState();
+      futureCommunities =
+          GetSpecificCommunity().getCommunities(widget.categoryName);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -52,7 +56,7 @@ class _CategoryPageState extends State<CategoryPage> {
               },
             );
           } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+            return Text("WOW! Such empty!");
           }
 
           return CircularProgressIndicator();

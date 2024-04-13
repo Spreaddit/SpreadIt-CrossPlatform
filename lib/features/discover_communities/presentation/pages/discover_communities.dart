@@ -23,6 +23,7 @@ class DiscoverCommunitiesBody extends StatelessWidget {
     '🏆 Community top charts',
     'Q&As',
     'Funny',
+    'Entertainment',
     'Stories & Confessions',
     'Interesting',
     'Memes',
