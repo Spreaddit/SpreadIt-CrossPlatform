@@ -11,13 +11,12 @@ Future<int> saveOrUnsave({
   try {
     String apiroute;
     String? accessToken = UserSingleton().accessToken;
-    String userId= UserSingleton().user!.id;
     switch (type) {
       case "savepost":
-        apiroute = "/posts/$id/save?userId=$userId";
+        apiroute = "/posts/$id/save";
         break;
       case "unsavepost":
-        apiroute = "/posts/$id/unsave?userId=$userId";
+        apiroute = "/posts/$id/unsave";
         break;
       case "comments":
         apiroute = "/comments/$id/save";

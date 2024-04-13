@@ -15,7 +15,6 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -159,7 +158,7 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
     List<String> writerOptions = [
       "Subscribe to post",
-      "Save",
+      "Unsave",
       "Copy text",
       "Report",
       "Block account",
@@ -172,7 +171,7 @@ class _PostHeaderState extends State<_PostHeader> {
 
     List<void Function()> writerActions = [
       subscribeToPost,
-      () => savePost(
+      () => unsavePost(
             context,
             widget.post.postId,
           ), //TODO: conditional rendering based on whether its saved or not

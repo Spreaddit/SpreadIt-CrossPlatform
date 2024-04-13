@@ -58,10 +58,6 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    print('inner json $json');
-    json.forEach((key, value) {
-      print('$key: $value (${value.runtimeType})');
-    });
     return Post(
       postId: json['_id'],
       userId: json['userId'],
