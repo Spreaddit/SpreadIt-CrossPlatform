@@ -8,11 +8,18 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 
+/// Widget for adding a comment to a post.
 class AddCommentWidget extends StatefulWidget {
+  /// List of comments associated with the post.
   List<Comment> commentsList;
+
+  /// ID of the post to which the comment is being added.
   String postId;
 
+  /// Function to add a comment.
   final Function(Comment) addComment;
+
+  /// Constructs an [AddCommentWidget] with the specified [commentsList], [postId], and [addComment] function.
   AddCommentWidget({
     required this.commentsList,
     required this.postId,
@@ -24,6 +31,7 @@ class AddCommentWidget extends StatefulWidget {
     return _AddCommentWidgetState();
   }
 
+  /// Retrieves the text of the comment.
   String getCommentText() {
     return _AddCommentWidgetState()._commentController.text;
   }

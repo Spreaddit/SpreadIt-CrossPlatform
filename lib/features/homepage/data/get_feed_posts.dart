@@ -44,7 +44,7 @@ String postCategoryEndpoint({
       case PostCategories.views:
         return "/home/sort/views/";
       case PostCategories.save:
-        return "/home/posts/save/";
+        return "/posts/save/";
       case PostCategories.hide:
         return "/home/posts/hide/";
       default:
@@ -97,7 +97,6 @@ Future<List<Post>> getFeedPosts({
     if (response.statusCode == 200) {
       List<Post> posts =
           (response.data as List).map((x) => Post.fromJson(x)).toList();
-      print("posts after json parsing:$posts");
       return (posts);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");

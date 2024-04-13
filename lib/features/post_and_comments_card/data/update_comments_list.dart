@@ -1,12 +1,23 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'comment_model_class.dart';
 
+/// Base URL for the API.
 String apibase = apiUrl;
 
+/// Updates comments or replies on a post or comment.
+///
+/// [id]: The ID of the post or comment.
+///
+/// [content]: The content of the comment or reply.
+///
+/// [media]: Media associated with the comment or reply.
+///
+/// [type]: The type of update, either 'comment' or 'reply'.
+///
+/// Returns the updated comment if successful, otherwise returns null.
 Future<Comment?> updateComments({
   required String id,
   required String content,
@@ -35,8 +46,15 @@ Future<Comment?> updateComments({
           "attachments": media,
         });
     if (response.statusCode == 201) {
-      Comment recievedComment = Comment.fromJson(response.data['comment']);
-      print('posted comment $recievedComment');
+      Comment recievedComment;
+      if (type == 'comment') {
+        recievedComment = Comment.fromJson(response.data['comment']);
+      }
+      else 
+      {
+        recievedComment = Comment.fromJson(response.data['reply']);
+      }
+      print('posted reply $recievedComment');
 
       print(response.data);
       print(response.statusCode);
