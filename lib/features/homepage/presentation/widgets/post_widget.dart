@@ -607,12 +607,6 @@ class _VideoAppState extends State<VideoPlayerScreen> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
 }
 
 /// This widget is responsible for displaying post interactions bottom bar
