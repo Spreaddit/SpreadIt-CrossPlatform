@@ -21,6 +21,11 @@ import '../../data/class_models/user_info_class_model.dart';
 import '../../data/get_user_comments.dart';
 import '../../data/get_follow_status.dart';
 
+/// `UserProfile` is a StatefulWidget responsible for displaying the user's profile information,
+/// including their background, profile picture, karma, about section, and active communities.
+///
+/// This widget fetches user data asynchronously and updates its state accordingly. It provides
+/// functionality to toggle follow status, view user comments, and navigate to edit profile.
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
 
@@ -28,6 +33,7 @@ class UserProfile extends StatefulWidget {
   State<UserProfile> createState() => _UserProfileState();
 }
 
+/// The state class for `UserProfile`. Handles state management and UI rendering.
 class _UserProfileState extends State<UserProfile> {
   int _selectedIndex = 0;
   late bool myProfile = true;
@@ -65,12 +71,13 @@ class _UserProfileState extends State<UserProfile> {
     loadCommunities();
     checkFollowStatus();
   }
-
+  
   @override
   void initState() {
     super.initState();
   }
-
+  
+  /// Loads communities that the user is active in.
   void loadCommunities() async {
     GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
     List<Community> loadedCommunities =
@@ -80,6 +87,7 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
+  /// Checks the follow status of the current user.
   void checkFollowStatus() async {
     try {
       followStatus = await isFollowed(username!);
@@ -88,6 +96,7 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  /// Fetches user information asynchronously.
   void fetchUserInfoAsync() async {
     try {
       userInfoFuture = await fetchUserInfo(username!);
@@ -116,6 +125,7 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  /// Toggles follow status.
   Future<void> unfollowOrFollow() async {
     try {
       var response =
@@ -136,6 +146,7 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  /// Fetches comments made by the user.
   Future<void> fetchComments() async {
     try {
       var data = await fetchUserComments(username!, 'user', '1');
@@ -147,12 +158,14 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  /// Callback for changing the selected page/tab.
   void _onIndexChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+ ///navigate to edit profile and send and recieve the data back
   void navigateToEditProfile(BuildContext context) async {
     final returnedData = await Navigator.of(context).pushNamed(
       '/edit-profile',
@@ -182,7 +195,7 @@ class _UserProfileState extends State<UserProfile> {
       });
     }
   }
-
+/// Builds the selected page based on the current index.
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
@@ -256,6 +269,7 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  /// Builds the user profile widget.
   @override
   Widget build(BuildContext context) {
     return Scaffold(

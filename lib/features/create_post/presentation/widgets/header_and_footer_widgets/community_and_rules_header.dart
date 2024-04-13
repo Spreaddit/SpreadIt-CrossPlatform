@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 
 class CommunityAndRulesHeader extends StatefulWidget {
 
   final String communityIcon;
   final String communityName;
-  final List<Map<String, dynamic>> communityRules;
+  final List<Rule?>? communityRules;
 
   const CommunityAndRulesHeader({
     required this.communityIcon,

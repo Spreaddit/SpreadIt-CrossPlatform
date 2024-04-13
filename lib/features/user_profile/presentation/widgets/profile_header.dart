@@ -1,34 +1,70 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
+import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/icon_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/social_media_button.dart';
 
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../generic_widgets/share.dart';
 
+/// The `ProfileHeader` widget displays the header section of a user's profile.
+///
+/// It includes the user's profile picture, background image, username, user info, about section,
+/// follow button (if applicable), chat button, and social media links.
 class ProfileHeader extends StatefulWidget {
+  /// The URL of the background image.
   final String backgroundImage;
-  final String profilePicture;
-  final String username;
-  final String userinfo;
-  final String about;
-  final bool myProfile;
-  final bool followed;
-  final VoidCallback? onStartChatPressed;
-  final VoidCallback? follow;
-  final VoidCallback? editprofile;
-  final List<Map<String, dynamic>> socialMediaLinks;
-  File? backgroundImageFile;
-  File? profileImageFile;
-  Uint8List? backgroundImageWeb;
-  Uint8List? profileImageWeb;
 
+  /// The URL of the profile picture.
+  final String profilePicture;
+
+  /// The username of the user.
+  final String username;
+
+  /// Additional user information.
+  final String userinfo;
+
+  /// Information about the user.
+  final String about;
+
+  /// Indicates whether the profile being viewed is the current user's profile.
+  final bool myProfile;
+
+  /// Indicates whether the user is being followed.
+  final bool followed;
+
+  /// Callback function for the chat button.
+  final VoidCallback? onStartChatPressed;
+
+  /// Callback function for the follow button.
+  final VoidCallback? follow;
+
+  /// Callback function for the edit profile button.
+  final VoidCallback? editprofile;
+
+  /// List of social media links associated with the user's profile.
+  final List<Map<String, dynamic>> socialMediaLinks;
+
+  /// The file representing the background image (for local images).
+   File? backgroundImageFile;
+
+  /// The file representing the profile picture (for local images).
+   File? profileImageFile;
+
+  /// The byte data representing the background image (for web images).
+   Uint8List? backgroundImageWeb;
+
+  /// The byte data representing the profile picture (for web images).
+   Uint8List? profileImageWeb;
+
+  /// Creates a `ProfileHeader` widget.
+  ///
+  /// The `backgroundImage`, `profilePicture`, `username`, `userinfo`, `about`, and `myProfile` parameters are required.
   ProfileHeader({
     required this.backgroundImage,
     required this.profilePicture,
@@ -51,8 +87,10 @@ class ProfileHeader extends StatefulWidget {
   _ProfileHeaderState createState() => _ProfileHeaderState();
 }
 
+/// The state for the `ProfileHeader` widget.
 class _ProfileHeaderState extends State<ProfileHeader> {
   double _headerHeight = 0;
+
   @override
   void initState() {
     super.initState();
@@ -76,6 +114,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ? screenHeight * 0.065
         : (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
 
+   
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
@@ -98,7 +137,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   },
                   child: Image(
                     image: selectImage(
-                      widget.backgroundImageFile, widget.backgroundImage,widget.backgroundImageWeb),
+                      widget.backgroundImageFile,
+                      widget.backgroundImage,
+                      widget.backgroundImageWeb,
+                    ),
                     fit: BoxFit.cover,
                   )),
             ),
@@ -159,7 +201,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                       onPressedList: [
                                         () => {},
                                         () => {},
-                                        () => {},
+                                        () => { interactWithUser(userId:widget.username, action :InteractWithUsersActions.block)},
                                         () => {},
                                       ],
                                     );
@@ -186,7 +228,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         CircleAvatar(
                           radius: photosize,
                           backgroundImage: selectImage(
-                              widget.profileImageFile, widget.profilePicture,widget.profileImageWeb),
+                            widget.profileImageFile,
+                            widget.profilePicture,
+                            widget.profileImageWeb,
+                          ),
                         ),
                         SizedBox(
                             height: kIsWeb

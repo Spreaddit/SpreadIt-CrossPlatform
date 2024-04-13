@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import '../../../generic_widgets/button.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/expanded_rules.dart';
 
-
 class CommunityRules extends StatefulWidget {
-
-  final List<Map<String,dynamic>> communityRules;
+  final List<Rule?>? communityRules;
 
   const CommunityRules({
     required this.communityRules,
@@ -17,7 +16,6 @@ class CommunityRules extends StatefulWidget {
 }
 
 class _CommunityRulesState extends State<CommunityRules> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +23,9 @@ class _CommunityRulesState extends State<CommunityRules> {
         children: [
           ButtonlesHeader(
             text: "Community rules",
-            onIconPress: () {Navigator.pop(context);},
+            onIconPress: () {
+              Navigator.pop(context);
+            },
           ),
           Container(
             margin: EdgeInsets.all(10),
@@ -37,30 +37,30 @@ class _CommunityRulesState extends State<CommunityRules> {
               ),
             ),
           ),
-        Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,  
-            itemCount: widget.communityRules.length,
-            itemBuilder: (context, index) {
-              return ExpandableListWidget(
-                title: widget.communityRules[index]['title'],
-                description: widget.communityRules[index]['description'],
-              );
-            },
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.communityRules!.length,
+              itemBuilder: (context, index) {
+                return ExpandableListWidget(
+                  title: widget.communityRules![index]!.title,
+                  description: widget
+                      .communityRules![index]!.description, //['description'],
+                );
+              },
+            ),
           ),
-        ),
-        //Spacer(),
-        Button(
-          onPressed: () {Navigator.pop(context);},
-          text: 'I understand',
-          backgroundColor: Color.fromARGB(255, 13, 71, 161),
-          foregroundColor: Colors.white,
+          //Spacer(),
+          Button(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            text: 'I understand',
+            backgroundColor: Color.fromARGB(255, 13, 71, 161),
+            foregroundColor: Colors.white,
           ),
         ],
       ),
     );
   }
 }
-
-
- 

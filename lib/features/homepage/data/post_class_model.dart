@@ -58,10 +58,6 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    print('inner json $json');
-    json.forEach((key, value) {
-      print('$key: $value (${value.runtimeType})');
-    });
     return Post(
       postId: json['_id'],
       userId: json['userId'],
@@ -117,12 +113,25 @@ class PollOptions {
     this.option,
     this.votes,
   });
+  factory PollOptions.fromOption(String option) {
+    return PollOptions(
+      option: option,
+      votes: 0,
+    );
+  }
 
   factory PollOptions.fromJson(Map<String, dynamic> json) {
     return PollOptions(
       option: json['option'],
       votes: json['votes'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'option': option,
+      'votes': votes,
+    };
   }
 }
 
