@@ -111,7 +111,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       return;
     }
     _newPasswordForm.currentState!.save();
-    var responseCode = await postData(
+    var responseCode = await verfiyPasswordData(
         enteredPassowrd: {"enteredPassword": _currentUserPassword});
     if (responseCode == 0) {
       CustomSnackbar(content: "Error").show(context);

@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void changeSelectedIndex(int newIndex) {
+    if (currentPage.index == newIndex) return;
     setState(() {
       currentPage = CurrentPage.values[newIndex];
     });
@@ -75,7 +76,6 @@ class _HomePageState extends State<HomePage> {
         context: context,
         onChangeHomeCategory: changeSelectedIndex,
       ),
-      //TODO: render popular
       AppBar(
         title: Text('Communities'),
       ),

@@ -108,7 +108,7 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
     _emailForm.currentState!.save();
     _passwordForm.currentState!.save();
     var responseCode =
-        await postData(enteredPassowrd: {"enteredPassword": _userPassword});
+        await verfiyPasswordData(enteredPassowrd: {"enteredPassword": _userPassword});
     if (responseCode == 0) {
       CustomSnackbar(content: "Error").show(context);
     } else if (responseCode == 401) {

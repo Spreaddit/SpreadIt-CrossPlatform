@@ -26,27 +26,27 @@ String postCategoryEndpoint({
   String? username = "",
 }) {
   if (action == PostCategories.user) {
-    return "/posts/$username";
+    return "/posts/username/$username";
   }
 
   if (subspreaditName == null) {
     switch (action) {
       case PostCategories.best:
-        return "/best/";
+        return "/home/best/";
       case PostCategories.hot:
-        return "/hot/";
+        return "/home/hot/";
       case PostCategories.newest:
-        return "/new/";
+        return "/home/new/";
       case PostCategories.top:
-        return "/top/";
+        return "/home/top/";
       case PostCategories.recent:
-        return "/posts/"; //TODO: check history page options (Rehab - phase 3)
+        return "/home/posts/"; //TODO: check history page options (Rehab - phase 3)
       case PostCategories.views:
-        return "/sort/views/";
+        return "/home/sort/views/";
       case PostCategories.save:
-        return "/posts/save/";
+        return "/home/posts/save/";
       case PostCategories.hide:
-        return "/posts/hide/";
+        return "/home/posts/hide/";
       default:
         return "";
     }
@@ -76,6 +76,7 @@ Future<List<Post>> getFeedPosts({
 }) async {
   try {
     String? accessToken = UserSingleton().getAccessToken();
+    print(accessToken);
 
     String requestURL = apiUrl +
         postCategoryEndpoint(
@@ -94,7 +95,10 @@ Future<List<Post>> getFeedPosts({
       ),
     );
     if (response.statusCode == 200) {
-      return (response.data as List).map((x) => Post.fromJson(x)).toList();
+      List<Post> posts =
+          (response.data as List).map((x) => Post.fromJson(x)).toList();
+      print("posts after json parsing:$posts");
+      return (posts);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
     } else if (response.statusCode == 400) {
@@ -125,7 +129,7 @@ Future<List<Post>> getFeedPosts({
 /// Takes [PostCategories] as a paremeter
 /// and fetches its respective [Post] List
 Future<Post?> getPostById({
-  required int postId,
+  required String postId,
 }) async {
   try {
     String? accessToken = UserSingleton().getAccessToken();

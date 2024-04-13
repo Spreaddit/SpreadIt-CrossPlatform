@@ -1,25 +1,28 @@
+import 'package:spreadit_crossplatform/user_info.dart';
+
 import 'community.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
 class GetSpecificCommunity {
   Dio dio = Dio();
-
+  String? accessToken = UserSingleton().accessToken;
   Future<List<Community>> getCommunities(String category) async {
     try {
       Response response;
       Options options = Options(
         headers: {
-          'Authorization': 'Bearer exampleToken',
+          'Authorization': 'Bearer $accessToken',
         },
       );
       if (category == '🔥 Trending globally' || category == '🌍 Top globally') {
         response = await dio.get(
-          '$communityApiUrlGalal/community/random-category',
+          '$apiUrl/community/random-category',
+          options: options,
         );
       } else {
         response = await dio.get(
-          '$communityApiUrlGalal/community/get-specific-category',
+          '$apiUrl/community/get-specific-category',
           queryParameters: {
             'category': category,
           },
@@ -28,6 +31,9 @@ class GetSpecificCommunity {
       }
 
       if (response.statusCode == 200) {
+        print(
+          "reponse ${response.data}",
+        );
         List<Community> communities =
             (response.data as List).map((i) => Community.fromJson(i)).toList();
 
@@ -43,5 +49,4 @@ class GetSpecificCommunity {
       throw Exception('Failed to load communities: $e ');
     }
   }
-
 }

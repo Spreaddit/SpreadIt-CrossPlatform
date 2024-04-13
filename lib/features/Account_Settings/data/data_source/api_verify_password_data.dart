@@ -15,10 +15,10 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// If the status code is 500, it indicates a server error.
 ///
 /// Returns 0 if an unknown error occurs.
-Future<int> postData({required Map<String, dynamic> enteredPassowrd}) async {
+Future<int> verfiyPasswordData({required Map<String, dynamic> enteredPassowrd}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
-    final response = await Dio().post(
+    final response = await Dio().put(
       '$apiUrl/settings/layout',
       data: enteredPassowrd,
       options: Options(

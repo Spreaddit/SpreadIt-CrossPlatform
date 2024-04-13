@@ -105,7 +105,10 @@ class _PostCardState extends State<PostCard> {
             itemBuilder: (context, index) {
               return Column(
                 children: [
-                  CommentCard(comment: widget.comments[index]),
+                  CommentCard(
+                    comment: widget.comments[index],
+                    community: widget.post.community,
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       border: Border(

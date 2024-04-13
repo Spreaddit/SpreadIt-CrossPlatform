@@ -2,12 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-Future<Map<String, dynamic>> getCommunitySubStatus(
-    String communityName, String userToken) async {
+Future<Map<String, dynamic>> getCommunitySubStatus(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
-      '$communityApiUrlGalal/community/is-subscribed',
+      '$apiUrl/community/is-subscribed',
       queryParameters: {
         "communityName": communityName,
       },
@@ -35,10 +34,13 @@ Future<Map<String, dynamic>> getCommunitySubStatus(
 Future<int> postSubscribeRequest(
     {required Map<String, dynamic> postRequestInfo}) async {
   String? accessToken = UserSingleton().getAccessToken();
+  print(postRequestInfo['name']);
   try {
     final response = await Dio().post(
-      '$communityApiUrlGalal/community/subscribe',
-      data: postRequestInfo,
+      '$apiUrl/community/subscribe',
+      data: {
+        "communityName": postRequestInfo['name'],
+      },
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -70,7 +72,7 @@ Future<int> postUnsubscribeRequest(
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-      '$communityApiUrlGalal/community/unsubscribe',
+      '$apiUrl/community/unsubscribe',
       data: postRequestInfo,
       options: Options(
         headers: {

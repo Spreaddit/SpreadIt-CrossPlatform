@@ -47,7 +47,7 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
                   title: community1.name,
                   description: community1.description,
                   numberOfMembers: community1.membersCount.toString(),
-                  image: community1.image,
+                  image: community1.image!,
                 ),
                 if (community2 != null)
                   SubredditCard(
@@ -55,7 +55,7 @@ class _HorizontalScrollState extends State<HorizontalScroll> {
                     title: community2.name,
                     description: community2.description,
                     numberOfMembers: community2.membersCount.toString(),
-                    image: community2.image,
+                    image: community2.image!,
                   ),
               ],
             ),

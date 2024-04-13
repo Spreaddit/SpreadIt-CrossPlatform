@@ -43,7 +43,7 @@ class ActiveCommunity extends StatelessWidget {
                         left: kIsWeb ? screenHeight * 0.12 : screenWidth * 0.1),
                     child: CircleAvatar(
                       radius: photosize,
-                      backgroundImage: NetworkImage(community.image),
+                      backgroundImage: NetworkImage(community.image!),
                     ),
                   ),
                   SizedBox(height: kIsWeb ? screenHeight * 0.01 : 8),

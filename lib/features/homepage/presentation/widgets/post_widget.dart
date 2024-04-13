@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter_polls/flutter_polls.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_post_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
@@ -13,9 +15,29 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
+
+void navigateToPostCardPage(
+  BuildContext context,
+  String postId,
+  bool isUserProfile,
+) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      settings: RouteSettings(
+        name: '/post-card-page/$postId/$isUserProfile',
+      ),
+      builder: (context) => PostCardPage(
+        postId: postId,
+        isUserProfile: isUserProfile,
+      ),
+    ),
+  );
+}
 
 class _PostHeader extends StatefulWidget {
   final Post post;
@@ -58,6 +80,7 @@ class _PostHeaderState extends State<_PostHeader> {
     });
   }
 
+  @override
   void dispose() {
     timer.cancel();
     super.dispose();
@@ -77,28 +100,48 @@ class _PostHeaderState extends State<_PostHeader> {
           title: Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [
-              Text(
-                "r/${widget.post.community}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => CommunityPage(
+                            communityName: widget.post.community,
+                          )),
+                ),
+                child: Text(
+                  "r/${widget.post.community}",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
               ),
               Text(dateFormatted),
             ],
           ),
           subtitle: GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(
-              '/user-profile',
-              arguments: {
-                'username': widget.post.username,
-              },
-            ),
-            child: Text(widget.post.community),
+            onTap: () => {
+              Navigator.of(context).pushNamed(
+                '/user-profile',
+                arguments: {
+                  'username': widget.post.username,
+                },
+              ),
+              print('username: ${widget.post.username}'),
+            },
+            child: Text(widget.post.username),
           ),
           leading: CircleAvatar(
             backgroundImage: NetworkImage(widget.post.userProfilePic),
           ),
-          trailing: IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: onShowMenu,
+          trailing: Flex(
+            direction: Axis.horizontal,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              JoinCommunityBtn(
+                communityName: widget.post.community,
+              ),
+              IconButton(
+                icon: Icon(Icons.more_vert),
+                onPressed: onShowMenu,
+              ),
+            ],
           ),
         ),
       ),
@@ -134,7 +177,14 @@ class _PostHeaderState extends State<_PostHeader> {
             widget.post.postId,
           ), //TODO: conditional rendering based on whether its saved or not
       copyText,
-      report,
+      () => report(
+            context,
+            widget.post.community,
+            widget.post.postId.toString(),
+            '0',
+            widget.post.username,
+            true,
+          ),
       blockAccount,
       hide,
       () => Navigator.push(
@@ -142,8 +192,9 @@ class _PostHeaderState extends State<_PostHeader> {
             MaterialPageRoute(
               builder: (context) => EditPost(
                 postId: widget.post.postId.toString(),
-                postContent: widget.post.content.isNotEmpty
-                    ? widget.post.content[widget.post.content.length - 1]
+                postContent: widget.post.content != null &&
+                        widget.post.content!.isNotEmpty
+                    ? widget.post.content![widget.post.content!.length - 1]
                     : "",
                 onContentChanged: widget.onContentChanged,
               ),
@@ -177,7 +228,14 @@ class _PostHeaderState extends State<_PostHeader> {
             widget.post.postId,
           ), //TODO: conditional rendering based on whether its saved or not
       copyText,
-      report,
+      () => report(
+            context,
+            widget.post.community,
+            widget.post.postId.toString(),
+            '0',
+            widget.post.username,
+            true,
+          ),
       blockAccount,
       hide
     ];
@@ -227,7 +285,7 @@ class _PostBody extends StatelessWidget {
   final List<PollOptions>? pollOption;
   final String? pollVotingLength;
   final bool? isPollEnabled;
-  final int postId;
+  final String postId;
   final bool isSpoiler;
   final bool isNsfw;
 
@@ -379,7 +437,7 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image(
-                      image: NetworkImage(i.link),
+                      image: NetworkImage(i.link!),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -419,7 +477,7 @@ class _PostContent extends StatelessWidget {
   final List<Attachment>? attachments;
   final String? link;
   final bool isFullView;
-  final int postId;
+  final String postId;
   final bool isSpoiler;
   final bool isNsfw;
 
@@ -439,40 +497,42 @@ class _PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (postType == "post") {
+    print(postType);
+    if (postType == "Post") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
 
       return Text(
         content ?? "",
+        textAlign: TextAlign.left,
         overflow: TextOverflow.ellipsis,
-        maxLines: !isFullView ? 5 : null,
+        maxLines: !isFullView ? 5 : 2000,
       );
-    } else if (postType == "attachment") {
+    } else if (postType == "Images & Video") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
 
       if (attachments!.isNotEmpty) {
         if (attachments![0].type == "image") {
           return _ImageCaruosel(attachments: attachments!);
         } else {
-          return VideoPlayerScreen(videoURL: attachments![0].link);
+          return VideoPlayerScreen(videoURL: attachments![0].link!);
         }
       } else {
         CustomSnackbar(content: "No Attachments Found").show(context);
         print("Error fetching attachments from back");
         return Text("Unable to load attachments");
       }
-    } else if (postType == "link") {
+    } else if (postType == "Link") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
-
+      print(link);
       return AnyLinkPreview(
-        link: link ?? "",
+        link: link?? "",
         displayDirection: UIDirection.uiDirectionHorizontal,
-        bodyMaxLines: 5,
-        bodyTextOverflow: TextOverflow.ellipsis,
-        titleStyle: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
+        cache: Duration(hours: 1),
+        backgroundColor: Colors.grey[300],
+        proxyUrl: "https://corsproxy.io/?",
+        errorWidget: Container(
+          color: Colors.grey[300],
+          child: Text('Oops!'),
         ),
       );
     } else {
@@ -499,9 +559,9 @@ class _PostContent extends StatelessWidget {
             return PollOption(
               id: index.toString(),
               title: Text(
-                option.option,
+                option.option!,
               ),
-              votes: option.votes,
+              votes: option.votes!,
             );
           },
         ).toList(),
@@ -558,11 +618,17 @@ class _PostInteractions extends StatefulWidget {
   final int votesCount;
   final int sharesCount;
   final int commentsCount;
+  final bool isUserProfile;
+  final String postId;
+  final bool isFullView;
 
   _PostInteractions({
     required this.votesCount,
     required this.sharesCount,
     required this.commentsCount,
+    required this.isUserProfile,
+    required this.postId,
+    required this.isFullView,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -583,11 +649,21 @@ class _PostInteractionsState extends State<_PostInteractions> {
               initialVotesCount: widget.votesCount,
             ),
             CommentButton(
-              initialCommensCount: widget.commentsCount,
-            ),
+                initialCommensCount: widget.commentsCount,
+                onCommentsPressed: () => {
+                      if (!widget.isFullView)
+                        {
+                          navigateToPostCardPage(
+                            context,
+                            widget.postId,
+                            widget.isUserProfile,
+                          ),
+                        }
+                    }),
             ShareButton(
               initialSharesCount: widget.sharesCount,
-              message: "LINK///////",
+              message:
+                  "${Uri.base.origin}/post-card-page/${widget.postId}/false",
             ),
           ],
         ),
@@ -622,34 +698,21 @@ class _PostWidgetState extends State<PostWidget> {
   void initState() {
     super.initState();
     setState(() {
-      isNsfw = widget.post.isNsfw;
-      isSpoiler = widget.post.isSpoiler;
-      content = widget.post.type == "post" ? widget.post.content : [];
+      isNsfw = widget.post.isNsfw!;
+      isSpoiler = widget.post.isSpoiler!;
+      content = widget.post.content != null && widget.post.content!.isNotEmpty
+          ? widget.post.content!
+          : [];
     });
   }
 
   void onDeleted() {
+    if (widget.isFullView) {
+      Navigator.of(context).pushNamed('/home');
+    }
     setState(() {
       isDeleted = true;
     });
-  }
-
-  void navigateToPostCardPage(
-    int postId,
-    bool isUserProfile,
-  ) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        settings: RouteSettings(
-          name: '/post-card-page/$postId/$isUserProfile',
-        ),
-        builder: (context) => PostCardPage(
-          postId: postId,
-          isUserProfile: isUserProfile,
-        ),
-      ),
-    );
   }
 
   void onContentChanged(String newContent) {
@@ -691,18 +754,21 @@ class _PostWidgetState extends State<PostWidget> {
                   print("tapped");
                   if (!widget.isFullView) {
                     navigateToPostCardPage(
+                      context,
                       widget.post.postId,
                       widget.isUserProfile,
                     );
                   }
                 },
                 child: _PostBody(
-                  title: widget.post.title,
-                  content:
-                      content.isNotEmpty ? content[content.length - 1] : "",
+                  title: widget.post.title!,
+                  content: widget.post.content != null &&
+                          widget.post.content!.isNotEmpty
+                      ? widget.post.content![widget.post.content!.length - 1]
+                      : "",
                   attachments: widget.post.attachments,
                   link: widget.post.link,
-                  postType: widget.post.type,
+                  postType: widget.post.type!,
                   isFullView: widget.isFullView,
                   pollOption: widget.post.pollOptions,
                   isPollEnabled: widget.post.isPollEnabled,
@@ -713,10 +779,13 @@ class _PostWidgetState extends State<PostWidget> {
                 ),
               ),
               _PostInteractions(
+                postId: widget.post.postId,
+                isUserProfile: widget.isUserProfile,
                 votesCount:
-                    widget.post.votesUpCount - widget.post.votesDownCount,
-                sharesCount: widget.post.sharesCount,
-                commentsCount: widget.post.commentsCount,
+                    widget.post.votesUpCount! - widget.post.votesDownCount!,
+                sharesCount: widget.post.sharesCount!,
+                commentsCount: widget.post.commentsCount!,
+                isFullView: widget.isFullView,
               )
             ],
           )

@@ -7,7 +7,6 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
@@ -53,7 +52,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: HomePage(),
+      home: StartUpPage(),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
@@ -63,15 +62,15 @@ class SpreadIt extends StatelessWidget {
 
         if (pathSegments.contains('post-card-page') &&
             pathSegments.length >= 3) {
-          final postId = int.tryParse(pathSegments[pathSegments.length - 2]);
+          final postId = pathSegments[pathSegments.length - 2];
           final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
 
-          if (postId != null) {
+
             return MaterialPageRoute(
               builder: (_) =>
                   PostCardPage(postId: postId, isUserProfile: isUserProfile),
             );
-          }
+        
         }
       },
       routes: {
@@ -83,7 +82,6 @@ class SpreadIt extends StatelessWidget {
               currentPage: CurrentPage.discover,
             ),
         '/all': (context) => AllPage(),
-        '/start-up-page': (context) => StartUpPage(),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),

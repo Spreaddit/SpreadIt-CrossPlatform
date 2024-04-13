@@ -6,7 +6,7 @@ import '../../../user_info.dart';
 Future<bool?> isFollowed(String username) async {
   try {
     String? accessToken = UserSingleton().accessToken; 
-    String requestURL = '$apiUrl/user/isfollowed/$username';
+    String requestURL = '$apiUrl/users/isfollowed/$username';
 
     final response = await Dio().get(
       requestURL,

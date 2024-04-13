@@ -13,27 +13,24 @@ Future<int> googleOAuthApi({
   required String googleToken,
 }) async {
   try {
-    print('here');
     var apiroute = "/google/oauth";
     String apiUrl = apibase + apiroute;
+    print(googleToken);
     var data = {
-      "Authorization": googleToken,
+      "googleToken": googleToken,
       "remember_me": true,
     };
     final response = await Dio().post(
       apiUrl,
       data: data,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $googleToken',
-        },
-      ),
     );
     if (response.statusCode == 200) {
+      print(response.data);
       User user = User.fromJson(response.data['user']);
       UserSingleton().setUser(user);
       UserSingleton().setAccessToken(response.data['access_token'],
           DateTime.parse(response.data['token_expiration_date']));
+      print(response.data['access_Token']);
 
       print(response.statusMessage);
       return 200;

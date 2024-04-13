@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'comment_model_class.dart';
 
 String apibase = apiUrl;
@@ -13,8 +14,7 @@ Future<Comment?> updateComments({
   required String type,
 }) async {
   try {
-    //String? accessToken = userSingleton().accessToken;
-    String accessToken = 'rehab';
+    String? accessToken = UserSingleton().accessToken;
     String apiRoute = "";
 
     switch (type) {
@@ -28,7 +28,7 @@ Future<Comment?> updateComments({
     String apiUrl = apibase + apiRoute;
     final response = await Dio().post(apiUrl,
         options: Options(headers: {
-          'Authorization': 'Bearer: $accessToken',
+          'Authorization': 'Bearer $accessToken',
         }),
         data: {
           "content": content,
@@ -36,6 +36,7 @@ Future<Comment?> updateComments({
         });
     if (response.statusCode == 201) {
       Comment recievedComment = Comment.fromJson(response.data['comment']);
+      print('posted comment $recievedComment');
 
       print(response.data);
       print(response.statusCode);

@@ -52,7 +52,8 @@ class _UserProfileState extends State<UserProfile> {
   Uint8List? imageProfileWeb;
   late String username;
 
-    void didChangeDependencies() {
+  @override
+  void didChangeDependencies() {
     super.didChangeDependencies();
     final Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
@@ -63,12 +64,11 @@ class _UserProfileState extends State<UserProfile> {
     fetchComments();
     loadCommunities();
     checkFollowStatus();
-    }
+  }
 
   @override
   void initState() {
     super.initState();
-
   }
 
   void loadCommunities() async {
@@ -222,6 +222,7 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               PostFeed(
                 postCategory: PostCategories.user,
+                username: username,
               ),
             ],
           ),

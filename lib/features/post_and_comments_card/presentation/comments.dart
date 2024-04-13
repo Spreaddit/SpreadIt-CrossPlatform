@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
-import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
-
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_replies.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class Media {
   final String type;
@@ -87,9 +83,13 @@ class _CommentHeader extends HookWidget {
 
 class CommentCard extends StatefulWidget {
   final Comment comment;
+  final String community;
   // bool collapseThreadFlag = false;
 
-  CommentCard({required this.comment});
+  CommentCard({
+    required this.comment,
+    required this.community,
+  });
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -97,6 +97,7 @@ class CommentCard extends StatefulWidget {
 
 class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
+  late bool isUserProfile;
 
   Future<void> fetchReplies() async {
     if (!_repliesFetched) {
@@ -115,6 +116,8 @@ class _CommentCardState extends State<CommentCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    isUserProfile = UserSingleton().user != null &&
+        widget.comment.username == UserSingleton().user!.username;
     fetchReplies();
   }
 
@@ -187,7 +190,14 @@ class _CommentCardState extends State<CommentCard> {
                                 save,
                                 copyText,
                                 blockAccount,
-                                report
+                                () => report(
+                                      context,
+                                      widget.community,
+                                      widget.comment.postId!,
+                                      widget.comment.id,
+                                      widget.comment.username!,
+                                      false,
+                                    ),
                               ],
                             );
                           },
@@ -270,13 +280,16 @@ class _CommentCardState extends State<CommentCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      child: CommentCard(comment: reply),
                       decoration: BoxDecoration(
                         border: Border(
                           left: BorderSide(color: Colors.grey, width: 1),
                         ),
                       ),
                       margin: EdgeInsets.only(left: 8.0),
+                      child: CommentCard(
+                        comment: reply,
+                        community: widget.community,
+                      ),
                     ),
                   ],
                 );
