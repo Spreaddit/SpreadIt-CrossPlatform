@@ -188,8 +188,8 @@ class _CommentCardState extends State<CommentCard> {
                                 },
                                 getReplyNotifications,
                                 save,
-                                copyText,
-                                blockAccount,
+                                ()=>copyText(context, widget.comment.content),
+                                ()=>blockAccount(widget.comment.username!),
                                 () => report(
                                       context,
                                       widget.community,

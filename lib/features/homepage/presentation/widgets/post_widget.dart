@@ -15,7 +15,6 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -42,6 +41,7 @@ void navigateToPostCardPage(
 class _PostHeader extends StatefulWidget {
   final Post post;
   final bool isUserProfile;
+  final String? content;
   final void Function(String) onContentChanged;
   final bool isNsfw;
   final bool isSpoiler;
@@ -58,6 +58,7 @@ class _PostHeader extends StatefulWidget {
     required this.onSpoilerChanged,
     required this.onNsfwChanged,
     required this.onDeleted,
+    this.content = "",
   });
 
   @override
@@ -161,8 +162,6 @@ class _PostHeaderState extends State<_PostHeader> {
       "Subscribe to post",
       "Save",
       "Copy text",
-      "Report",
-      "Block account",
       "Hide",
       "Edit post",
       widget.isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
@@ -176,16 +175,7 @@ class _PostHeaderState extends State<_PostHeader> {
             context,
             widget.post.postId,
           ), //TODO: conditional rendering based on whether its saved or not
-      copyText,
-      () => report(
-            context,
-            widget.post.community,
-            widget.post.postId.toString(),
-            '0',
-            widget.post.username,
-            true,
-          ),
-      blockAccount,
+      () => copyText(context, widget.content!),
       hide,
       () => Navigator.push(
             context,
@@ -227,7 +217,7 @@ class _PostHeaderState extends State<_PostHeader> {
             context,
             widget.post.postId,
           ), //TODO: conditional rendering based on whether its saved or not
-      copyText,
+      () => copyText(context, widget.content!),
       () => report(
             context,
             widget.post.community,
@@ -236,7 +226,7 @@ class _PostHeaderState extends State<_PostHeader> {
             widget.post.username,
             true,
           ),
-      blockAccount,
+      () => blockAccount(widget.post.username),
       hide
     ];
 
@@ -244,8 +234,6 @@ class _PostHeaderState extends State<_PostHeader> {
       Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
-      Icons.flag,
-      Icons.block,
       Icons.hide_source_rounded,
       Icons.edit,
       Icons.new_releases_rounded,
@@ -659,8 +647,8 @@ class _PostInteractionsState extends State<_PostInteractions> {
                     }),
             ShareButton(
               initialSharesCount: widget.sharesCount,
-              message:"",
-                  // "${Uri.base.origin}/post-card-page/${widget.postId}/false",
+              message: "",
+              // "${Uri.base.origin}/post-card-page/${widget.postId}/false",
             ),
           ],
         ),
@@ -745,6 +733,10 @@ class _PostWidgetState extends State<PostWidget> {
                 onNsfwChanged: onChangeNsfw,
                 onSpoilerChanged: onChangeSpoiler,
                 onDeleted: onDeleted,
+                content: widget.post.content != null &&
+                        widget.post.content!.isNotEmpty
+                    ? widget.post.content![widget.post.content!.length - 1]
+                    : widget.post.title,
               ),
               GestureDetector(
                 onTap: () {
