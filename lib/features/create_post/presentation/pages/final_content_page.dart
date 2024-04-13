@@ -140,9 +140,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       finalVideoWeb = widget.videoWeb;
     }
     if(widget.createPoll != null) { 
-      print("poll set from the primary");
-      print("poll in the final content $finalCreatePoll");
-      finalCreatePoll = widget.createPoll!;
       mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
@@ -171,7 +168,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       _finalLinkForm.currentState!.save();
     }
     });
-    validateLink(finalLink!);
+    validatePostTitle(finalLink!);
   }
 
   void updateButtonState() {
@@ -181,7 +178,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       });
     }
     else {
-      isButtonEnabled = validatePostTitle(finalTitle) && validateLink(finalLink!);  
+      isButtonEnabled = validatePostTitle(finalTitle) && validatePostTitle(finalLink!);  
     }
   }
 

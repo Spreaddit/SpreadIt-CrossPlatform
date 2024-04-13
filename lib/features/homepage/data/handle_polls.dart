@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<bool> handlePolls({
   required PollOptions pollOption,
@@ -8,9 +9,16 @@ Future<bool> handlePolls({
 }) async {
   try {
     String requestURL = "$apiUrl/posts/$postId/poll/vote";
+    String? accessToken = UserSingleton().getAccessToken();
+
     print("post vote endpoint: $requestURL");
     final response = await Dio().post(
       requestURL,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
       data: {
         'selectedOptions': pollOption.option,
       },
