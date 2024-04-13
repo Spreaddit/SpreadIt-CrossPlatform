@@ -20,7 +20,7 @@ Future<bool> handlePolls({
         },
       ),
       data: {
-        'selectedOptions': pollOption.option,
+        'selectedOption': pollOption.option,
       },
     );
     if (response.statusCode == 200) {

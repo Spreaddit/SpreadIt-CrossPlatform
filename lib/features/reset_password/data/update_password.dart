@@ -4,9 +4,9 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-/// This page receives the user input passwords which are [currentPassword], [newPassword] and a [token] for the user request, and 
+/// This page receives the user input passwords which are [currentPassword], [newPassword] and a [token] for the user request, and
 /// sends all thede data to the backend.
-/// the backend first checks that the [currentPassword] is indeed connected to this user and then updated the 
+/// the backend first checks that the [currentPassword] is indeed connected to this user and then updated the
 /// [currentPassword] with the [newPassword].
 
 Future<int> updatePassword(
@@ -16,16 +16,14 @@ Future<int> updatePassword(
     String apiUrl = apibase + apiRoute;
     String? accessToken = UserSingleton().accessToken;
     final response = await Dio().post(apiUrl,
-    options:Options(
-        headers: {
-          'Authorization' :'Bearer $accessToken',
-        }
-      ),
-     data: {
-      "newPassword": newPassword,
-      "currentPassword": currentPassword,
-    } 
-        );
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+        data: {
+          "newPassword": newPassword,
+          "currentPassword": currentPassword,
+          "token": accessToken,
+        });
     if (response.statusCode == 200) {
       print(response.statusCode);
       print(response.statusMessage);

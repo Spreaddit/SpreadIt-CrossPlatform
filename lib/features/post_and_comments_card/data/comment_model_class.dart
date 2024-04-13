@@ -52,7 +52,7 @@ class Comment {
       likesCount: json['likes_count'],
       repliesCount: json['replies_count'],
       isReply: json['is_reply'],
-      media: List<String>.from(json['media']),
+      // media: List<String>.from(json['media']),
       createdAt: DateTime.parse(json['created_at'] as String),
       isHidden: json['is_hidden'] as bool,
       isSaved: json['is_saved'] as bool,

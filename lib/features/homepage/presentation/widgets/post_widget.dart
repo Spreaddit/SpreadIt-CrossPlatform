@@ -525,7 +525,7 @@ class _PostContent extends StatelessWidget {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
       print(link);
       return AnyLinkPreview(
-        link: link?? "",
+        link: link ?? "",
         displayDirection: UIDirection.uiDirectionHorizontal,
         cache: Duration(hours: 1),
         backgroundColor: Colors.grey[300],
@@ -537,6 +537,9 @@ class _PostContent extends StatelessWidget {
       );
     } else {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
+      if (pollOption == null || pollOption!.length < 2) {
+        return Text("Oops. something went wrong");
+      }
       return FlutterPolls(
         pollTitle: Text(""),
         pollId: Uuid().v1(),
