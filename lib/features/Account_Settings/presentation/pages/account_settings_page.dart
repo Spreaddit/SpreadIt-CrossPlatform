@@ -51,7 +51,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     setState(() {
       currentEmail = data["email"];
       connectedAccMode();
-      currentLocation = data["country"];
+      currentLocation = (data["country"] == "IP")
+          ? "Use approximate location (based on IP)"
+          : data["country"];
     });
   }
 
