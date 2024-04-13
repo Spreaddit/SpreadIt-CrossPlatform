@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
+import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/icon_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/social_media_button.dart';
 
@@ -113,6 +114,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ? screenHeight * 0.065
         : (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
 
+   
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
@@ -199,7 +201,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                       onPressedList: [
                                         () => {},
                                         () => {},
-                                        () => {},
+                                        () => { interactWithUser(userId:widget.username, action :InteractWithUsersActions.block)},
                                         () => {},
                                       ],
                                     );
