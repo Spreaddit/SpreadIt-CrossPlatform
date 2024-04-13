@@ -140,6 +140,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       finalVideoWeb = widget.videoWeb;
     }
     if(widget.createPoll != null) { 
+      print("poll set from the primary");
+      print("poll in the final content $finalCreatePoll");
       finalCreatePoll = widget.createPoll!;
       mapPoll();
       openPollWidow();

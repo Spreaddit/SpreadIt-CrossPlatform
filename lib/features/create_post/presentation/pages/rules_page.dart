@@ -43,8 +43,8 @@ class _CommunityRulesState extends State<CommunityRules> {
             itemCount: widget.communityRules.length,
             itemBuilder: (context, index) {
               return ExpandableListWidget(
-                title: widget.communityRules[index]['title'],
-                description: widget.communityRules[index]['description'],
+                title: widget.communityRules[index],
+                description: widget.communityRules[index],
               );
             },
           ),

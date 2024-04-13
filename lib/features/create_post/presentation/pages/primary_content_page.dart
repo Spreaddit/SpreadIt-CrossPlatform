@@ -152,6 +152,7 @@ class _CreatePostState extends State<CreatePost> {
     setState(() {
       createPoll = !createPoll;
     });
+    print('create poll from primary: $createPoll');
   }
 
   void updatePollOption(int optionNumber, String value) {
