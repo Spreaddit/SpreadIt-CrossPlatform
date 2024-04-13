@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 
 /// This widget is to display the user information in the page. It displays the user avatar, his email and username.
 
-// TODO : to be parametrised in phase 2
+
+final String username = UserSingleton().user!.username;
+final String email = UserSingleton().user!.email!;
+final String image = UserSingleton().user!.avatarUrl!;
 
 class UserCard extends StatelessWidget {
+
   const UserCard({Key? key}) : super(key: key);
 
   @override
@@ -18,12 +24,12 @@ class UserCard extends StatelessWidget {
           Container(
             height:80,
             width:80,
-            child: Image.asset("./assets/images/UserAvatar.png") // taken from user
+            child: Image.asset(image),
             ), 
           Column(
             children: [
-              Text("u/username"),  // to be taken from the backend
-              Text("jshd@sf.com"), // to be taken from the backend
+              Text(username), 
+              Text(email), 
             ],)
         ],),
     );
