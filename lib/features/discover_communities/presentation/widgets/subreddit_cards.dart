@@ -21,7 +21,7 @@ class SubredditCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //navigate to the subreddit page
+        // Navigate to the community page
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
