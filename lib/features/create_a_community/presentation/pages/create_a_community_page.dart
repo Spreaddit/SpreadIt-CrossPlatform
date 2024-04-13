@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
+import '../../../community/presentation/pages/community_page.dart';
 
 /// The CreateCommunityPage widget is a stateful widget that builds the UI for creating a new community.
 class CreateCommunityPage extends StatefulWidget {
@@ -102,7 +104,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
             ),
           ),
           Visibility(
-            visible: _responseStatus == 204,
+            visible: _responseStatus == 403,
             child: Text(
               'Community Name Already taken!',
             ),
@@ -216,20 +218,33 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
     final dio = Dio();
     final client = RestClient(dio);
 
-    final community = Community(_communityName);
+    final community = Community(_communityName, _is18Plus,
+        communityType[selectedCommunityType].split('\n')[0].trim());
 
     try {
-      final response = await client.createCommunity(community, "ExampleToken");
+      String authenticationToken = UserSingleton().accessToken!;
+      print(community.toJson());
+      final response = await client.createCommunity(
+          community, "Bearer $authenticationToken");
       setState(() {
         _responseStatus = response.response.statusCode;
       });
       if (response.response.statusCode == 200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommunityPage(communityName: _communityName),
+          ),
+        );
         // Navigate to the community page
         print('Community created successfully!');
       } else {
         print('oh noooooooo');
       }
     } catch (e) {
+      setState(() {
+        _responseStatus = 403;
+      });
       print('Error: $e');
     }
   }

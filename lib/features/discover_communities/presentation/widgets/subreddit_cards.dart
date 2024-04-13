@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import './join_button.dart';
+import '../../../community/presentation/pages/community_page.dart';
 
+/// `SubredditCard` is a StatelessWidget that represents a card for a subreddit.
+///
+/// It takes several parameters: `index`, `title`, `description`, `numberOfMembers`, and `image`. All of these parameters are required.
+///
+/// The `index` is used to identify the card, the `title` and `description` provide information about the subreddit, the `numberOfMembers` shows how many members the subreddit has, and the `image` is the image of the subreddit.
+///
+/// The `build` method is overridden to build the widget. It returns an `InkWell` widget, which makes its child widget tappable. When the `InkWell` is tapped, it navigates to the community page.
+///
+/// The child of the `InkWell` is a `Container` that has a margin and a border. The margin is symmetric, with vertical margins of 8.0 and horizontal margins of 16.0. The border is a simple border with a default color.
 class SubredditCard extends StatelessWidget {
   final int index;
   final String title;
@@ -21,7 +31,13 @@ class SubredditCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //navigate to the subreddit page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommunityPage(communityName: title),
+          ),
+        );
+        // Navigate to the community page
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
