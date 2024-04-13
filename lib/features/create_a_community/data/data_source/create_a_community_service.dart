@@ -20,7 +20,7 @@ abstract class RestClient {
   /// Sends a POST request to the "/communities/create" endpoint to create a new community.
   ///
   /// The [community] parameter is the community to be created.
-  @POST("/communities/create")
+  @POST("/community/create")
   Future<HttpResponse> createCommunity(
     @Body() Community community,
     @Header("Authorization") String token,
@@ -33,9 +33,11 @@ abstract class RestClient {
 class Community extends Equatable {
   /// The name of the community.
   final String communityName;
+  final bool is18Plus;
+  final String communityType;
 
   /// Creates a Community instance.
-  Community(this.communityName);
+  Community(this.communityName, this.is18Plus, this.communityType);
 
   @override
 
@@ -46,6 +48,8 @@ class Community extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'name': communityName,
+      'is18plus': is18Plus,
+      'communityType': communityType,
     };
   }
 }

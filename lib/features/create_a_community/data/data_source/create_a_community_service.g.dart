@@ -13,7 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:3000/FAROUQDIAA52/Module3/1.0.0';
+    baseUrl ??= 'http://localhost:80';
   }
 
   final Dio _dio;
@@ -39,7 +39,7 @@ class _RestClient implements RestClient {
     )
             .compose(
               _dio.options,
-              '/communities/create',
+              '/community/create',
               queryParameters: queryParameters,
               data: _data,
             )
