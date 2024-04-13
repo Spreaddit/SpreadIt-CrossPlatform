@@ -124,7 +124,7 @@ void unsaveComment(BuildContext context) async {
                 ),
                 if (comment.media!.isNotEmpty)
                   SizedBox(height: screenHeight * 0.02),
-                if (comment.media!.isNotEmpty) Image.network(comment.media![0]),
+                if (comment.media!.isNotEmpty) Image.network(comment.media![0].link),
               ],
             ),
           ),

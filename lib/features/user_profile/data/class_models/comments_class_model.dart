@@ -1,9 +1,6 @@
-/// This file defines the Comment class, which represents a comment in a Flutter application.
-/// It includes properties and methods related to comments.
-
 import 'package:spreadit_crossplatform/features/user.dart';
 
-/// A class representing a comment.
+/// A class representing a comment in a Flutter application.
 class Comment {
   /// Unique identifier for the comment.
   final String id;
@@ -18,7 +15,7 @@ class Comment {
   /// Indicates if the comment is a reply to another comment.
   final bool? isReply;
   /// List of media (such as images) associated with the comment.
-  final List<String>? media;
+  final List<Media>? media;
   /// Date and time when the comment was created.
   final DateTime createdAt;
   /// Indicates if the comment is hidden from view.
@@ -32,16 +29,18 @@ class Comment {
   /// List of replies to the comment.
   List<Comment>? replies;
   /// ID of the parent comment if this comment is a reply.
-  int? commentParentId;
+  final int? commentParentId;
   /// Indicates if the comment is collapsed (hidden from view) by the user.
   bool isCollapsed;
   /// URL of the profile picture of the user who made the comment.
   final String? profilePic;
   /// ID of the user who made the comment.
   final String? userId;
-    /// ID of the post to which the comment belongs.
+  /// ID of the post to which the comment belongs.
   final String? postId;
+  /// Username of the user who made the comment.
   final String? username;
+
   /// Constructor for creating a Comment object.
   Comment({
     required this.id,
@@ -77,7 +76,7 @@ class Comment {
       likesCount: json['likes_count'],
       repliesCount: json['replies_count'],
       isReply: json['is_reply'],
-      media: List<String>.from(json['media']),
+      media: (json['media'] != null) ? List<Media>.from(json['media'].map((x) => Media.fromJson(x))) : null,
       createdAt: DateTime.parse(json['created_at'] as String),
       isHidden: json['is_hidden'] as bool,
       isSaved: json['is_saved'] as bool,
@@ -85,5 +84,33 @@ class Comment {
       subredditName: json['community_title']??"ayhaga",
       username: usernameFetched,
     );
+  }
+}
+
+/// A class representing media (such as images) associated with a comment.
+class Media {
+  final String type;
+  final String link;
+  final String id;
+
+  /// Constructor for creating a Media object.
+  Media({required this.type, required this.link, required this.id});
+
+  /// Factory method for creating a Media object from JSON data.
+  factory Media.fromJson(Map<String, dynamic> json) {
+    return Media(
+      type: json['type'],
+      link: json['link'],
+      id: json['_id'],
+    );
+  }
+
+  /// Converts the Media object to a JSON representation.
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'link': link,
+      '_id': id,
+    };
   }
 }
