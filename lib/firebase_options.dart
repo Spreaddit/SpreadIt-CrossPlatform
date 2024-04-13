@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '546473234311',
     projectId: 'spreadit-5a997',
     storageBucket: 'spreadit-5a997.appspot.com',
-    iosClientId: '546473234311-511m13erocmi67d2qvmrf29hk924qkpg.apps.googleusercontent.com',
+    iosClientId:
+        '546473234311-511m13erocmi67d2qvmrf29hk924qkpg.apps.googleusercontent.com',
     iosBundleId: 'com.example.spreaditCrossplatform',
   );
 }

@@ -4,7 +4,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/custom_input.dar
 import 'package:spreadit_crossplatform/features/generic_widgets/header.dart';
 import 'package:spreadit_crossplatform/features/Sign_up/data/sign_up_api.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
-
+import '../../data/check_username.dart';
 import '../../../generic_widgets/snackbar.dart';
 
 
@@ -28,10 +28,17 @@ class _CreateUsernameState extends State<CreateUsername> {
   var invalidText = "";
 
 
-  void updateUsername(String username, bool validation) {
+  void updateUsername(String username, bool validation) async {
     _userName = username;
+      var responseCode = await checkUsernameAvailability(
+      username: _userName,
+    );
     setState(() {
       invalidText = validateusernametext(_userName);
+      if (invalidText=="Great name! it's not taken, so it's all yours." && responseCode ==false)
+      {
+        invalidText="Username is already Taken";
+      }
       validUserName = validation && invalidText == "Great name! it's not taken, so it's all yours.";
     });
     _usernameform.currentState!.save();

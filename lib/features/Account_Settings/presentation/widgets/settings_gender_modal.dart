@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'settings_btn_bottom_sheet.dart';
-import '../data/data_source/api_basic_settings_data.dart';
+import '../../data/data_source/api_basic_settings_data.dart';
 import '../../../generic_widgets/snackbar.dart';
 
+/// A widget that displays a bottom sheet with options to select the gender.
+///
+/// It uses a [BottomModalBtn] that when pressed, displays the bottom sheet as well as update
+/// after a selected value is recorded.
 class SelectGender extends StatefulWidget {
+  /// Creates a select gender widget.
   SelectGender({Key? key}) : super(key: key);
 
+  /// List of available genders.
   final List<String> genders = [
     "Man",
     "Woman",
@@ -15,11 +21,20 @@ class SelectGender extends StatefulWidget {
   State<SelectGender> createState() => _SelectGenderState();
 }
 
+/// [SelectGender] state.
 class _SelectGenderState extends State<SelectGender> {
+  /// Represents the selected gender.
   String? _selectedGender = "";
+
+  /// Represents the temporary selected gender.
   String? _tempSelectedGender = "";
+
+  /// Holds the fetched data related to user information.
   late Map<String, dynamic> data;
+
+  /// Represents the result of the API update call.
   int result = 1;
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +43,7 @@ class _SelectGenderState extends State<SelectGender> {
     });
   }
 
+  /// Fetches data from the API.
   Future<void> fetchData() async {
     data = await getBasicData(); // Await the result of getData()
     setState(() {
@@ -36,6 +52,9 @@ class _SelectGenderState extends State<SelectGender> {
     });
   }
 
+  /// Displays the Gender bottom sheet.
+  ///
+  /// The option isn't updated until the 'Done' Button is pressed.
   void setGenderModal() {
     showModalBottomSheet(
       context: context,
@@ -89,7 +108,8 @@ class _SelectGenderState extends State<SelectGender> {
                             onPressed: () async {
                               var oldGender = _tempSelectedGender;
                               data["gender"] = _tempSelectedGender;
-                              var result = await updateBasicData(updatedData: data);
+                              var result =
+                                  await updateBasicData(updatedData: data);
                               if (result != 0) {
                                 setState(() {
                                   _selectedGender = data["gender"];

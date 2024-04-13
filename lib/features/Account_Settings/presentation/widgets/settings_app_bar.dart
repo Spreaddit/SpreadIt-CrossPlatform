@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// A custom app bar designed for the settings screen.
 class SettingsAppBar extends StatelessWidget implements PreferredSizeWidget {
+  /// Creates a custom app bar with a title to be used in the Settings page and sub-pages.
+  ///
+  /// Parameters:
+  /// - [title] : [String] The title of the app bar [required].
   const SettingsAppBar({
     Key? key,
     required this.title,

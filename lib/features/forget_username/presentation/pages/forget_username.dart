@@ -6,6 +6,9 @@ import '../../../generic_widgets/header.dart';
 import '../../../generic_widgets/validations.dart';
 import '../../data/post_email.dart';
 
+/// This class is responsible for rendering the [ForgetUsername] page.
+/// It contains an input field in which a user writes his `email` and a button to send this input data to the backend.
+
 class ForgetUsername extends StatefulWidget {
   const ForgetUsername({Key? key}) : super(key: key);
 

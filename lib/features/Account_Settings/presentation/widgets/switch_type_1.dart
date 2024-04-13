@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 
+/// A customizable switch button widget with an icon, main text, and switch.
 class SwitchBtn1 extends StatefulWidget {
+  /// Creates a switch button widget.
+  ///
+  /// Parameters:
+  /// - [iconData] : [IconData] The icon to be displayed [optional].
+  /// - [mainText] : [String] The main text of the switch button [required].
+  /// - [onPressed] : [Function] The function called when the switch button is pressed [required].
+  /// - [currentLightVal] : [bool] The current value of the switch [required].
+  /// - [switchActiveClr] : [Color] The color of the switch when active (default is [Color.fromARGB(255, 7, 116, 205)]).
+  /// - [thumbActiveClr] : [Color] The color of the switch thumb when active (default is [Colors.white]).
+  /// - [tertiaryText] : [String] The additional text to be displayed below the main text (default is an empty string).
   const SwitchBtn1(
       {Key? key,
-      required this.iconData,
+      this.iconData,
       required this.mainText,
       required this.onPressed,
       required this.currentLightVal,
@@ -12,7 +23,7 @@ class SwitchBtn1 extends StatefulWidget {
       this.tertiaryText = ""})
       : super(key: key);
 
-  final IconData iconData;
+  final IconData? iconData;
   final Function onPressed;
   final Color switchActiveClr;
   final bool currentLightVal;
@@ -24,13 +35,17 @@ class SwitchBtn1 extends StatefulWidget {
   State<SwitchBtn1> createState() => SwitchBtn1State();
 }
 
+/// [SwitchBtn1] state.
 class SwitchBtn1State extends State<SwitchBtn1> {
+  /// Current value of the switch.
   late bool lightVal = widget.currentLightVal;
 
+  /// Gets the current value of the switch.
   bool getCurrentState() {
     return lightVal;
   }
 
+  /// Changes the state based on the function [widget.onPressed].
   void changeState() {
     setState(() {
       widget.onPressed();
@@ -56,10 +71,12 @@ class SwitchBtn1State extends State<SwitchBtn1> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                if (widget.iconData != null)
                 Icon(
                   widget.iconData,
                   color: Color.fromARGB(255, 136, 136, 136),
                 ),
+                
                 SizedBox(
                   width: 8,
                 ),
@@ -93,6 +110,7 @@ class SwitchBtn1State extends State<SwitchBtn1> {
             if (widget.tertiaryText != "")
               Row(
                 children: [
+                  if (widget.iconData != null)
                   Icon(
                     widget.iconData,
                     color: Colors.transparent,
