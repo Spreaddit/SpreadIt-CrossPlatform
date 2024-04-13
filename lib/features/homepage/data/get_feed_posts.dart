@@ -134,7 +134,7 @@ Future<Post?> getPostById({
   try {
     String? accessToken = UserSingleton().getAccessToken();
 
-    String requestURL = "$apiUrl/posts/$postId";
+    String requestURL = "$apiUrl/posts/$postId/one";
     print("post Category Endpoint: $requestURL");
     final response = await Dio().get(
       requestURL,
