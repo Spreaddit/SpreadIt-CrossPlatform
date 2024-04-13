@@ -21,7 +21,7 @@ Future<void> updateEditedPost({
     final response = await Dio().put(
       apiUrl,
       options: Options(headers: {
-        'Authorization': 'Bearer: $accessToken',
+        'Authorization': 'Bearer $accessToken',
       }),
       data: {
         "content": content,
