@@ -235,6 +235,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
         print('oh noooooooo');
       }
     } catch (e) {
+      _responseStatus = 403;
       print('Error: $e');
     }
   }
