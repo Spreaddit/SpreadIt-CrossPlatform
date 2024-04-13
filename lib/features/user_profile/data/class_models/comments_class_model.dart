@@ -81,8 +81,8 @@ class Comment {
       createdAt: DateTime.parse(json['created_at'] as String),
       isHidden: json['is_hidden'] as bool,
       isSaved: json['is_saved'] as bool,
-      postTitle: json['post_title'],
-      subredditName: json['community_title'],
+      postTitle: json['post_title'] ?? "ayhaga",
+      subredditName: json['community_title']??"ayhaga",
       username: usernameFetched,
     );
   }
