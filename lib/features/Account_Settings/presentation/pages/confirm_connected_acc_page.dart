@@ -85,7 +85,7 @@ class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
     }
     _passwordForm.currentState!.save();
     var responseCode =
-        await postData(enteredPassowrd: {"enteredPassword": _userPassword});
+        await verfiyPasswordData(enteredPassowrd: {"enteredPassword": _userPassword});
     if (responseCode == 0) {
       CustomSnackbar(content: "Error").show(context);
     } else if (responseCode == 401) {

@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dar
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/sort_menu.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// This widget is a post feed display,
 /// which takes [PostCategories] as a constructor parameter
@@ -76,12 +77,6 @@ class _PostFeedState extends State<PostFeed> {
     fetchData();
   }
 
-  void navigateToPostCardPage(Post post) {
-    Navigator.of(context).pushNamed('./post-card-page', arguments: {
-      'post': post,
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -120,13 +115,13 @@ class _PostFeedState extends State<PostFeed> {
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {navigateToPostCardPage(items[index]);},
-                          child: PostWidget(
-                              post: items[index],
-                              isUserProfile:
-                                  currentPostCategory == PostCategories.user),
-                        ),
+                        PostWidget(
+                            post: items[index],
+                            isUserProfile:
+                                currentPostCategory == PostCategories.user ||
+                                    (UserSingleton().user != null &&
+                                        items[index].username ==
+                                            UserSingleton().user!.username)),
                         Divider(
                           height: 20,
                           thickness: 0.2,

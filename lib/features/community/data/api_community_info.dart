@@ -27,7 +27,7 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
-      '$communityApiUrlGalal/community/get-info',
+      '$apiUrl/community/get-info',
       queryParameters: {"communityName": communityName},
       options: Options(
         headers: {

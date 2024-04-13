@@ -19,9 +19,11 @@ Future<int> logInApi({
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
+      print(response.data);
       User user = User.fromJson(response.data['user']);
       UserSingleton().setUser(user);
-      UserSingleton().setAccessToken(response.data['access_token'], DateTime.parse(response.data['token_expiration_date']));
+      UserSingleton().setAccessToken(response.data['access_token'],
+          DateTime.parse(response.data['token_expiration_date']));
 
       print(response.statusMessage);
       return 200;

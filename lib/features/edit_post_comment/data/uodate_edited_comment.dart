@@ -1,8 +1,7 @@
-import 'dart:io';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
@@ -12,8 +11,8 @@ Future<void> updateEditedComment({
   Media? media,
 }) async {
   try {
-    // String? accessToken = userSingleton().accessToken;
-    String accessToken = 'rehab';
+    String? accessToken = UserSingleton().accessToken;
+
     var apiRoute = "/comments/:$commentId/edit";
     String apiUrl = apibase + apiRoute;
 

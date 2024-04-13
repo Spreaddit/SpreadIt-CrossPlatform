@@ -20,7 +20,6 @@ import '../widgets/link.dart';
 import '../widgets/image_and_video_widgets.dart';
 
 class CreatePost extends StatefulWidget {  
-  const CreatePost({Key? key}) : super(key: key);
 
   @override
   State<CreatePost> createState() => _CreatePostState();

@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
-String apibase = communityApiUrlChahd;
+String apibase = apiUrl;
 
 Future<List<Map<String, dynamic>>> getCommunitiesList() async {
   try {
-    //String? accessToken = userSingleton().accessToken;
-    String accessToken = 'chahd';
+    String? accessToken = UserSingleton().accessToken;
     print('entered get communities');
     var response = await Dio().get(
       '$apiUrl/community/random-category',

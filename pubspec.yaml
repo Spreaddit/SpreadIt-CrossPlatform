@@ -41,6 +41,7 @@ dependencies:
   flutter_hooks: ^0.20.5
 
   cached_network_image: ^3.2.0
+  
 
   image_picker: ^0.8.4+2
   share_plus: ^6.3.4
@@ -57,7 +58,7 @@ dependencies:
   google_fonts: ^6.2.0
   collection: ^1.18.0
   uuid: ^4.4.0
-
+  flutter_link_previewer: ^3.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,7 +71,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  assets:
+  assets: 
   - assets/images/LogoSpreadIt.png
   - assets/images/GoogleLogo.png
   - assets/images/UserAvatar.png

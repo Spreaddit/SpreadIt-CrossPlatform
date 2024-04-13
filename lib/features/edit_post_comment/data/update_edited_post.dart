@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
@@ -12,9 +13,9 @@ Future<void> updateEditedPost({
   Media? media,
 }) async {
   try {
-    // String? accessToken = userSingleton().accessToken;
-    String accessToken = 'rehab';
-    var apiRoute = "/posts/:$postId/edit";
+    String? accessToken = UserSingleton().accessToken;
+
+    var apiRoute = "/posts/$postId/edit";
     String apiUrl = apibase + apiRoute;
 
     final response = await Dio().put(

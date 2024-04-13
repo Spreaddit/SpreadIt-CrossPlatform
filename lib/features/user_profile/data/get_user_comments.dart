@@ -11,7 +11,7 @@ Future<List<Comment>> fetchUserComments(String username, String page , String po
     String apiroute = '';
     switch (page) {
       case 'saved':
-        apiroute = "/comments/saved/$username";
+        apiroute = "/comments/saved/user";
         break;
       case 'user':
         apiroute = "/comments/user/$username";
@@ -36,10 +36,20 @@ Future<List<Comment>> fetchUserComments(String username, String page , String po
       List<Comment> comments =
           commentsJson.map((json) => Comment.fromJson(json)).toList();
       return comments;
-    } else {
+    } else if (response.statusCode==404)
+    {
+      print("No comments");
+      return [];
+    } 
+    else {
       throw Exception("Failed to fetch comments: ${response.statusMessage}");
     }
   } on DioException catch (e) {
+    if(e.response!.statusCode==404)
+    {
+       print("No comments");
+       return [];
+    }
     throw Exception("Dio error occurred: $e");
   } catch (e) {
     throw Exception("Error occurred: $e");

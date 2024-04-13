@@ -7,13 +7,11 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/pages/popular.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'features/saved/presentation/page/saved_page.dart';
 import 'features/user_profile/presentation/pages/edit_profile.dart';
@@ -54,35 +52,36 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: FinalCreatePost(
-        title: '',
-        content: '',
-        pollOptions: [],
-        selectedDay: 1,
-        isLinkAdded: false,
-        community: [
-          {
-            'communityName': 'r/AskReddit',
-            'communityIcon': './assets/images/LogoSpreadIt.png',
-            'communityRules': [
-              {
-                'title': 'hate is not tolerated',
-                'description': 'yarab nekhlas baa ana zhe2t men om el bta3 da',
-              },
-              {
-                'title': '3ayza a3ayyat',
-                'description': 'kefaya 3alayy akeda abous ideiko',
-              }
-            ]
-          }
-        ],
-      ),
+      home: StartUpPage(),
+      onGenerateRoute: (settings) {
+        final List<String>? pathSegments = settings.name?.split('/');
+        print(pathSegments);
+        if (pathSegments == null || pathSegments.isEmpty) {
+          return null;
+        }
+
+        if (pathSegments.contains('post-card-page') &&
+            pathSegments.length >= 3) {
+          final postId = pathSegments[pathSegments.length - 2];
+          final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
+
+
+            return MaterialPageRoute(
+              builder: (_) =>
+                  PostCardPage(postId: postId, isUserProfile: isUserProfile),
+            );
+        
+        }
+      },
       routes: {
         '/home': (context) => HomePage(),
-        '/discover': (context) => DiscoverCommunitiesPage(),
-        '/popular': (context) => PopularPage(),
+        '/popular': (context) => HomePage(
+              currentPage: CurrentPage.popular,
+            ),
+        '/discover': (context) => HomePage(
+              currentPage: CurrentPage.discover,
+            ),
         '/all': (context) => AllPage(),
-        '/start-up-page': (context) => StartUpPage(),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),
@@ -146,7 +145,6 @@ class SpreadIt extends StatelessWidget {
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
-        '/post_card_page/:post-id/': (context) => PostCardPage(),
       },
     );
   }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 
 class CustomSearchBar extends StatefulWidget {
-
   final String hintText;
-  final List<Map<String, dynamic>> searchList;
-  final Function(List<Map<String, dynamic>>) onSearch;
+  final List<Community> searchList;
+  final Function(List<Community>) onSearch;
 
   const CustomSearchBar({
     required this.hintText,
@@ -17,16 +17,15 @@ class CustomSearchBar extends StatefulWidget {
 }
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
-
   final TextEditingController searchController = TextEditingController();
 
-  @override 
+  @override
   void initState() {
     super.initState();
     searchController.addListener(queryListener);
   }
 
-  @override 
+  @override
   void dispose() {
     searchController.removeListener(queryListener);
     searchController.dispose();
@@ -37,17 +36,16 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     widget.onSearch(_filterList(searchController.text));
   }
 
-  List<Map<String, dynamic>> _filterList(String query) {
+  List<Community> _filterList(String query) {
     if (query.isEmpty) {
       return List.from(widget.searchList);
-    } 
-    else {
+    } else {
       return widget.searchList
-          .where((e) =>
-              e['communityName']
-                  .toString()
-                  .toLowerCase()
-                  .contains(query.toLowerCase()))
+          .where(
+            (e) => e.name.toString().toLowerCase().contains(
+                  query.toLowerCase(),
+                ),
+          )
           .toList();
     }
   }
@@ -57,16 +55,19 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     return Padding(
       padding: EdgeInsets.all(15),
       child: SearchBar(
-          hintText: 'Search for a community',
-          controller: searchController,
-          backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 241, 243, 254)),
-          trailing: [
-            IconButton(
+        hintText: 'Search for a community',
+        controller: searchController,
+        backgroundColor: MaterialStateProperty.all<Color>(
+            Color.fromARGB(255, 241, 243, 254)),
+        trailing: [
+          IconButton(
             icon: Icon(Icons.cancel),
-            onPressed: () {searchController.clear();},
-            ),
-          ],
-        ),
+            onPressed: () {
+              searchController.clear();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

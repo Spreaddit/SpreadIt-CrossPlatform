@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 
 enum CurrentPage {
   home,
+  discover,
+  createPost,
+  chat,
+  inbox,
   popular,
-  community,
   all,
 }
 
 class TopBar extends AppBar {
   final CurrentPage currentPage;
   final BuildContext context;
+  final void Function(int)? onChangeHomeCategory;
 
   TopBar({
     this.currentPage = CurrentPage.home,
     required this.context,
+    this.onChangeHomeCategory,
   }) : super(
           toolbarHeight: 60,
           backgroundColor: Colors.transparent,
@@ -40,12 +45,13 @@ class TopBar extends AppBar {
                       color: Colors.transparent,
                     ),
                     onChanged: (newValue) {
-                      Navigator.of(context)
-                          .pushNamed('/${newValue.toString().split('.').last}');
+                      onChangeHomeCategory!(CurrentPage.home == currentPage
+                          ? CurrentPage.popular.index
+                          : CurrentPage.home.index);
                     },
                     items: CurrentPage.values
                         .where((category) =>
-                            category.index == 0 || category.index == 1)
+                            category.index == 0 || category.index == 5)
                         .map<DropdownMenuItem<CurrentPage>>(
                           (newPage) => DropdownMenuItem<CurrentPage>(
                             value: newPage,

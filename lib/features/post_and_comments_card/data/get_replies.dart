@@ -2,13 +2,13 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String baseUrl = apiUrl;
 
 Future<List<Comment>> getCommentReplies(String commentId) async {
   try {
-    //String? accessToken = UserSingleton().accessToken;
-    String? accessToken = 'ayhaga';
+    String? accessToken = UserSingleton().accessToken;
     String apiroute = '';
 
     apiroute = "/comments/:$commentId/replies";
