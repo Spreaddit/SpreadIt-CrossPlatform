@@ -25,6 +25,8 @@ import '../../../generic_widgets/photo_and_video_pickers/video_picker.dart';
 import '../widgets/tags_widgets/rendered_tag.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/image_and_video_widgets.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
 
 
 class FinalCreatePost extends StatefulWidget {
@@ -40,7 +42,7 @@ class FinalCreatePost extends StatefulWidget {
   final int? selectedDay;
   final bool? createPoll;
   final bool? isLinkAdded;
-  final List<Map<String, dynamic>> community;
+  final List<Community> community;
 
   const FinalCreatePost({
     Key? key,
@@ -76,7 +78,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String finalContent ='';
   String communityName = '';
   String communityIcon = '';
-  List<Map<String, dynamic>> communityRules = [];
+  List<String?> communityRules = [];
   List<String> finalPollOptions = ['', ''];
   List<String> finalInitialBody = ['',''];
   int finalSelectedDay = 1;
@@ -97,13 +99,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   IconData? lastPressedIcon;
 
   void mapCommunityData () {
-    communityName = widget.community[0]['communityName'];
-    communityIcon = widget.community[0]['communityIcon'];
-    if (widget.community[0]['communityRules'] is List<Map<String, dynamic>>) {
-    communityRules = widget.community[0]['communityRules'];
-  } else {
-    communityRules = (widget.community[0]['communityRules']).cast<Map<String,dynamic>>();
-  }
+    communityName = widget.community.first.name;
+    communityIcon = widget.community.first.image!;
+    communityRules = widget.community.first.rules;
   }
 
   void mapPoll () {
@@ -284,11 +282,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
-  void extractCommunityData () {
-    Map<String, dynamic> communityData = widget.community[0];
-    communityName= communityData['communityName'];
-    communityIcon = communityData['communityIcon'];
-  }
 
   void navigateToAddTags(){
     Navigator.of(context).pushNamed('/add-tags');
