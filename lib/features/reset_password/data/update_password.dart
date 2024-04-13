@@ -22,6 +22,7 @@ Future<int> updatePassword(
         data: {
           "newPassword": newPassword,
           "currentPassword": currentPassword,
+          "token": accessToken,
         });
     if (response.statusCode == 200) {
       print(response.statusCode);
