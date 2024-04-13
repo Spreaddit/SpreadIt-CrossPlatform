@@ -3,6 +3,9 @@ import 'package:spreadit_crossplatform/features/community/data/api_subscription_
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/user.dart';
 
+/// `JoinButton` is a StatefulWidget that represents a button for joining a community.
+///
+/// This widget is stateful, meaning that it can change over time. The state for this widget is defined in `_JoinButtonState`.
 class JoinButton extends StatefulWidget {
   final String communityName;
 
@@ -12,6 +15,13 @@ class JoinButton extends StatefulWidget {
   _JoinButtonState createState() => _JoinButtonState();
 }
 
+/// `_JoinButtonState` is a class that contains the state for a `JoinButton`.
+///
+/// It has two boolean properties: `isJoined` and `isLoading`. `isJoined` indicates whether the user has joined the community, and `isLoading` indicates whether the widget is currently performing a load operation.
+///
+/// The `initState` method is overridden to call `setupInitialJoinState` when the widget is first created. This method is responsible for setting up the initial state of the `isJoined` property.
+///
+/// The `setupInitialJoinState` method is an async function that retrieves the subscription data for the community and updates `isJoined` accordingly. If the subscription data indicates that the user is subscribed to the community, `isJoined` is set to true. If the subscription data cannot be retrieved, an error message is printed.
 class _JoinButtonState extends State<JoinButton> {
   bool isJoined = false;
   bool isLoading = false;

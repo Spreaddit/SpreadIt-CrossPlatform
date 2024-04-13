@@ -3,15 +3,28 @@ import '../../data/community.dart';
 import '../../data/get_specific_category.dart';
 import '../widgets/subreddit_cards.dart';
 
+/// `CategoryPage` is a StatefulWidget that represents a page for a specific category.
+///
+/// It takes a `categoryName` as a required parameter, which is used to fetch and display the communities for that category.
+///
+/// The `CategoryPage` class overrides the `createState` method to create a new instance of `_CategoryPageState`.
 class CategoryPage extends StatefulWidget {
   final String categoryName;
 
+  /// Creates a new instance of `CategoryPage`.
+  ///
+  /// The `categoryName` parameter must not be null.
   CategoryPage({required this.categoryName});
 
   @override
   _CategoryPageState createState() => _CategoryPageState();
 }
 
+/// `_CategoryPageState` is a class that contains the state for a `CategoryPage`.
+///
+/// It has a `futureCommunities` property, which is a `Future` that completes with a list of `Community` objects.
+///
+/// The `futureCommunities` property is marked as `late`, which means it must be initialized before it's used.
 class _CategoryPageState extends State<CategoryPage> {
   late Future<List<Community>> futureCommunities;
 

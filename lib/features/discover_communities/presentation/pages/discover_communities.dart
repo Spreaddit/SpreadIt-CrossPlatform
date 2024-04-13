@@ -18,6 +18,13 @@ class DiscoverCommunitiesPage extends StatelessWidget {
   }
 }
 
+/// `DiscoverCommunitiesBody` is a StatelessWidget that represents the body of the Discover Communities page.
+///
+/// It contains a list of categories, which are represented as strings. Each string in the list is a category name.
+///
+/// The list of categories is final and includes categories like  'Q&As', 'Funny', 'Entertainment', and more.
+///
+/// This widget is stateless, meaning that it describes part of the user interface which can depend on configuration information in the constructor and changeable information in the build method, but does not depend on any mutable state.
 class DiscoverCommunitiesBody extends StatelessWidget {
   final List<String> categories = [
     '🏆 Community top charts',
