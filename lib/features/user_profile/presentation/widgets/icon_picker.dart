@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
+/// The `PlatformIconMapper` class provides static methods to retrieve icon data and colors for various social media platforms.
+///
+/// This class is useful for displaying platform-specific icons and colors within the user interface.
 class PlatformIconMapper {
+  /// Returns the icon data for a given platform name.
+  ///
+  /// Parameters:
+  /// - `platformName`: The name of the platform.
+  ///
+  /// Returns:
+  /// - The icon data corresponding to the platform name. If the platform name is not recognized, returns the default link outline icon.
   static IconData getIconData(String platformName) {
     switch (platformName.toLowerCase()) {
       case 'facebook':
@@ -31,6 +41,13 @@ class PlatformIconMapper {
     }
   }
 
+  /// Returns the color for a given platform name.
+  ///
+  /// Parameters:
+  /// - `platformName`: The name of the platform.
+  ///
+  /// Returns:
+  /// - The color corresponding to the platform name. If the platform name is not recognized, returns the default grey color.
   static Color getColor(String platformName) {
     switch (platformName.toLowerCase()) {
       case 'facebook':

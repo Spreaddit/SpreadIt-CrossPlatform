@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'social_media_button.dart';
 import '../../../generic_widgets/custom_input.dart';
 
+/// The `SocialMediaBottomSheetContent` widget displays the content of the bottom sheet for adding social media links.
 class SocialMediaBottomSheetContent extends StatelessWidget {
+  /// The name of the social media platform.
   final String platformName;
+
+  /// The icon representing the social media platform.
   final IconData icon;
+
+  /// The color associated with the social media platform.
   final Color color;
 
+  /// Creates a `SocialMediaBottomSheetContent` widget.
+  ///
+  /// The `platformName`, `icon`, and `color` parameters are required.
   SocialMediaBottomSheetContent({
     required this.platformName,
     required this.icon,
@@ -102,11 +111,20 @@ class SocialMediaBottomSheetContent extends StatelessWidget {
   }
 }
 
+/// The `SocialMediaBottomSheet` widget represents the bottom sheet for adding social media links.
 class SocialMediaBottomSheet extends StatefulWidget {
+  /// The name of the social media platform.
   final String platformName;
+
+  /// The icon representing the social media platform.
   final IconData icon;
+
+  /// The color associated with the social media platform.
   final Color color;
 
+  /// Creates a `SocialMediaBottomSheet` widget.
+  ///
+  /// The `platformName`, `icon`, and `color` parameters are required.
   SocialMediaBottomSheet({
     required this.platformName,
     required this.icon,
@@ -117,6 +135,7 @@ class SocialMediaBottomSheet extends StatefulWidget {
   _SocialMediaBottomSheetState createState() => _SocialMediaBottomSheetState();
 }
 
+/// The state for the `SocialMediaBottomSheet` widget.
 class _SocialMediaBottomSheetState extends State<SocialMediaBottomSheet> {
   late Widget _bottomSheetContent;
 

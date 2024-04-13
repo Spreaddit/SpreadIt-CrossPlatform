@@ -6,6 +6,7 @@ import '../../../user_profile/data/class_models/comments_class_model.dart';
 import '../../../user_profile/data/get_user_comments.dart';
 import '../../../user_profile/presentation/widgets/comments.dart';
 
+/// A StatefulWidget representing the Saved page where users can view their saved posts and comments.
 class SavedPage extends StatefulWidget {
   const SavedPage({Key? key}) : super(key: key);
 
@@ -16,7 +17,7 @@ class SavedPage extends StatefulWidget {
 class _SavedPageState extends State<SavedPage> {
   int _selectedIndex = 0;
   List<Comment> commentsList = [];
-  String username = 'mimo'; // Get current username bgd using el singleton;
+  String username = ' '; // Dummy data, not actually used when fetching the function;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _SavedPageState extends State<SavedPage> {
     });
   }
 
+  /// Fetches the user's saved comments.
   Future<void> fetchComments() async {
     try {
       var data = await fetchUserComments(username, 'saved', '1');
@@ -41,12 +43,14 @@ class _SavedPageState extends State<SavedPage> {
     }
   }
 
+  /// Removes a comment from the list of saved comments.
   void removeCommentFromList(Comment comment) {
     setState(() {
       commentsList.remove(comment);
     });
   }
 
+  /// Builds the selected page content based on the selected tab index.
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
