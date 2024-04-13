@@ -1,9 +1,21 @@
 import 'package:dio/dio.dart';
-import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
+import '../../../user_info.dart'; // Importing user information.
 
-import '../../../user_info.dart';
-
-/// Sends a POST request to unsave a post or comment and handles response status codes.
+/// Sends a POST request to save or unsave a post or comment and handles response status codes.
+///
+/// This function sends a POST request to the server to either save or unsave a post or comment,
+/// depending on the specified type. It handles different response status codes accordingly.
+///
+/// Parameters:
+///   - id: The ID of the post or comment to save or unsave.
+///   - type: The type of operation to perform ('savepost', 'unsavepost', or 'comments').
+///
+/// Returns:
+///   - A Future<int> representing the HTTP status code of the request:
+///     - 200 if successful.
+///     - 404 if the resource is not found.
+///     - 500 if a server error occurs or an unexpected status code is received.
 Future<int> saveOrUnsave({
   required String id,
   required String type,
@@ -11,6 +23,8 @@ Future<int> saveOrUnsave({
   try {
     String apiroute;
     String? accessToken = UserSingleton().accessToken;
+    
+    /// Determine the API route based on the specified type.
     switch (type) {
       case "savepost":
         apiroute = "/posts/$id/save";
@@ -27,6 +41,8 @@ Future<int> saveOrUnsave({
     }
 
     String requestURL = '$apiUrl$apiroute';
+    
+    /// Send a POST request to the server to save or unsave the post or comment.
     final response = await Dio().post(
       requestURL,
       options: Options(
@@ -36,6 +52,7 @@ Future<int> saveOrUnsave({
       ),
     );
 
+    /// Process the response based on the status code.
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return 200;
