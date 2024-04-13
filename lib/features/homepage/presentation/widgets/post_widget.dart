@@ -503,6 +503,7 @@ class _PostContent extends StatelessWidget {
 
       return Text(
         content ?? "",
+        textAlign: TextAlign.left,
         overflow: TextOverflow.ellipsis,
         maxLines: !isFullView ? 5 : 2000,
       );
@@ -524,7 +525,7 @@ class _PostContent extends StatelessWidget {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
       print(link);
       return AnyLinkPreview(
-        link: "https://www.geeksforgeeks.org/",
+        link: link?? "",
         displayDirection: UIDirection.uiDirectionHorizontal,
         cache: Duration(hours: 1),
         backgroundColor: Colors.grey[300],

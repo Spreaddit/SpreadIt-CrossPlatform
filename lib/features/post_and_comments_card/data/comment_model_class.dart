@@ -44,6 +44,7 @@ class Comment {
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
+    String usernameFetched = User.fromJson(json['user']).username;
     return Comment(
       id: json['id'],
       content: json['content'],
@@ -57,6 +58,7 @@ class Comment {
       isSaved: json['is_saved'] as bool,
       postTitle: json['post_title'],
       subredditName: json['community_title'],
+      username: usernameFetched,
     );
   }
 }

@@ -47,7 +47,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   description: snapshot.data![index].description,
                   numberOfMembers:
                       snapshot.data![index].membersCount.toString(),
-                  image: snapshot.data![index].image,
+                  image: snapshot.data![index].image!,
                 );
               },
             );

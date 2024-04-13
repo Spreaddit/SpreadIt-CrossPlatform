@@ -36,6 +36,7 @@ Future<Comment?> updateComments({
         });
     if (response.statusCode == 201) {
       Comment recievedComment = Comment.fromJson(response.data['comment']);
+      print('posted comment $recievedComment');
 
       print(response.data);
       print(response.statusCode);

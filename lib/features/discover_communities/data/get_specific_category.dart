@@ -31,6 +31,9 @@ class GetSpecificCommunity {
       }
 
       if (response.statusCode == 200) {
+        print(
+          "reponse ${response.data}",
+        );
         List<Community> communities =
             (response.data as List).map((i) => Community.fromJson(i)).toList();
 
