@@ -11,8 +11,14 @@ Future<int> sendEmail(String email) async {
   try {
     const apiRoute = "/forgot-username";
     String apiUrl = apibase + apiRoute;
+    String? accessToken = UserSingleton().accessToken;
     final response = await Dio().post(
       apiUrl,
+      options:Options(
+        headers: {
+          'Authorization' :'Bearer $accessToken',
+        }
+      ),
       data: {"email": email},
     );
     if (response.statusCode == 200) {

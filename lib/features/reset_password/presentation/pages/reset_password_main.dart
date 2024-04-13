@@ -108,7 +108,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           ),
           Container(
             margin: EdgeInsets.all(10),
-            child: UserCard(username:'farouq12', email: 'farouq@gmail.com', userProfilePic: Image.asset("./assets/images/UserAvatar.png")),
+            child: UserCard(),
           ),
           //Container(
           //child:
