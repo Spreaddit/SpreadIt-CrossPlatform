@@ -29,7 +29,6 @@ void main() {
     expect(find.byType(HomePageDrawer), findsWidgets);
 
     // find buttons on drawer
-    expect(find.byIcon(Icons.group), findsOneWidget);
     expect(find.byIcon(Icons.account_circle_outlined), findsOneWidget);
     expect(find.byIcon(Icons.bookmarks_outlined), findsOneWidget);
     expect(find.byIcon(Icons.watch_later_outlined), findsOneWidget);

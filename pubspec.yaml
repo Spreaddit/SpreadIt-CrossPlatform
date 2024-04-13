@@ -66,6 +66,7 @@ dev_dependencies:
   retrofit_generator: ^8.1.0
   floor_generator: ^1.4.2
   build_runner: ^2.4.8
+  mockito: ^5.4.4
   
 
 flutter:
