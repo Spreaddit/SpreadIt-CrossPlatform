@@ -140,7 +140,6 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       finalVideoWeb = widget.videoWeb;
     }
     if(widget.createPoll != null) { 
-      finalCreatePoll = widget.createPoll!;
       mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
