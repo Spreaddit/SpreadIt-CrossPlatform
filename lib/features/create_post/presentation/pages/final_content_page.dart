@@ -169,7 +169,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       _finalLinkForm.currentState!.save();
     }
     });
-    validateLink(finalLink!);
+    validatePostTitle(finalLink!);
   }
 
   void updateButtonState() {
@@ -179,7 +179,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       });
     }
     else {
-      isButtonEnabled = validatePostTitle(finalTitle) && validateLink(finalLink!);  
+      isButtonEnabled = validatePostTitle(finalTitle) && validatePostTitle(finalLink!);  
     }
   }
 
