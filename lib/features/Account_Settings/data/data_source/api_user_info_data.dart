@@ -13,7 +13,7 @@ Future<Map<String, dynamic>> getUserInfo() async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
-      '$apiUrl/user-info',
+      '$apiUrl/reset-password/user-info',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -47,7 +47,7 @@ Future<int> updateUserInfo({required Map<String, dynamic> updatedData}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().put(
-      '$apiUrl/user-info',
+      '$apiUrl/reset-password/user-info',
       data: updatedData,
       options: Options(
         headers: {

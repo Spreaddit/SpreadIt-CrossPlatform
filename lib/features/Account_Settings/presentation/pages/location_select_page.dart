@@ -11,7 +11,6 @@ class SelectLocationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     /// List of available locations.
     List<String> availableLocations = [
       "Use approximate location (based on IP)",
@@ -34,11 +33,14 @@ class SelectLocationPage extends StatelessWidget {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(availableLocations[index]),
-            onTap: () async{
+            onTap: () async {
               var data = await getBasicData();
-              data["country"] = availableLocations[index];
-              var result = await updateUserInfo(updatedData: data);
-              if (result == 0) CustomSnackbar(content: "Failed to update location").show(context);
+              data["country"] = (index == 0) ? "IP" : availableLocations[index];
+              print(data["country"]);
+              var result = await updateBasicData(updatedData: data);
+              if (result == 0)
+                CustomSnackbar(content: "Failed to update location")
+                    .show(context);
               Navigator.pop(context);
             },
           );

@@ -13,8 +13,8 @@ class SelectGender extends StatefulWidget {
 
   /// List of available genders.
   final List<String> genders = [
-    "Man",
-    "Woman",
+    "Male",
+    "Female",
   ];
 
   @override
@@ -45,10 +45,10 @@ class _SelectGenderState extends State<SelectGender> {
 
   /// Fetches data from the API.
   Future<void> fetchData() async {
-    data = await getBasicData(); // Await the result of getData()
+    data = await getBasicData();
     setState(() {
       _selectedGender =
-          data["gender"]; // Update blockedAccountsList with fetched data
+          data["gender"] ?? "";
     });
   }
 

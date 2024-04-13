@@ -342,7 +342,7 @@ class ReportModal {
       response = await reportCommentRequest(postId, commentId,
           postRequestInfo: postRequestInfo);
     }
-    bool reportSuccessful = (response == 200);
+    bool reportSuccessful = (response == 201);
     if (reportSuccessful) {
       Navigator.pop(context);
       if (hasSubReasons[selectedMainIndex]) {
@@ -350,8 +350,10 @@ class ReportModal {
       }
       showDonePage(context);
     } else {
+      
       CustomSnackbar(content: "Failed to report").show(context);
     }
+    print("RESPONSE OF REPORT : $response");
   }
 
   void reportUser(BuildContext context) async {

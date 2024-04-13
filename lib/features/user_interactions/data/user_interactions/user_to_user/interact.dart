@@ -31,11 +31,8 @@ void interactWithUser(
     String? reportReason}) async {
   try {
     String requestURL = apiUrl + interactionType(action);
-    String accessToken = UserSingleton().accessToken!;
-    var data = {
-      'username': userId,
-      'reason': reportReason,
-    };
+    String? accessToken = UserSingleton().getAccessToken();
+    var data = {'username': userId, 'reason': reportReason};
     final response = await Dio().post(
       requestURL,
       data: data,
@@ -58,7 +55,7 @@ void interactWithUser(
   } on DioException catch (e) {
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
-        print("Bad request: ${e.response!.statusMessage} ${e.message}");
+        print("Bad request: ${e.response!.statusMessage}");
       } else if (e.response!.statusCode == 404) {
         print("Not Found: ${e.response!.statusMessage}");
       } else {

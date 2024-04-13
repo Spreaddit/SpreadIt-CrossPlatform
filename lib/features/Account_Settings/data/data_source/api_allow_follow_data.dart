@@ -12,6 +12,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 Future<Map<String, dynamic>> getData() async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
+    
     var response = await Dio().get(
       '$apiUrl/mobile/settings/blocking-permissions',
       options: Options(
@@ -22,7 +23,7 @@ Future<Map<String, dynamic>> getData() async {
     );
     if (response.statusCode == 200) {
       {
-        print(response.data);
+        print("ALLOW FOADOSKADOS${response.data}");
         print(response.statusMessage);
         return response.data;
       }
@@ -47,7 +48,7 @@ Future<Map<String, dynamic>> getData() async {
 ///
 /// Throws an error if updating data fails.
 Future<int> updateData({
-  required List<dynamic> blkedList,
+  required List<dynamic>? blkedList,
   required bool updatedVal,
 }) async {
   String? accessToken = UserSingleton().getAccessToken();

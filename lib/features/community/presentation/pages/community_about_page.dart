@@ -30,8 +30,8 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   Future<void> fetchData() async {
     communityData = await getCommunityInfo(widget.communityName);
     setState(() {
-      communityBannerLink = communityData["communityBanner"];
-      communityImageLink = communityData["image"];
+      communityBannerLink = communityData["communityBanner"] ?? "";
+      communityImageLink = communityData["image"] ?? "";
       communityDescription = communityData["description"];
       communityRules = communityData["rules"];
     });

@@ -96,10 +96,8 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
   }
 
   void unsubscribe() async {
-    String? accessToken = UserSingleton().getAccessToken();
     var postRequestInfo = {
       "communityName": widget.communityName,
-      "token": accessToken
     };
     var response =
         await postUnsubscribeRequest(postRequestInfo: postRequestInfo);

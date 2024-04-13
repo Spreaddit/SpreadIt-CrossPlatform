@@ -6,6 +6,8 @@ Future<int> reportPostRequest(String postId,
     {required Map<String, dynamic> postRequestInfo}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
+    print(postId);
+    print(postRequestInfo);
     final response = await Dio().post(
       '$apiUrl/posts/$postId/report',
       data: postRequestInfo,
@@ -15,7 +17,7 @@ Future<int> reportPostRequest(String postId,
         },
       ),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print(response.statusMessage);
       return response.statusCode ?? 0;
     } else if (response.statusCode == 400) {
@@ -52,7 +54,7 @@ Future<int> reportCommentRequest(String postId, String commentId,
         },
       ),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print(response.statusMessage);
       return response.statusCode ?? 0;
     } else if (response.statusCode == 400) {
