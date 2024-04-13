@@ -12,14 +12,31 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 
+
+/// Represents a media object.
+class Media {
+  /// Type of the media.
+  final String type;
+
+  /// Link to the media.
+  final String link;
+
+  /// Constructs a [Media] object with the specified [type] and [link].
+  Media({
+    required this.type,
+    required this.link,
+  });
+}
+
+/// Represents the header of a comment widget.
 class _CommentHeader extends HookWidget {
   final String username;
   final String userId;
   final String postId;
   final DateTime date;
   final String profilePic;
-  
 
+  /// Constructs a [_CommentHeader] widget with the given parameters.
   _CommentHeader({
     required this.username,
     required this.userId,
@@ -73,11 +90,13 @@ class _CommentHeader extends HookWidget {
   }
 }
 
+/// Represents a comment widget.
 class CommentCard extends StatefulWidget {
   final Comment comment;
   final String community;
   // bool collapseThreadFlag = false;
 
+  /// Constructs a [CommentCard] widget with the given parameters.
   CommentCard({
     required this.comment,
     required this.community,
@@ -91,6 +110,7 @@ class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
   late bool isUserProfile;
 
+  /// Fetches replies for the comment asynchronously.
   Future<void> fetchReplies() async {
     if (!_repliesFetched) {
       try {

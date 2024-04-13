@@ -10,8 +10,12 @@ import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 
+/// Widget for editing a comment.
 class EditComment extends StatefulWidget {
+  /// The comment to be edited.
   Comment? comment;
+
+  /// Constructor for EditComment widget.
   EditComment({this.comment});
 
   @override
@@ -74,7 +78,8 @@ class _EditCommentState extends State<EditComment> {
 
             },
             isEnabled: isEnabled,
-            onIconPress: () {Navigator.of(context).pop();
+            onIconPress: () {
+              Navigator.of(context).pop();
               Navigator.of(context).pop();}, 
             showHeaderTitle: true,
           ),

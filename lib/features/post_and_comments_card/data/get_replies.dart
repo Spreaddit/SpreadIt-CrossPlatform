@@ -4,13 +4,21 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Base URL for the API.
 String baseUrl = apiUrl;
 
+/// Retrieves replies to a specific comment.
+///
+/// [commentId]: The ID of the comment for which replies are to be retrieved.
+///
+/// Returns a list of comments representing the replies to the specified comment.
 Future<List<Comment>> getCommentReplies(String commentId) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     String apiroute = '';
+
     apiroute = "/comments/$commentId/replies";
+
     String apiUrl = "$baseUrl$apiroute";
 
     final response = await Dio().get(
@@ -37,4 +45,4 @@ Future<List<Comment>> getCommentReplies(String commentId) async {
   } catch (e) {
     throw Exception("Error occurred: $e");
   }
-}
+  }

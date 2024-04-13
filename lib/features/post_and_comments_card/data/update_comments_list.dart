@@ -4,8 +4,20 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'comment_model_class.dart';
 
+/// Base URL for the API.
 String apibase = apiUrl;
 
+/// Updates comments or replies on a post or comment.
+///
+/// [id]: The ID of the post or comment.
+///
+/// [content]: The content of the comment or reply.
+///
+/// [media]: Media associated with the comment or reply.
+///
+/// [type]: The type of update, either 'comment' or 'reply'.
+///
+/// Returns the updated comment if successful, otherwise returns null.
 Future<Comment?> updateComments({
   required String id,
   required String content,

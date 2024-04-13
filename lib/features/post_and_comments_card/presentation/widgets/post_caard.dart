@@ -8,11 +8,18 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 
+/// Widget representing a post card.
 class PostCard extends StatefulWidget {
+  /// The post associated with this card.
   Post post;
+
+  /// Indicates whether the current user is the owner of the post.
   bool isUserProfile;
+
+  /// List of comments associated with the post.
   List<Comment> comments;
 
+  /// Constructs a [PostCard] with the specified [post], [comments], and [isUserProfile] flag.
   PostCard({
     required this.post,
     required this.comments,
@@ -28,6 +35,7 @@ class _PostCardState extends State<PostCard> {
   final TextEditingController _linkController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
+  /// Shows a bottom sheet for adding a link to the comment.
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,

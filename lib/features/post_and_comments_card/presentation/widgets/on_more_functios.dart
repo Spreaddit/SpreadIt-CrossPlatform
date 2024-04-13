@@ -92,7 +92,7 @@ void deletePost(
     BuildContext context, String postId, void Function() onDeleted) {
   deletePostButtomSheet(context, postId, onDeleted);
 }
-
+///function to fetch save post
 void savePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
   Navigator.pop(context);
@@ -103,7 +103,7 @@ void savePost(BuildContext context, String postId) async {
         .show(context);
   }
 }
-
+///function to fetch unsave post
 void unsavePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
   Navigator.pop(context);

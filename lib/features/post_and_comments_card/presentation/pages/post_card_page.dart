@@ -8,8 +8,12 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Widget representing the page displaying a post card.
 class PostCardPage extends StatefulWidget {
+  /// The ID of the post.
   final String postId;
+
+  /// Indicates whether the current user is the owner of the profile associated with the post.
   final bool isUserProfile;
 
   const PostCardPage(
@@ -24,6 +28,7 @@ class _PostCardPageState extends State<PostCardPage> {
   List<Comment> comments = [];
   Post? post;
 
+  /// Fetches comments associated with the post.
   Future<void> fetchComments() async {
     try {
       var data = await fetchCommentsData('user', 'post', "${widget.postId}");
@@ -36,6 +41,7 @@ class _PostCardPageState extends State<PostCardPage> {
     }
   }
 
+  /// Adds a new comment to the post.
   void addComment(Comment newComment) {
     setState(() {
       comments.add(newComment);
@@ -43,6 +49,7 @@ class _PostCardPageState extends State<PostCardPage> {
     });
   }
 
+  /// Fetches the post by its ID.
   Future<void> fetchPost() async {
     Post? fetchedPost = await getPostById(
       postId: widget.postId,
@@ -72,7 +79,7 @@ class _PostCardPageState extends State<PostCardPage> {
     return Scaffold(
       appBar: PostCardTopBar(context,
           UserSingleton().user!.avatarUrl!), 
-        body: Container(
+      body: Container(
         margin: EdgeInsets.all(10),
         child: Column(
           children: [
