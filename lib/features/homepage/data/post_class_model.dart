@@ -117,12 +117,25 @@ class PollOptions {
     this.option,
     this.votes,
   });
+  factory PollOptions.fromOption(String option) {
+    return PollOptions(
+      option: option,
+      votes: 0,
+    );
+  }
 
   factory PollOptions.fromJson(Map<String, dynamic> json) {
     return PollOptions(
       option: json['option'],
       votes: json['votes'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'option': option,
+      'votes': votes,
+    };
   }
 }
 

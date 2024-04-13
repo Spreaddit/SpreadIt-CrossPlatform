@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
@@ -24,13 +25,19 @@ Future<int> submitPost(
 ) async {
   try {
     String? accessToken = UserSingleton().accessToken;
+    List<PollOptions> pollOptionsData =
+        pollOptions.map((option) => PollOptions.fromOption(option)).toList();
+    List<Map<String, dynamic>> jsonList =
+        pollOptionsData.map((pollOption) => pollOption.toJson()).toList();
+
+    print(pollOptionsData);
     const apiRoute = "/posts";
     String apiUrl = apibase + apiRoute;
     String pollVotingLength = selectedDays.toString();
     if (selectedDays == 1) {
-      pollVotingLength + ' Day';
+      pollVotingLength += ' Day';
     } else {
-      pollVotingLength + ' Days';
+      pollVotingLength += ' Days';
     }
     String? fileType;
     int flagMedia = 0;
@@ -71,7 +78,7 @@ Future<int> submitPost(
       "title": title,
       "content": content,
       "community": community,
-      "pollOptions": pollOptions,
+      "pollOptions": jsonList,
       "pollVotingLength": pollVotingLength,
       "type": "Poll",
       "fileType": fileType,
