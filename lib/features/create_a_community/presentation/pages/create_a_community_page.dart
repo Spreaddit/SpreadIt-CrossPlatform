@@ -10,6 +10,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import '../../../community/presentation/pages/community_page.dart';
 
 /// The CreateCommunityPage widget is a stateful widget that builds the UI for creating a new community.
 class CreateCommunityPage extends StatefulWidget {
@@ -229,6 +230,12 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
         _responseStatus = response.response.statusCode;
       });
       if (response.response.statusCode == 200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommunityPage(communityName: _communityName),
+          ),
+        );
         // Navigate to the community page
         print('Community created successfully!');
       } else {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './join_button.dart';
+import '../../../community/presentation/pages/community_page.dart';
 
 /// `SubredditCard` is a StatelessWidget that represents a card for a subreddit.
 ///
@@ -30,6 +31,12 @@ class SubredditCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommunityPage(communityName: title),
+          ),
+        );
         // Navigate to the community page
       },
       child: Container(
