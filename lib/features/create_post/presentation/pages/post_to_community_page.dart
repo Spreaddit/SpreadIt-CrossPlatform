@@ -169,7 +169,3 @@ class _PostToCommunityState extends State<PostToCommunity> {
   }
 }
 
-/*
-TODOs:
- unit testing
- */

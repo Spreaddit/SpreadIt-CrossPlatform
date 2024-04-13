@@ -3,11 +3,19 @@ import 'subreddit_cards.dart';
 import '../../data/community.dart';
 import '../../data/get_specific_category.dart';
 
+/// `HorizontalScroll` is a StatefulWidget that represents a horizontally scrolling list of communities.
+///
+/// This widget is stateful, meaning that it can change over time. The state for this widget is defined in `_HorizontalScrollState`.
 class HorizontalScroll extends StatefulWidget {
   @override
   _HorizontalScrollState createState() => _HorizontalScrollState();
 }
 
+/// `_HorizontalScrollState` is a class that contains the state for a `HorizontalScroll`.
+///
+/// It has a `communities` property, which is a list of `Community` objects. This list is initially empty.
+///
+/// The `initState` method is overridden to call `loadCommunities` when the widget is first created. This method is responsible for loading the communities and adding them to the `communities` list.
 class _HorizontalScrollState extends State<HorizontalScroll> {
   List<Community> communities = [];
 

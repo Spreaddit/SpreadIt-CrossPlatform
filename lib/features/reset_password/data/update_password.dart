@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-/// This page receives the user input passwords which are [currentPassword], [newPassword] and a [token] for the user request, and 
+/// This page receives the user input passwords which are [currentPassword], [newPassword] and a [token] for the user request, and
 /// sends all thede data to the backend.
-/// the backend first checks that the [currentPassword] is indeed connected to this user and then updated the 
+/// the backend first checks that the [currentPassword] is indeed connected to this user and then updated the
 /// [currentPassword] with the [newPassword].
 
 Future<int> updatePassword(
@@ -13,12 +14,16 @@ Future<int> updatePassword(
   try {
     const apiRoute = "/reset-password";
     String apiUrl = apibase + apiRoute;
-    final response = await Dio().post(apiUrl, data: {
-      "newPassword": newPassword,
-      "currentPassword": currentPassword,
-      "token": token
-    } // TODO :to be taken from signIn
-        );
+    String? accessToken = UserSingleton().accessToken;
+    final response = await Dio().post(apiUrl,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+        data: {
+          "newPassword": newPassword,
+          "currentPassword": currentPassword,
+          "token": accessToken,
+        });
     if (response.statusCode == 200) {
       print(response.statusCode);
       print(response.statusMessage);

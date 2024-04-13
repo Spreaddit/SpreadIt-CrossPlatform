@@ -3,7 +3,7 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-/// describes the way reddit posts are categorized and/or sorted
+/// describes the way reddit posts are categorized and /or sorted
 enum PostCategories {
   best,
   hot,
@@ -133,7 +133,7 @@ Future<Post?> getPostById({
   try {
     String? accessToken = UserSingleton().getAccessToken();
 
-    String requestURL = "$apiUrl/posts/$postId";
+    String requestURL = "$apiUrl/posts/$postId/";
     print("post Category Endpoint: $requestURL");
     final response = await Dio().get(
       requestURL,

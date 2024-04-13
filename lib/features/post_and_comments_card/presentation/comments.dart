@@ -12,7 +12,6 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 
-
 /// Represents a media object.
 class Media {
   /// Type of the media.
@@ -182,7 +181,7 @@ class _CommentCardState extends State<CommentCard> {
                                 Icons.share,
                                 Icons.notifications_on_rounded,
                                 Icons.save,
-                                if(isUserProfile) Icons.edit,
+                                if (isUserProfile) Icons.edit,
                                 Icons.copy,
                                 Icons.block,
                                 Icons.flag
@@ -191,7 +190,7 @@ class _CommentCardState extends State<CommentCard> {
                                 "Share",
                                 "Get Reply notifications",
                                 "Save",
-                                if (isUserProfile)"Edit Comment",
+                                if (isUserProfile) "Edit Comment",
                                 "Copy text",
                                 "Block account",
                                 "Report"
