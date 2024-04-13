@@ -210,8 +210,13 @@ class _CommentCardState extends State<CommentCard> {
                                           ),
                                         ),
                                       ),
-                                copyText,
-                                blockAccount,
+                                () => copyText(
+                                      context,
+                                      widget.comment.content,
+                                    ),
+                                () => blockAccount(
+                                      widget.comment.username!,
+                                    ),
                                 () => report(
                                       context,
                                       widget.community,
