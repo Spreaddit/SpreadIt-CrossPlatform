@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 ///describes different user_to_user interactions
 enum InteractWithUsersActions { follow, unfollow, block, report }
@@ -30,8 +31,17 @@ void interactWithUser(
     String? reportReason}) async {
   try {
     String requestURL = apiUrl + interactionType(action);
-    var data = {'userId': userId, 'reason': reportReason};
-    final response = await Dio().post(requestURL, data: data);
+    String? accessToken = UserSingleton().getAccessToken();
+    var data = {'username': userId, 'reason': reportReason};
+    final response = await Dio().post(
+      requestURL,
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       //TO DO: implement logic needed to re-render UI
       print(response.statusMessage);

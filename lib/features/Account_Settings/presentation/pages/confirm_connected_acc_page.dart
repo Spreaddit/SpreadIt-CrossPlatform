@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_basic_settings_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import '../../data/data_source/api_verify_password_data.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
@@ -12,7 +13,7 @@ import '../../data/data_source/api_user_info_data.dart';
 /// Used for verification when connecting or disconnecting from the connected accounts experience.
 class ConfirmConnectedPassword extends StatefulWidget {
   /// Constructs an [ConfirmConnectedPassword] instance.
-  /// 
+  ///
   /// Parameters:
   /// - [connectionAction] : [String] Specifies whether the user is connecting or disconnecting [required].
   const ConfirmConnectedPassword({
@@ -84,20 +85,25 @@ class _ConfirmPasswConnectedordState extends State<ConfirmConnectedPassword> {
       return;
     }
     _passwordForm.currentState!.save();
-    var responseCode =
-        await verfiyPasswordData(enteredPassowrd: {"enteredPassword": _userPassword});
+    var responseCode = await verfiyPasswordData(
+        enteredPassowrd: {"enteredPassword": _userPassword});
     if (responseCode == 0) {
       CustomSnackbar(content: "Error").show(context);
     } else if (responseCode == 401) {
       CustomSnackbar(content: "Current password is incorrect").show(context);
     } else if (responseCode == 500) {
       CustomSnackbar(content: "Internal server error").show(context);
-    } else {
+    } else if (responseCode == 200) {
       CustomSnackbar(
               content:
                   "Succesfully ${widget.connectionAction.toLowerCase()}ed to your account")
           .show(context);
+      var data = await getBasicData();
+      // TODO CONNECTED ACC UPDATE
+      data["connectedAccounts"] = [""];
       Navigator.pop(context);
+    } else {
+      CustomSnackbar(content: "Seems Like An Unknown Error").show(context);
     }
   }
 

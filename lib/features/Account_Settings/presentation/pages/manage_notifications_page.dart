@@ -23,6 +23,20 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
   /// List that hold the current notification settings, defaults to false.
   List<dynamic> notificationsSettingsList = List.generate(11, (_) => false);
 
+  Map<String, dynamic> notificationsSettingsValues = {
+    "newFollowers": false,
+    "mentions": false,
+    "inboxMessages": false,
+    "chatMessages": false,
+    "chatRequests": false,
+    "repliesToComments": false,
+    "cakeDay": false,
+    "modNotifications": false,
+    "commentsOnYourPost": false,
+    "commentsYouFollow": false,
+    "upvotes": false
+  };
+
   /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
@@ -36,20 +50,21 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
   Future<void> fetchData() async {
     var data = await getData(); // Await the result of getData()
     setState(() {
-      notificationsSettingsList =
-          data; // Update blockedAccountsList with fetched data
+      notificationsSettingsValues =
+          data;
     });
   }
 
   /// Toggles the state of notification setting and calls the API to update the data.
-  void stateSetter(int index) async {
+  void stateSetter(String key) async {
     setState(() {
-      notificationsSettingsList[index] = !notificationsSettingsList[index];
+      notificationsSettingsValues[key] = !notificationsSettingsValues[key];
     });
-    var result = await updateData(updatedList: notificationsSettingsList);
+    print("Updated notifics: $notificationsSettingsValues");
+    var result = await updateData(updatedNotificationsSettings: notificationsSettingsValues);
     if (result != 200) {
       setState(() {
-        notificationsSettingsList[index] = !notificationsSettingsList[index];
+        notificationsSettingsValues[key] = !notificationsSettingsValues[key];
       });
       CustomSnackbar(content: "Failed to update").show(context);
     }
@@ -73,28 +88,28 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
       SwitchBtn2(
         outlinedIconData: Icons.message_outlined,
         filledIconData: Icons.message,
-        currentLightVal: notificationsSettingsList[0],
+        currentLightVal: notificationsSettingsValues["inboxMessages"],
         mainText: "Private messages",
         onPressed: () {
-          stateSetter(0);
+          stateSetter("inboxMessages");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.sms_outlined,
         filledIconData: Icons.sms,
-        currentLightVal: notificationsSettingsList[1],
+        currentLightVal: notificationsSettingsValues["chatMessages"],
         mainText: "Chat messages",
         onPressed: () {
-          stateSetter(1);
+          stateSetter("chatMessages");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.maps_ugc_outlined,
-        currentLightVal: notificationsSettingsList[2],
+        currentLightVal: notificationsSettingsValues["chatRequests"],
         filledIconData: Icons.maps_ugc,
         mainText: "Chat requests",
         onPressed: () {
-          stateSetter(2);
+          stateSetter("chatRequests");
         },
       ),
     ]);
@@ -102,56 +117,56 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
     activitySection.addAll([
       SwitchBtn2(
         outlinedIconData: Icons.person_outlined,
-        currentLightVal: notificationsSettingsList[3],
+        currentLightVal: notificationsSettingsValues["mentions"],
         filledIconData: Icons.person,
         mainText: "Mentions of u/username",
         onPressed: () {
-          stateSetter(3);
+          stateSetter("mentions");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.chat_bubble_outline,
-        currentLightVal: notificationsSettingsList[4],
+        currentLightVal: notificationsSettingsValues["commentsOnYourPost"],
         filledIconData: Icons.chat_bubble,
         mainText: "Comments on your posts",
         onPressed: () {
-          stateSetter(4);
+          stateSetter("commentsOnYourPost");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.arrow_upward_outlined,
-        currentLightVal: notificationsSettingsList[5],
+        currentLightVal: notificationsSettingsValues["commentsYouFollow"],
         filledIconData: Icons.arrow_upward,
         mainText: "Upvotes on your posts",
         onPressed: () {
-          stateSetter(5);
+          stateSetter("commentsYouFollow");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.arrow_upward_outlined,
-        currentLightVal: notificationsSettingsList[6],
+        currentLightVal: notificationsSettingsValues["upvotes"],
         filledIconData: Icons.arrow_upward,
         mainText: "Upvotes on your comments",
         onPressed: () {
-          stateSetter(6);
+          stateSetter("upvotes");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.reply_outlined,
-        currentLightVal: notificationsSettingsList[7],
+        currentLightVal: notificationsSettingsValues["repliesToComments"],
         filledIconData: Icons.reply,
         mainText: "Replies to your comments",
         onPressed: () {
-          stateSetter(7);
+          stateSetter("repliesToComments");
         },
       ),
       SwitchBtn2(
         outlinedIconData: Icons.person_outlined,
-        currentLightVal: notificationsSettingsList[8],
+        currentLightVal: notificationsSettingsValues["newFollowers"],
         filledIconData: Icons.person,
         mainText: "New followers",
         onPressed: () {
-          stateSetter(8);
+          stateSetter("newFollowers");
         },
       ),
     ]);
@@ -159,11 +174,11 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
     updatesSection.addAll([
       SwitchBtn2(
         outlinedIconData: Icons.cake_outlined,
-        currentLightVal: notificationsSettingsList[9],
+        currentLightVal: notificationsSettingsValues["cakeDay"],
         filledIconData: Icons.cake,
         mainText: "Cake day",
         onPressed: () {
-          stateSetter(9);
+          stateSetter("cakeDay");
         },
       ),
     ]);
@@ -171,11 +186,11 @@ class _NotificationsPageUIState extends State<NotificationsPageUI> {
     moderationSection.addAll([
       SwitchBtn2(
         outlinedIconData: Icons.shield_outlined,
-        currentLightVal: notificationsSettingsList[10],
+        currentLightVal: notificationsSettingsValues["modNotifications"],
         filledIconData: Icons.shield,
         mainText: "Mod notifications",
         onPressed: () {
-          stateSetter(10);
+          stateSetter("modNotifications");
         },
       ),
     ]);

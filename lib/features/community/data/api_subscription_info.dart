@@ -47,6 +47,8 @@ Future<int> postSubscribeRequest(
         },
       ),
     );
+    print(response.statusCode);
+    print(response.statusMessage);
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return response.statusCode ?? 0;

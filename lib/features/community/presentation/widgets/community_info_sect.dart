@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_about_page.dart';
-import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 
 class CommunityInfoSection extends StatefulWidget {
   const CommunityInfoSection({Key? key, required this.communityName})
@@ -31,9 +29,16 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
   Future<void> fetchData() async {
     communityData = await getCommunityInfo(widget.communityName);
     setState(() {
-      membersCount = formatNumber(communityData["memberscount"]);
-      communityImageLink = communityData["image"];
+      membersCount = formatNumber(communityData["membersCount"]);
+      if (communityData["image"] == null) {
+        communityImageLink = "";
+      } else {
+        communityImageLink = communityData["image"];
+      }
       communityDescription = communityData["description"];
+    });
+    setState(() {
+      membersCount = membersCount;
     });
   }
 
@@ -96,11 +101,14 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 15),
-            child: Text(
-              communityDescription,
-              softWrap: true,
-              style: TextStyle(
-                  fontSize: 15, color: const Color.fromARGB(255, 96, 95, 95)),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                communityDescription,
+                softWrap: true,
+                style: TextStyle(
+                    fontSize: 15, color: const Color.fromARGB(255, 96, 95, 95)),
+              ),
             ),
           ),
           Padding(

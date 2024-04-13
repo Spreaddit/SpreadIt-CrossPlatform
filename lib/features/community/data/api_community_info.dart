@@ -38,6 +38,7 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
     if (response.statusCode == 200) {
       {
         print(response.statusMessage);
+        print('COMMUNITU INFO: ${response.data}');
         return response.data;
       }
     } else {

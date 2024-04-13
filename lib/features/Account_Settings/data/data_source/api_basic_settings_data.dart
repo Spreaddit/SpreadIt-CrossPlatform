@@ -25,6 +25,10 @@ Future<Map<String, dynamic>> getBasicData() async {
       {
         print(response.data);
         print(response.statusMessage);
+        if (response.data["email"] == null) {
+          response.data["email"] = "";
+        }
+        response.data["country"] = (response.data["country"] == "") ? "No location specified" : response.data["country"];
         return response.data;
       }
     } else {
@@ -57,6 +61,7 @@ Future<Map<String, dynamic>> getBasicData() async {
 Future<int> updateBasicData({required Map<String, dynamic> updatedData}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
+    print("${updatedData}");
     final response = await Dio().put(
       '$apiUrl/mobile/settings/general/account',
       data: updatedData,
