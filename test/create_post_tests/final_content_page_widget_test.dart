@@ -68,6 +68,27 @@ import 'package:spreadit_crossplatform/features/discover_communities/data/commun
   expect(find.byIcon(Icons.keyboard_arrow_down), findsExactly(3));
 
 
+  //check that the link icon works
+  await tester.tap(find.byIcon(Icons.link));
+  await tester.pump();
+  expect(find.widgetWithText(TextField, 'URL'), findsOneWidget);
+  await tester.tap(find.byIcon(Icons.cancel));
+  await tester.pump();
+  expect(find.widgetWithText(TextField, 'URL'),findsNothing);
+
+  // check that the poll icon works 
+  await tester.tap(find.byIcon(Icons.poll));
+  await tester.pump();
+  expect(find.widgetWithText(TextField, 'Option 1'), findsOneWidget);
+  expect(find.widgetWithText(TextField, 'Option 2'), findsOneWidget);
+  expect(find.byIcon(Icons.cancel_rounded), findsOneWidget);
+
+  // check that the cancel poll icon works
+  await tester.tap(find.byIcon(Icons.cancel_rounded));
+  await tester.pump();
+  expect(find.widgetWithText(TextField, 'Option 1'), findsNothing);
+  expect(find.widgetWithText(TextField, 'Option 2'), findsNothing);
+
   //test the functionality of add tags button
   await tester.tap(find.text('Add tags'));
   await tester.pump();
