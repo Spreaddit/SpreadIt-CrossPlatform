@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/image_and_video_widgets.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import '../../lib/features/create_post/presentation/pages/primary_content_page.dart';
 
 void main() {
@@ -29,25 +30,22 @@ void main() {
     await tester.tap(find.byIcon(Icons.link));
     await tester.pump();
     expect(find.widgetWithText(TextField, 'URL'), findsOneWidget);
-
-    // check that the photo icon works
-   /* await tester.tap(find.byIcon(Icons.photo));
+    await tester.tap(find.byIcon(Icons.cancel));
     await tester.pump();
-    expect(find.byType (ImageOrVideoWidget), findsOneWidget);
-
-    // check that the video icon works
-    await tester.tap(find.byIcon(Icons.photo));
-    await tester.pump();
-    expect(find.byType (ImageOrVideoWidget), findsOneWidget);*/
+    expect(find.widgetWithText(TextField, 'URL'),findsNothing);
 
     // check that the poll icon works 
     await tester.tap(find.byIcon(Icons.poll));
     await tester.pump();
-    expect(find.text('Add option'), findsOneWidget);
-    /*expect(find.widgetWithText(TextField, 'Option 1'), findsOneWidget);
+    expect(find.widgetWithText(TextField, 'Option 1'), findsOneWidget);
     expect(find.widgetWithText(TextField, 'Option 2'), findsOneWidget);
-    expect(find.byType(InkWell), findsOneWidget);
-    expect(find.byIcon(Icons.cancel_rounded), findsOneWidget);*/
+    expect(find.byIcon(Icons.cancel_rounded), findsOneWidget);
+
+    // check that the cancel poll icon works
+    await tester.tap(find.byIcon(Icons.cancel_rounded));
+    await tester.pump();
+    expect(find.widgetWithText(TextField, 'Option 1'), findsNothing);
+    expect(find.widgetWithText(TextField, 'Option 2'), findsNothing);
 
 
 
