@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Fetches the list of blocked accounts from the server.
 ///
@@ -23,10 +24,17 @@ import 'package:spreadit_crossplatform/api.dart';
 Future<List> getBlockedAccounts() async {
   try {
     print("gowa blocked accounts");
-    var response =
-        await Dio().get('$apiUrl/mobile/settings/blocking-permissions');
+    String? accessToken = UserSingleton().getAccessToken();
+
+    var response = await Dio().get(
+      '$apiUrl/mobile/settings/blocking-permissions',
+      options: Options(headers: {
+        'Authorization': 'Bearer $accessToken',
+      }),
+    );
     if (response.statusCode == 200) {
       {
+        print("response data${response.data}");
         print(response.data['blockedAccounts'] as List);
         print(response.statusMessage);
         return response.data['blockedAccounts'] as List;

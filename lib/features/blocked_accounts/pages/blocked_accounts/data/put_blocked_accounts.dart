@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Updates the list of blocked accounts on the server.
 ///
@@ -30,8 +31,14 @@ import 'package:spreadit_crossplatform/api.dart';
 Future<void> updateBlockedAccounts({required List<dynamic> updatedList}) async {
   try {
     var data = {"blockedAccounts": updatedList, "allowFollow": true};
-    final response = await Dio()
-        .put('$apiUrl/mobile/settings/blocking-permissions', data: data);
+    String? accessToken = UserSingleton().getAccessToken();
+    final response = await Dio().put(
+      '$apiUrl/mobile/settings/blocking-permissions',
+      data: data,
+      options: Options(headers: {
+        'Authorization': 'Bearer $accessToken',
+      }),
+    );
     if (response.statusCode == 200) {
       print(response.statusMessage);
     } else {

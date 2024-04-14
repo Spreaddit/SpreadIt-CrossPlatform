@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class HomePageDrawer extends StatelessWidget {
   @override
@@ -7,7 +8,7 @@ class HomePageDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('u/Basem1166', style: TextStyle(fontSize: 24.0)),
+            title: Text('u/${UserSingleton().user!.username}', style: TextStyle(fontSize: 24.0)),
           ),
           ...[
             {
