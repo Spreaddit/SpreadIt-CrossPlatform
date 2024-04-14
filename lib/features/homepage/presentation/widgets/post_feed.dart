@@ -63,8 +63,7 @@ class _PostFeedState extends State<PostFeed> {
 
     setState(() {
       if (fetchedItems.isEmpty) {
-        CustomSnackbar(content: "an error occured. Please Refresh")
-            .show(context);
+        CustomSnackbar(content: "No posts found").show(context);
       }
       items = fetchedItems;
     });
