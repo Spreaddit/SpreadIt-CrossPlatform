@@ -647,8 +647,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                     }),
             ShareButton(
               initialSharesCount: widget.sharesCount,
-              message:
-                  "${Uri.base.origin}/post-card-page/${widget.postId}/false",
+              message: "false",
             ),
           ],
         ),
