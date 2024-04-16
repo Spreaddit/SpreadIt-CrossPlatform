@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
+/// A modal bottom bar widget that displays a button and optional extra text about the report choice.
 class ModalBottomBar extends StatelessWidget {
+  /// Creates a modal bottom bar.
+  ///
+  /// The [buttonText] parameter is required and specifies the text to be displayed on the button.
+  ///
+  /// The [onPressed] parameter is a callback function that will be called when the button is pressed.
+  ///
+  /// The [extraTextTitle] parameter is an optional string that specifies the title of the extra text section.
+  ///
+  /// The [extraText] parameter is an optional string that specifies the extra text to be displayed.
   ModalBottomBar({
     Key? key,
     required this.buttonText,

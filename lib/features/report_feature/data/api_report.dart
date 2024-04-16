@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Sends a report for a post.
+///
+/// Returns the status code of the report request.
 Future<int> reportPostRequest(String postId,
     {required Map<String, dynamic> postRequestInfo}) async {
   String? accessToken = UserSingleton().getAccessToken();
@@ -37,6 +40,9 @@ Future<int> reportPostRequest(String postId,
   }
 }
 
+/// Sends a report for a comment.
+///
+/// Returns the status code of the report request.
 Future<int> reportCommentRequest(String postId, String commentId,
     {required Map<String, dynamic> postRequestInfo}) async {
   String? accessToken = UserSingleton().getAccessToken();

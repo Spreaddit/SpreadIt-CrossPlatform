@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
+/// A widget that represents the main report reasons section.
 class MainReportSection extends StatefulWidget {
+  /// Constructs a [MainReportSection] widget.
+  ///
+  /// The [mainReportOptions] parameter is a list of widgets representing the main report options.
   const MainReportSection({Key? key, required this.mainReportOptions})
       : super(key: key);
 
+  /// The list of widgets representing the main report options.
   final List<Widget> mainReportOptions;
 
   @override

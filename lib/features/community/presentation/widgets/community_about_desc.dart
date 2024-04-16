@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// A widget that displays the description of a community.
 class CommunityAboutDesc extends StatelessWidget {
-  const CommunityAboutDesc(
-      {Key? key, required this.communityName, required this.communityDesc})
-      : super(key: key);
+  const CommunityAboutDesc({
+    Key? key,
+    required this.communityName,
+    required this.communityDesc,
+  }) : super(key: key);
 
+  /// The name of the community.
   final String communityName;
+
+  /// The description of the community.
   final String communityDesc;
 
   @override
@@ -34,7 +40,7 @@ class CommunityAboutDesc extends StatelessWidget {
                   softWrap: true,
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
-              )
+              ),
             ],
           ),
         ),

@@ -4,9 +4,11 @@ import 'package:spreadit_crossplatform/features/community/data/api_community_inf
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 
+/// A widget that displays the post feed for a specific community.
 class CommunityPostFeed extends StatefulWidget {
   CommunityPostFeed({Key? key, required this.communityName}) : super(key: key);
 
+  /// The name of the community.
   final String communityName;
 
   @override
@@ -14,6 +16,7 @@ class CommunityPostFeed extends StatefulWidget {
 }
 
 class _CommunityPostFeedState extends State<CommunityPostFeed> {
+  
   late Map<String, dynamic> data;
   String communityBannerLink = "";
   List<PostCategories> mainPostCategories = [
@@ -77,6 +80,7 @@ class _CommunityPostFeedState extends State<CommunityPostFeed> {
     });
   }
 
+  /// Fetches the community information and updates the state.
   Future<void> fetchData() async {
     data = await getCommunityInfo(widget.communityName);
     setState(() {
@@ -84,6 +88,7 @@ class _CommunityPostFeedState extends State<CommunityPostFeed> {
     });
   }
 
+  /// Sets the selected post sort based on the given index and whether it is a top post.
   void setPostSort(int selectedIndex, bool isTopPost) {
     if (!isTopPost) {
       setState(() {
@@ -104,6 +109,7 @@ class _CommunityPostFeedState extends State<CommunityPostFeed> {
     }
   }
 
+  /// Displays the modal bottom sheet for selecting the main post sort.
   void selectPostSortModal() {
     showModalBottomSheet(
       context: context,
@@ -185,6 +191,7 @@ class _CommunityPostFeedState extends State<CommunityPostFeed> {
     );
   }
 
+  /// Displays the modal bottom sheet for selecting the top post sort.
   void selectTopPostSortModal(int mainPrevIndex) {
     showModalBottomSheet(
       context: context,
