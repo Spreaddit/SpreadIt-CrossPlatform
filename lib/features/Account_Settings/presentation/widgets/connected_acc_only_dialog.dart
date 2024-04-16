@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 
+/// A dialog that is displayed when only connected accounts are used to indicate how to convert
+/// current account into a normal one.
 class ConnectedAccountOnlyDialog {
+  
+  /// A dialog widget that is used to display a message indicating that the action can only be performed with a connected account.
+  /// [callOption] : 0 means deny update email address, 1 means send email for adding passord,
+  /// and 2 means deny disconnecting from Google.
   ConnectedAccountOnlyDialog(
       this.buildContext, this.callOption, this.userEmail) {
     showConnectedAccDialog(buildContext, callOption);
@@ -12,18 +18,27 @@ class ConnectedAccountOnlyDialog {
   int callOption;
   String userEmail;
 
+  /// A list of titles used in the connected account only dialog.
   final List<String> titles = [
     "Update email address",
     "Check your email",
     "Disconnect from Google",
   ];
 
+  /// A list of texts used in the connected account only dialog.
   final List<String> texts = [
     "To change your email address, you need to create a Reddit password first.",
     "Check your email for a link to create a password.",
     "To disconnect your Google account, you need to create a Reddit password first.",
   ];
 
+  /// Shows a dialog for connected account settings.
+  ///
+  /// This method is responsible for displaying a dialog for connected account settings
+  /// based on the provided [callOption].
+  ///
+  /// The [context] parameter is the build context of the widget that calls this method.
+  /// The [callOption] parameter is an integer representing the call option.
   void showConnectedAccDialog(BuildContext context, int callOption) {
     if (callOption == 1) {
       sendAddPasswordEmail(context);

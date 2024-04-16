@@ -5,9 +5,11 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// A button widget that allows the user to join or leave a community.
 class JoinCommunityBtn extends StatefulWidget {
   JoinCommunityBtn({Key? key, required this.communityName}) : super(key: key);
 
+  /// The name of the community.
   final String communityName;
 
   @override
@@ -24,6 +26,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
     fetchData();
   }
 
+  /// Fetches the subscription data for the community.
   Future<void> fetchData() async {
     subscriptionData = await getCommunitySubStatus(widget.communityName);
     if (subscriptionData["isSubscribed"] == -1) {
@@ -36,6 +39,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
     }
   }
 
+  /// Handles the button press event.
   void handleBtnPress() {
     if (!isJoined) {
       subscribe();
@@ -80,6 +84,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
     }
   }
 
+  /// Subscribes the user to the community.
   void subscribe() async {
     User? currentUser = UserSingleton().getUser();
     String? userId = currentUser?.id;
@@ -95,6 +100,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
     }
   }
 
+  /// Unsubscribes the user from the community.
   void unsubscribe() async {
     var postRequestInfo = {
       "communityName": widget.communityName,

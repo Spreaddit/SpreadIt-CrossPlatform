@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 
+/// A widget that represents a main report option.
 class MainReportOption extends StatefulWidget {
-  MainReportOption(
-      {Key? key,
-      required this.communityName,
-      required this.optionText,
-      required this.index,
-      required this.selectedContainerIndex,
-      required this.onSelect,
-      this.optionHasImage = false})
-      : super(key: key);
-
+  /// The name of the community.
   final String communityName;
+
+  /// The text of the option.
   final String optionText;
+
+  /// Indicates whether the option has an image.
   final bool optionHasImage;
+
+  /// The index of the option.
   final int index;
+
+  /// The index of the selected container.
   final int selectedContainerIndex;
+
+  /// A callback function that is called when the option is selected.
   final Function onSelect;
+
+  /// Creates a [MainReportOption] widget.
+  MainReportOption({
+    Key? key,
+    required this.communityName,
+    required this.optionText,
+    required this.index,
+    required this.selectedContainerIndex,
+    required this.onSelect,
+    this.optionHasImage = false,
+  }) : super(key: key);
 
   @override
   State<MainReportOption> createState() => _MainReportOptionState();

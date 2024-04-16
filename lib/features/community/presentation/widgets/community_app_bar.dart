@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+/// A custom app bar widget for the community page.
 class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
+  /// Constructs a [CommunityAppBar].
+  ///
+  /// The [bannerImageLink] is the link to the community banner image.
+  /// The [communityName] is the name of the community.
+  /// The [blurImage] determines whether to apply a blur effect to the banner image and display community name.
   CommunityAppBar({
     Key? key,
     required this.bannerImageLink,

@@ -13,7 +13,6 @@ import '../../../generic_widgets/header.dart';
 /// This class renders the [AddPasswordPage] page.
 /// It displays 2 input fields where the user writes his `newPassword` and `confirmedPassword`.
 /// It also contains a button `Continue` that the user presses to send his input to the backend.
-
 class AddPasswordPage extends StatefulWidget {
   const AddPasswordPage({Key? key}) : super(key: key);
 
@@ -52,6 +51,11 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
     basicData = await getBasicData();
   }
 
+  /// Updates the new password with the provided [password] and [validation] status.
+  ///
+  /// This method is called when the user wants to update their password in the account settings.
+  /// The [password] parameter represents the new password entered by the user.
+  /// The [validation] parameter indicates whether the password meets the required validation criteria.
   void updateNewPassword(String password, bool validation) {
     _newPassword = password;
     setState(() {
@@ -60,6 +64,15 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
     _newPasswordForm.currentState!.save();
   }
 
+  /// Updates the confirmed password with the given [password] and [validation] status.
+  ///
+  /// This method is called when the user enters a password and the validation status
+  /// is updated. It updates the confirmed password field with the entered password
+  /// and updates the validation status accordingly.
+  ///
+  /// Parameters:
+  /// - [password]: The entered password.
+  /// - [validation]: The validation status of the entered password.
   void updateConfirmedPassword(String password, bool validation) {
     _confirmedPassword = password;
     setState(() {
@@ -80,6 +93,7 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
     }
   }
 
+  /// Sends a POST request to the server with the data.
   void postData() async {
     int response = await updatePassword(_newPassword, "", _token);
     if (response == 200) {
