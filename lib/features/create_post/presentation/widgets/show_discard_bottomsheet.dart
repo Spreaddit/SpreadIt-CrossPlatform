@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../generic_widgets/small_custom_button.dart';
 
+/// [showDiscardButtomSheet] : a function which displays the buttom sheet which appears upon canceling the creation of a post 
+/// it give the user the option to choose between discarding the post or saving th draft
+
 void showDiscardButtomSheet( BuildContext context) {
   showModalBottomSheet(
     context: context,
@@ -60,4 +63,3 @@ void returnToHomePage (BuildContext context) {
   Navigator.of(context).pushNamed('/home');
 }
 
-/*TO DO : implementation of save api*/

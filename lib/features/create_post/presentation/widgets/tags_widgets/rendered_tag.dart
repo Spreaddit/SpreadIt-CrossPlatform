@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// [RenderedTag] a template of how each tag will look on the create post page when its flag is set
+
 class RenderedTag extends StatelessWidget {
 
   final IconData icon;

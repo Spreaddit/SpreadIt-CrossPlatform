@@ -1,5 +1,10 @@
 import'package:flutter/material.dart';
 
+/// [ButtonlessHeader] : a template for a header without a button
+/// Parameters :
+/// 1) [text] : the header text.
+/// 2) [onIconPress] : the action to be taken when the cancel icon is pressed
+
 class ButtonlesHeader extends StatefulWidget {
 
   final String text;

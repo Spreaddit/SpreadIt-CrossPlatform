@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../generic_widgets/small_custom_button.dart';
 
 
+/// [showDaysButtomSheet] : a function which displays a buttom sheet to allow the user to choose how long will the poll be availale for voting
+
 void showDaysButtomSheet(BuildContext context, int day, Function(int) onDaySelected) {
 
   showModalBottomSheet(

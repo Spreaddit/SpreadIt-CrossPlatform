@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+
+/// [PollOption] : a template of the textfield of each poll option
+/// Parameters:
+/// 1) [optionNumber] : gets automatically incremented by 1 on each option added 
+/// 2) [formKey] : to allow textfiled modification 
+/// 3) [onChanged] : to save the content of each text field in its corresponding variable
+/// 4) [onIconPress] : the action to be taken when the option cancel icon is pressed
+/// 5) [initialBody] : if it is passed from the primary content page
+
 class PollOption extends StatefulWidget {
 
   final int optionNumber;

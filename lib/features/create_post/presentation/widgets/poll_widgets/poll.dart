@@ -5,6 +5,8 @@ import 'poll_option.dart';
 import 'add_option_button.dart';
 import 'showDaysBottomSheet.dart';
 
+/// [Poll] : renders the poll creation form
+
 class Poll extends StatefulWidget {
 
   final VoidCallback? onPollCancel;

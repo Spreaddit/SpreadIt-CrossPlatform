@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// [ExpandableListWidget] : a template of how the rules and their description will be displayed in the rules page
+
 class ExpandableListWidget extends StatefulWidget {
   final String? title;
   final String? description;

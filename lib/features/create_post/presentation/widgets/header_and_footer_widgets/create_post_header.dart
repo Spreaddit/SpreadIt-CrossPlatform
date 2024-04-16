@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import '../../../../generic_widgets/small_custom_button.dart';
 
 
+/// [CreatePostHeader] : a template for a header which contains a header text and a button
+
 class CreatePostHeader extends StatefulWidget {
 
   final String buttonText;

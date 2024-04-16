@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// [PostTitle] : class of the title textfield 
+
 class PostTitle extends StatefulWidget {
   
   final GlobalKey<FormState> formKey;
