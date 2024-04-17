@@ -77,8 +77,7 @@ class _PostCardPageState extends State<PostCardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PostCardTopBar(context,
-          UserSingleton().user!.avatarUrl!), 
+      appBar: PostCardTopBar(context, UserSingleton().user?.avatarUrl ?? ""),
       body: Container(
         margin: EdgeInsets.all(10),
         child: Column(
