@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
@@ -10,7 +11,14 @@ Future<int> sendUserInput(String usernameOrEmail) async {
   try {
     const apiRoute = "/app/forgot-password";
     String apiUrl = apibase + apiRoute;
-    final response = await Dio().post(apiUrl, data: {
+    String? accessToken = UserSingleton().accessToken;
+    final response = await Dio().post(apiUrl,
+    options:Options(
+        headers: {
+          'Authorization' :'Bearer $accessToken',
+        }
+      ),
+     data: {
       "usernameOremail": usernameOrEmail,
     });
     if (response.statusCode == 200) {

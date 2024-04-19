@@ -4,10 +4,12 @@ import 'package:spreadit_crossplatform/features/community/presentation/pages/com
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
 
+/// A widget that displays information about a community.
 class CommunityInfoSection extends StatefulWidget {
   const CommunityInfoSection({Key? key, required this.communityName})
       : super(key: key);
 
+  /// The name of the community.
   final String communityName;
 
   @override
@@ -26,6 +28,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
     fetchData();
   }
 
+  /// Fetches the community data from an API.
   Future<void> fetchData() async {
     communityData = await getCommunityInfo(widget.communityName);
     setState(() {
@@ -42,6 +45,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
     });
   }
 
+  /// Formats a number using the NumberFormat class.
   formatNumber(dynamic myNumber) {
     myNumber.toString();
     NumberFormat numberFormat =

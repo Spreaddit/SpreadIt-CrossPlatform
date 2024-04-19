@@ -4,6 +4,9 @@ import '../../../generic_widgets/button.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/expanded_rules.dart';
 
+/// the class [CommunityRules] displays the rules of the community to which the user posts. 
+/// Each rule contains a [title] and may be extended to include its [description].
+
 class CommunityRules extends StatefulWidget {
   final List<Rule?>? communityRules;
 

@@ -2,19 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import '../../data/violation_and_sub_violations.dart';
 
+/// A widget that represents a section of sub-report reasons.
 class SubReportSection extends StatefulWidget {
-  SubReportSection({
+  /// The name of the community.
+  final String communityName;
+
+  /// The index of the selected sub-report.
+  final int selectedIndex;
+
+  /// A callback function that is called when the index of the selected sub-report changes.
+  final Function(int) onIndexChange;
+
+  /// Indicates whether the user is reporting the violation.
+  final bool isReportingUser;
+
+  /// Creates a [SubReportSection] widget.
+  const SubReportSection({
     Key? key,
     required this.communityName,
     required this.selectedIndex,
     required this.onIndexChange,
     this.isReportingUser = false,
   }) : super(key: key);
-
-  final String communityName;
-  final int selectedIndex;
-  final bool isReportingUser;
-  final Function(int) onIndexChange;
 
   @override
   State<SubReportSection> createState() => _SubReportSectionState();
@@ -42,6 +51,7 @@ class _SubReportSectionState extends State<SubReportSection> {
     }
   }
 
+  /// Fetches the community data and updates the state.
   Future<void> fetchData() async {
     var communityData = await getCommunityInfo(widget.communityName);
     setState(() {

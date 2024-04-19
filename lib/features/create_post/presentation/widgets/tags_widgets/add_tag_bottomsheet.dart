@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import './tags.dart';
 
+/// [showAddTagButtomSheet] : a bottom sheet which allows the user to add Spoiler or NSFW tags to his post
+
 void showAddTagButtomSheet(
   BuildContext context,
   bool isSpoiler, 

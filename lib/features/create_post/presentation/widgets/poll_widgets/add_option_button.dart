@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+
+/// [AddOptionsButton] : a button which allows the user to add another option to his poll
+
 class AddOptionButton extends StatefulWidget {
 
   final VoidCallback onPressed;

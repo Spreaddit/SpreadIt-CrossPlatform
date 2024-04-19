@@ -7,7 +7,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 ///
 /// Returns a [Map] containing community information including 'avatar', 'email', and 'username'.
 ///
-/// Returns a [Map] with empty key values if fetching fails.
+/// Returns a [Map] with default values if fetching fails.
 ///
 /// Throws an error if fetching data fails.
 Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {

@@ -7,6 +7,15 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/le
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 
+/// This widget represents the home page of the application and all its subpages.
+/// It takes a parameter [currentPage] of type [CurrentPage] representing the current page.
+/// 
+/// Example:
+/// ```dart
+/// HomePage(
+///   currentPage: CurrentPage.home,
+/// )
+/// ```
 class HomePage extends StatefulWidget {
   final CurrentPage currentPage;
   HomePage({

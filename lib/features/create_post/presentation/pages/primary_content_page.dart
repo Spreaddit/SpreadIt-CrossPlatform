@@ -19,6 +19,10 @@ import '../widgets/poll_widgets/poll.dart';
 import '../widgets/link.dart';
 import '../widgets/image_and_video_widgets.dart';
 
+/// [CreatePost] class renders the create post page , which allows the user to create a post by adding a [title], [content], [link]
+/// [image], [video] or [poll].
+/// it serves as the first draft for the user to write his post
+
 class CreatePost extends StatefulWidget {  
 
   @override
@@ -54,12 +58,14 @@ class _CreatePostState extends State<CreatePost> {
   String? link;
   IconData? lastPressedIcon;
 
+  /// [updateTitle] : a function which updates the title whenever the user writes in the title text field
   void updateTitle(String value) {
     title = value;
     _primaryTitleForm.currentState!.save();
     updateButtonState();
   }
 
+  /// [updateContent] : a function which updates the content whenever the user writes in the content text field
   void updateContent(String value) {
     content = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -69,6 +75,7 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
+  /// [updateLink] : a function which updates the link whenever the user writes in the link text field
   void updateLink(String value) {
     link = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -79,6 +86,7 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
+ /// [updateButtonState] : a function which controls the enablement of the 'Next' button
   void updateButtonState() {
     if (link == null) {
       setState(() {
@@ -90,6 +98,7 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
+ /// [setLastPreddedIcon] : a function which sets the last pressed icon variable to the last pressed icon by the user to disable the rest
   void setLastPressedIcon(IconData? passedIcon) {
     setState(() {
       lastPressedIcon = passedIcon;
@@ -102,6 +111,7 @@ class _CreatePostState extends State<CreatePost> {
     });
   }
 
+  /// [addLink] : a function which renders the link text field
   void addLink() {
     setState(() {
       isLinkAdded = !isLinkAdded;
@@ -114,6 +124,7 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
+  /// [cancelImageOrVideo] : removes the uploaded image or video
   void cancelImageOrVideo () {
     setState(() {
       imageWeb = null;
@@ -148,10 +159,12 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
+  /// [openPollWindow] : renders the poll 
   void openPollWidow() {
     setState(() {
       createPoll = !createPoll;
     });
+    print('create poll from primary: $createPoll');
   }
 
   void updatePollOption(int optionNumber, String value) {

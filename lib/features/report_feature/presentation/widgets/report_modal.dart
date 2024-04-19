@@ -10,6 +10,19 @@ import 'package:spreadit_crossplatform/features/report_feature/presentation/widg
 import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 
 class ReportModal {
+  /// A modal for reporting posts, comments, or users.
+  ///
+  /// The [ReportModal] class provides a bottom sheet interface for reporting posts, comments, or users on Reddit. It allows users to specify various reasons for reporting, including standard violations and additional context.
+  ///
+  /// ## Parameters
+  ///
+  /// - [buildContext] : The build context where the modal will be displayed.
+  /// - [communityName] : The name of the community where the report is being made.
+  /// - [postId] : The ID of the post being reported.
+  /// - [commentId] : The ID of the comment being reported.
+  /// - [isReportingPost] : A boolean indicating whether the report is for a post or comment.
+  /// - [isReportingUser] : A boolean indicating whether the report is for a user or posts and comments.
+  /// - [reportedUserName] : The username of the user being reported (if applicable).
   ReportModal(
       this.buildContext,
       this.communityName,
@@ -18,6 +31,7 @@ class ReportModal {
       this.isReportingPost,
       this.isReportingUser,
       this.reportedUserName) {
+    /// List of main violations for reporting.
     mainViolations.addAll([
       "Breaks r/$communityName rules",
       "Harassment",
@@ -34,6 +48,7 @@ class ReportModal {
       "Spam"
     ]);
 
+    /// List of extra text providing additional context for reporting.
     extraText.addAll([
       'Posts, comments, or behavior that breaks r/$communityName rules',
       'Harassing, bullying, intimidationg, or abusing an individual or group of people with the result of discouraging them from participating.',
@@ -50,6 +65,7 @@ class ReportModal {
       'Repeated, unwanted, or unsolicited manual or automated actions that negatively affect redditors, communities, and the Reddit platform.',
     ]);
 
+    /// List indicating whether sub-reasons are enabled for each main violation.
     hasSubReasons = List.generate(
       mainViolations.length,
       (int index) => (index == 3 || index == 7 || index == 11) ? false : true,
@@ -63,23 +79,58 @@ class ReportModal {
     }
   }
 
+  /// The build context where the modal will be displayed.
   BuildContext buildContext;
+
+  /// The name of the community where the report is being made.
   String communityName;
+
+  /// The username of the reported user (if applicable).
   final String reportedUserName;
+
+  /// The ID of the post being reported.
   String postId;
+
+  /// The ID of the comment being reported.
   String commentId;
+
+  /// A boolean indicating whether the report is for a post.
   bool isReportingPost;
+
+  /// A boolean indicating whether the report is for a user.
   bool isReportingUser;
+
+  /// The index of the selected report reason for the user.
   var selectedUserReportIndex = -1;
+
+  /// The index of the selected main report reason.
   var selectedMainIndex = -1;
+
+  /// The index of the selected sub report reason.
   var selectedSubIndex = -1;
+
+  /// A boolean indicating whether the 'block' option is checked.
   var blockIsChecked = false;
+
+  /// List of violations reported on the user's profile.
   List<String> userProfileViolations = [];
+
+  /// List of main violations for reporting.
   final List<String> mainViolations = [];
+
+  /// List of extra text providing additional context for reporting.
   final List<String> extraText = [];
+
+  /// List of main report options generated based on main violations.
   List<MainReportOption> mainReportOptions = [];
+
+  /// List indicating whether sub-reasons are enabled for each main violation.
   List<bool> hasSubReasons = [];
 
+  /// Generates main report options for the report modal.
+  /// Creates a list of main report options based on the predefined main violations. Each option is represented by a [MainReportOption] object, containing information such as the community name, option text, index, and whether it has an associated image.
+  /// - [setModalState] : A function to state setter of the bottom sheet.
+  /// The function does not return a value but updates the [mainReportOptions] list.
   void generateMainReports(StateSetter setModalState) {
     mainReportOptions = List.generate(
       mainViolations.length,
@@ -99,6 +150,7 @@ class ReportModal {
     );
   }
 
+  /// Displays the report user page.
   void showReportUserPage(BuildContext context) {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -149,6 +201,7 @@ class ReportModal {
         });
   }
 
+  /// Displays the main reporting page.
   void showMainPage(BuildContext context) {
     showModalBottomSheet(
         isScrollControlled: true,
@@ -204,6 +257,7 @@ class ReportModal {
         });
   }
 
+  /// Displays the second reporting page.
   void showSecondPage(BuildContext context) {
     selectedSubIndex = -1;
     showModalBottomSheet(
@@ -252,6 +306,7 @@ class ReportModal {
         });
   }
 
+  /// Displays the 'done' page after submitting a report, with the option of blocking the reported user.
   void showDonePage(BuildContext context) {
     blockIsChecked = false;
     showModalBottomSheet(
@@ -326,6 +381,7 @@ class ReportModal {
         });
   }
 
+  /// Reports a post or comment.
   void reportPostOrComment(BuildContext context) async {
     int response;
     var postRequestInfo = {
@@ -350,7 +406,6 @@ class ReportModal {
       }
       showDonePage(context);
     } else {
-      
       CustomSnackbar(content: "Failed to report").show(context);
     }
     print("RESPONSE OF REPORT : $response");
@@ -366,6 +421,7 @@ class ReportModal {
     showDonePage(context);
   }
 
+  /// Reports a post, comment, or user.
   void report(BuildContext context) async {
     if (isReportingUser) {
       reportUser(context);
@@ -374,6 +430,7 @@ class ReportModal {
     }
   }
 
+  /// Blocks the reported user.
   void blockReportedUser(BuildContext context) {
     print(blockIsChecked);
     if (blockIsChecked) {

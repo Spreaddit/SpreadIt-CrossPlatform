@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+
+/// [Tag] : a class which renders each tag selection switch 
+/// Parameters :
+/// 1) [tagName] : the name of the tag (Spoiler or NSFW)
+/// 2) [tagDescription] : teh description of each tag's meaning 
+/// 3) [tagIcon] : the icon to e displayed next to the tag
+/// 4) [tagValue] : a boolean to indicate if the flag is set 
+/// 5) [onChanged] : toggle the flag when the switch is pressed
+
 class Tag extends StatefulWidget {
 
   final String tagName;

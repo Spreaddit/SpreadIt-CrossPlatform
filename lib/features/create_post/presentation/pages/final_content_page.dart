@@ -28,6 +28,8 @@ import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
 
+/// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
+/// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
 
 class FinalCreatePost extends StatefulWidget {
 
@@ -98,11 +100,15 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String? finalLink;
   IconData? lastPressedIcon;
 
+  /// [mapCommunityData] : a function which extracts the [communityName], [communityIcon] and [communityRules] from the passsed list of communities
+
   void mapCommunityData () {
     communityName = widget.community.first.name;
     communityIcon = widget.community.first.image!;
     communityRules = widget.community.first.rules;
   }
+
+  /// [mapPoll] : a function used to map the passed [pollOptions]
 
   void mapPoll () {
     if (widget.selectedDay != null) {

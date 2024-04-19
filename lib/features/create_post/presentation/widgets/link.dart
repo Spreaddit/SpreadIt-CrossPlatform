@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// [LinkTextField] : class of the link textfield 
+
 class LinkTextField extends StatefulWidget {
 
   final GlobalKey<FormState> formKey;

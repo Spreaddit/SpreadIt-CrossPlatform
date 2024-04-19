@@ -38,6 +38,8 @@ void navigateToPostCardPage(
   );
 }
 
+/// This widget represents the header section of a post, including details like community, username, date, and actions.
+/// It also renders the post menu based on whether the user is the owner of the post or a viewer.
 class _PostHeader extends StatefulWidget {
   final Post post;
   final bool isUserProfile;
@@ -262,7 +264,7 @@ class _PostHeaderState extends State<_PostHeader> {
 }
 
 /// This widget is responsible for displaying post body:
-/// headline, description (optional) and an image (optional)
+/// headline, content (all types)
 class _PostBody extends StatelessWidget {
   final String title;
   final String postType;
@@ -385,6 +387,10 @@ class _PostBody extends StatelessWidget {
   }
 }
 
+/// This widget is responsible for displaying a carousel of images. 
+/// It takes a list of attachments (images) as input and
+/// displays them in a horizontal carousel format, allowing 
+/// users to swipe through the images.
 class _ImageCaruosel extends StatefulWidget {
   final List<Attachment> attachments;
   _ImageCaruosel({
@@ -456,6 +462,9 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
   }
 }
 
+/// This widget is responsible for displaying the content of a post. 
+/// It adapts its layout and rendering based on the type of post,
+/// which can be an image, video, poll, or text.
 class _PostContent extends StatelessWidget {
   final String postType;
   final String? content;
@@ -656,8 +665,20 @@ class _PostInteractionsState extends State<_PostInteractions> {
   }
 }
 
-/// This widget takes an instance of [Post] as a paremeter
-/// and returns a postcard with its relevant info
+/// This widget represents a post card with relevant information.
+/// It takes the following parameters:
+/// 1. [post]: An instance of [Post] containing post details.
+/// 2. [isFullView]: A boolean indicating whether to render the post in full view or post feed view.
+/// 3. [isUserProfile]: A boolean indicating whether to render the post as a post owner or viewer.
+/// 
+/// Example:
+/// ```dart
+/// PostWidget(
+///   post: myPost,
+///   isFullView: true,
+///   isUserProfile: true,
+/// )
+/// ```
 class PostWidget extends StatefulWidget {
   final Post post;
   final bool isFullView;

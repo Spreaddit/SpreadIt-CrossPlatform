@@ -8,6 +8,10 @@ import '../../../generic_widgets/search_bar.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../widgets/communities_search_card.dart';
 
+/// this class renders the [PostToCommunity] page , which allows the user to chose which community to post to.
+/// It contains a [searchbar] to search for the desired community from the list of communities.
+/// On community press, the user is redirected to the [FinalContentPage] to finalize the post before submitting.
+
 class PostToCommunity extends StatefulWidget {
   final String title;
   final String content;

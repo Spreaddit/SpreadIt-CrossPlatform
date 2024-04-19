@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 
+/// A widget that displays the rules of a community.
 class CommunityAboutRules extends StatefulWidget {
+  /// The name of the community.
+  final String communityName;
+
+  /// Creates a [CommunityAboutRules] widget.
   CommunityAboutRules({Key? key, required this.communityName})
       : super(key: key);
-
-  final String communityName;
 
   @override
   State<CommunityAboutRules> createState() => _CommunityAboutRulesState();
@@ -21,6 +24,7 @@ class _CommunityAboutRulesState extends State<CommunityAboutRules> {
     fetchData();
   }
 
+  /// Fetches the community information including the rules.
   Future<void> fetchData() async {
     var communityData = await getCommunityInfo(widget.communityName);
     setState(() {

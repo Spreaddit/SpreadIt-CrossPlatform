@@ -4,7 +4,12 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_about_rules.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 
+/// A page that displays community info.
 class CommunityAboutPage extends StatefulWidget {
+  /// A page that displays information about a community.
+  ///
+  /// This page provides details and information about a specific community.
+  /// It takes a [communityName] parameter to specify the name of the community.
   const CommunityAboutPage({Key? key, required this.communityName})
       : super(key: key);
 
@@ -15,10 +20,20 @@ class CommunityAboutPage extends StatefulWidget {
 }
 
 class _CommunityAboutPageState extends State<CommunityAboutPage> {
+
+  /// Represents the data of a community.
   late Map<String, dynamic> communityData;
+
+  /// Represents the link to the community banner.
   String communityBannerLink = "";
+
+  /// Represents the description of the community.
   String communityDescription = "";
+
+  /// Represents the link to the community image.
   String communityImageLink = "";
+
+  /// Represents the rules of the community.
   List<dynamic> communityRules = [];
 
   @override
@@ -27,6 +42,12 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
     fetchData();
   }
 
+  /// Fetches data for the community.
+  ///
+  /// This method fetches the community information using the [getCommunityInfo] function
+  /// and updates the state with the fetched data. It retrieves the community banner link,
+  /// community image link, community description, and community rules from the fetched data.
+  /// If the community banner or image link is not available, empty strings are assigned.
   Future<void> fetchData() async {
     communityData = await getCommunityInfo(widget.communityName);
     setState(() {

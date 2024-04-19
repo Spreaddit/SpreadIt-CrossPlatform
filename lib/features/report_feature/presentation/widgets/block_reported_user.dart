@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// A widget that allows blocking a reported user.
 class BlockReportedUser extends StatefulWidget {
+  /// Constructs a [BlockReportedUser] widget.
+  ///
+  /// The [reportedUserName] parameter is the name of the reported user.
+  /// The [onValChanged] parameter is a callback function that is called when the value of the checkbox is changed.
+  /// The [blockIsChecked] parameter is a boolean value indicating whether the checkbox is checked or not.
   BlockReportedUser({
     Key? key,
     required this.reportedUserName,
