@@ -49,11 +49,43 @@ class User {
     this.isVisible,
     this.displayName,
     this.about,
+    this.cakeDay,
     this.subscribedCommunities,
     this.favouriteCommunities,
-    this.cakeDay,
     this.socialLinks,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'username': username,
+      'email': email,
+      'googleId': googleId,
+      'birth_date': birthDate?.toIso8601String(),
+      'phone': phone,
+      'avatar_url': avatarUrl,
+      'background_picture_url': backgroundPictureUrl,
+      'location': location,
+      'bio': bio,
+      'followers_count': followersCount,
+      'following_count': followingCount,
+      'created_at': createdAt?.toIso8601String(),
+      'role': role,
+      'nsfw': nsfw,
+      'activeInCommunityVisibility': activeInCommunityVisibility,
+      'isVerified': isVerified,
+      'isVisible': isVisible,
+      'isActive': isActive,
+      'displayName': displayName,
+      'about': about,
+      'cakeDay': cakeDay,
+      'subscribedCommunities': subscribedCommunities,
+      'favouriteCommunities': favouriteCommunities,
+      'socialLinks':
+          socialLinks?.map((socialMedia) => socialMedia?.toJson()).toList(),
+    };
+  }
 
   factory User.fromJson(Map<String, dynamic> json) {
     var socialMediaJson = json['socialLinks'] as List;
@@ -74,8 +106,8 @@ class User {
       backgroundPictureUrl: json['background_picture_url'],
       location: json['location'],
       bio: json['bio'],
-      followersCount: json['followers_count'] as int,
-      followingCount: json['following_count'] as int,
+      followersCount: json['followers_count'] as int?,
+      followingCount: json['following_count'] as int?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : DateTime.now(),
@@ -101,19 +133,27 @@ class User {
 
 class SocialMedia {
   final String? platform;
-  final String? displayname;
+  final String? displayName; 
   final String? url;
 
   SocialMedia({
     this.platform,
-    this.displayname,
+    this.displayName,
     this.url,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'platform': platform,
+      'displayName': displayName, 
+      'url': url,
+    };
+  }
 
   factory SocialMedia.fromJson(Map<String, dynamic> json) {
     return SocialMedia(
       platform: json['platform'],
-      displayname: json['displayName'],
+      displayName: json['displayName'], 
       url: json['url'],
     );
   }

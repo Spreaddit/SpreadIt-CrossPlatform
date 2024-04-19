@@ -59,6 +59,7 @@ dependencies:
   collection: ^1.18.0
   uuid: ^4.4.0
   flutter_link_previewer: ^3.2.2
+  shared_preferences: ^2.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
