@@ -8,8 +8,10 @@ class HomePageDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('u/${UserSingleton().user?.username ?? 'user'}',
-                style: TextStyle(fontSize: 24.0)),
+            title: Text(
+              'u/${UserSingleton().user?.username ?? 'user'}',
+              style: TextStyle(fontSize: 24.0),
+            ),
           ),
           ...[
             {
@@ -36,13 +38,26 @@ class HomePageDrawer extends StatelessWidget {
               'icon': Icons.settings_outlined,
               'text': 'Settings',
               'route': '/settings'
+            },
+            // Logout Button
+            {
+              'icon': Icons.logout,
+              'text': 'Log out',
+              'route': '/logout',
             }
           ].map((Map<String, dynamic> item) {
             return ListTile(
               leading: Icon(item['icon']),
               title: Text(item['text'], style: TextStyle(fontSize: 18.0)),
               onTap: () {
-                Navigator.pushNamed(context, item['route']);
+                if (item['route'] == '/logout') {
+                   UserSingleton().clearUserFromPrefs();
+                  UserSingleton().user = null; // Clear user info
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/start-up-page', (route) => false);
+                } else {
+                  Navigator.pushNamed(context, item['route']);
+                }
               },
             );
           }).toList(),

@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,7 @@ import 'features/Sign_up/Presentaion/pages/createusername.dart';
 import 'features/create_post/presentation/pages/primary_content_page.dart';
 import 'features/create_post/presentation/pages/rules_page.dart';
 import 'features/user_profile/presentation/pages/user_profile.dart';
+import './user_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
@@ -36,6 +38,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await UserSingleton().loadFromPrefs();
+
   runApp(SpreadIt());
 }
 
@@ -52,8 +56,20 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CreatePost(),
-      onGenerateRoute: (settings) {
+      home: FutureBuilder<bool>(
+        future: _checkIfUserLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); 
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            final bool loggedIn = snapshot.data!;
+            return loggedIn ? HomePage() : StartUpPage();
+          }
+        },
+      ),
+       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
         if (pathSegments == null || pathSegments.isEmpty) {
@@ -74,7 +90,8 @@ class SpreadIt extends StatelessWidget {
         }
       },
       routes: {
-        '/home': (context) => HomePage(),
+        '/start-up-page': (context) => StartUpPage(),
+      '/home': (context) => HomePage(),
         '/popular': (context) => HomePage(
               currentPage: CurrentPage.popular,
             ),
@@ -147,5 +164,11 @@ class SpreadIt extends StatelessWidget {
             AddPasswordPage(),
       },
     );
+  }
+
+  Future<bool> _checkIfUserLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataJson = prefs.getString('userSingleton');
+    return userDataJson != null;
   }
 }
