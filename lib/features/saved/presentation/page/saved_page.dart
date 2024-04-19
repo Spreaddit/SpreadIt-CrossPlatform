@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import '../../../generic_widgets/custom_bar.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
-import '../../../user_profile/data/class_models/comments_class_model.dart';
-import '../../../user_profile/data/get_user_comments.dart';
 import '../../../user_profile/presentation/widgets/comments.dart';
 
 /// A StatefulWidget representing the Saved page where users can view their saved posts and comments.
@@ -34,7 +34,7 @@ class _SavedPageState extends State<SavedPage> {
   /// Fetches the user's saved comments.
   Future<void> fetchComments() async {
     try {
-      var data = await fetchUserComments(username, 'saved', '1');
+      var data = await fetchCommentsData(username, 'saved', '1');
       setState(() {
         commentsList = data;
       });

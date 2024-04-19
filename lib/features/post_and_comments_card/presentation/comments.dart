@@ -108,6 +108,7 @@ class CommentCard extends StatefulWidget {
 class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
   late bool isUserProfile;
+  var issaved;
 
   /// Fetches replies for the comment asynchronously.
   Future<void> fetchReplies() async {
@@ -130,6 +131,12 @@ class _CommentCardState extends State<CommentCard> {
     isUserProfile = UserSingleton().user != null &&
         widget.comment.username == UserSingleton().user!.username;
     fetchReplies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    issaved = widget.comment.isSaved!;
   }
 
   @override
@@ -189,7 +196,7 @@ class _CommentCardState extends State<CommentCard> {
                               text: [
                                 "Share",
                                 "Get Reply notifications",
-                                "Save",
+                                issaved ? "Unsave" : "save",
                                 if (isUserProfile) "Edit Comment",
                                 "Copy text",
                                 if (!isUserProfile) "Block account",
@@ -200,10 +207,15 @@ class _CommentCardState extends State<CommentCard> {
                                   sharePressed(comment.content);
                                 },
                                 getReplyNotifications,
-                                () => saveOrUnsaveComment(
-                                      context,
-                                      comment.id,
-                                    ),
+                                () => {
+                                      saveOrUnsaveComment(
+                                        context,
+                                        comment.id,
+                                      ),
+                                      setState(() {
+                                        issaved = !issaved;
+                                      })
+                                    },
                                 if (isUserProfile)
                                   () => Navigator.push(
                                         context,

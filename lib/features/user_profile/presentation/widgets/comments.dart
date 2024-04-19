@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
 import '../../../saved/data/save_or_unsave.dart';
-import '../../data/class_models/comments_class_model.dart';
 
 /// The `CommentWidget` class is responsible for displaying a single comment within a user interface.
 ///
