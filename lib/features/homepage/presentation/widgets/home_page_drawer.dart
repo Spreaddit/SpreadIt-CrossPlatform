@@ -8,7 +8,8 @@ class HomePageDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('u/${UserSingleton().user!.username}', style: TextStyle(fontSize: 24.0)),
+            title: Text('u/${UserSingleton().user?.username ?? 'user'}',
+                style: TextStyle(fontSize: 24.0)),
           ),
           ...[
             {
