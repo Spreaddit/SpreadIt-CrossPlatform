@@ -7,12 +7,14 @@ class CustomSearchBar extends StatefulWidget {
   final List searchList;
   final Function(String) updateSearchItem;
   final Function(List) onSearch;
+  final String? initialText;
 
   const CustomSearchBar({
     required this.hintText,
     required this.searchList,
     required this.updateSearchItem,
     required this.onSearch,
+    this.initialText,
   });
 
   @override
@@ -64,7 +66,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       height: 40,   
       child: SearchBar(
         //controller: controller,
-        hintText: widget.hintText,
+        hintText: widget.initialText != null ? widget.initialText : widget.hintText,
         leading: Icon(Icons.search),
         backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) => Colors.grey[200]),
         trailing:  controller.text.isNotEmpty ?

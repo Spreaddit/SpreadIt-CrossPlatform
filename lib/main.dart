@@ -15,6 +15,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/search_results.dart';
 import 'features/saved/presentation/page/saved_page.dart';
 import 'features/user_profile/presentation/pages/edit_profile.dart';
 import 'firebase_options.dart';
@@ -57,7 +58,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: GeneralSearch(),
+      home:SearchResult(),
        onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
