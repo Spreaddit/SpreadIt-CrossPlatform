@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_view.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/comments_page_view.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/communities_page_view.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/people_page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/search_result_header.dart';
 
 class SearchResult extends StatefulWidget {
@@ -19,10 +22,10 @@ class _SearchResultState extends State<SearchResult> {
   int selectedIndex = 0;
   List<Widget> pages = [
       Center(child: Text('Posts')),
-      Center(child: Text('Communities')),
-      Center(child: Text('Comments')),
+      CommunitiesPageView(),
+      CommentsPageView(),
       Center(child: Text('Media')),
-      Center(child: Text('People')),
+      PeoplePageView(),
     ];
   PageController _pageController = PageController(initialPage: 0);  
 
@@ -47,7 +50,6 @@ class _SearchResultState extends State<SearchResult> {
       curve: Curves.ease,
       );
     });
-    print(selectedIndex);
   }
 
 

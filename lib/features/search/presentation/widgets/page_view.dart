@@ -18,7 +18,6 @@ class CustomPageView extends StatefulWidget {
 class _CustomPageViewState extends State<CustomPageView> {
   @override
   Widget build(BuildContext context) {
-    print('selected index in page view: ${widget.currentIndex}');
     return PageView(
       children: widget.pages,
       controller: widget.pageController,

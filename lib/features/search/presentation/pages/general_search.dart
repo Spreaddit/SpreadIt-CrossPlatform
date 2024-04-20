@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/recent_searches.dart';
-import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_menu.dart';
-import '../widgets/trending_card_mobile.dart';
-import '../widgets/custom_search_bar.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_menu.dart';
 import '../widgets/search_display_list.dart';
 
 

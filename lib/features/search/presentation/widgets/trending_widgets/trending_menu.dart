@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_card_mobile.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_card_mobile.dart';
 
 class TrendingMenu extends StatefulWidget {
   const TrendingMenu({Key? key}) : super(key: key);
