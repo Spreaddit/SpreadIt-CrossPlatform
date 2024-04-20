@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/media_page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/comments_page_view.dart';
@@ -24,7 +25,7 @@ class _SearchResultState extends State<SearchResult> {
       Center(child: Text('Posts')),
       CommunitiesPageView(),
       CommentsPageView(),
-      Center(child: Text('Media')),
+      MediaPageView(),
       PeoplePageView(),
     ];
   PageController _pageController = PageController(initialPage: 0);  
