@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/comment_element.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
 
 class CommentsPageView extends StatefulWidget {
   const CommentsPageView({Key? key}) : super(key: key);
@@ -99,13 +101,23 @@ class _CommentsPageViewState extends State<CommentsPageView> {
     'postUpvotes': '17.2k',
     'commentsCount': '590',
   },
-
   ];
+
+  List sort = [ 'Most relevant', 'Top', 'New'];
+  List sortActions = [(){}, (){}, (){}];
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: FilterButton(
+              openBottomSheet: () => openBottomSheet('Sort', sort, sortActions, context),
+              text: 'Sort',
+            ),
+          ),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
