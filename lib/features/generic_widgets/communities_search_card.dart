@@ -7,10 +7,16 @@ class CommunitiesCard extends StatefulWidget {
 
   final String communityName;
   final String communityIcon;
+  final double boxSize;
+  final double iconRadius;
+  final double fontSize;
 
   const CommunitiesCard({
     required this.communityName,
     required this.communityIcon,
+    required this.boxSize,
+    required this.iconRadius,
+    required this.fontSize,
   });
 
   @override
@@ -28,15 +34,15 @@ class _CommunitiesCardState extends State<CommunitiesCard> {
           children: [
             CircleAvatar(
               backgroundImage: AssetImage(widget.communityIcon),
-              radius: 20,
+              radius: widget.iconRadius,
             ),
-            SizedBox(width: 10),
+            SizedBox(width: widget.boxSize),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                   Text(widget.communityName,
                   style: TextStyle(
-                  fontSize: 20,
+                  fontSize: widget.fontSize,
                   fontWeight: FontWeight.bold,
                   ),
                 ),
