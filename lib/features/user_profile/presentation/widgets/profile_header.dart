@@ -95,7 +95,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   void initState() {
     super.initState();
     // Set _headerHeight when the widget is first inserted into the tree
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _headerHeight = context.size!.height;
       });

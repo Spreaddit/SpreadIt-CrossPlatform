@@ -35,6 +35,7 @@ Future<UserInfo> fetchUserInfo(String username) async {
 
     /// Process the response based on the status code.
     if (response.statusCode == 200) {
+      print(response);
       return UserInfo.fromJson(response.data);
     } else if (response.statusCode == 401) {
       throw Exception("Error token is required: ${response.statusMessage}");

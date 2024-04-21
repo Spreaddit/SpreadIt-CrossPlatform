@@ -27,6 +27,7 @@ class PostFeed extends StatefulWidget {
   bool showSortTypeChange = false;
   final int startSortIndex;
   final int endSortIndex;
+  final isSavedPage;
 
   PostFeed({
     required this.postCategory,
@@ -36,6 +37,7 @@ class PostFeed extends StatefulWidget {
     this.showSortTypeChange = false,
     this.startSortIndex = 0,
     this.endSortIndex = 3,
+    this.isSavedPage=false,
   });
 
   @override
@@ -116,6 +118,7 @@ class _PostFeedState extends State<PostFeed> {
                       children: [
                         PostWidget(
                             post: items[index],
+                             isSavedPage : widget.isSavedPage,
                             isUserProfile:
                                 currentPostCategory == PostCategories.user ||
                                     (UserSingleton().user != null &&

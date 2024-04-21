@@ -57,6 +57,7 @@ class _SavedPageState extends State<SavedPage> {
         return SliverToBoxAdapter(
           child: PostFeed(
             postCategory: PostCategories.save,
+            isSavedPage: true,
           ),
         );
       case 1:

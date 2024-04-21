@@ -42,6 +42,6 @@ ImageProvider<Object> selectImage(File? imageFile, String? imageURL, Uint8List? 
   } else if (imageURL != null && imageURL.isNotEmpty) {
     return NetworkImage(imageURL);
   } else {
-    return NetworkImage('https://addlogo.imageonline.co/image.jpg');
+    return NetworkImage('https://htmlcolorcodes.com/assets/images/colors/white-color-solid-background-1920x1080.png');
   }
 }

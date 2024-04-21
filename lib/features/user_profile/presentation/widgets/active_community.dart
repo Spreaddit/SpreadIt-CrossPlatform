@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import '../../../discover_communities/data/community.dart';
+
 /// The `ActiveCommunity` class is responsible for displaying information about an active community.
 ///
 /// This widget is typically used within user profile pages to showcase communities that the user is active in.
@@ -24,51 +26,63 @@ class ActiveCommunity extends StatelessWidget {
         ? screenHeight * 0.045
         : (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.08;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black.withOpacity(0.5), width: 1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          children: [
-            Image.network(
-              community.backgroundImage!,
-              fit: BoxFit.cover,
-              width: kIsWeb ? screenHeight * 0.35 : screenWidth * 0.4,
-              height: kIsWeb ? screenWidth * 0.05 : screenHeight * 0.1,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => CommunityPage(
+              communityName: community.name,
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: kIsWeb ? screenHeight * 0.12 : screenWidth * 0.1),
-                    child: CircleAvatar(
-                      radius: photosize,
-                      backgroundImage: NetworkImage(community.image!),
-                    ),
-                  ),
-                  SizedBox(height: kIsWeb ? screenHeight * 0.01 : 8),
-                  Text(
-                    'r/${community.name}',
-                    style: TextStyle(color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: kIsWeb ? screenHeight * 0.007 : 4),
-                  Text(
-                    '${community.membersCount} members',
-                    style: TextStyle(color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black.withOpacity(0.5), width: 1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Stack(
+            children: [
+              Image.network(
+                community.backgroundImage!,
+                fit: BoxFit.cover,
+                width: kIsWeb ? screenHeight * 0.35 : screenWidth * 0.4,
+                height: kIsWeb ? screenWidth * 0.05 : screenHeight * 0.1,
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left:
+                              kIsWeb ? screenHeight * 0.12 : screenWidth * 0.1),
+                      child: CircleAvatar(
+                        radius: photosize,
+                        backgroundImage: NetworkImage(community.image!),
+                      ),
+                    ),
+                    SizedBox(height: kIsWeb ? screenHeight * 0.01 : 8),
+                    Text(
+                      'r/${community.name}',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: kIsWeb ? screenHeight * 0.007 : 4),
+                    Text(
+                      '${community.membersCount} members',
+                      style: TextStyle(color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
