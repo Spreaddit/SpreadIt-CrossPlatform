@@ -88,7 +88,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
                     'Cancel',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                      fontSize: 15,
                     ),
                   ),
                 ),

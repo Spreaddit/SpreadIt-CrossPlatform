@@ -4,10 +4,25 @@ void openBottomSheet (
   String title,
   List items,
   List actions,
+  String? filterInitialValue ,
   BuildContext context,
 )
 {
-  int selectedIndex = 0;
+  int? selectedIndex ;
+  if (title == 'Sort') {
+    if(filterInitialValue == 'Top') {
+      selectedIndex = 2;
+    }
+    else if(filterInitialValue == 'New') {
+      selectedIndex = 3;
+    }
+    else {
+      selectedIndex = 0;
+    }
+  }
+  else {
+    selectedIndex = 0;
+  }
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {

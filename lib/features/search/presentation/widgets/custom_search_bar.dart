@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CustomSearchBar extends StatefulWidget {
-
   final String hintText;
   final List searchList;
-  final Function(String) updateSearchItem;
   final Function(List) onSearch;
-  final String? initialText;
+  final Function(String) updateSearchItem;
+  final String? communityOrUserName;
+  final String? communityOrUserIcon;
 
   const CustomSearchBar({
     required this.hintText,
     required this.searchList,
-    required this.updateSearchItem,
     required this.onSearch,
-    this.initialText,
+    required this.updateSearchItem,
+    this.communityOrUserName,
+    this.communityOrUserIcon,
   });
 
   @override
@@ -22,29 +22,29 @@ class CustomSearchBar extends StatefulWidget {
 }
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
-
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    controller.addListener(queryListener);
+    searchController.addListener(queryListener);
   }
 
   @override
   void dispose() {
-    controller.removeListener(queryListener);
-    controller.dispose();
-    super.dispose;
+    searchController.removeListener(queryListener);
+    searchController.dispose();
+    super.dispose();
   }
 
   void queryListener() {
-    widget.onSearch(filterList(controller.text));
-    widget.updateSearchItem(controller.text);
+    widget.onSearch(_filterList(searchController.text));
   }
 
-  List filterList(String query) {
-    if (query.isNotEmpty) {
+  List _filterList(String query) {
+    if (query.isEmpty) {
+      return List.from(widget.searchList);
+    } else {
       return widget.searchList
           .where(
             (e) => e.name.toString().toLowerCase().contains(
@@ -53,32 +53,56 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           )
           .toList();
     }
-    else {
-      return [];
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
+      height: 80,
       width: 330,
-      height: 40,   
-      child: SearchBar(
-        //controller: controller,
-        hintText: widget.initialText != null ? widget.initialText : widget.hintText,
-        leading: Icon(Icons.search),
-        backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) => Colors.grey[200]),
-        trailing:  controller.text.isNotEmpty ?
-        [
-          IconButton(
-            icon: Icon(Icons.cancel),
-            onPressed: () {
-              controller.clear();
-            },
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: SearchBar(
+              hintText: widget.communityOrUserName != null && widget.communityOrUserIcon != null ? '' : widget.hintText,
+              controller: searchController,
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 241, 243, 254)),
+              leading: Icon(Icons.search),
+              trailing: [
+                IconButton(
+                  icon: Icon(Icons.cancel),
+                  onPressed: () {
+                    searchController.clear();
+                  },
+                ),
+              ],
+            ),
           ),
-        ] : 
-        [],
+          if (widget.communityOrUserIcon != null && widget.communityOrUserName != null)
+            Positioned(
+              left: 50,
+              child: Container(
+                padding : EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Colors.grey,
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage:AssetImage(widget.communityOrUserIcon!),
+                      radius:10,
+                    ),  
+                    SizedBox(width: 4),
+                    Text(widget.communityOrUserName!),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

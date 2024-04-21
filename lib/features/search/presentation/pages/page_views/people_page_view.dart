@@ -84,3 +84,7 @@ class _PeoplePageViewState extends State<PeoplePageView> {
     );
   }
 }
+
+/* TO DOS :
+1) akhod boolean el user da followed walla laa w 3ala asaso ba-render el button
+2) mock service  */

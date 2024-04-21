@@ -15,7 +15,9 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search.dart';
-import 'package:spreadit_crossplatform/features/search/presentation/pages/search_results.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/in_community_or_user_search_results.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/search_in_community_or_user.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search_results.dart';
 import 'features/saved/presentation/page/saved_page.dart';
 import 'features/user_profile/presentation/pages/edit_profile.dart';
 import 'firebase_options.dart';
@@ -58,7 +60,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home:SearchResult(),
+      home:SearchInCommunityOrUser(),
        onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
@@ -150,8 +152,15 @@ class SpreadIt extends StatelessWidget {
         '/user-profile': (context) => UserProfile(),
         '/edit-profile': (context) => EditProfilePage(),
         '/edit_comment': (context) => EditComment(),
-        '/settings/account-settings/add-password': (context) =>
-            AddPasswordPage(),
+        '/settings/account-settings/add-password': (context) => AddPasswordPage(),
+        '/in-community-or-user-search-results': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          return InCommunityOrUserSearchResults(
+            sortFilter: args['sortFilter'],
+            timeFilter: args['timeFilter'],
+          );
+        }
       },
     );
   }

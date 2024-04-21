@@ -4,7 +4,14 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/page
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
 
 class MediaPageView extends StatefulWidget {
-  const MediaPageView({Key? key}) : super(key: key);
+  
+  String? sortFilter;
+  String? timeFilter;
+
+  MediaPageView({
+    this.sortFilter,
+    this.timeFilter,
+  });
 
   @override
   State<MediaPageView> createState() => _MediaPageViewState();
@@ -94,21 +101,62 @@ class _MediaPageViewState extends State<MediaPageView> {
   List time = ['All time', 'Past hour', 'Today', 'Past week', 'Past month', 'Past year'];
   List timeActions = [(){}, (){}, (){}, (){}, (){},(){}];
 
+  void removeFilter() {
+    setState(() {
+      widget.sortFilter = 'Most relevant';
+      widget.timeFilter = 'All time';
+    });
+  }
+
+  void updateSortFilter(value) {
+    setState(() => widget.sortFilter = value);
+  }
+
+  void updateTimeFilter(value) {
+    setState(() => widget.timeFilter = value);
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+    bool ShowTimeFilter = widget.sortFilter != 'New' && widget.sortFilter != 'Hot';
+
     return SingleChildScrollView(
       child: Column(
         children: [
           Row(
               children: [
+                if(widget.sortFilter !=null)
+                  IconButton(
+                    onPressed: removeFilter,
+                    icon: Icon(Icons.cancel),
+                  ),
                 FilterButton(
-                openBottomSheet: () => openBottomSheet('Sort', sort, sortActions, context),
-                text: 'Sort',
+                openBottomSheet: () {
+                  openBottomSheet(
+                    'Sort',
+                     sort,
+                    sortActions,
+                    widget.sortFilter,
+                    context,
+                  );
+                },
+                text: widget.sortFilter != null ? widget.sortFilter! :'Sort',
                 ),
-                FilterButton(
-                openBottomSheet: () => openBottomSheet('Time', time, timeActions, context),
-                text: 'Time',
-                ),
+                if (ShowTimeFilter)
+                  FilterButton(
+                  openBottomSheet: () { 
+                    openBottomSheet(
+                      'Time',
+                      time,
+                      timeActions,
+                      widget.timeFilter,
+                      context,
+                    );  
+                  },
+                  text: widget.timeFilter != null ? widget.timeFilter! :'Time',
+                  ),
               ],
           ),
           Row(
@@ -153,3 +201,10 @@ class _MediaPageViewState extends State<MediaPageView> {
     );
   }
 }
+
+/* TO DOS :
+1) azabat na2l el photos sa7
+2) a7ot videos (ask farida)
+3) lamma aghayyar el filter fl bottom sheet yeghayyaro fl page nafsaha 
+4) a7ot el community fl search bar
+5) mock service  */
