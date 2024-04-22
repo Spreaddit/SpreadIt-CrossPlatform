@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -20,11 +19,11 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// ),
 /// ```
 class PostFeed extends StatefulWidget {
-  PostCategories postCategory;
-  String? subspreaditName;
-  String? timeSort;
-  String? username;
-  bool showSortTypeChange = false;
+  final PostCategories postCategory;
+  final String? subspreaditName;
+  final String? timeSort;
+  final String? username;
+  final bool showSortTypeChange;
   final int startSortIndex;
   final int endSortIndex;
 
@@ -44,6 +43,7 @@ class PostFeed extends StatefulWidget {
 
 class _PostFeedState extends State<PostFeed> {
   late PostCategories currentPostCategory;
+  bool isLoading = true;
   List<Post> items = [];
 
   @override
@@ -54,6 +54,8 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   Future<void> fetchData() async {
+    if (!mounted) return;
+
     List<Post> fetchedItems = await getFeedPosts(
       category: currentPostCategory,
       subspreaditName: widget.subspreaditName,
@@ -66,12 +68,17 @@ class _PostFeedState extends State<PostFeed> {
         CustomSnackbar(content: "No posts found").show(context);
       }
       items = fetchedItems;
+      isLoading = false;
     });
   }
 
   void onCategoryChanged(PostCategories postCategory) {
+    if (postCategory == currentPostCategory) return;
+    if (!mounted) return;
     setState(() {
       currentPostCategory = postCategory;
+      items.clear();
+      isLoading = true;
     });
     fetchData();
   }

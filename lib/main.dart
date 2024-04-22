@@ -60,7 +60,7 @@ class SpreadIt extends StatelessWidget {
         future: _checkIfUserLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); 
+            return CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -69,7 +69,7 @@ class SpreadIt extends StatelessWidget {
           }
         },
       ),
-       onGenerateRoute: (settings) {
+      onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
         if (pathSegments == null || pathSegments.isEmpty) {
@@ -81,17 +81,15 @@ class SpreadIt extends StatelessWidget {
           final postId = pathSegments[pathSegments.length - 2];
           final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
 
-
-            return MaterialPageRoute(
-              builder: (_) =>
-                  PostCardPage(postId: postId, isUserProfile: isUserProfile),
-            );
-        
+          return MaterialPageRoute(
+            builder: (_) =>
+                PostCardPage(postId: postId, isUserProfile: isUserProfile),
+          );
         }
       },
       routes: {
         '/start-up-page': (context) => StartUpPage(),
-      '/home': (context) => HomePage(),
+        '/home': (context) => HomePage(),
         '/popular': (context) => HomePage(
               currentPage: CurrentPage.popular,
             ),
