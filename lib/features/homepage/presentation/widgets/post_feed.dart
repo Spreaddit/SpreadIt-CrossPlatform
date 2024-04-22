@@ -59,6 +59,9 @@ class _PostFeedState extends State<PostFeed> {
   @override
   void didUpdateWidget(covariant PostFeed oldWidget) {
     if (widget.postCategory != oldWidget.postCategory) {
+      setState(() {
+        currentPostCategory = widget.postCategory;
+      });
       fetchData();
     }
     super.didUpdateWidget(oldWidget);
@@ -67,7 +70,9 @@ class _PostFeedState extends State<PostFeed> {
   Future<void> fetchData() async {
     if (!mounted) return;
 
-    setState(() => isLoading = true);
+    setState(
+      () => isLoading = true,
+    );
 
     List<Post> fetchedItems = await getFeedPosts(
       category: currentPostCategory,
@@ -80,6 +85,8 @@ class _PostFeedState extends State<PostFeed> {
       if (fetchedItems.isEmpty) {
         CustomSnackbar(content: "No posts found").show(context);
       }
+      newItems.clear();
+      existingItems.clear();
       newItems.addAll(fetchedItems);
       isLoading = false;
       _loadingMore = false;

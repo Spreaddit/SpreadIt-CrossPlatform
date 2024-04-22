@@ -48,9 +48,7 @@ class TopBar extends AppBar {
                       color: Colors.transparent,
                     ),
                     onChanged: (newValue) {
-                      onChangeHomeCategory!(CurrentPage.home == currentPage
-                          ? CurrentPage.popular.index
-                          : CurrentPage.home.index);
+                      onChangeHomeCategory!(newValue!.index);
                     },
                     items: CurrentPage.values
                         .where((category) =>
