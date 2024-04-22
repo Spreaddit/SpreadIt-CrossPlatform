@@ -26,6 +26,7 @@ class Post {
   final bool? isCommentsLocked;
   final bool? isNsfw;
   final bool? sendPostReplyNotification;
+  final bool? isSaved;
 
   Post({
     required this.postId,
@@ -55,6 +56,7 @@ class Post {
     this.isCommentsLocked,
     this.isNsfw,
     this.sendPostReplyNotification,
+    this.isSaved =true, 
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -101,6 +103,7 @@ class Post {
       isCommentsLocked: json['isCommentsLocked'],
       isNsfw: json['isNsfw'],
       sendPostReplyNotification: json['sendPostReplyNotification'],
+      isSaved: json['isSaved'],
     );
   }
 }

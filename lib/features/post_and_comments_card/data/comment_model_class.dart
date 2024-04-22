@@ -85,6 +85,7 @@ class Comment {
       subredditName: json['community_title']??"ayhaga",
       username: usernameFetched,
       profilePic: avatarFetched,
+      postId:  json['postId'], //////// CHECK HYKTOBHA EZAY
     );
   }
 }

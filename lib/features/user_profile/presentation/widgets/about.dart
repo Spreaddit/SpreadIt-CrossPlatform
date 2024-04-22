@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 /// The `AboutWidget` class is responsible for displaying user information such as post karma, comment karma, and about text.
 ///
 /// This widget is typically used within user profile pages to provide a summary of the user's activity and background.
@@ -55,44 +54,6 @@ class AboutWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    postKarmaNo,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "Post Karma",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              SizedBox(width: screenWidth * 0.3),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    commentKarmaNo,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "Comment Karma",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ],
-          ),
           SizedBox(height: screenHeight * 0.03),
           Text(
             aboutText,

@@ -61,6 +61,7 @@ class UserSingleton {
     await prefs.setString('userSingleton', jsonString);
   }
 
+
   // Load data from shared preferences
   Future<void> loadFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
