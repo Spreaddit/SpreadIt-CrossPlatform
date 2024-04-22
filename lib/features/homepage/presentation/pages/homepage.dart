@@ -7,8 +7,11 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/le
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 
+CurrentPage previousPage = CurrentPage.home;
+
 class HomePage extends StatefulWidget {
   final CurrentPage currentPage;
+
   HomePage({
     Key? key,
     this.currentPage = CurrentPage.home,
@@ -43,6 +46,9 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       currentPage = CurrentPage.values[newIndex];
     });
+    if (currentPage.index <= 5) {
+      previousPage = currentPage;
+    }
   }
 
   @override
@@ -89,7 +95,8 @@ class _HomePageState extends State<HomePage> {
           label: 'Inbox',
         ),
       ],
-      currentIndex: currentPage.index <= 5 ? currentPage.index % 5 : 0,
+      currentIndex:
+          currentPage.index <= 5 ? currentPage.index % 5 : previousPage.index,
       selectedItemColor: const Color.fromARGB(255, 255, 72, 0),
       onTap: (index) => changeSelectedIndex(index),
       unselectedItemColor: Colors.black,
