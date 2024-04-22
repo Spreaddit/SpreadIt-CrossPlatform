@@ -35,6 +35,10 @@ class _HomePageState extends State<HomePage> {
   void changeSelectedIndex(int newIndex) {
     print("New Index:$newIndex");
     print("previous page index: ${currentPage.index}");
+    if (newIndex == 2) {
+      Navigator.of(context).pushNamed('/primary-content-page');
+      return;
+    }
     if (currentPage.index == newIndex) return;
     setState(() {
       currentPage = CurrentPage.values[newIndex];
@@ -43,25 +47,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<PreferredSizeWidget?> appBars = [
-      TopBar(
-        key: _homePageKey,
-        currentPage: currentPage,
-        context: context,
-        onChangeHomeCategory: changeSelectedIndex,
-      ),
-      AppBar(
-        title: Text('Communities'),
-      ),
-      null,
-      AppBar(
-        title: Text('Chat'),
-      ),
-      AppBar(
-        title: Text('Inbox'),
-      ),
-    ];
-
     List<Widget> screens = [
       PostFeed(
         postCategory: PostCategories.best,
@@ -107,7 +92,12 @@ class _HomePageState extends State<HomePage> {
     );
 
     return Scaffold(
-      appBar: appBars[currentPage.index % 5],
+      appBar: TopBar(
+        key: _homePageKey,
+        context: context,
+        currentPage: currentPage,
+        onChangeHomeCategory: changeSelectedIndex,
+      ),
       body: screens[currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),
