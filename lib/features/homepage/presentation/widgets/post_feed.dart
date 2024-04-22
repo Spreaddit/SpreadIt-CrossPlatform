@@ -8,6 +8,18 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/so
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// This widget is a post feed display,
+/// which takes [PostCategories] as a constructor parameter
+/// and creates a post feed, by fetching posts from
+/// the respective endpoint
+///
+/// This example shows how a post feed of best posts can be created
+///
+/// ```dart
+/// PostFeed(
+///   postCategory: PostCategories.best,
+/// ),
+/// ```
 class PostFeed extends StatefulWidget {
   final PostCategories postCategory;
   final String? subspreaditName;
