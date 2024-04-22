@@ -143,7 +143,7 @@ class _PostFeedState extends State<PostFeed> {
         return fetchData();
       },
       child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const ScrollPhysics(),
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
