@@ -166,24 +166,31 @@ class _PostFeedState extends State<PostFeed> {
                       ? _buildShimmerLoading()
                       : Column(
                           children: [
-                            for (int i = 0; i < existingItems.length; i++)
-                              Column(
-                                children: [
-                                  PostWidget(
-                                    post: existingItems[i],
-                                    isUserProfile: currentPostCategory ==
-                                            PostCategories.user ||
-                                        (UserSingleton().user != null &&
-                                            existingItems[i].username ==
-                                                UserSingleton().user!.username),
-                                  ),
-                                  Divider(
-                                    height: 20,
-                                    thickness: 0.2,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: existingItems.length,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    PostWidget(
+                                        post: existingItems[index],
+                                        isUserProfile: currentPostCategory ==
+                                                PostCategories.user ||
+                                            (UserSingleton().user != null &&
+                                                existingItems[index].username ==
+                                                    UserSingleton()
+                                                        .user!
+                                                        .username)),
+                                    Divider(
+                                      height: 20,
+                                      thickness: 0.2,
+                                      color: Colors.black,
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
                             if (_loadingMore)
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
