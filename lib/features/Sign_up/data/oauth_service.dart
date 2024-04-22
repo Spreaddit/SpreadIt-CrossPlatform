@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import "package:spreadit_crossplatform/user_info.dart";
 
 /// Google sign-in instance.
 final GoogleSignIn _googleSignIn = GoogleSignIn();  
@@ -20,7 +21,7 @@ Future<String> signInWithGoogle(BuildContext context) async {
   var accessToken=credential.accessToken!;
   await FirebaseAuth.instance.signInWithCredential(credential);
   final currentUser = FirebaseAuth.instance.currentUser;
-   print("User signed in: ${currentUser!.email}");
+   UserSingleton().setGoogleInfo(accessToken , currentUser!.email!);
   return accessToken;
 }
 
@@ -35,3 +36,4 @@ Future<bool> signOutWithGoogle(BuildContext context) async {
   }
   return true;
 }
+

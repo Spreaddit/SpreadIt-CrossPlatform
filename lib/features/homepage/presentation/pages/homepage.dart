@@ -64,6 +64,9 @@ class _HomePageState extends State<HomePage> {
         break;
       case CurrentPage.inbox:
         // Handle case when "Inbox" icon is tapped
+        Navigator.of(context).pushNamed(
+          '/notifications',
+        );
         break;
       case CurrentPage.popular:
         Navigator.of(context).pushNamed(
