@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -86,10 +88,14 @@ class _PostFeedState extends State<PostFeed> {
       }
       newItems.clear();
       existingItems.clear();
-      newItems.addAll(fetchedItems);
+      newItems = fetchedItems;
       isLoading = false;
       _loadingMore = false;
-      existingItems.addAll(newItems.take(7));
+      existingItems = [
+        ...existingItems,
+        ...newItems.sublist(existingItems.length,
+            max(existingItems.length + 7, newItems.length))
+      ];
       isRefreshing = false;
     });
   }
@@ -114,7 +120,10 @@ class _PostFeedState extends State<PostFeed> {
     if (existingItems.length < newItems.length) {
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
-          existingItems.addAll(newItems.take(7));
+          existingItems = [
+            ...existingItems,
+            ...newItems.sublist(existingItems.length, existingItems.length + 7)
+          ];
           _loadingMore = false;
         });
       });
