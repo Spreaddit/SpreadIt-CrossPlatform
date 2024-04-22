@@ -60,6 +60,10 @@ class _HomePageState extends State<HomePage> {
         postCategory: PostCategories.hot,
         showSortTypeChange: false,
       ),
+      PostFeed(
+        postCategory: PostCategories.best,
+        showSortTypeChange: true,
+      ),
     ];
 
     Widget bottomNavigationBar = BottomNavigationBar(
@@ -85,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           label: 'Inbox',
         ),
       ],
-      currentIndex: currentPage.index % 5,
+      currentIndex: currentPage.index <= 5 ? currentPage.index % 5 : 0,
       selectedItemColor: const Color.fromARGB(255, 255, 72, 0),
       onTap: (index) => changeSelectedIndex(index),
       unselectedItemColor: Colors.black,

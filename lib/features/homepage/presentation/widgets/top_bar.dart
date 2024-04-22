@@ -26,7 +26,7 @@ class TopBar extends AppBar {
           toolbarHeight: 60,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: currentPage.index > 0 && currentPage.index < 5
+          title: currentPage.index != 0 && currentPage.index != 5
               ? Text(currentPage.toString().split('.').last)
               : chooseTitle(
                   currentPage,
@@ -98,5 +98,5 @@ Widget chooseTitle(
       ),
     ),
   ];
-  return titles[currentPage.index%5];
+  return titles[currentPage.index % 5];
 }

@@ -99,7 +99,9 @@ class SpreadIt extends StatelessWidget {
         '/discover': (context) => HomePage(
               currentPage: CurrentPage.discover,
             ),
-        '/all': (context) => AllPage(),
+        '/all': (context) => HomePage(
+              currentPage: CurrentPage.all,
+            ),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),
