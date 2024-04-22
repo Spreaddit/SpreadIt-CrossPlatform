@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
@@ -530,13 +531,13 @@ class _PostContent extends StatelessWidget {
       }
     } else if (postType == "Link") {
       if ((isNsfw || isSpoiler) && !isFullView) return Text("");
-      print(link);
+      print("link is:$link");
       return AnyLinkPreview(
         link: link ?? "",
         displayDirection: UIDirection.uiDirectionHorizontal,
         cache: Duration(hours: 1),
         backgroundColor: Colors.grey[300],
-        proxyUrl: "https://corsproxy.io/?",
+        proxyUrl: kIsWeb ? "https://corsproxy.io/?" : null,
         errorWidget: Container(
           color: Colors.grey[300],
           child: Text('Oops!'),

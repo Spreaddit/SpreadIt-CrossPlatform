@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -93,7 +94,7 @@ class _PostFeedState extends State<PostFeed> {
       existingItems = [
         ...existingItems,
         ...newItems.sublist(existingItems.length,
-            max(existingItems.length + 7, newItems.length))
+            min(existingItems.length + 7, newItems.length))
       ];
       isRefreshing = false;
     });
@@ -121,7 +122,8 @@ class _PostFeedState extends State<PostFeed> {
         setState(() {
           existingItems = [
             ...existingItems,
-            ...newItems.sublist(existingItems.length, existingItems.length + 7)
+            ...newItems.sublist(existingItems.length,
+                min(existingItems.length + 7, newItems.length))
           ];
           _loadingMore = false;
         });
