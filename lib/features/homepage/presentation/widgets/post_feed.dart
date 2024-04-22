@@ -4,7 +4,6 @@ import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dar
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/sort_menu.dart';
-import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:shimmer/shimmer.dart';
 
