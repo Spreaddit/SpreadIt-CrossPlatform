@@ -136,71 +136,73 @@ class _PostFeedState extends State<PostFeed> {
         });
         return fetchData();
       },
-      child: SingleChildScrollView(
-        physics: ScrollPhysics(),
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              if (widget.showSortTypeChange)
-                Container(
-                  color: const Color.fromARGB(255, 226, 226, 226),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SortTypeMenu(
-                        onCategoryChanged: onCategoryChanged,
-                        startSortIndex: widget.startSortIndex,
-                        endSortIndex: widget.endSortIndex,
-                      ),
-                    ],
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: _scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                if (widget.showSortTypeChange)
+                  Container(
+                    color: const Color.fromARGB(255, 226, 226, 226),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SortTypeMenu(
+                          onCategoryChanged: onCategoryChanged,
+                          startSortIndex: widget.startSortIndex,
+                          endSortIndex: widget.endSortIndex,
+                        ),
+                      ],
+                    ),
                   ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 0,
+                  ),
+                  child: isLoading
+                      ? _buildShimmerLoading()
+                      : Column(
+                          children: [
+                            for (int i = 0; i < existingItems.length; i++)
+                              Column(
+                                children: [
+                                  PostWidget(
+                                    post: existingItems[i],
+                                    isUserProfile: currentPostCategory ==
+                                            PostCategories.user ||
+                                        (UserSingleton().user != null &&
+                                            existingItems[i].username ==
+                                                UserSingleton().user!.username),
+                                  ),
+                                  Divider(
+                                    height: 20,
+                                    thickness: 0.2,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                            if (_loadingMore)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: existingItems.length != newItems.length
+                                    ? CircularProgressIndicator(
+                                        color: Colors.grey,
+                                      )
+                                    : Center(
+                                        child: Text(
+                                            "Hooray! You checked everything for today!"),
+                                      ),
+                              )
+                          ],
+                        ),
                 ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 0,
-                ),
-                child: isLoading
-                    ? _buildShimmerLoading()
-                    : Column(
-                        children: [
-                          for (int i = 0; i < existingItems.length; i++)
-                            Column(
-                              children: [
-                                PostWidget(
-                                  post: existingItems[i],
-                                  isUserProfile: currentPostCategory ==
-                                          PostCategories.user ||
-                                      (UserSingleton().user != null &&
-                                          existingItems[i].username ==
-                                              UserSingleton().user!.username),
-                                ),
-                                Divider(
-                                  height: 20,
-                                  thickness: 0.2,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
-                          if (_loadingMore)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: existingItems.length != newItems.length
-                                  ? CircularProgressIndicator(
-                                      color: Colors.grey,
-                                    )
-                                  : Center(
-                                      child: Text(
-                                          "Hooray! You checked everything for today!"),
-                                    ),
-                            )
-                        ],
-                      ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
