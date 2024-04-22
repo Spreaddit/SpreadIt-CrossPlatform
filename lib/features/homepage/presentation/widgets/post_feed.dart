@@ -6,6 +6,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/sort_menu.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PostFeed extends StatefulWidget {
   final PostCategories postCategory;
@@ -37,6 +38,7 @@ class _PostFeedState extends State<PostFeed> {
   List<Post> existingItems = [];
   final ScrollController _scrollController = ScrollController();
   bool _loadingMore = false;
+  bool isRefreshing = false;
 
   @override
   void initState() {
@@ -54,8 +56,18 @@ class _PostFeedState extends State<PostFeed> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant PostFeed oldWidget) {
+    if (widget.postCategory != oldWidget.postCategory) {
+      fetchData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   Future<void> fetchData() async {
     if (!mounted) return;
+
+    setState(() => isLoading = true);
 
     List<Post> fetchedItems = await getFeedPosts(
       category: currentPostCategory,
@@ -71,7 +83,8 @@ class _PostFeedState extends State<PostFeed> {
       newItems.addAll(fetchedItems);
       isLoading = false;
       _loadingMore = false;
-      _loadMore();
+      existingItems.addAll(newItems.take(7));
+      isRefreshing = false;
     });
   }
 
@@ -118,105 +131,141 @@ class _PostFeedState extends State<PostFeed> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () {
+        setState(() {
+          isRefreshing = true;
+        });
         return fetchData();
       },
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                if (widget.showSortTypeChange)
-                  Container(
-                    color: const Color.fromARGB(255, 226, 226, 226),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SortTypeMenu(
-                          onCategoryChanged: onCategoryChanged,
-                          startSortIndex: widget.startSortIndex,
-                          endSortIndex: widget.endSortIndex,
-                        ),
-                      ],
-                    ),
-                  ),
+      child: SingleChildScrollView(
+        physics: ScrollPhysics(),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              if (widget.showSortTypeChange)
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 0,
+                  color: const Color.fromARGB(255, 226, 226, 226),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SortTypeMenu(
+                        onCategoryChanged: onCategoryChanged,
+                        startSortIndex: widget.startSortIndex,
+                        endSortIndex: widget.endSortIndex,
+                      ),
+                    ],
                   ),
-                  child: isLoading
-                      ? CircularProgressIndicator(
-                          color: redditOrange,
-                        )
-                      : Column(
-                          children: [
-                            for (int i = 0; i < existingItems.length; i++)
-                              Column(
-                                children: [
-                                  PostWidget(
-                                    post: existingItems[i],
-                                    isUserProfile: currentPostCategory ==
-                                            PostCategories.user ||
-                                        (UserSingleton().user != null &&
-                                            existingItems[i].username ==
-                                                UserSingleton().user!.username),
-                                  ),
-                                  Divider(
-                                    height: 20,
-                                    thickness: 0.2,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                            if (_loadingMore)
-                              existingItems.length != newItems.length
-                                  ? SliverPersistentHeader(
-                                      pinned: true,
-                                      delegate: _LoadingMoreIndicator(),
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Center(
-                                        child: Text(
-                                            "Hooray! You checked everything for today!"),
-                                      ),
-                                    ),
-                          ],
-                        ),
                 ),
-              ],
-            ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 0,
+                ),
+                child: isLoading
+                    ? _buildShimmerLoading()
+                    : Column(
+                        children: [
+                          for (int i = 0; i < existingItems.length; i++)
+                            Column(
+                              children: [
+                                PostWidget(
+                                  post: existingItems[i],
+                                  isUserProfile: currentPostCategory ==
+                                          PostCategories.user ||
+                                      (UserSingleton().user != null &&
+                                          existingItems[i].username ==
+                                              UserSingleton().user!.username),
+                                ),
+                                Divider(
+                                  height: 20,
+                                  thickness: 0.2,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                          if (_loadingMore)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: existingItems.length != newItems.length
+                                  ? CircularProgressIndicator(
+                                      color: Colors.grey,
+                                    )
+                                  : Center(
+                                      child: Text(
+                                          "Hooray! You checked everything for today!"),
+                                    ),
+                            )
+                        ],
+                      ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LoadingMoreIndicator extends SliverPersistentHeaderDelegate {
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return SizedBox(
-      height: shrinkOffset,
-      child: Center(
-        child: CircularProgressIndicator(
-          color: redditOrange,
         ),
       ),
     );
   }
 
-  @override
-  double get maxExtent => 20.0;
-
-  @override
-  double get minExtent => 0.0;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
+  Widget _buildShimmerLoading() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: !isRefreshing
+                ? CircularProgressIndicator(
+                    color: Colors.grey,
+                  )
+                : Text(""),
+          ),
+        ),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          period: Duration(milliseconds: 1000),
+          child: Column(
+            children: List.generate(
+              10,
+              (index) => Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(),
+                      title: Container(
+                        width: double.infinity,
+                        height: 10.0,
+                        color: Colors.white,
+                      ),
+                      subtitle: Container(
+                        width: double.infinity,
+                        height: 10.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 200.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    ListTile(
+                      title: Container(
+                        width: double.infinity,
+                        height: 10.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

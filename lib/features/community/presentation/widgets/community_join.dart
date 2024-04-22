@@ -7,10 +7,15 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 /// A button widget that allows the user to join or leave a community.
 class JoinCommunityBtn extends StatefulWidget {
-  JoinCommunityBtn({Key? key, required this.communityName}) : super(key: key);
+  JoinCommunityBtn({
+    Key? key,
+    required this.communityName,
+    this.shouldJoinButtonRender,
+  }) : super(key: key);
 
   /// The name of the community.
   final String communityName;
+  final void Function()? shouldJoinButtonRender;
 
   @override
   State<JoinCommunityBtn> createState() => _JoinCommunityBtnState();
@@ -33,10 +38,11 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
       CustomSnackbar(content: "Failed to retrieve subscription data")
           .show(context);
     } else {
-      if (mounted) {
-        setState(() {
-          isJoined = subscriptionData["isSubscribed"];
-        });
+      setState(() {
+        isJoined = subscriptionData["isSubscribed"];
+      });
+      if (widget.shouldJoinButtonRender != null) {
+        widget.shouldJoinButtonRender!();
       }
     }
   }

@@ -70,6 +70,8 @@ class _PostHeader extends StatefulWidget {
 class _PostHeaderState extends State<_PostHeader> {
   late String dateFormatted;
   late Timer timer;
+  bool shouldRenderJoin = false;
+
   @override
   void initState() {
     super.initState();
@@ -137,8 +139,16 @@ class _PostHeaderState extends State<_PostHeader> {
             direction: Axis.horizontal,
             mainAxisSize: MainAxisSize.min,
             children: [
-              JoinCommunityBtn(
-                communityName: widget.post.community,
+              Opacity(
+                opacity: shouldRenderJoin ? 1 : 0,
+                child: JoinCommunityBtn(
+                  shouldJoinButtonRender: () {
+                    setState(() {
+                      shouldRenderJoin = true;
+                    });
+                  },
+                  communityName: widget.post.community,
+                ),
               ),
               IconButton(
                 icon: Icon(Icons.more_vert),
@@ -387,9 +397,9 @@ class _PostBody extends StatelessWidget {
   }
 }
 
-/// This widget is responsible for displaying a carousel of images. 
+/// This widget is responsible for displaying a carousel of images.
 /// It takes a list of attachments (images) as input and
-/// displays them in a horizontal carousel format, allowing 
+/// displays them in a horizontal carousel format, allowing
 /// users to swipe through the images.
 class _ImageCaruosel extends StatefulWidget {
   final List<Attachment> attachments;
@@ -462,7 +472,7 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
   }
 }
 
-/// This widget is responsible for displaying the content of a post. 
+/// This widget is responsible for displaying the content of a post.
 /// It adapts its layout and rendering based on the type of post,
 /// which can be an image, video, poll, or text.
 class _PostContent extends StatelessWidget {
@@ -670,7 +680,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
 /// 1. [post]: An instance of [Post] containing post details.
 /// 2. [isFullView]: A boolean indicating whether to render the post in full view or post feed view.
 /// 3. [isUserProfile]: A boolean indicating whether to render the post as a post owner or viewer.
-/// 
+///
 /// Example:
 /// ```dart
 /// PostWidget(
