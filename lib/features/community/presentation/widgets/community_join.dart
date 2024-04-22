@@ -33,9 +33,11 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
       CustomSnackbar(content: "Failed to retrieve subscription data")
           .show(context);
     } else {
-      setState(() {
-        isJoined = subscriptionData["isSubscribed"];
-      });
+      if (mounted) {
+        setState(() {
+          isJoined = subscriptionData["isSubscribed"];
+        });
+      }
     }
   }
 

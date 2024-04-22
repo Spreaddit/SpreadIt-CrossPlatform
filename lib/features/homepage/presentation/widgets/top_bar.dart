@@ -14,12 +14,15 @@ class TopBar extends AppBar {
   final CurrentPage currentPage;
   final BuildContext context;
   final void Function(int)? onChangeHomeCategory;
+  final Key? key;
 
   TopBar({
     this.currentPage = CurrentPage.home,
     required this.context,
     this.onChangeHomeCategory,
+    this.key,
   }) : super(
+          key: key,
           toolbarHeight: 60,
           backgroundColor: Colors.transparent,
           elevation: 0,
