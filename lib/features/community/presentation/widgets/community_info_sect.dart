@@ -100,7 +100,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
                     ),
                   ],
                 ),
-                if (isMod) ModtoolsPageBtn(),
+                if (isMod) ModtoolsPageBtn(communityName: widget.communityName,),
                 if (!isMod)
                   JoinCommunityBtn(
                     communityName: widget.communityName,

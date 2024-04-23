@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DummyPage extends StatelessWidget {
-  const DummyPage({Key? key}) : super(key: key);
+  DummyPage({Key? key, required this.communityName}) : super(key: key);
+
+  final String communityName;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ElevatedButton(
+      onPressed: () {},
+      child: Text('Dummy Page: r/$communityName'),
+    );
   }
 }

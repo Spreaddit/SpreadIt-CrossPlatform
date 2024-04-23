@@ -3,25 +3,48 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/pages/community_type_page.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/pages/description_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/dummy_page.dart';
 
 class ModtoolsPage extends StatelessWidget {
-  ModtoolsPage({Key? key}) : super(key: key);
+  ModtoolsPage({Key? key, required this.communityName}) : super(key: key);
 
-  /// List of routes to navigate to different modtools sub-pages.
-  final Map<String, Widget> routes = {
-    "description_page": DummyPage(),
-    "community_type_page": DummyPage(),
-    "post_types_page": DummyPage(),
-    "discovery_page": DummyPage(),
-    "scheduled_posts_page": DummyPage(),
-    "moderators_page": DummyPage(),
-    "approved_users_page": DummyPage(),
-    "banned_users_page": DummyPage(),
-  };
+  final String communityName;
 
   @override
   Widget build(BuildContext context) {
+    /// List of routes to navigate to different modtools sub-pages.
+    final Map<String, Widget> routes = {
+      "description_page": DescriptionPage(
+        communityName: communityName,
+      ),
+      "community_type_page": CommunityTypePage(
+        communityName: communityName,
+      ),
+      "post_types_page": DummyPage(
+        communityName: communityName,
+      ),
+      "discovery_page": DummyPage(
+        communityName: communityName,
+      ),
+      "content_tags_page": DummyPage(
+        communityName: communityName,
+      ),
+      "scheduled_posts_page": DummyPage(
+        communityName: communityName,
+      ),
+      "moderators_page": DummyPage(
+        communityName: communityName,
+      ),
+      "approved_users_page": DummyPage(
+        communityName: communityName,
+      ),
+      "banned_users_page": DummyPage(
+        communityName: communityName,
+      ),
+    };
+
     /// Lists to hold widgets for different sections of the modtools.
     List<Widget> generalSection = [];
     List<Widget> contentAndRegulationsSection = [];
@@ -77,7 +100,7 @@ class ModtoolsPage extends StatelessWidget {
       ToPageBtn(
         iconData: Icons.local_offer_outlined,
         mainText: "Content Tags",
-        onPressed: () => DummyPage(),
+        onPressed: () => navigateToPage(routes["content_tags_page"]),
       ),
     ]);
 
