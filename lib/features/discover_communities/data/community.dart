@@ -77,11 +77,11 @@ class Rule {
 
   factory Rule.fromJson(Map<String, dynamic> json) {
     return Rule(
-      id: json['_id'],
+      id: json['_id']?? "0",
       title: json['title'],
       description: json['description'],
       reportReason: json['reportReason'],
-      communityName: json['communityName'],
+      communityName: json['communityName'] ?? '0',
     );
   }
 }

@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/disable_community_notification.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 
 class ManageNotificationBottomSheet extends StatelessWidget {
   final bool followed;
   final bool community;
+  final void Function(String, Notifications) onHide;
+  final Notifications notification;
+
 
   ManageNotificationBottomSheet({
     required this.followed,
     required this.community,
+    required this.onHide,
+    required this.notification,
   });
 
   @override
@@ -46,7 +53,7 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 leading: Icon(Icons.visibility_off, color: Colors.black),
                 title: Text("Hide this notification"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  onHide(notification.id , notification);
                 },
               ),
             if (followed || community)
@@ -61,8 +68,8 @@ class ManageNotificationBottomSheet extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.do_not_disturb_on, color: Colors.black),
                 title: Text("Disable updates from this community"),
-                onTap: () {
-                  // Add your logic here for handling this action
+                onTap: () async {
+                  await disableCommunitynotifications(id:"1");
                 },
               ),
             Button(

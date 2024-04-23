@@ -46,7 +46,7 @@ dependencies:
   image_picker: ^0.8.4+2
   share_plus: ^6.3.4
   url_launcher: ^6.2.5
-
+  firebase_messaging: ^14.8.2
   dio: ^5.4.1
   flutter_dotenv: ^5.1.0
   time_machine: ^0.9.17
@@ -60,6 +60,7 @@ dependencies:
   uuid: ^4.4.0
   flutter_link_previewer: ^3.2.2
   shared_preferences: ^2.2.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

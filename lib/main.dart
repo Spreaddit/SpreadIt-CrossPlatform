@@ -11,6 +11,9 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/pages/p
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
@@ -60,7 +63,7 @@ class SpreadIt extends StatelessWidget {
         future: _checkIfUserLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); 
+            return LoaderWidget(dotSize: 10, logoSize: 100 ,); 
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -162,6 +165,7 @@ class SpreadIt extends StatelessWidget {
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
+        '/notifications' : (context) => NotificationPage(),
       },
     );
   }
@@ -169,6 +173,8 @@ class SpreadIt extends StatelessWidget {
   Future<bool> _checkIfUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userDataJson = prefs.getString('userSingleton');
+    ///subscribe to notifications
+    await subscribeToNotifications();
     return userDataJson != null;
   }
 }
