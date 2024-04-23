@@ -3,12 +3,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
-import '../../data/class_models/comments_class_model.dart';
 import '../../data/date_conversion.dart';
 import '../../data/follow_unfollow_api.dart';
 import '../widgets/about.dart';
@@ -18,7 +19,6 @@ import '../../../generic_widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
 import '../../data/get_user_info.dart';
 import '../../data/class_models/user_info_class_model.dart';
-import '../../data/get_user_comments.dart';
 import '../../data/get_follow_status.dart';
 
 /// `UserProfile` is a StatefulWidget responsible for displaying the user's profile information,
@@ -149,7 +149,7 @@ class _UserProfileState extends State<UserProfile> {
   /// Fetches comments made by the user.
   Future<void> fetchComments() async {
     try {
-      var data = await fetchUserComments(username!, 'user', '1');
+      var data = await fetchCommentsData(username, 'user', '1');
       setState(() {
         commentsList = data;
       });
