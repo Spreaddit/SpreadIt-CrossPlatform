@@ -15,7 +15,6 @@ import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'features/saved/presentation/page/saved_page.dart';
 import 'features/user_profile/presentation/pages/edit_profile.dart';
@@ -72,7 +71,7 @@ class SpreadIt extends StatelessWidget {
           }
         },
       ),
-       onGenerateRoute: (settings) {
+      onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
         if (pathSegments == null || pathSegments.isEmpty) {
@@ -84,24 +83,24 @@ class SpreadIt extends StatelessWidget {
           final postId = pathSegments[pathSegments.length - 2];
           final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
 
-
-            return MaterialPageRoute(
-              builder: (_) =>
-                  PostCardPage(postId: postId, isUserProfile: isUserProfile),
-            );
-        
+          return MaterialPageRoute(
+            builder: (_) =>
+                PostCardPage(postId: postId, isUserProfile: isUserProfile),
+          );
         }
       },
       routes: {
         '/start-up-page': (context) => StartUpPage(),
-      '/home': (context) => HomePage(),
+        '/home': (context) => HomePage(),
         '/popular': (context) => HomePage(
               currentPage: CurrentPage.popular,
             ),
         '/discover': (context) => HomePage(
               currentPage: CurrentPage.discover,
             ),
-        '/all': (context) => AllPage(),
+        '/all': (context) => HomePage(
+              currentPage: CurrentPage.all,
+            ),
         '/log-in-page': (context) => LogInScreen(),
         '/sign-up-page': (context) => SignUpScreen(),
         '/create-username-page': (context) => CreateUsername(),
