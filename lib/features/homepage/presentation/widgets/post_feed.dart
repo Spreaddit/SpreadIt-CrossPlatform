@@ -95,6 +95,8 @@ class _PostFeedState extends State<PostFeed> {
       username: widget.username,
     );
 
+    print("Category:$currentPostCategory, Items:$fetchedItems");
+
     setState(() {
       if (fetchedItems.isEmpty) {
         CustomSnackbar(content: "No posts found").show(context);
