@@ -266,6 +266,7 @@ class _PostFeedState extends State<PostFeed> {
                 : Text(""),
           ),
         ),
+        
         Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
