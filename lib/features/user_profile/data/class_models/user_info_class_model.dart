@@ -4,8 +4,10 @@
 class SocialMedia {
   /// The name of the platform.
   final String platform;
+
   /// The Title that will get rendered
-  final String displayname; 
+  final String displayname;
+
   /// The actual Url of the link
   final String url;
 

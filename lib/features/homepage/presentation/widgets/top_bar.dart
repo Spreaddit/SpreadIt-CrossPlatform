@@ -27,7 +27,9 @@ class TopBar extends AppBar {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: currentPage.index != 0 && currentPage.index != 5
-              ? Text(currentPage.toString().split('.').last)
+              ? Center(
+                  child: Text(currentPage.toString().split('.').last),
+                )
               : chooseTitle(
                   currentPage,
                   onChangeHomeCategory,

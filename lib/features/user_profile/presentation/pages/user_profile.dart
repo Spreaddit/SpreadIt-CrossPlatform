@@ -55,6 +55,7 @@ class _UserProfileState extends State<UserProfile> {
   File? backgroundImageFile;
   File? profileImageFile;
   Uint8List? imageBackgroundWeb;
+  ScrollController _scrollController = ScrollController();
   Uint8List? imageProfileWeb;
   late String username;
 
@@ -179,7 +180,7 @@ class _UserProfileState extends State<UserProfile> {
         'about': about,
         'displayname': displayName,
         'socialMediaLinks': socialMediaLinks,
-        'isActive' : isActive,
+        'isActive': isActive,
       },
     );
     if (returnedData != null && returnedData is Map<String, dynamic>) {
@@ -193,14 +194,15 @@ class _UserProfileState extends State<UserProfile> {
         socialMediaLinks = returnedData['socialMedia'] ?? [];
         about = returnedData['about'] ?? '';
         displayName = returnedData['displayname'] ?? '';
-        isActive=returnedData['isActive'];
+        isActive = returnedData['isActive'];
       });
     }
   }
 
   /// Builds the selected page based on the current index.
   Widget _buildSelectedPage() {
-    print("isActive $isActive communitiesList.isNotEmpty ${communitiesList.isNotEmpty}");
+    print(
+        "isActive $isActive communitiesList.isNotEmpty ${communitiesList.isNotEmpty}");
     switch (_selectedIndex) {
       case 0:
         return SliverToBoxAdapter(
@@ -219,7 +221,8 @@ class _UserProfileState extends State<UserProfile> {
                             vertical: 10.0, horizontal: 15.0),
                         child: Text(
                           'Active Communities',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ),
                       SizedBox(
@@ -245,6 +248,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
               PostFeed(
+                scrollController: _scrollController,
                 postCategory: PostCategories.user,
                 username: username,
               ),
@@ -286,6 +290,8 @@ class _UserProfileState extends State<UserProfile> {
     return Scaffold(
       body: Scrollbar(
         child: CustomScrollView(
+          physics: ScrollPhysics(),
+          controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
               child: userInfoFuture == null

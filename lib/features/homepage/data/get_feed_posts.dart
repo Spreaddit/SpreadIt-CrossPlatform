@@ -95,7 +95,6 @@ Future<List<Post>> getFeedPosts({
       ),
     );
     if (response.statusCode == 200) {
-      print("Fetched json posts = ${response.data}");
       List<Post> posts =
           (response.data as List).map((x) => Post.fromJson(x)).toList();
       return (posts);
