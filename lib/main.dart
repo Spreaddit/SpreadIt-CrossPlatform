@@ -29,6 +29,7 @@ import 'features/Sign_up/Presentaion/pages/createusername.dart';
 import 'features/create_post/presentation/pages/primary_content_page.dart';
 import 'features/create_post/presentation/pages/rules_page.dart';
 import 'features/user_profile/presentation/pages/user_profile.dart';
+import 'features/moderation/muted_communities/presentation/pages/muted_communities_page.dart';
 import './user_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -161,6 +162,7 @@ class SpreadIt extends StatelessWidget {
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) =>
             AddPasswordPage(),
+        '/muted-commuinties': (context) =>  MutedCommintyPage(),
       },
     );
   }

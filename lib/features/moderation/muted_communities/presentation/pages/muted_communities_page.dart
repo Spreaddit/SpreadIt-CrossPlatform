@@ -18,7 +18,6 @@ class _MutedCommintyPageState extends State<MutedCommintyPage> {
   void initState() {
     super.initState();
     getmutedCommunities();
-    loadCommunities();
   }
 
   void getmutedCommunities() async {
@@ -28,15 +27,6 @@ class _MutedCommintyPageState extends State<MutedCommintyPage> {
     setState(() {
       communities = loadedCommunities;
       isLoading = false;
-    });
-  }
-
-  void loadCommunities() async {
-    GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
-    List<Community> loadedCommunities =
-        await getSpecificCommunity.getCommunities('🔥 Trending globally');
-    setState(() {
-      communities = loadedCommunities;
     });
   }
 

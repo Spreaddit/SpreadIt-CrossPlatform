@@ -1,9 +1,9 @@
+import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 import 'package:dio/dio.dart';
 //import 'package:spreadit_crossplatform/api.dart';
- var apiUrl=  "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 class GetMutedCommunities {
   Dio dio = Dio();
   String? accessToken = UserSingleton().accessToken;

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import 'package:spreadit_crossplatform/user_info.dart';
 
-var baseurl = "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 
 Future<int> muteOrUnmuteUser(String communityName, String username, String type, String note) async {
   try {
@@ -26,7 +25,7 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
         return 400;
     }
 
-    String requestURL = '$baseurl$apiroute';
+    String requestURL = '$apiUrl$apiroute';
 
     /// Send a POST request to the server to mute or unmute the user.
     final response = await Dio().post(

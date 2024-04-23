@@ -15,7 +15,6 @@ String baseUrl = apiUrl; /// Base URL for API requests.
 /// Returns:
 ///   - A Future<List<MutedUser>> representing the list of muted users fetched from the server.
 
-var baseurl=  "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 Future<List<MutedUser>> getMutedUsers(String communityName) async {
   try {
     /// Retrieve the access token from the user singleton instance.
@@ -23,11 +22,11 @@ Future<List<MutedUser>> getMutedUsers(String communityName) async {
 
     /// Construct the complete API URL.
     String apiroute = "/community/moderation/$communityName/muted-users";
-    String apiUrl = "$baseurl$apiroute";
+    String route = "$apiUrl$apiroute";
 
     /// Send a GET request to the server to fetch muted users.
     final response = await Dio().get(
-      apiUrl,
+      route,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
