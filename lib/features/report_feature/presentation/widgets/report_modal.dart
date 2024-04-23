@@ -436,7 +436,7 @@ class ReportModal {
     if (blockIsChecked) {
       // TODO ASK IF REQUEST RESPONSE STATUS SHOULD BE RETURNED HERE
       interactWithUser(
-          userId: reportedUserName, action: InteractWithUsersActions.report);
+          userId: reportedUserName, action: InteractWithUsersActions.block);
     }
     Navigator.pop(context);
   }
