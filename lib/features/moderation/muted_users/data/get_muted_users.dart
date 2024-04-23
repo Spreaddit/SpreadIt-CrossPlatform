@@ -15,7 +15,7 @@ String baseUrl = apiUrl; /// Base URL for API requests.
 /// Returns:
 ///   - A Future<List<MutedUser>> representing the list of muted users fetched from the server.
 
-var baseurl=  "http://localhost:3001/MOHAMEDREFAAT031/Notification/2.0.0";
+var baseurl=  "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 Future<List<MutedUser>> getMutedUsers(String communityName) async {
   try {
     /// Retrieve the access token from the user singleton instance.
