@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_about_page.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/modtools_page_btn.dart';
 
 /// A widget that displays information about a community.
 class CommunityInfoSection extends StatefulWidget {
@@ -21,6 +22,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
   String membersCount = "0";
   String communityDescription = "";
   String communityImageLink = "";
+  bool isMod = false;
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
     setState(() {
       membersCount = membersCount;
     });
+    // TODO: Check if user is a moderator
   }
 
   /// Formats a number using the NumberFormat class.
@@ -97,9 +100,11 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
                     ),
                   ],
                 ),
-                JoinCommunityBtn(
-                  communityName: widget.communityName,
-                ),
+                if (isMod) ModtoolsPageBtn(),
+                if (!isMod)
+                  JoinCommunityBtn(
+                    communityName: widget.communityName,
+                  ),
               ],
             ),
           ),
