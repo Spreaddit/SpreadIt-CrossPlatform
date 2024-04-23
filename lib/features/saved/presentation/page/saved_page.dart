@@ -17,7 +17,8 @@ class SavedPage extends StatefulWidget {
 class _SavedPageState extends State<SavedPage> {
   int _selectedIndex = 0;
   List<Comment> commentsList = [];
-  String username = ' '; // Dummy data, not actually used when fetching the function;
+  ScrollController _scrollController = ScrollController();
+
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class _SavedPageState extends State<SavedPage> {
   /// Fetches the user's saved comments.
   Future<void> fetchComments() async {
     try {
-      var data = await fetchCommentsData(username, 'saved', '1');
+      var data = await fetchCommentsData('', 'saved', '1');
       setState(() {
         commentsList = data;
       });
@@ -56,6 +57,7 @@ class _SavedPageState extends State<SavedPage> {
       case 0:
         return SliverToBoxAdapter(
           child: PostFeed(
+            scrollController: _scrollController,
             postCategory: PostCategories.save,
             isSavedPage: true,
           ),
@@ -96,6 +98,8 @@ class _SavedPageState extends State<SavedPage> {
       body: Container(
         color: _selectedIndex == 1 ? Colors.grey[200] : Colors.transparent,
         child: CustomScrollView(
+          physics: ScrollPhysics(),
+          controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
               child: CustomBar(
