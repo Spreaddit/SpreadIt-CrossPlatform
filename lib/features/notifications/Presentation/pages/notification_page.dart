@@ -16,7 +16,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   late List<Notifications> notification;
-  var community=false;
+  var community = false;
   @override
   void initState() {
     super.initState();
@@ -33,66 +33,60 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Dummy Notifications'),
-      ),
-      body: FutureBuilder<List<Notifications>>(
-        future: fetchNotifications(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoaderWidget(
-              dotSize: 10,
-              logoSize: 100,
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            List<Notifications>? notifications = snapshot.data;
-            return ListView.builder(
-              itemCount: notifications!.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                final data= processNotification(notification);
-                return NotificationWidget(
-                  content: data.content,
-                  title: notification.content,
-                  profilePicUrl: notification.relatedUser.avatarUrl,
-                  date: dateToDuration(notification.createdAt),
-                  iconData: data.icon,
-                  buttonIcon: data.icon,
-                  buttonText: data.buttonText,
-                  onPressed: data.onPress,
-                  isRead : notification.isRead,
-                  followed: followed(notification.notificationType),
-                  community: getRandomBool(),   ///To be changed later
-                );
-              },
-            );
-          }
-        },
-      ),
+    return FutureBuilder<List<Notifications>>(
+      future: fetchNotifications(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoaderWidget(
+            dotSize: 10,
+            logoSize: 100,
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          List<Notifications>? notifications = snapshot.data;
+          return ListView.builder(
+            itemCount: notifications!.length,
+            itemBuilder: (context, index) {
+              final notification = notifications[index];
+              final data = processNotification(notification);
+              return NotificationWidget(
+                content: data.content,
+                title: notification.content,
+                profilePicUrl: notification.relatedUser.avatarUrl,
+                date: dateToDuration(notification.createdAt),
+                iconData: data.icon,
+                buttonIcon: data.icon,
+                buttonText: data.buttonText,
+                onPressed: data.onPress,
+                isRead: notification.isRead,
+                followed: followed(notification.notificationType),
+                community: getRandomBool(),
+
+                ///To be changed later
+              );
+            },
+          );
+        }
+      },
     );
   }
 }
 
-bool followed(String notificationType)
-{
-  if (notificationType == "posts" || notificationType == "comments")
-  {
+bool followed(String notificationType) {
+  if (notificationType == "posts" || notificationType == "comments") {
     return true;
   }
   return false;
 }
 
-
 bool getRandomBool() {
   // Generate a random number between 0 and 1
   var random = Random();
   var randomNumber = random.nextDouble();
-  
+
   // Return true if the random number is greater than or equal to 0.5, otherwise false
   return randomNumber >= 0.5;
 }

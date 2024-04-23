@@ -3,13 +3,12 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/data/get_feed_posts.dart';
 import '../../../homepage/presentation/widgets/post_feed.dart';
+import '../../data/class_models/comments_class_model.dart';
 import '../../data/date_conversion.dart';
 import '../../data/follow_unfollow_api.dart';
 import '../widgets/about.dart';
@@ -19,6 +18,7 @@ import '../../../generic_widgets/custom_bar.dart';
 import '../widgets/profile_header.dart';
 import '../../data/get_user_info.dart';
 import '../../data/class_models/user_info_class_model.dart';
+import '../../data/get_user_comments.dart';
 import '../../data/get_follow_status.dart';
 
 /// `UserProfile` is a StatefulWidget responsible for displaying the user's profile information,
@@ -45,7 +45,7 @@ class _UserProfileState extends State<UserProfile> {
   String about = '';
   String background = '';
   bool? followStatus = false;
-  bool isActive = false;
+  bool isVisible = false;
   String displayName = '';
   String postKarmaNo = '';
   String commentKarmaNo = '';
@@ -90,7 +90,7 @@ class _UserProfileState extends State<UserProfile> {
   /// Checks the follow status of the current user.
   void checkFollowStatus() async {
     try {
-      followStatus = await isFollowed(username);
+      followStatus = await isFollowed(username!);
     } catch (e) {
       CustomSnackbar(content: 'Internal server error').show(context);
     }
@@ -99,7 +99,7 @@ class _UserProfileState extends State<UserProfile> {
   /// Fetches user information asynchronously.
   void fetchUserInfoAsync() async {
     try {
-      userInfoFuture = await fetchUserInfo(username);
+      userInfoFuture = await fetchUserInfo(username!);
 
       setState(() {
         formattedDate = formatDate(userInfoFuture!.dateOfJoining);
@@ -111,7 +111,7 @@ class _UserProfileState extends State<UserProfile> {
         commentKarmaNo = userInfoFuture!.commentKarmaNo;
         profilePicture = userInfoFuture!.avatar;
         displayName = userInfoFuture!.displayname;
-        isActive = userInfoFuture!.isActive;
+        isVisible = userInfoFuture!.isVisible;
         socialMediaLinks = userInfoFuture!.socialMedia
             .map((socialMedia) => {
                   'platform': socialMedia.platform,
@@ -129,7 +129,7 @@ class _UserProfileState extends State<UserProfile> {
   Future<void> unfollowOrFollow() async {
     try {
       var response =
-          await toggleFollow(isFollowing: followStatus!, username: username);
+          await toggleFollow(isFollowing: followStatus!, username: username!);
       if (response == 200) {
         setState(() {
           followStatus = !followStatus!;
@@ -149,7 +149,7 @@ class _UserProfileState extends State<UserProfile> {
   /// Fetches comments made by the user.
   Future<void> fetchComments() async {
     try {
-      var data = await fetchCommentsData(username, 'user', '1');
+      var data = await fetchUserComments(username!, 'user', '1');
       setState(() {
         commentsList = data;
       });
@@ -179,7 +179,6 @@ class _UserProfileState extends State<UserProfile> {
         'about': about,
         'displayname': displayName,
         'socialMediaLinks': socialMediaLinks,
-        'isActive' : isActive,
       },
     );
     if (returnedData != null && returnedData is Map<String, dynamic>) {
@@ -193,55 +192,46 @@ class _UserProfileState extends State<UserProfile> {
         socialMediaLinks = returnedData['socialMedia'] ?? [];
         about = returnedData['about'] ?? '';
         displayName = returnedData['displayname'] ?? '';
-        isActive=returnedData['isActive'];
       });
     }
   }
 
   /// Builds the selected page based on the current index.
   Widget _buildSelectedPage() {
-    print("isActive $isActive communitiesList.isNotEmpty ${communitiesList.isNotEmpty}");
     switch (_selectedIndex) {
       case 0:
         return SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (communitiesList.isNotEmpty && isActive)
-                Container(
-                  width: double.infinity, // Take the full width of the screen
-                  color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 15.0),
-                        child: Text(
-                          'Active Communities',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                      ),
-                      SizedBox(
-                        height: kIsWeb
-                            ? MediaQuery.of(context).size.height * 0.25
-                            : MediaQuery.of(context).size.height * 0.21,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: communitiesList.map((communities) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 5.0, vertical: 10.0),
-                                child: ActiveCommunity(
-                                  community: communities,
-                                ),
-                              );
-                            }).toList(),
+              if (communitiesList.isNotEmpty && isVisible)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 15.0),
+                  child: Text(
+                    'Active Communities',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              if (communitiesList.isNotEmpty)
+                SizedBox(
+                  height: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.25
+                      : MediaQuery.of(context).size.height * 0.21,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: communitiesList.map((communities) {
+                        return Padding(
+                          padding: EdgeInsets.only(right: 10.0),
+                          child: ActiveCommunity(
+                            community: communities,
                           ),
-                        ),
-                      ),
-                    ],
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               PostFeed(
