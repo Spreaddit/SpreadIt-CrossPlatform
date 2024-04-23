@@ -55,6 +55,7 @@ class _UserProfileState extends State<UserProfile> {
   File? backgroundImageFile;
   File? profileImageFile;
   Uint8List? imageBackgroundWeb;
+  ScrollController _scrollController = ScrollController();
   Uint8List? imageProfileWeb;
   late String username;
 
@@ -246,12 +247,11 @@ class _UserProfileState extends State<UserProfile> {
                     ],
                   ),
                 ),
-              Expanded(
-                child: PostFeed(
-                  postCategory: PostCategories.best,
-                  username: username,
-                ),
-              )
+              PostFeed(
+                scrollController: _scrollController,
+                postCategory: PostCategories.best,
+                username: username,
+              ),
             ],
           ),
         );
@@ -290,6 +290,8 @@ class _UserProfileState extends State<UserProfile> {
     return Scaffold(
       body: Scrollbar(
         child: CustomScrollView(
+          physics: ScrollPhysics(),
+          controller: _scrollController,
           slivers: [
             SliverToBoxAdapter(
               child: userInfoFuture == null
