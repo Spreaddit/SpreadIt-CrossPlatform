@@ -53,7 +53,7 @@ class GetSpecificCommunity {
         );
         List<Community> communities =
             (response.data as List).map((i) => Community.fromJson(i)).toList();
-
+        print(communities);
         return communities;
       } else if (response.statusCode == 404) {
         throw Exception('No communities found for the specified category');

@@ -8,6 +8,18 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/so
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// This widget is a post feed display,
+/// which takes [PostCategories] as a constructor parameter
+/// and creates a post feed, by fetching posts from
+/// the respective endpoint
+///
+/// This example shows how a post feed of best posts can be created
+///
+/// ```dart
+/// PostFeed(
+///   postCategory: PostCategories.best,
+/// ),
+/// ```
 class PostFeed extends StatefulWidget {
   final PostCategories postCategory;
   final String? subspreaditName;
@@ -16,6 +28,8 @@ class PostFeed extends StatefulWidget {
   final bool showSortTypeChange;
   final int startSortIndex;
   final int endSortIndex;
+  final bool isSavedPage;
+  final ScrollController? scrollController;
 
   PostFeed({
     required this.postCategory,
@@ -25,6 +39,8 @@ class PostFeed extends StatefulWidget {
     this.showSortTypeChange = false,
     this.startSortIndex = 0,
     this.endSortIndex = 3,
+    this.isSavedPage = false,
+    this.scrollController,
   });
 
   @override
@@ -36,7 +52,7 @@ class _PostFeedState extends State<PostFeed> {
   bool isLoading = true;
   List<Post> newItems = [];
   List<Post> existingItems = [];
-  final ScrollController _scrollController = ScrollController();
+  late ScrollController _scrollController;
   bool _loadingMore = false;
   bool isRefreshing = false;
 
@@ -45,6 +61,9 @@ class _PostFeedState extends State<PostFeed> {
     currentPostCategory = widget.postCategory;
     isLoading = true;
     super.initState();
+    setState(() {
+      _scrollController = widget.scrollController ?? ScrollController();
+    });
     fetchData();
     _scrollController.addListener(_onScroll);
   }
@@ -61,9 +80,13 @@ class _PostFeedState extends State<PostFeed> {
     if (widget.postCategory != oldWidget.postCategory) {
       setState(() {
         currentPostCategory = widget.postCategory;
+        _scrollController = widget.scrollController ?? ScrollController();
       });
       fetchData();
     }
+    setState(() {
+      _scrollController = ScrollController();
+    });
     super.didUpdateWidget(oldWidget);
   }
 
@@ -80,6 +103,8 @@ class _PostFeedState extends State<PostFeed> {
       timeSort: widget.timeSort,
       username: widget.username,
     );
+
+    print("Category:$currentPostCategory, Items:$fetchedItems");
 
     setState(() {
       if (fetchedItems.isEmpty) {
@@ -100,6 +125,8 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void _onScroll() {
+    print(
+        "pixels:${_scrollController.position.pixels} max: ${_scrollController.position.maxScrollExtent}");
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       _loadMore();
@@ -151,80 +178,77 @@ class _PostFeedState extends State<PostFeed> {
         });
         return fetchData();
       },
-      child: CustomScrollView(
+      child: SingleChildScrollView(
         physics: const ScrollPhysics(),
         controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                if (widget.showSortTypeChange)
-                  Container(
-                    color: const Color.fromARGB(255, 226, 226, 226),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+          children: [
+            if (widget.showSortTypeChange)
+              Container(
+                color: const Color.fromARGB(255, 226, 226, 226),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SortTypeMenu(
+                      onCategoryChanged: onCategoryChanged,
+                      startSortIndex: widget.startSortIndex,
+                      endSortIndex: widget.endSortIndex,
+                    ),
+                  ],
+                ),
+              ),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 0,
+              ),
+              child: isLoading
+                  ? _buildShimmerLoading()
+                  : Column(
                       children: [
-                        SortTypeMenu(
-                          onCategoryChanged: onCategoryChanged,
-                          startSortIndex: widget.startSortIndex,
-                          endSortIndex: widget.endSortIndex,
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: existingItems.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                PostWidget(
+                                    isSavedPage: widget.isSavedPage,
+                                    post: existingItems[index],
+                                    isUserProfile: currentPostCategory ==
+                                            PostCategories.user ||
+                                        (UserSingleton().user != null &&
+                                            existingItems[index].username ==
+                                                UserSingleton()
+                                                    .user!
+                                                    .username)),
+                                Divider(
+                                  height: 20,
+                                  thickness: 0.2,
+                                  color: Colors.black,
+                                )
+                              ],
+                            );
+                          },
                         ),
+                        if (_loadingMore)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: existingItems.length != newItems.length
+                                ? CircularProgressIndicator(
+                                    color: Colors.grey,
+                                  )
+                                : Center(
+                                    child: Text(
+                                        "Hooray! You checked everything for today!"),
+                                  ),
+                          )
                       ],
                     ),
-                  ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 0,
-                  ),
-                  child: isLoading
-                      ? _buildShimmerLoading()
-                      : Column(
-                          children: [
-                            ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: existingItems.length,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    PostWidget(
-                                        post: existingItems[index],
-                                        isUserProfile: currentPostCategory ==
-                                                PostCategories.user ||
-                                            (UserSingleton().user != null &&
-                                                existingItems[index].username ==
-                                                    UserSingleton()
-                                                        .user!
-                                                        .username)),
-                                    Divider(
-                                      height: 20,
-                                      thickness: 0.2,
-                                      color: Colors.black,
-                                    )
-                                  ],
-                                );
-                              },
-                            ),
-                            if (_loadingMore)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: existingItems.length != newItems.length
-                                    ? CircularProgressIndicator(
-                                        color: Colors.grey,
-                                      )
-                                    : Center(
-                                        child: Text(
-                                            "Hooray! You checked everything for today!"),
-                                      ),
-                              )
-                          ],
-                        ),
-                ),
-              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

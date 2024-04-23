@@ -20,6 +20,7 @@ class CommunityPage extends StatefulWidget {
 class _CommunityPageState extends State<CommunityPage> {
   late Map<String, dynamic> data;
   String communityBannerLink = "";
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _CommunityPageState extends State<CommunityPage> {
         communityName: widget.communityName,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Container(
           color: Color.fromARGB(255, 228, 227, 227),
           child: Column(
@@ -60,6 +62,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 startSortIndex: 1,
                 endSortIndex: 3,
                 showSortTypeChange: true,
+                scrollController: _scrollController,
               ),
             ],
           ),
