@@ -249,7 +249,7 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               PostFeed(
                 scrollController: _scrollController,
-                postCategory: PostCategories.best,
+                postCategory: PostCategories.user,
                 username: username,
               ),
             ],
