@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/media_page_view.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/posts_page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/comments_page_view.dart';
@@ -22,7 +24,7 @@ class _SearchResultState extends State<SearchResult> {
   List labelsList = ['Posts', 'Communities', 'Comments', 'Media', 'People'];
   int selectedIndex = 0;
   List<Widget> pages = [
-      Center(child: Text('Posts')),
+      PostsPageView(),
       CommunitiesPageView(),
       CommentsPageView(),
       MediaPageView(),

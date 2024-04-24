@@ -50,7 +50,7 @@ class _PostFeedState extends State<PostFeed> {
   void initState() {
     currentPostCategory = widget.postCategory;
     super.initState();
-    fetchData();
+    //fetchData();
   }
 
   Future<void> fetchData() async {
