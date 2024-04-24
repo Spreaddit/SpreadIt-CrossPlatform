@@ -17,7 +17,8 @@ class SavedPage extends StatefulWidget {
 class _SavedPageState extends State<SavedPage> {
   int _selectedIndex = 0;
   List<Comment> commentsList = [];
-  String username = ' '; // Dummy data, not actually used when fetching the function;
+  String username =
+      ' '; // Dummy data, not actually used when fetching the function;
 
   @override
   void initState() {
