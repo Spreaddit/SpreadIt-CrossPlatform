@@ -29,7 +29,6 @@ import 'package:spreadit_crossplatform/user_info.dart';
 import '../features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 
 Map<String, WidgetBuilder> generateRoutes() {
-  bool isloggedIn = UserSingleton().user!=null ? true :false;
   return {
     '/start-up-page': (context) => StartUpPage(),
     '/log-in-page': (context) => LogInScreen(),
@@ -37,32 +36,26 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/create-username-page': (context) => CreateUsername(),
     '/forget-password': (context) => ForgetPassword(),
     '/forget-username': (context) => ForgetUsername(),
-    '/home': (context) =>
-        ProtectedRoute( child: HomePage()),
-    '/popular': (context) => ProtectedRoute(
-        
-        child: HomePage(currentPage: CurrentPage.popular)),
-    '/discover': (context) => ProtectedRoute(
-        
-        child: HomePage(currentPage: CurrentPage.discover)),
-    '/all': (context) => ProtectedRoute(
-         child: HomePage(currentPage: CurrentPage.all)),
+    '/home': (context) => ProtectedRoute(child: HomePage()),
+    '/popular': (context) =>
+        ProtectedRoute(child: HomePage(currentPage: CurrentPage.popular)),
+    '/discover': (context) =>
+        ProtectedRoute(child: HomePage(currentPage: CurrentPage.discover)),
+    '/all': (context) =>
+        ProtectedRoute(child: HomePage(currentPage: CurrentPage.all)),
     '/create_a_community': (context) =>
-        ProtectedRoute( child: CreateCommunityPage()),
-    '/history': (context) =>
-        ProtectedRoute( child: HistoryPage()),
-    '/settings': (context) =>
-        ProtectedRoute( child: SettingsPage()),
+        ProtectedRoute(child: CreateCommunityPage()),
+    '/history': (context) => ProtectedRoute(child: HistoryPage()),
+    '/settings': (context) => ProtectedRoute(child: SettingsPage()),
     '/settings/account-settings': (context) =>
-        ProtectedRoute( child: AccountSettingsPage()),
+        ProtectedRoute(child: AccountSettingsPage()),
     '/settings/account-settings/blocked_accounts': (context) =>
-        ProtectedRoute( child: BlockedAccountsPage()),
+        ProtectedRoute(child: BlockedAccountsPage()),
     '/settings/account-settings/manage-notifications': (context) =>
-        ProtectedRoute( child: NotificationsPageUI()),
+        ProtectedRoute(child: NotificationsPageUI()),
     '/settings/account-settings/change-password': (context) =>
-        ProtectedRoute( child: ResetPassword()),
+        ProtectedRoute(child: ResetPassword()),
     '/post-to-community': (context) => ProtectedRoute(
-          
           child: Builder(
             builder: (context) {
               final args = ModalRoute.of(context)!.settings.arguments
@@ -83,18 +76,13 @@ Map<String, WidgetBuilder> generateRoutes() {
             },
           ),
         ),
-    '/saved': (context) =>
-        ProtectedRoute( child: SavedPage()),
-    '/user-profile': (context) =>
-        ProtectedRoute( child: UserProfile()),
-    '/edit-profile': (context) =>
-        ProtectedRoute( child: EditProfilePage()),
-    '/edit_comment': (context) =>
-        ProtectedRoute( child: EditComment()),
+    '/saved': (context) => ProtectedRoute(child: SavedPage()),
+    '/user-profile': (context) => ProtectedRoute(child: UserProfile()),
+    '/edit-profile': (context) => ProtectedRoute(child: EditProfilePage()),
+    '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
     '/settings/account-settings/add-password': (context) =>
-        ProtectedRoute( child: AddPasswordPage()),
+        ProtectedRoute(child: AddPasswordPage()),
     '/final-content-page': (context) => ProtectedRoute(
-          
           child: Builder(
             builder: (context) {
               final args = ModalRoute.of(context)!.settings.arguments
@@ -115,10 +103,8 @@ Map<String, WidgetBuilder> generateRoutes() {
             },
           ),
         ),
-    '/primary-content-page': (context) =>
-        ProtectedRoute( child: CreatePost()),
+    '/primary-content-page': (context) => ProtectedRoute(child: CreatePost()),
     '/rules': (context) => ProtectedRoute(
-          
           child: Builder(
             builder: (context) {
               final args = ModalRoute.of(context)!.settings.arguments
@@ -132,11 +118,12 @@ Map<String, WidgetBuilder> generateRoutes() {
         ),
   };
 }
+
 class ProtectedRoute extends StatelessWidget {
   final Widget child;
 
   const ProtectedRoute({Key? key, required this.child}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
@@ -147,16 +134,15 @@ class ProtectedRoute extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          final bool isLoggedIn = snapshot.data ?? false; 
-          return isLoggedIn ? child : StartUpPage(); 
+          final bool isLoggedIn = snapshot.data ?? false;
+          return isLoggedIn ? child : StartUpPage();
         }
       },
     );
   }
 
   Future<bool> checkIfUserLoggedIn() async {
-    if(UserSingleton().isloggedIn!=null)
-    {
+    if (UserSingleton().isloggedIn != null) {
       return UserSingleton().isloggedIn!;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
