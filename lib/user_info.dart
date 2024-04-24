@@ -17,7 +17,7 @@ class UserSingleton {
   DateTime? accessTokenExpiry;
   String? googleToken;
   String? googleEmail;
-  bool isloggedIn=false;
+  bool? isloggedIn;
 
   void setUser(User newUser) {
     user = newUser;
@@ -85,6 +85,7 @@ class UserSingleton {
     // Clear user information from shared preferences
   Future<void> clearUserFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    isloggedIn=false;
     await prefs.remove('userSingleton');
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/routes/auth_guard.dart';
+import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
@@ -32,7 +32,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: UserSingleton().isloggedIn ? HomePage() : StartUpPage(),
+      home: UserSingleton().user!=null ? HomePage() : StartUpPage(),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         if (pathSegments == null || pathSegments.isEmpty) {
@@ -49,10 +49,13 @@ class SpreadIt extends StatelessWidget {
                 PostCardPage(postId: postId, isUserProfile: isUserProfile),
           );
         }
-
-        return RouteManager.generateAuthenticatedRoute(
-            settings, UserSingleton().isloggedIn);
+        return null;
       },
+      routes: generateRoutes(),
     );
   }
 }
+
+
+
+
