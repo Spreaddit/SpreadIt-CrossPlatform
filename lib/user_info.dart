@@ -17,6 +17,7 @@ class UserSingleton {
   DateTime? accessTokenExpiry;
   String? googleToken;
   String? googleEmail;
+  bool isloggedIn=false;
 
   void setUser(User newUser) {
     user = newUser;
@@ -50,13 +51,14 @@ class UserSingleton {
   // Save data to shared preferences
   Future<void> _saveToPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+    isloggedIn=true;
     String jsonString = json.encode({
       'user': user?.toJson(),
       'access_token': accessToken,
       'token_expiration_date': accessTokenExpiry?.toIso8601String(),
       'google_token': googleToken,
       'google_email': googleEmail,
+      'isLoggedin' : isloggedIn,
     });
     await prefs.setString('userSingleton', jsonString);
   }
@@ -76,6 +78,7 @@ class UserSingleton {
       accessTokenExpiry = jsonMap['token_expiration_date'] != null
           ? DateTime.parse(jsonMap['token_expiration_date'])
           : null;
+      isloggedIn = jsonMap['isLoggedin'];
 
     }
   }
