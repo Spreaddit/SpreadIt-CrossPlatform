@@ -51,7 +51,7 @@ class HomePageDrawer extends StatelessWidget {
               title: Text(item['text'], style: TextStyle(fontSize: 18.0)),
               onTap: () {
                 if (item['route'] == '/logout') {
-                   UserSingleton().clearUserFromPrefs();
+                  UserSingleton().clearUserFromPrefs();
                   UserSingleton().user = null; // Clear user info
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/start-up-page', (route) => false);
