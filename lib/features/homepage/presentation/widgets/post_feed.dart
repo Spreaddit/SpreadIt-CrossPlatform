@@ -215,6 +215,7 @@ class _PostFeedState extends State<PostFeed> {
                               children: [
                                 PostWidget(
                                     isSavedPage: widget.isSavedPage,
+                                    feedContext: context,
                                     post: existingItems[index],
                                     isUserProfile: currentPostCategory ==
                                             PostCategories.user ||

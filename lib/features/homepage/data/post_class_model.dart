@@ -94,7 +94,7 @@ class Post extends Equatable {
       pollExpiration: json['pollExpiration'] != null
           ? DateTime.parse(json['pollExpiration'])
           : null,
-      isPollEnabled: json['isPollEnabled'] ?? false,
+      isPollEnabled: json['isPollEnabled'] ?? true,
       link: json['link'],
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((attachment) => Attachment.fromJson(attachment))

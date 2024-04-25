@@ -53,6 +53,7 @@ class _PostHeader extends StatefulWidget {
   final void Function(bool) onSpoilerChanged;
   final void Function() onDeleted;
   final void Function(bool) onsaved;
+  final BuildContext? feedContext;
 
   _PostHeader({
     required this.post,
@@ -66,6 +67,7 @@ class _PostHeader extends StatefulWidget {
     required this.onNsfwChanged,
     required this.onDeleted,
     this.content = "",
+    this.feedContext,
   });
 
   @override
@@ -236,7 +238,11 @@ class _PostHeaderState extends State<_PostHeader> {
                 widget.onNsfwChanged(!widget.isNsfw),
                 markNSFW(context, widget.post.postId),
               },
-      () => deletePost(context, widget.post.postId, widget.onDeleted),
+      () => deletePost(
+            widget.feedContext ?? context,
+            widget.post.postId,
+            widget.onDeleted,
+          ),
     ];
 
     List<void Function()> viewerActions = [
@@ -585,7 +591,7 @@ class _PostContent extends StatelessWidget {
         return Text("Oops. something went wrong");
       }
 
-      print("has voted ahoooo $isPollEnabled");
+      print("has voted ahoooo $hasVotedOnPoll $selectedPollOption");
       return FlutterPolls(
         pollTitle: Text(""),
         pollId: Uuid().v1(),
@@ -605,7 +611,7 @@ class _PostContent extends StatelessWidget {
               ));
         },
         pollOptionsSplashColor: Colors.white,
-        pollEnded: false,
+        pollEnded: !isPollEnabled,
         votedProgressColor: Colors.grey,
         votedBackgroundColor: Colors.grey.withOpacity(0.2),
         leadingVotedProgessColor: Color.fromARGB(230, 255, 68, 0),
@@ -739,12 +745,14 @@ class PostWidget extends StatefulWidget {
   final bool isFullView;
   final bool isUserProfile;
   final bool isSavedPage;
+  final BuildContext? feedContext;
 
   PostWidget({
     required this.post,
     this.isFullView = false,
     required this.isUserProfile,
     this.isSavedPage = false,
+    this.feedContext,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -825,6 +833,7 @@ class _PostWidgetState extends State<PostWidget> {
                     onNsfwChanged: onChangeNsfw,
                     onSpoilerChanged: onChangeSpoiler,
                     onDeleted: onDeleted,
+                    feedContext: widget.feedContext,
                     content: widget.post.content != null &&
                             widget.post.content!.isNotEmpty
                         ? widget.post.content![widget.post.content!.length - 1]
