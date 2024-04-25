@@ -587,7 +587,7 @@ class _PostContent extends StatelessWidget {
               ));
         },
         pollOptionsSplashColor: Colors.white,
-        pollEnded: !isPollEnabled,
+        pollEnded: false,
         votedProgressColor: Colors.grey,
         votedBackgroundColor: Colors.grey.withOpacity(0.2),
         leadingVotedProgessColor: Color.fromARGB(230, 255, 68, 0),

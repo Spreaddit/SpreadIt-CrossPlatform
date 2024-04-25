@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
       ),
       DiscoverCommunitiesBody(),
       CreatePost(),
-      Text("chat"),
+      ChatPage(),
       NotificationPage(),
       PostFeed(
         postCategory: PostCategories.hot,

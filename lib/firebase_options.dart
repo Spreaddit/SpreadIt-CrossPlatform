@@ -47,21 +47,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCX1jmRxahDC1AnucDMfKeaJHbStiER11w',
-    appId: '1:546473234311:web:7e770f68f65d24ffcb4d22',
-    messagingSenderId: '546473234311',
-    projectId: 'spreadit-5a997',
-    authDomain: 'spreadit-5a997.firebaseapp.com',
-    storageBucket: 'spreadit-5a997.appspot.com',
-    measurementId: 'G-3K9JM9TT9L',
+    apiKey: 'AIzaSyB-bMY0fyMC9XX3QZl_2z4AtjNSphf8pxE',
+    appId: '1:932668103377:web:37af04c0d79ebfb6f7c3f0',
+    messagingSenderId: '932668103377',
+    projectId: 'spreadit-b8b53',
+    authDomain: 'spreadit-b8b53.firebaseapp.com',
+    storageBucket: 'spreadit-b8b53.appspot.com',
+    measurementId: 'G-14L5Y6VJ0B',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCFSCkNMchvrdapkxEjBYzR036laFNW-cI',
-    appId: '1:546473234311:android:1a6d76a6227de7cfcb4d22',
-    messagingSenderId: '546473234311',
-    projectId: 'spreadit-5a997',
-    storageBucket: 'spreadit-5a997.appspot.com',
+    apiKey: 'AIzaSyCMX5Ew7oZKA2Ao4OxsdcyIkJ1LzBxCufo',
+    appId: '1:932668103377:android:ddc65ca06e820d35f7c3f0',
+    messagingSenderId: '932668103377',
+    projectId: 'spreadit-b8b53',
+    storageBucket: 'spreadit-b8b53.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

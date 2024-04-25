@@ -61,6 +61,10 @@ dependencies:
   flutter_link_previewer: ^3.2.2
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
+  flutter_chat_ui: ^1.6.12
+  mime: ^1.0.5
+  flutter_chat_types: ^3.6.2
+  firebase_storage: ^11.7.4
 
 dev_dependencies:
   flutter_test:
