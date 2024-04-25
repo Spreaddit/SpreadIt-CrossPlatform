@@ -19,6 +19,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/to
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/createusername.dart';
+import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/email_screen.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/log_in_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/sign_up_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/start_up_page.dart';
@@ -36,6 +37,7 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/create-username-page': (context) => CreateUsername(),
     '/forget-password': (context) => ForgetPassword(),
     '/forget-username': (context) => ForgetUsername(),
+    '/email-verification': (context) => EmailSentPage(),
     '/home': (context) => ProtectedRoute(child: HomePage()),
     '/popular': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.popular)),

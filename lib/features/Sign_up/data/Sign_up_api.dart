@@ -17,7 +17,7 @@ Future<int> signUpApi({
   try {
     const apiroute = "/signup";
     String apiUrl = apibase + apiroute;
-    var data = {"username": username, "email": email, "password": password};
+    var data = {"username": username, "email": email, "password": password , "isCross": true };
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
