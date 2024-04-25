@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
 import '../../../user_info.dart';
 import '../../user.dart';
 
@@ -24,7 +25,7 @@ Future<int> logInApi({
       UserSingleton().setUser(user);
       UserSingleton().setAccessToken(response.data['access_token'],
           DateTime.parse(response.data['token_expiration_date']));
-
+     await subscribeToNotifications();
       print(response.statusMessage);
       return 200;
     } else if (response.statusCode == 404) {

@@ -46,7 +46,7 @@ dependencies:
   image_picker: ^0.8.4+2
   share_plus: ^6.3.4
   url_launcher: ^6.2.5
-
+  firebase_messaging: ^14.8.2
   dio: ^5.4.1
   flutter_dotenv: ^5.1.0
   time_machine: ^0.9.17
@@ -70,10 +70,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  network_image_mock: ^2.0.1
   retrofit_generator: ^8.1.0
   floor_generator: ^1.4.2
-  build_runner: ^2.4.8
   mockito: ^5.4.4
   
 
