@@ -104,8 +104,6 @@ class _PostFeedState extends State<PostFeed> {
       username: widget.username,
     );
 
-    print("Category:$currentPostCategory, Items:$fetchedItems");
-
     setState(() {
       if (fetchedItems.isEmpty) {
         CustomSnackbar(content: "No posts found").show(context);
@@ -125,8 +123,6 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void _onScroll() {
-    print(
-        "pixels:${_scrollController.position.pixels} max: ${_scrollController.position.maxScrollExtent}");
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       _loadMore();

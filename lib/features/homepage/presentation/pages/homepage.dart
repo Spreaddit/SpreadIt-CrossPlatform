@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_user_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -33,13 +33,10 @@ class _HomePageState extends State<HomePage> {
     _homePageKey = GlobalKey<_HomePageState>();
     setState(() {
       currentPage = widget.currentPage;
-      print("Current Page Index:${currentPage.index}");
     });
   }
 
   void changeSelectedIndex(int newIndex) {
-    print("New Index:$newIndex");
-    print("previous page index: ${currentPage.index}");
     if (newIndex == 2) {
       Navigator.of(context).pushNamed('/primary-content-page');
       return;
@@ -62,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       ),
       DiscoverCommunitiesBody(),
       CreatePost(),
-      ChatPage(),
+      ChatUserPage(),
       NotificationPage(),
       PostFeed(
         postCategory: PostCategories.hot,

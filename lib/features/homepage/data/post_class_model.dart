@@ -66,9 +66,6 @@ class Post extends Equatable {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    json.forEach((key, value) {
-      print('$key: $value, type: ${value.runtimeType}');
-    });
     return Post(
       postId: json['_id'],
       userId: json['userId'],

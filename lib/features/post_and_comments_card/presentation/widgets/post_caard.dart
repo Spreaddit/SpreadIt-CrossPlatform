@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 
 /// Widget representing a post card.
 class PostCard extends StatefulWidget {
