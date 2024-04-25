@@ -29,6 +29,8 @@ class Post extends Equatable {
   final bool? isNsfw;
   final bool? sendPostReplyNotification;
   final bool? isSaved;
+  final bool? hasVotedOnPoll;
+  final String? selectedPollOption;
 
   Post({
     required this.postId,
@@ -59,9 +61,14 @@ class Post extends Equatable {
     this.isNsfw,
     this.sendPostReplyNotification,
     this.isSaved = true,
+    this.hasVotedOnPoll,
+    this.selectedPollOption,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
+    json.forEach((key, value) {
+      print('$key: $value, type: ${value.runtimeType}');
+    });
     return Post(
       postId: json['_id'],
       userId: json['userId'],
@@ -87,7 +94,7 @@ class Post extends Equatable {
       pollExpiration: json['pollExpiration'] != null
           ? DateTime.parse(json['pollExpiration'])
           : null,
-      isPollEnabled: json['isPollEnabled'],
+      isPollEnabled: json['isPollEnabled'] ?? false,
       link: json['link'],
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((attachment) => Attachment.fromJson(attachment))
@@ -103,7 +110,9 @@ class Post extends Equatable {
       isCommentsLocked: json['isCommentsLocked'],
       isNsfw: json['isNsfw'],
       sendPostReplyNotification: json['sendPostReplyNotification'],
-      isSaved: json['isSaved'],
+      isSaved: json['isSaved'] ?? false,
+      hasVotedOnPoll: json['hasVotedOnPoll'] == true,
+      selectedPollOption: json['selectedPollOption'],
     );
   }
 
@@ -137,6 +146,8 @@ class Post extends Equatable {
         isNsfw,
         sendPostReplyNotification,
         isSaved,
+        hasVotedOnPoll,
+        selectedPollOption,
       ];
 }
 

@@ -106,30 +106,6 @@ class _PostCardState extends State<PostCard> {
                       width: screenHeight * 0.005)),
             ),
           ),
-          ListView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: widget.comments.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  CommentCard(
-                    comment: widget.comments[index],
-                    community: widget.post.community,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                            color: Color.fromARGB(255, 216, 213, 213),
-                            width: screenHeight * 0.005),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
         ]),
       ),
     );
