@@ -18,7 +18,7 @@ void main() async {
   );
   await UserSingleton().loadFromPrefs();
   if (UserSingleton().user != null) {
-    await subscribeToNotifications();
+    // await subscribeToNotifications();
   }
   runApp(SpreadIt());
 }
