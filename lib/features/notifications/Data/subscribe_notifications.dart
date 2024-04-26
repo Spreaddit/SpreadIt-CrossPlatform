@@ -1,16 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:spreadit_crossplatform/api.dart'; 
 
 
 FirebaseMessaging messaging = FirebaseMessaging.instance;
-String baseUrl = "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
+
 
 
 Future<int> subscribeToNotifications() async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String apiRoute = '$baseUrl/notifications/subscribe';
+    String apiRoute = '$apiUrl/notifications/subscribe';
     await messaging.requestPermission(
       alert: true,
       announcement: true,

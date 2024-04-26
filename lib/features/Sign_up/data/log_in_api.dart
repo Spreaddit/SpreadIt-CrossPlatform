@@ -25,6 +25,7 @@ Future<int> logInApi({
       UserSingleton().setUser(user);
       UserSingleton().setAccessToken(response.data['access_token'],
           DateTime.parse(response.data['token_expiration_date']));
+      
      await subscribeToNotifications();
       print(response.statusMessage);
       return 200;
