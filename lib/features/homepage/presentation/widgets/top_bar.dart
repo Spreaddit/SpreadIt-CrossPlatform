@@ -108,19 +108,34 @@ Widget chooseTitle(
   }
   List<Widget> titles = [
     Center(
-      child: Text('Home'),
+      child: Text(
+        'Home',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     ),
     Center(
-      child: Text('Discover'),
+      child: Text(
+        'Discover',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     ),
     Center(
-      child: Text("create post"),
+      child: Text(
+        'create post',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     ),
     Center(
-      child: Text("Chat"),
+      child: Text(
+        'Chat',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     ),
     Center(
-      child: Text("Inbox"),
+      child: Text(
+        'Inbox',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     ),
   ];
   return titles[currentPage.index % 5];

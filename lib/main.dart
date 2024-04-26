@@ -1,8 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -37,24 +35,7 @@ class SpreadIt extends StatelessWidget {
       title: 'Spread It',
       theme: spreadItTheme,
       home: UserSingleton().user != null ? HomePage() : StartUpPage(),
-      onGenerateRoute: (settings) {
-        final List<String>? pathSegments = settings.name?.split('/');
-        if (pathSegments == null || pathSegments.isEmpty) {
-          return null;
-        }
-
-        if (pathSegments.contains('post-card-page') &&
-            pathSegments.length >= 3) {
-          final postId = pathSegments[pathSegments.length - 2];
-          final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
-
-          return MaterialPageRoute(
-            builder: (_) =>
-                PostCardPage(postId: postId, isUserProfile: isUserProfile),
-          );
-        }
-        return null;
-      },
+      onGenerateRoute: onGenerateRoute,
       routes: generateRoutes(),
     );
   }

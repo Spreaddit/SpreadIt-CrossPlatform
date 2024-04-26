@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
@@ -8,7 +9,10 @@ import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 // String userId = UserSingleton().user!.id;
 String userId = 'ZfVwjS49NshSBOFe1Yy124MHUh22';
 
-Widget _usersList(int selectedOption) {
+Widget _usersList({
+  required BuildContext context,
+  required selectedOption,
+}) {
   return StreamBuilder<QuerySnapshot>(
     stream: FirebaseFirestore.instance
         .collection('chatrooms')
@@ -35,7 +39,11 @@ Widget _usersList(int selectedOption) {
               return true;
             })
             .map<Widget>(
-              (doc) => _userItem(doc),
+              (doc) => _userItem(
+                docId: doc.id,
+                document: doc,
+                context: context,
+              ),
             )
             .toList(),
       );
@@ -43,7 +51,11 @@ Widget _usersList(int selectedOption) {
   );
 }
 
-Widget _userItem(DocumentSnapshot document) {
+Widget _userItem({
+  required docId,
+  required DocumentSnapshot document,
+  required BuildContext context,
+}) {
   Chatroom data = Chatroom.fromDocumentSnapshot(
     document,
   );
@@ -84,7 +96,17 @@ Widget _userItem(DocumentSnapshot document) {
       dateToDuration(data.timestamp),
     ),
     onTap: () {
-      // Handle tap on the chat tile
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          settings: RouteSettings(
+            name: '/chatroom/$docId',
+          ),
+          builder: (context) => ChatPage(
+            id: docId,
+          ),
+        ),
+      );
     },
   );
 }
@@ -130,6 +152,6 @@ class _ChatUserPageState extends State<ChatUserPage> {
   @override
   Widget build(BuildContext context) {
     print(selectedOption);
-    return _usersList(selectedOption);
+    return _usersList(context: context, selectedOption: selectedOption);
   }
 }
