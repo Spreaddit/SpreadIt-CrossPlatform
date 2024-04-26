@@ -26,13 +26,12 @@ import '../widgets/tags_widgets/rendered_tag.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/features/schedule_posts/data/is_user_moderator_service.dart';
 
 /// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
 /// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
 
 class FinalCreatePost extends StatefulWidget {
-
   final String title;
   final String content;
   final String? link;
@@ -60,14 +59,13 @@ class FinalCreatePost extends StatefulWidget {
     this.createPoll,
     this.isLinkAdded,
     required this.community,
-    }) : super(key: key);
+  }) : super(key: key);
 
   @override
   State<FinalCreatePost> createState() => _FinalCreatePostState();
 }
 
 class _FinalCreatePostState extends State<FinalCreatePost> {
-
   final GlobalKey<FormState> _finalTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalContentForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalLinkForm = GlobalKey<FormState>();
@@ -77,21 +75,23 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   ];
 
   String finalTitle = '';
-  String finalContent ='';
+  String finalContent = '';
   String communityName = '';
   String communityIcon = '';
   List<Rule?>? communityRules = [];
   List<String> finalPollOptions = ['', ''];
-  List<String> finalInitialBody = ['',''];
+  List<String> finalInitialBody = ['', ''];
   int finalSelectedDay = 1;
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
+  bool allowScheduling = false;
+  bool isModerator = true;
   bool isNSFWAllowed = true;
   bool isSpoiler = false;
   bool isNSFW = false;
-  bool finalIsLinkAdded = false ;  
-  bool finalCreatePoll = false;   
+  bool finalIsLinkAdded = false;
+  bool finalCreatePoll = false;
 
   File? finalImage;
   Uint8List? finalImageWeb;
@@ -102,7 +102,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   /// [mapCommunityData] : a function which extracts the [communityName], [communityIcon] and [communityRules] from the passsed list of communities
 
-  void mapCommunityData () {
+  void mapCommunityData() {
     communityName = widget.community.first.name;
     communityIcon = widget.community.first.image!;
     communityRules = widget.community.first.rules;
@@ -110,18 +110,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   /// [mapPoll] : a function used to map the passed [pollOptions]
 
-  void mapPoll () {
+  void mapPoll() {
     if (widget.selectedDay != null) {
-     finalSelectedDay = widget.selectedDay!;
+      finalSelectedDay = widget.selectedDay!;
     }
     finalInitialBody.clear();
     finalPollOptions.clear();
     finalInitialBody.addAll(widget.pollOptions!);
     finalPollOptions.addAll(widget.pollOptions!);
-    if(finalPollOptions.length > 2) {
-      for(int i = 2; i < finalPollOptions.length; i++) {
+    if (finalPollOptions.length > 2) {
+      for (int i = 2; i < finalPollOptions.length; i++) {
         GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
-        finalFormKeys.add(newFormKey); 
+        finalFormKeys.add(newFormKey);
       }
     }
   }
@@ -130,29 +130,42 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void initState() {
     super.initState();
     mapCommunityData();
-    if(widget.isLinkAdded != null) {
+    isModeratorFunction();
+    if (widget.isLinkAdded != null) {
       finalIsLinkAdded = widget.isLinkAdded!;
     }
-    if(widget.image != null) {
+    if (widget.image != null) {
       finalImage = widget.image;
     }
-    if(widget.imageWeb != null) {
+    if (widget.imageWeb != null) {
       finalImageWeb = widget.imageWeb;
     }
-    if(widget.video != null) {
+    if (widget.video != null) {
       finalVideo = widget.video;
     }
-    if(widget.videoWeb != null) {
+    if (widget.videoWeb != null) {
       finalVideoWeb = widget.videoWeb;
     }
-    if(widget.createPoll != null) { 
+    if (widget.createPoll != null) {
       mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
-      }
+    }
   }
-  
-   void updateTitle(String value) {
+
+  /// [isModeratorFunction] : a function which checks if the user is a moderator of the community
+  Future<void> isModeratorFunction() async {
+    print("inside isModeratorFunction");
+    bool moderatorStatus =
+        await IsUserModeratorService().isUserModerator(communityName);
+    setState(() {
+      isModerator = moderatorStatus;
+    });
+
+    print(" the isModerator is $isModerator");
+  }
+
+  void updateTitle(String value) {
     finalTitle = value;
     _finalTitleForm.currentState!.save();
     updateButtonState();
@@ -161,18 +174,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void updateContent(String value) {
     finalContent = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    if (_finalContentForm.currentState != null) {
-      _finalContentForm.currentState!.save();
-    }
+      if (_finalContentForm.currentState != null) {
+        _finalContentForm.currentState!.save();
+      }
     });
   }
 
   void updateLink(String value) {
     finalLink = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    if (_finalLinkForm.currentState != null) {
-      _finalLinkForm.currentState!.save();
-    }
+      if (_finalLinkForm.currentState != null) {
+        _finalLinkForm.currentState!.save();
+      }
     });
     validatePostTitle(finalLink!);
   }
@@ -181,10 +194,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     if (finalLink == null) {
       setState(() {
         isButtonEnabled = validatePostTitle(finalTitle);
+        allowScheduling = validatePostTitle(finalTitle) && isModerator;
       });
-    }
-    else {
-      isButtonEnabled = validatePostTitle(finalTitle) && validatePostTitle(finalLink!);  
+    } else {
+      isButtonEnabled =
+          validatePostTitle(finalTitle) && validatePostTitle(finalLink!);
+      allowScheduling = validatePostTitle(finalTitle) &&
+          validatePostTitle(finalLink!) &&
+          isModerator;
     }
   }
 
@@ -201,7 +218,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     print(isSpoiler);
   }
 
-  void updateIsNSFW () {
+  void updateIsNSFW() {
     setState(() {
       isNSFW = !isNSFW;
     });
@@ -220,13 +237,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
     if (finalIsLinkAdded) {
       setLastPressedIcon(Icons.link);
-    }
-    else {
+    } else {
       setLastPressedIcon(null);
     }
   }
 
-  void cancelImageOrVideo () {
+  void cancelImageOrVideo() {
     setState(() {
       finalImageWeb = null;
       finalVideoWeb = null;
@@ -242,15 +258,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       setState(() {
         finalImageWeb = image;
       });
-    }
-    else {
+    } else {
       final image = await pickImageFromFilePicker();
       setState(() {
         finalImage = image;
       });
     }
   }
-  
+
   Future<void> pickVideo() async {
     File? video = await pickVideoFromFilePicker.pickVideo();
     if (video != null) {
@@ -269,9 +284,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void updatePollOption(int optionNumber, String value) {
     setState(() {
       finalPollOptions[optionNumber - 1] = value;
-      print(finalPollOptions[optionNumber-1]);
+      print(finalPollOptions[optionNumber - 1]);
     });
-    finalFormKeys[optionNumber-1].currentState!.save();
+    finalFormKeys[optionNumber - 1].currentState!.save();
   }
 
   void updateSelectedDay(int selectedDay) {
@@ -287,26 +302,34 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
-
-  void navigateToAddTags(){
+  void navigateToAddTags() {
     Navigator.of(context).pushNamed('/add-tags');
   }
 
-  void returnToHomePage (BuildContext context) {
+  void returnToHomePage(BuildContext context) {
     Navigator.of(context).pushNamed('/home');
   }
 
-  void submit () async {
-   int response = await submitPost(
-      finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalImageWeb, finalVideo, finalVideoWeb, isSpoiler, isNSFW);
-    if ( response == 201 ) {
+  void submit() async {
+    int response = await submitPost(
+        finalTitle,
+        finalContent,
+        communityName,
+        finalPollOptions,
+        finalSelectedDay,
+        finalLink,
+        finalImage,
+        finalImageWeb,
+        finalVideo,
+        finalVideoWeb,
+        isSpoiler,
+        isNSFW);
+    if (response == 201) {
       CustomSnackbar(content: 'Posted successfully !').show(context);
       returnToHomePage(context);
-    }
-    else if (response == 400) {
+    } else if (response == 400) {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
-    }
-    else if (response == 500) {
+    } else if (response == 500) {
       CustomSnackbar(content: 'Internal server error').show(context);
     }
   }
@@ -321,18 +344,21 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               children: [
                 Container(
                   child: CreatePostHeader(
+                    allowScheduling: allowScheduling,
                     buttonText: "Post",
                     onPressed: submit,
                     isEnabled: isButtonEnabled,
-                    onIconPress : () { showDiscardButtomSheet(context);},
+                    onIconPress: () {
+                      showDiscardButtomSheet(context);
+                    },
                   ),
                 ),
                 Container(
-                 margin: EdgeInsets.all(10),
-                 child:  CommunityAndRulesHeader(
-                  communityIcon: communityIcon,
-                  communityName: communityName,
-                  communityRules: communityRules,
+                  margin: EdgeInsets.all(10),
+                  child: CommunityAndRulesHeader(
+                    communityIcon: communityIcon,
+                    communityName: communityName,
+                    communityRules: communityRules,
                   ),
                 ),
                 Align(
@@ -341,30 +367,32 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     buttonText: 'Add tags',
                     onPressed: () {
                       showAddTagButtomSheet(
-                        context, 
-                        isSpoiler, 
-                        isNSFW, 
-                        isNSFWAllowed, 
+                        context,
+                        isSpoiler,
+                        isNSFW,
+                        isNSFWAllowed,
                         updateIsSpoiler,
                         updateIsNSFW,
-                        );
-                      },
+                      );
+                    },
                     isEnabled: true,
                     width: 150,
                     height: 10,
                   ),
                 ),
                 if (isSpoiler && !isNSFW)
-                    RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler'),
+                  RenderedTag(
+                      icon: Icons.new_releases_rounded, text: 'Spoiler'),
                 if (!isSpoiler && isNSFW)
-                    RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'), 
+                  RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'),
                 if (isSpoiler && isNSFW)
-                  Row (
+                  Row(
                     children: [
-                      RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler'),
+                      RenderedTag(
+                          icon: Icons.new_releases_rounded, text: 'Spoiler'),
                       RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'),
                     ],
-                  ),             
+                  ),
                 PostTitle(
                   formKey: _finalTitleForm,
                   onChanged: updateTitle,
@@ -375,32 +403,35 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     imageOrVideo: finalImage,
                     imageOrVideoWeb: finalImageWeb,
                     onIconPress: cancelImageOrVideo,
-                  ), 
+                  ),
                 if (finalVideo != null || finalVideoWeb != null)
-                   ImageOrVideoWidget(
+                  ImageOrVideoWidget(
                     imageOrVideo: finalVideo,
                     imageOrVideoWeb: finalVideoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)
-                   LinkTextField(
+                  LinkTextField(
                     formKey: _finalLinkForm,
                     onChanged: updateLink,
                     hintText: 'URL',
                     initialBody: widget.link,
                     onIconPress: addLink,
                   ),
-                if (finalIsLinkAdded  && finalLink != null && !validateLink(finalLink!)) 
+                if (finalIsLinkAdded &&
+                    finalLink != null &&
+                    !validateLink(finalLink!))
                   Container(
-                    margin:EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
                     decoration: BoxDecoration(
                       color: Colors.grey,
                     ),
-                    child: Text('Oops, this link isn\'t valid. Double-check, and try again.'),
-                  ),      
+                    child: Text(
+                        'Oops, this link isn\'t valid. Double-check, and try again.'),
+                  ),
                 PostContent(
                   formKey: _finalContentForm,
-                  onChanged:  updateContent,
+                  onChanged: updateContent,
                   hintText: 'body text (optional)',
                   initialBody: widget.content,
                 ),
@@ -419,28 +450,30 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               ],
             ),
           ),
-          isPrimaryFooterVisible? PostFooter(
-            toggleFooter: toggleFooter,
-            showAttachmentIcon: true,
-            showPhotoIcon: true,
-            showVideoIcon: true,
-            showPollIcon: true,
-            onLinkPress: addLink,
-            onImagePress: pickImage,
-            onVideoPress: pickVideo,
-            onPollPress: openPollWidow,
-            lastPressedIcon: lastPressedIcon, 
-            setLastPressedIcon: setLastPressedIcon,
-            ) : SecondaryPostFooter(
-              onLinkPress: addLink,
-              onImagePress: pickImage,
-              onVideoPress: pickVideo,
-              onPollPress: openPollWidow,
-              lastPressedIcon: lastPressedIcon, 
-              setLastPressedIcon: setLastPressedIcon,
-            ),
-          ],
-        ),
+          isPrimaryFooterVisible
+              ? PostFooter(
+                  toggleFooter: toggleFooter,
+                  showAttachmentIcon: true,
+                  showPhotoIcon: true,
+                  showVideoIcon: true,
+                  showPollIcon: true,
+                  onLinkPress: addLink,
+                  onImagePress: pickImage,
+                  onVideoPress: pickVideo,
+                  onPollPress: openPollWidow,
+                  lastPressedIcon: lastPressedIcon,
+                  setLastPressedIcon: setLastPressedIcon,
+                )
+              : SecondaryPostFooter(
+                  onLinkPress: addLink,
+                  onImagePress: pickImage,
+                  onVideoPress: pickVideo,
+                  onPollPress: openPollWidow,
+                  lastPressedIcon: lastPressedIcon,
+                  setLastPressedIcon: setLastPressedIcon,
+                ),
+        ],
+      ),
     );
   }
 }
