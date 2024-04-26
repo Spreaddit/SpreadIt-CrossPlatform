@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
@@ -151,8 +152,14 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> pickVideo() async {
-    File? video = await pickVideoFromFilePicker.pickVideo();
-    if (video != null) {
+    if(kIsWeb) {
+      final video = await pickVideoFromFilePickerWeb();
+      setState(() {
+        videoWeb = video;
+      });
+    }
+    else {
+      final video = await pickVideoFromFilePicker();
       setState(() {
         this.video = video;
       });
@@ -230,9 +237,9 @@ class _CreatePostState extends State<CreatePost> {
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (video != null || videoWeb != null)
-                   ImageOrVideoWidget(
-                    imageOrVideo: video,
-                    imageOrVideoWeb: videoWeb,
+                   VideoWidget(
+                    video: video,
+                    videoWeb: videoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (isLinkAdded)

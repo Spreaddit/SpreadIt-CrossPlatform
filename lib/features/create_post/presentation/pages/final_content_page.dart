@@ -11,6 +11,7 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/widgets
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
@@ -252,8 +253,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
   
   Future<void> pickVideo() async {
-    File? video = await pickVideoFromFilePicker.pickVideo();
-    if (video != null) {
+    if(kIsWeb) {
+      final video = await pickVideoFromFilePickerWeb();
+      setState(() {
+        finalVideoWeb = video;
+      });
+    }
+    else {
+      final video = await pickVideoFromFilePicker();
       setState(() {
         finalVideo = video;
       });
@@ -377,9 +384,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     onIconPress: cancelImageOrVideo,
                   ), 
                 if (finalVideo != null || finalVideoWeb != null)
-                   ImageOrVideoWidget(
-                    imageOrVideo: finalVideo,
-                    imageOrVideoWeb: finalVideoWeb,
+                   VideoWidget(
+                    video: finalVideo,
+                    videoWeb: finalVideoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)

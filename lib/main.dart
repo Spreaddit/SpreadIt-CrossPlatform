@@ -55,7 +55,8 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: FutureBuilder<bool>(
+      home: CreatePost(),
+      /*FutureBuilder<bool>(
         future: _checkIfUserLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -67,7 +68,7 @@ class SpreadIt extends StatelessWidget {
             return loggedIn ? HomePage() : StartUpPage();
           }
         },
-      ),
+      ),*/
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
