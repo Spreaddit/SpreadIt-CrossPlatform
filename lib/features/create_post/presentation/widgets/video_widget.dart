@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
@@ -27,13 +29,9 @@ class _VideoWidgetState extends State<VideoWidget> {
     super.initState();
     if (kIsWeb && widget.videoWeb != null) {
       _controller = VideoPlayerController.network(
-        Uri.dataFromString(
-          String.fromCharCodes(widget.videoWeb!),
-          mimeType: 'video/mp4',
-        ).toString()
-      )..initialize().then((_) {
-          setState(() {}); // Ensure the video player is initialized
-        });
+        'data:video/mp4;base64,${base64Encode(widget.videoWeb!)}',
+      );
+      videoDisplayed = _controller.initialize();  
     }
     else if (!kIsWeb && widget.video != null) {
       _controller = VideoPlayerController.file(widget.video!);
@@ -50,36 +48,14 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb && widget.videoWeb != null) {
-      return Stack(
-        children: [
-          _controller.value.isInitialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-              : Container(),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: IconButton(
-              icon: Icon(Icons.cancel),
-              onPressed: widget.onIconPress,
-            ),
-          ),
-        ],
-      );
-    } else {
       return FutureBuilder(
         future: videoDisplayed,
         builder :(context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Stack(
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  height: 160,
-                  width: double.infinity,
+                AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
                   child: VideoPlayer(_controller),
                 ),
                 Positioned(
@@ -100,9 +76,5 @@ class _VideoWidgetState extends State<VideoWidget> {
       );
     }
   }
-}
 
-// decoration: BoxDecoration(
-                  //   image: DecorationImage(
-                  //     image: FileImage(widget.video!),
-                  //     fit: BoxFit.cover,
+
