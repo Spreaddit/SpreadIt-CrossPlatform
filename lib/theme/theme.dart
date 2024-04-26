@@ -7,6 +7,7 @@ const redditGrey = Color.fromRGBO(206, 227, 248, 1);
 const redditBlue = Color(0xFF0079D3);
 
 ThemeData spreadItTheme = ThemeData(
+  primarySwatch: Colors.grey,
   fontFamily: GoogleFonts.notoSans().fontFamily,
   colorScheme: ColorScheme.fromSeed(
     seedColor: redditOrange,

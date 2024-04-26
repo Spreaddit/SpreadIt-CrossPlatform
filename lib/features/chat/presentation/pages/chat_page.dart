@@ -1,13 +1,11 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
+import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:uuid/uuid.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ChatPage extends StatefulWidget {
   final String id;
@@ -22,13 +20,15 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
-  final _user = const types.User(
-    id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
-  );
+  late types.User _user;
 
   @override
   void initState() {
     super.initState();
+    _user = types.User(
+      // id: UserSingleton().user!.firebaseId,
+      id: 'KMmoAXLiVc9UBl0rNqTO',
+    );
     _loadMessages();
   }
 
@@ -64,17 +64,6 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  void _handleMessageTap(BuildContext _, types.Message message) async {
-    if (message is types.FileMessage) {
-      if (message.uri.startsWith('http')) {
-        // Open the Firebase storage URL in a browser or relevant application
-        // You can use platform-specific plugins like url_launcher to achieve this
-        // For example:
-        // await launch(message.uri);
-      }
-    }
-  }
-
   void _handlePreviewDataFetched(
     types.TextMessage message,
     types.PreviewData previewData,
@@ -98,6 +87,30 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     _addMessage(textMessage);
+
+    Map<String, dynamic> messageMap = {
+      'chatRoomId': widget.id,
+      'content': textMessage.id,
+      'image': '',
+      'sender': UserData(
+        name: _user.lastName ?? '',
+        avatarUrl: _user.imageUrl ?? "",
+        id: _user.id,
+        email: _user.metadata!['email'],
+      ),
+      'time': DateTime.now().millisecondsSinceEpoch.toString(),
+      'type': 'text',
+    };
+
+    CollectionReference messages =
+        FirebaseFirestore.instance.collection('messages');
+
+    Future<void> addMessageToFirebase() {
+      return messages
+          .add(messageMap)
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
   }
 
   void _loadMessages() {
@@ -109,11 +122,15 @@ class _ChatPageState extends State<ChatPage> {
       setState(() {
         _messages = snapshot.docs.map((doc) {
           final data = doc.data();
+          String email = data['sender']['email'];
           types.Message message = data['type'] == "text"
               ? types.TextMessage(
                   id: doc.id,
                   text: data['content'] ?? '',
                   author: types.User(
+                    metadata: {
+                      'email': email,
+                    },
                     id: data['sender']['id'] ?? '',
                     imageUrl: data['sender']['avatarUrl'] ?? '',
                     lastName: data['sender']['name'] ?? '',
@@ -145,16 +162,26 @@ class _ChatPageState extends State<ChatPage> {
     return Chat(
       messages: _messages,
       onAttachmentPressed: _handleImageSelection,
-      onMessageTap: _handleMessageTap,
       onPreviewDataFetched: _handlePreviewDataFetched,
       onSendPressed: _handleSendPressed,
       showUserAvatars: true,
       showUserNames: true,
       user: _user,
       theme: chatTheme,
+      imageMessageBuilder: imageMessageBuilder,
     );
   }
 }
+
+Widget Function(types.ImageMessage, {required int messageWidth})?
+    imageMessageBuilder = (message, {required int messageWidth}) {
+  return FadeInImage.memoryNetwork(
+    placeholder: kTransparentImage,
+    image: message.uri,
+    width: messageWidth.toDouble(),
+    fit: BoxFit.cover,
+  );
+};
 
 ChatTheme chatTheme = const DefaultChatTheme(
     attachmentButtonIcon: Icon(Icons.image),

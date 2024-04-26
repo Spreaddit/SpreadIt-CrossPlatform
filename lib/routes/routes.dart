@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
@@ -71,6 +72,7 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.discover)),
     '/chat-rooms': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.chat)),
+    '/new-chat': (context) => ProtectedRoute(child: NewChatPage()),
     '/all': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.all)),
     '/create_a_community': (context) =>
