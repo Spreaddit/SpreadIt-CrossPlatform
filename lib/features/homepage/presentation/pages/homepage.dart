@@ -45,7 +45,12 @@ class _HomePageState extends State<HomePage> {
     final List<String> parts = currentUrl.split('/');
     final String token = parts.last;
     print("token $token");
-    int response= await verifyEmail(emailToken: token);
+    int response =100;
+    if(token!='home')
+    {
+        response= await verifyEmail(emailToken: token);
+
+    }
     if (response ==200)
     {
       CustomSnackbar(content: "Email verifed Succesfully").show(context);

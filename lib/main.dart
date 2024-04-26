@@ -17,9 +17,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await UserSingleton().loadFromPrefs();
-  if (UserSingleton().user != null) {
-   // await subscribeToNotifications();
-  }
   runApp(SpreadIt());
 }
 
