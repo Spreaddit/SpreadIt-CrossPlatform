@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,83 +36,6 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _messages.insert(0, message);
     });
-  }
-
-  void _handleAttachmentPressed() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) => SafeArea(
-        child: SizedBox(
-          height: 144,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleImageSelection();
-                },
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text('Photo'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text('File'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text('Cancel'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _handleFileSelection() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.any,
-    );
-
-    if (result != null && result.files.single.path != null) {
-      final fileName = result.files.single.name;
-      final filePath = result.files.single.path!;
-      final fileBytes = File(filePath).readAsBytesSync();
-
-      try {
-        final ref =
-            FirebaseStorage.instance.ref().child('files').child(fileName);
-        await ref.putData(fileBytes);
-
-        final downloadUrl = await ref.getDownloadURL();
-
-        final message = types.FileMessage(
-          author: _user,
-          createdAt: DateTime.now().millisecondsSinceEpoch,
-          id: const Uuid().v4(),
-          mimeType: lookupMimeType(filePath),
-          name: fileName,
-          size: result.files.single.size,
-          uri: downloadUrl,
-        );
-
-        _addMessage(message);
-      } catch (e) {
-        print('Failed to upload file: $e');
-      }
-    }
   }
 
   void _handleImageSelection() async {
@@ -223,21 +144,61 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Chat(
       messages: _messages,
-      onAttachmentPressed: _handleAttachmentPressed,
+      onAttachmentPressed: _handleImageSelection,
       onMessageTap: _handleMessageTap,
       onPreviewDataFetched: _handlePreviewDataFetched,
       onSendPressed: _handleSendPressed,
       showUserAvatars: true,
       showUserNames: true,
       user: _user,
-      theme: const DefaultChatTheme(
-        seenIcon: Text(
-          'read',
-          style: TextStyle(
-            fontSize: 10.0,
-          ),
-        ),
-      ),
+      theme: chatTheme,
     );
   }
 }
+
+ChatTheme chatTheme = const DefaultChatTheme(
+    attachmentButtonIcon: Icon(Icons.image),
+    deliveredIcon: Icon(Icons.done),
+    documentIcon: Icon(Icons.insert_drive_file),
+    errorIcon: Icon(Icons.error),
+    inputBackgroundColor: Color(0xFFF5F6F8),
+    inputSurfaceTintColor: Colors.white,
+    inputMargin: EdgeInsets.all(8.0),
+    inputPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+    inputTextColor: Colors.black87,
+    primaryColor: Color.fromARGB(255, 211, 0, 0),
+    seenIcon: Icon(Icons.check_circle),
+    dateDividerTextStyle: TextStyle(
+      fontSize: 12,
+      color: Colors.grey,
+      decoration: TextDecoration.none,
+    ),
+    sendButtonIcon: Icon(Icons.send),
+    emptyChatPlaceholderTextStyle: TextStyle(
+      color: Colors.transparent,
+      fontSize: 12,
+      decoration: TextDecoration.none,
+    ),
+    userAvatarNameColors: [Colors.black],
+    userNameTextStyle: TextStyle(
+      fontSize: 12,
+      decoration: TextDecoration.none,
+    ),
+    inputTextStyle: TextStyle(fontSize: 12),
+    sentMessageBodyTextStyle: TextStyle(
+        fontSize: 12,
+        color: Colors.black,
+        decoration: TextDecoration.none,
+        fontWeight: FontWeight.normal),
+    receivedMessageBodyTextStyle: TextStyle(
+        fontSize: 12,
+        color: Colors.black,
+        decoration: TextDecoration.none,
+        fontWeight: FontWeight.normal),
+    systemMessageTheme: SystemMessageTheme(
+      margin: EdgeInsets.all(8.0),
+      textStyle: TextStyle(
+        fontSize: 12,
+        decoration: TextDecoration.none,
+      ),
+    ));
