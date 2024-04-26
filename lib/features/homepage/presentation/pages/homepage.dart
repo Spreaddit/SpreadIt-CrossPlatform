@@ -26,6 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late CurrentPage currentPage;
   late GlobalKey<_HomePageState> _homePageKey;
+  int chatFilterSelectedOption = 3;
 
   @override
   void initState() {
@@ -50,6 +51,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onChangeChatFilter(int chatFilterSelectedOption) {
+    setState(() {
+      this.chatFilterSelectedOption = chatFilterSelectedOption;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
@@ -59,7 +66,9 @@ class _HomePageState extends State<HomePage> {
       ),
       DiscoverCommunitiesBody(),
       CreatePost(),
-      ChatUserPage(),
+      ChatUserPage(
+        selectedOption: chatFilterSelectedOption,
+      ),
       NotificationPage(),
       PostFeed(
         postCategory: PostCategories.hot,
@@ -103,15 +112,18 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: TopBar(
-        key: _homePageKey,
-        context: context,
-        currentPage: currentPage,
-        onChangeHomeCategory: changeSelectedIndex,
-      ),
+          key: _homePageKey,
+          context: context,
+          currentPage: currentPage,
+          onChangeHomeCategory: changeSelectedIndex,
+          onChangeChatFilter: onChangeChatFilter,
+          chatFilterSelectedOption: chatFilterSelectedOption),
       body: screens[currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),
       bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton:
+          currentPage == CurrentPage.chat ? floatingNewChatButton() : null,
     );
   }
 }
