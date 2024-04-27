@@ -95,6 +95,7 @@ class _MutedUsersPageState extends State<MutedUsersPage> {
                       hintText: 'Search',
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(),
+                      fillColor: Colors.white,
                     ),
                   ),
                 ),
@@ -165,6 +166,7 @@ class _MutedUsersPageState extends State<MutedUsersPage> {
               height: 10.0,
               color: Colors.white,
             ),
+            trailing: Icon(Icons.more_vert),
               );
             },
           ),
