@@ -35,16 +35,16 @@ class Chatroom {
 }
 
 class UserData {
-  final String id;
-  final String name;
-  final String email;
-  final String avatarUrl;
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? avatarUrl;
 
   UserData({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.avatarUrl,
+    this.id,
+    this.name,
+    this.email,
+    this.avatarUrl,
   });
 
   factory UserData.fromMap(Map<String, dynamic> data) {

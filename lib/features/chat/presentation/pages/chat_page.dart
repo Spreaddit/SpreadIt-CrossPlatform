@@ -98,19 +98,17 @@ class _ChatPageState extends State<ChatPage> {
         id: _user.id,
         email: _user.metadata!['email'],
       ),
-      'time': DateTime.now().millisecondsSinceEpoch.toString(),
+      'time': DateTime.now() as Timestamp,
       'type': 'text',
     };
 
     CollectionReference messages =
         FirebaseFirestore.instance.collection('messages');
 
-    Future<void> addMessageToFirebase() {
-      return messages
-          .add(messageMap)
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
-    }
+    messages
+        .add(messageMap)
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 
   void _loadMessages() {
