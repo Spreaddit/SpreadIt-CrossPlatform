@@ -17,7 +17,7 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
     "communityType": "Public",
     "description": "",
     "image": "",
-    "memberscount": 0,
+    "membersCount": 0,
     "rules": [
       {"title": "", "description": "", "reportReason": ""}
     ],

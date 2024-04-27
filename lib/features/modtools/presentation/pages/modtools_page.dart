@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/pages/banned_users_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/community_type_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/description_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/dummy_page.dart';
@@ -11,6 +12,11 @@ class ModtoolsPage extends StatelessWidget {
   ModtoolsPage({Key? key, required this.communityName}) : super(key: key);
 
   final String communityName;
+
+  /// Lists to hold widgets for different sections of the modtools.
+  final List<Widget> generalSection = [];
+  final List<Widget> contentAndRegulationsSection = [];
+  final List<Widget> userManagementSection = [];
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +46,10 @@ class ModtoolsPage extends StatelessWidget {
       "approved_users_page": DummyPage(
         communityName: communityName,
       ),
-      "banned_users_page": DummyPage(
+      "banned_users_page": BannedUsersPage(
         communityName: communityName,
       ),
     };
-
-    /// Lists to hold widgets for different sections of the modtools.
-    List<Widget> generalSection = [];
-    List<Widget> contentAndRegulationsSection = [];
-    List<Widget> userManagementSection = [];
 
     /// Function to navigate to a different page using a custom route transition.
     void navigateToPage(Widget? route) {
@@ -131,6 +132,7 @@ class ModtoolsPage extends StatelessWidget {
     ]);
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(237, 236, 236, 234),
       appBar: SettingsAppBar(
         title: "Moderator tools",
       ),
@@ -143,7 +145,6 @@ class ModtoolsPage extends StatelessWidget {
             SettingsSectionBody(sectionChildren: contentAndRegulationsSection),
             SettingsSectionTitle(title: "User Management"),
             SettingsSectionBody(sectionChildren: userManagementSection),
-            SettingsSectionTitle(title: ""),
           ],
         ),
       ),
