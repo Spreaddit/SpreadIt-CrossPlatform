@@ -2,13 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import '../../../user_info.dart'; // Importing user information.
 
-var apibase= "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 Future<int> disableCommunitynotifications({
   required String id,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String requestURL = '$apibase/community/update/disable';
+    String requestURL = '$apiUrl/community/update/disable';
     
       var data = {
       "communityId": id,

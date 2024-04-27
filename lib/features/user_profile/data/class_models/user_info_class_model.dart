@@ -98,7 +98,7 @@ class UserInfo {
       displayname: json['name'],
       avatar: json['avatar'],
       background: json['banner'],
-      about: json['about'],
+      about: json['about'] ?? '',
       dateOfJoining: json['createdAt'],
       isVisible: json['isVisible'],
       isActive: json['isActive'],

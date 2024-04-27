@@ -1,22 +1,28 @@
 import 'package:dio/dio.dart';
-import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
-import '../../../user_info.dart'; // Importing user information.
+import 'package:spreadit_crossplatform/api.dart'; 
+import '../../../user_info.dart'; 
 
-Future<int> HideNotification({
+Future<int> MarkAsRead({
   required String id,
+  required String type,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String requestURL = '$apiUrl/notifications/hide';
-    
-      var data = {
-      "notificationId": id,
-    };
-
-    /// Send a POST request to the server to save or unsave the post or comment.
-    final response = await Dio().post(
+    String apiroute;
+     switch (type) {
+      case "all":
+        apiroute = "notifications/mark-all-as-read";
+        break;
+      case "one":
+        apiroute = "notifications/read-notification/$id";
+        break;
+      default:
+        print("Invalid type");
+        return 400;
+    }
+    var requestURL= "$apiUrl/$apiroute";
+    final response = await Dio().put(
       requestURL,
-      data: data,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/navigation_buttom_sheet.dart';
 
 class NotificationWidget extends StatefulWidget {
   final Notifications? notification;
   final String content;
-  final Community? recommendedComunity;
   final IconData? iconData;
   final VoidCallback? onPressed;
   final void Function(String, Notifications) onHide;
@@ -21,7 +21,6 @@ class NotificationWidget extends StatefulWidget {
     Key? key,
     this.notification,
     required this.content,
-    this.recommendedComunity,
     required this.date,
     this.iconData,
     this.onPressed,
@@ -45,8 +44,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     isRead = widget.isRead;
   }
 
-  void MarkasRead() {
-    //To_Do  Fetch mark as read
+  Future<void> markmessageasRead() async{
+    await MarkAsRead(id: widget.notification!.id!, type: 'one');
     setState(() {
       isRead = true;
     });
@@ -67,7 +66,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               children: [
                 CircleAvatar(
                   backgroundImage:
-                      NetworkImage( widget.community ? widget.recommendedComunity!.image! :widget.notification!.relatedUser.avatarUrl),
+                      NetworkImage( widget.community ? widget.notification!.communitypic! :widget.notification!.relatedUser!.avatarUrl!),
                   radius: 20.0,
                 ),
                 if (widget.iconData != null)
@@ -78,7 +77,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                       radius: 8,
                       backgroundColor: Colors.white,
                       child: Icon(
-                         widget.community ? Icons.recommend : widget.iconData,
+                        widget.iconData,
                         color: Theme.of(context).colorScheme.tertiary,
                         size: 12,
                       ),
@@ -92,7 +91,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widget.community ? Text("Recommended Community ${widget.recommendedComunity!.name}"): Text("${widget.notification!.content} ${widget.date}"),
+                widget.community ? Text(widget.content) : Text("${widget.notification!.content} ${widget.date}"),
                 SizedBox(height: 4), // Add some space between title and content
                 if (!widget.community) Text(widget.content),
               ],
@@ -100,7 +99,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
           ),
           GestureDetector(
             onTap: () {
-              MarkasRead();
+              markmessageasRead();
               showModalBottomSheet(
                 context: context,
                 builder: (context) => ManageNotificationBottomSheet(
@@ -124,8 +123,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () {
-                    MarkasRead();
+                  onPressed: () async{
+                    await markmessageasRead();
                     widget.onPressed?.call();
                   },
                   icon: Icon(

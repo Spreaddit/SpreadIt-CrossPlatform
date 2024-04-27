@@ -25,8 +25,13 @@ Future<int> logInApi({
       UserSingleton().setUser(user);
       UserSingleton().setAccessToken(response.data['access_token'],
           DateTime.parse(response.data['token_expiration_date']));
-      
-     await subscribeToNotifications();
+
+      try {
+        await subscribeToNotifications();
+      } catch (e) {
+        print('Failed to subscribe to notifications: $e');
+      }
+
       print(response.statusMessage);
       return 200;
     } else if (response.statusCode == 404) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_notifications.dart';
@@ -19,8 +18,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   List<Notifications> notifications = [];
   bool isLoading = true;
-  bool noNotifications = false;
-  Community? recommendedCommunity;
+  Notifications? recommendedCommunity;
 
   @override
   void initState() {
@@ -31,11 +29,17 @@ class _NotificationPageState extends State<NotificationPage> {
   Future<void> fetchData() async {
     try {
       notifications = await fetchNotifications();
-      recommendedCommunity = await getRecommendedCommunity();
+      if (notifications.isEmpty) {
+        recommendedCommunity = await getRecommendedCommunity();
+        notifications.add(recommendedCommunity!);
+      }
     } catch (e) {
       print(e);
-      noNotifications = true;
-      recommendedCommunity = await getRecommendedCommunity();
+      if (notifications.isEmpty) {
+        recommendedCommunity = await getRecommendedCommunity();
+        notifications.add(recommendedCommunity!);
+        print(notifications);
+      }
     } finally {
       setState(() {
         isLoading = false;
@@ -59,41 +63,42 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dummy Notifications'),
-      ),
       body: isLoading
           ? LoaderWidget(
               dotSize: 10,
               logoSize: 100,
             )
-          : notifications.isEmpty || noNotifications
-              ? Center(
-                child: Text("No notifications"),
-              )
-              : ListView.builder(
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    final notification = notifications[index];
-                    final data = processNotification(notification);
-                    return NotificationWidget(
-                      content: data.content,
-                      notification: notification,
-                      date: dateToDuration(notification.createdAt),
-                      iconData: data.icon,
-                      buttonIcon: data.icon,
-                      buttonText: data.buttonText,
-                      onPressed: data.onPress,
-                      isRead: notification.isRead,
-                      followed: followed(notification.notificationType),
-                      onHide: onHide,
-                    );
-                  },
-                ),
+          : ListView.builder(
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                final notification = notifications[index];
+                final data = processNotification(notification, context);
+                print(data);
+                return NotificationWidget(
+                  content: data.content!,
+                  notification: notification,
+                  date: dateToDuration(notification.createdAt),
+                  iconData: data.icon,
+                  buttonIcon: data.icon,
+                  buttonText: data.buttonText??'',
+                  onPressed: data.onPress,
+                  isRead: notification.isRead,
+                  followed: true,
+                  onHide: onHide,
+                  community: community(notification.notificationType),
+                );
+              },
+            ),
     );
   }
 }
 
 bool followed(String notificationType) {
   return notificationType == "posts" || notificationType == "comments";
+}
+
+bool community(String notificationType) {
+  bool isCommunity= notificationType == "community" ;
+  print(" comminty $isCommunity");
+  return isCommunity;
 }

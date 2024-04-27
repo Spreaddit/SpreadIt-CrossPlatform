@@ -46,6 +46,8 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 title: Text("Don't get updates on this"),
                 onTap: () {
                   // Add your logic here for handling this action
+                        Navigator.pop(context);
+
                 },
               ),
             if (followed || community)
@@ -53,7 +55,9 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 leading: Icon(Icons.visibility_off, color: Colors.black),
                 title: Text("Hide this notification"),
                 onTap: () {
-                  onHide(notification.id , notification);
+                  onHide(notification.id! , notification);
+                        Navigator.pop(context);
+
                 },
               ),
             if (followed || community)
@@ -62,6 +66,8 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 title: Text("Turn off this notification type"),
                 onTap: () {
                   // Add your logic here for handling this action
+                        Navigator.pop(context);
+
                 },
               ),
             if (community)
@@ -70,6 +76,8 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 title: Text("Disable updates from this community"),
                 onTap: () async {
                   await disableCommunitynotifications(id:"1");
+                        Navigator.pop(context);
+
                 },
               ),
             Button(

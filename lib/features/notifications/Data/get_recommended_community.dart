@@ -1,16 +1,16 @@
-import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
-String baseUrl = "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 
-Future<Community> getRecommendedCommunity() async {
+Future<Notifications> getRecommendedCommunity() async {
   try {
     String? accessToken = UserSingleton().accessToken;
 
     final response = await Dio().get(
-      '$baseUrl/community/suggest',
+      '$apiUrl/community/suggest',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -22,7 +22,7 @@ Future<Community> getRecommendedCommunity() async {
       print(
         "reponse ${response.data}",
       );
-      Community community = Community.fromJson(response.data);
+      Notifications community = Notifications.fromJson(response.data);
       print(community);
       return community;
     } else if (response.statusCode == 404) {

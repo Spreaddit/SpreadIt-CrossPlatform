@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
-import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
 
 CurrentPage previousPage = CurrentPage.home;
 
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
       DiscoverCommunitiesBody(),
       CreatePost(),
       Text("chat"),
-      NotificationPage(),
+      InboxPage(),
       PostFeed(
         postCategory: PostCategories.hot,
         showSortTypeChange: false,
