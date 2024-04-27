@@ -29,7 +29,8 @@ class NotificationWidget extends StatefulWidget {
     this.buttonIcon,
     this.isRead = false,
     this.followed = false,
-    this.community = false, Community? recommendedCommunity,
+    this.community = false,
+    Community? recommendedCommunity,
   }) : super(key: key);
 
   @override
@@ -44,7 +45,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     isRead = widget.isRead;
   }
 
-  Future<void> markmessageasRead() async{
+  Future<void> markmessageasRead() async {
     await MarkAsRead(id: widget.notification!.id!, type: 'one');
     setState(() {
       isRead = true;
@@ -64,10 +65,16 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             height: 40.0,
             child: Stack(
               children: [
-                CircleAvatar(
-                  backgroundImage:
-                      NetworkImage( widget.community ? widget.notification!.communitypic! :widget.notification!.relatedUser!.avatarUrl!),
-                  radius: 20.0,
+                GestureDetector(
+                  onTap: () {
+                    widget.onPressed?.call();
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(widget.community
+                        ? widget.notification!.communitypic!
+                        : widget.notification!.relatedUser!.avatarUrl!),
+                    radius: 20.0,
+                  ),
                 ),
                 if (widget.iconData != null)
                   Positioned(
@@ -91,7 +98,9 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widget.community ? Text(widget.content) : Text("${widget.notification!.content} ${widget.date}"),
+                widget.community
+                    ? Text(widget.content)
+                    : Text("${widget.notification!.content} ${widget.date}"),
                 SizedBox(height: 4), // Add some space between title and content
                 if (!widget.community) Text(widget.content),
               ],
@@ -123,7 +132,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () async{
+                  onPressed: () async {
                     await markmessageasRead();
                     widget.onPressed?.call();
                   },

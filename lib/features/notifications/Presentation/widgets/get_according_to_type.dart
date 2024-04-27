@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 
@@ -20,7 +21,8 @@ class NotificationData extends Equatable {
   List<Object?> get props => [icon, content, buttonText, onPress];
 }
 
-NotificationData processNotification(Notifications notification, BuildContext context) {
+NotificationData processNotification(
+    Notifications notification, BuildContext context) {
   IconData? icon;
   String? content;
   String? buttonText;
@@ -30,8 +32,14 @@ NotificationData processNotification(Notifications notification, BuildContext co
       icon = Icons.person_add;
       content = "";
       buttonText = "View Profile";
+      String username = notification.relatedUser!.username!;
       onPress = () {
-        // Go to user profile
+        Navigator.of(context).pushNamed(
+          '/user-profile',
+          arguments: {
+            'username': username,
+          },
+        );
       };
       break;
     case "upvoteComments":
@@ -39,7 +47,19 @@ NotificationData processNotification(Notifications notification, BuildContext co
       content = notification.comment!.content;
       buttonText = "View Comment";
       onPress = () {
-        // Set onPress callback to navigate to the commented post
+        //need to scroll to comment
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/post-card-page/${notification.postId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+            ),
+          ),
+        );
       };
       break;
     case "upvotePosts":
@@ -47,7 +67,6 @@ NotificationData processNotification(Notifications notification, BuildContext co
       content = notification.post!.title;
       buttonText = "View Post";
       onPress = () {
-        // Set onPress callback to navigate to the upvoted post
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -68,7 +87,19 @@ NotificationData processNotification(Notifications notification, BuildContext co
       content = notification.comment!.content;
       buttonText = "View Comment";
       onPress = () {
-        // Set onPress callback to navigate to the commented post
+        //need to scroll ll comment
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/post-card-page/${notification.postId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+            ),
+          ),
+        );
       };
       break;
     case "comment":
@@ -76,7 +107,19 @@ NotificationData processNotification(Notifications notification, BuildContext co
       content = notification.comment!.content;
       buttonText = "View Comment";
       onPress = () {
-        // Set onPress callback to navigate to the commented post
+        //need to scroll ll comment
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/post-card-page/${notification.postId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+            ),
+          ),
+        );
       };
       break;
     case "community":
@@ -84,7 +127,13 @@ NotificationData processNotification(Notifications notification, BuildContext co
       content = 'Recommended : ${notification.communityname}';
       buttonText = null;
       onPress = () {
-        // Set onPress callback to navigate to the RECOMMENDED COMMUNITY post
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => CommunityPage(
+              communityName: notification.communityname!,
+            ),
+          ),
+        );
       };
       break;
 
