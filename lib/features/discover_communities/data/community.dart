@@ -77,7 +77,7 @@ class Rule extends Equatable {
 
   factory Rule.fromJson(Map<String, dynamic> json) {
     return Rule(
-      id: json['_id'] ?? "0",
+      id: json['_id']?? "0",
       title: json['title'],
       description: json['description'],
       reportReason: json['reportReason'],

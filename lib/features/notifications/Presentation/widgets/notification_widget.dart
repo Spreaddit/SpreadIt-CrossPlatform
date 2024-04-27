@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/navigation_buttom_sheet.dart';
 
 class NotificationWidget extends StatefulWidget {
-  final String title;
+  final Notifications? notification;
   final String content;
-  final String profilePicUrl;
+  final Community? recommendedComunity;
   final IconData? iconData;
   final VoidCallback? onPressed;
-  final VoidCallback? onMoreVertPressed;
+  final void Function(String, Notifications) onHide;
   final String? buttonText;
   final IconData? buttonIcon;
   final String date;
@@ -17,18 +19,18 @@ class NotificationWidget extends StatefulWidget {
 
   const NotificationWidget({
     Key? key,
-    required this.title,
+    this.notification,
     required this.content,
-    required this.profilePicUrl,
+    this.recommendedComunity,
     required this.date,
     this.iconData,
     this.onPressed,
-    this.onMoreVertPressed,
+    required this.onHide,
     this.buttonText,
     this.buttonIcon,
     this.isRead = false,
     this.followed = false,
-    this.community = false,
+    this.community = false, Community? recommendedCommunity,
   }) : super(key: key);
 
   @override
@@ -64,7 +66,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             child: Stack(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(widget.profilePicUrl),
+                  backgroundImage:
+                      NetworkImage( widget.community ? widget.recommendedComunity!.image! :widget.notification!.relatedUser.avatarUrl),
                   radius: 20.0,
                 ),
                 if (widget.iconData != null)
@@ -75,7 +78,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                       radius: 8,
                       backgroundColor: Colors.white,
                       child: Icon(
-                        widget.iconData,
+                         widget.community ? Icons.recommend : widget.iconData,
                         color: Theme.of(context).colorScheme.tertiary,
                         size: 12,
                       ),
@@ -89,9 +92,9 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${widget.title} ${widget.date}"),
+                widget.community ? Text("Recommended Community ${widget.recommendedComunity!.name}"): Text("${widget.notification!.content} ${widget.date}"),
                 SizedBox(height: 4), // Add some space between title and content
-                Text(widget.content),
+                if (!widget.community) Text(widget.content),
               ],
             ),
           ),
@@ -103,6 +106,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 builder: (context) => ManageNotificationBottomSheet(
                   followed: widget.followed,
                   community: widget.community,
+                  onHide: widget.onHide,
+                  notification: widget.notification!,
                 ),
               );
             },
@@ -111,7 +116,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
         ],
       ),
       subtitle: Container(
-        margin: EdgeInsets.only(right: 20.0 , left :20.0 , top :10.0),
+        margin: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

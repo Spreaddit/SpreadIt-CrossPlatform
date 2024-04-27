@@ -108,7 +108,7 @@ void savePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
   Navigator.pop(context);
   if (statusCode == 200) {
-    print('Post unsaved successfully.');
+    print('Post saved successfully.');
   } else {
     CustomSnackbar(content: "Error occurred while trying to unsave")
         .show(context);
