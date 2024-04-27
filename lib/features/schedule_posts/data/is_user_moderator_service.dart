@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
@@ -10,7 +8,7 @@ class IsUserModeratorService {
   IsUserModeratorService();
 
   Future<bool> isUserModerator(String communityName) async {
-    String username = UserSingleton().user?.name ?? '';
+    String username = UserSingleton().user?.username ?? '';
     String? accessToken = UserSingleton().accessToken;
     Options options = Options(
       headers: {
@@ -19,7 +17,7 @@ class IsUserModeratorService {
     );
     try {
       final response = await dio.get(
-        '$apiUrl/community/moderation/$communityName/$username/is-moderator',
+        '$apiUrl$communityName/$username/is-moderator',
         options: options,
       );
 
