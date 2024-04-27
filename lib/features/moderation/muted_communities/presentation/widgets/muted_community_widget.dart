@@ -32,6 +32,7 @@ class _CommunityTileState extends State<CommunityTile> {
       leading: CircleAvatar(
         backgroundImage: NetworkImage(widget.community.image!),
         backgroundColor: Colors.grey,
+        radius: 15.0,
         child: Icon(Icons.group),
       ),
       title: Text(widget.community.name),
@@ -45,19 +46,19 @@ class _CommunityTileState extends State<CommunityTile> {
         },
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
-            _isMuted ? Colors.white : Theme.of(context).colorScheme.tertiary,
+            _isMuted ? Colors.white : Colors.blue[900]!,
           ),
           foregroundColor: MaterialStateProperty.all<Color>(
-            _isMuted ? Theme.of(context).colorScheme.tertiary : Colors.white,
+            _isMuted ? Colors.blue[900]! : Colors.white,
           ),
           textStyle: MaterialStateProperty.all<TextStyle>(
             TextStyle(fontSize: 12),
           ),
           padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-            EdgeInsets.symmetric(horizontal: 8),
+            EdgeInsets.all(8),
           ),
           side: MaterialStateProperty.all<BorderSide>(
-            BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            BorderSide(color: Colors.blue[900]!),
           ),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(

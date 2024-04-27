@@ -131,29 +131,44 @@ class _MutedUsersPageState extends State<MutedUsersPage> {
             ),
     );
   }
-
   Widget _buildShimmerLoading() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
       period: Duration(milliseconds: 1000),
-      child: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: CircleAvatar(),
-            title: Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: 10.0,
-              color: Colors.white,
+      child: SingleChildScrollView(
+        child: Column(children: [
+         
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Search',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(),
             ),
+          ),
+          ListView.builder(
+            shrinkWrap:
+                true, 
+            physics:
+                NeverScrollableScrollPhysics(), 
+            itemCount: 20,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: CircleAvatar(),
+                title: Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: 10.0,
+                  color: Colors.white,
+                ),
             subtitle: Container(
               width: double.infinity,
               height: 10.0,
               color: Colors.white,
             ),
-          );
-        },
+              );
+            },
+          ),
+        ]),
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:spreadit_crossplatform/features/discover_communities/data/commun
 import 'package:spreadit_crossplatform/user_info.dart';
 
 import 'package:dio/dio.dart';
-//import 'package:spreadit_crossplatform/api.dart';
 class GetMutedCommunities {
   Dio dio = Dio();
   String? accessToken = UserSingleton().accessToken;

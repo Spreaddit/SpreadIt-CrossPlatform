@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
+import 'package:spreadit_crossplatform/api.dart'; 
 import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<int> muteOrUnmuteCommunity(String communityName, String type) async {
