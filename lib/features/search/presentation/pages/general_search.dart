@@ -16,7 +16,6 @@ class _GeneralSearchState extends State<GeneralSearch> {
 
   final GlobalKey<FormState> searchForm = GlobalKey<FormState>();
   String? searchItem ;
-  List filteredList = [];
   List communityList = 
    [
       {
@@ -58,16 +57,12 @@ class _GeneralSearchState extends State<GeneralSearch> {
    ];
 
 
-  void onSearch(List filteredList) {
-    setState(() {
-      this.filteredList = List.from(filteredList);
-    });
-  }
 
   void updateSearchItem(String value) {
     searchItem = value;
     searchForm.currentState!.save();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +73,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
               children: [
                 CustomSearchBar(
                   hintText: 'Search',
-                  searchList: [],
                   updateSearchItem: updateSearchItem,
-                  onSearch: onSearch,
                 ),
                 InkWell(
                   onTap: () {}, // navigate to home page 
@@ -94,10 +87,10 @@ class _GeneralSearchState extends State<GeneralSearch> {
                 ),
               ],
             ),
-            if(filteredList.isEmpty)
+            if(searchItem == null || RegExp(r'^[\W_]+$').hasMatch(searchItem!) )
               RecentSearches(),
               TrendingMenu(),  
-            if(filteredList.isNotEmpty)
+            if (searchItem != null && !RegExp(r'^[\W_]+$').hasMatch(searchItem!))
              Column(
               children: [
                 Text('Communities'),
@@ -112,7 +105,8 @@ class _GeneralSearchState extends State<GeneralSearch> {
                   onTap: () {},  // naviagate to el page el 3emalaqa di
                   child: Text('Search for "$searchItem"' ),
                 ),
-              ],)  
+              ],
+            ),  
           ],
         ),
     );

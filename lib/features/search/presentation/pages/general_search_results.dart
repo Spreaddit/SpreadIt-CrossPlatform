@@ -64,9 +64,7 @@ class _SearchResultState extends State<SearchResult> {
         children: [
           CustomSearchBar(
             hintText: 'hello',
-            searchList: [], 
             updateSearchItem: updateSearchItem,
-            onSearch: onSearch,
           ),
           SizedBox(height: 8),
           SearchResultHeader(

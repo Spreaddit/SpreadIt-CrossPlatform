@@ -79,9 +79,7 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
               ),
               CustomSearchBar(
                 hintText: 'hello',
-                searchList: [], 
                 updateSearchItem: updateSearchItem,
-                onSearch: onSearch,
               ),
             ],
           ),

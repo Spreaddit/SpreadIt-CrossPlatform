@@ -69,9 +69,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
               children: [
                 CustomSearchBar(
                   hintText: 'Search',
-                  searchList: [],
                   updateSearchItem: updateSearchItem,
-                  onSearch: onSearch,
                   communityOrUserName: communityOrUserName,
                   communityOrUserIcon: communityOrUserIcon,
                 ),

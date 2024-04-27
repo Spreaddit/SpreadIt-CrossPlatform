@@ -60,7 +60,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home:SearchResult(),
+      home:GeneralSearch(),
        onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);

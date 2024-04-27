@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/search/data/delete_search_history.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_search_history.dart';
 
 class RecentSearches extends StatefulWidget {
   const RecentSearches({Key? key}) : super(key: key);
@@ -10,7 +14,28 @@ class RecentSearches extends StatefulWidget {
 
 class _RecentSearchesState extends State<RecentSearches> {
 
-  List recents = [' cyberTruck', 'Taylor Swift', 'Taslimet el software etbakkaret', ' ana t3ebt', 'yarab nekhlas'];
+  List recents = [];
+  List recentSearches = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getRecentSearches();
+  }
+
+  void getRecentSearches () async {
+    recentSearches = await getSeacrhHistory();
+    setRecentVector();
+  }
+
+  void setRecentVector () {
+    setState(() => recents = recentSearches.map((item) => item["query"]).toList());
+  }
+
+  void deleteRecentSearch (String query) async{
+    int response = await deleteSearchHistory();
+    getSeacrhHistory();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +44,7 @@ class _RecentSearchesState extends State<RecentSearches> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.3,
           child: ListView.builder(
-            itemCount: 3,
+            itemCount: min(recents.length, 5),
             itemBuilder: (context, index) {
               return Row(
                 children: [
@@ -46,7 +71,7 @@ class _RecentSearchesState extends State<RecentSearches> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () => deleteRecentSearch(recents[index]),
                         icon: Icon(Icons.cancel),
                       ),
                     ),
@@ -54,11 +79,11 @@ class _RecentSearchesState extends State<RecentSearches> {
                 ],
               );
             },
-                ),
+          ),
         ),
     );
   }
 }
 
 /*TO DOS
-1) lamma el user yekhtar haga aw y-search 3ala haga , el haga di tetne2el fo2 (the list only displays 3 results) */
+1) fix el delete */

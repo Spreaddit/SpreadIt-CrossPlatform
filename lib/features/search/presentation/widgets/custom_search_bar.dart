@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final String hintText;
-  final List searchList;
-  final Function(List) onSearch;
   final Function(String) updateSearchItem;
   final String? communityOrUserName;
   final String? communityOrUserIcon;
 
   const CustomSearchBar({
     required this.hintText,
-    required this.searchList,
-    required this.onSearch,
     required this.updateSearchItem,
     this.communityOrUserName,
     this.communityOrUserIcon,
@@ -38,22 +34,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   void queryListener() {
-    widget.onSearch(_filterList(searchController.text));
+    // call backend funcrion
   }
 
-  List _filterList(String query) {
-    if (query.isEmpty) {
-      return List.from(widget.searchList);
-    } else {
-      return widget.searchList
-          .where(
-            (e) => e.name.toString().toLowerCase().contains(
-                  query.toLowerCase(),
-                ),
-          )
-          .toList();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
