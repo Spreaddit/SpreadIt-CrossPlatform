@@ -3,7 +3,6 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/data/muted_user_class_model.dart'; 
 import 'package:spreadit_crossplatform/user_info.dart';
 
-String baseUrl = apiUrl; /// Base URL for API requests.
 
 /// Fetches muted users for a community.
 ///

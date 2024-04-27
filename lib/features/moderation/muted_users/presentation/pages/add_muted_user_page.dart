@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/moderation/muted_users/data/muted_user_class_model.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/widgets/unmute_mute_user.dart';
 
 class EditMutedUserPage extends StatefulWidget {
@@ -13,10 +14,13 @@ class _EditMutedUserPageState extends State<EditMutedUserPage> {
   late String initialUsername;
   late String initialModNotes;
   late String communityName;
+  late void Function(MutedUser)? onUpdate;
+  late MutedUser? mutedUser;
 
   @override
   void initState() {
     super.initState();
+    isFirstFieldEditable=true;
   }
 
   @override
@@ -26,14 +30,18 @@ class _EditMutedUserPageState extends State<EditMutedUserPage> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     print("args $args");
     if (args != null) {
-      isFirstFieldEditable = args['isFirstFieldEditable'];
-      initialUsername = args['initialUsername'];
-      initialModNotes = args['initialModNotes'];
-      communityName = args['communityName'];
+      isFirstFieldEditable = args['isFirstFieldEditable'] ?? true;
+      mutedUser = args['mutedUser'];
+       initialUsername = '';
+        initialModNotes = '';
+      if (mutedUser != null) {
+        initialUsername = mutedUser!.username;
+        initialModNotes = mutedUser!.note;
+      }
+      communityName = args['communityName'] ?? '';
+      onUpdate = args['onUpdate'];
       _usernameController = TextEditingController(text: initialUsername);
       _modNotesController = TextEditingController(text: initialModNotes);
-    } else {
-      // Handle null arguments here
     }
   }
 
@@ -43,8 +51,6 @@ class _EditMutedUserPageState extends State<EditMutedUserPage> {
     _modNotesController.dispose();
     super.dispose();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +71,12 @@ class _EditMutedUserPageState extends State<EditMutedUserPage> {
           TextButton(
             onPressed: () {
               muteUser(context, _usernameController.text, communityName, 'mute',
-                  _modNotesController.text);
-              Navigator.pop(context);
+                  _modNotesController.text, isFirstFieldEditable);
+              if (!isFirstFieldEditable) {
+                mutedUser!.note=_modNotesController.text;
+                onUpdate!(mutedUser!);
+                Navigator.pop(context);
+              }
             },
             child: Text(
               'Save',
@@ -96,6 +106,10 @@ class _EditMutedUserPageState extends State<EditMutedUserPage> {
                 controller: _usernameController,
                 readOnly: !isFirstFieldEditable,
                 decoration: InputDecoration(
+                  prefix: Text(
+                    'u/',
+                    style: TextStyle(color: Colors.black),
+                  ),
                   border: OutlineInputBorder(borderSide: BorderSide.none),
                   hintText: 'Enter username',
                   contentPadding: EdgeInsets.all(12.0),

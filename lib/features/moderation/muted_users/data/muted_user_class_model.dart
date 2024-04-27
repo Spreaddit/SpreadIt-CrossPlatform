@@ -5,21 +5,21 @@ class MutedUser extends Equatable {
   final String userProfilePic;
   final String username;
   final String date;
-  final String note;
+  String note;
 
   MutedUser({
     required this.userProfilePic,
     required this.username,
     required this.date,
-    required this.note,
+    this.note='',
   });
 
   factory MutedUser.fromJson(Map<String, dynamic> json) {
     return MutedUser(
-      userProfilePic: json['userProfilePic'],
+      userProfilePic: json['avatar'],
       username: json['username'],
-      date: dateToDuration( DateTime.parse(json['date'])),
-      note: json['note'],
+      date: dateToDuration( DateTime.parse(json['muteDate'])),
+      note: json['muteReason'],
     );
   }
 

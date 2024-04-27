@@ -39,10 +39,22 @@ class _MutedUsersPageState extends State<MutedUsersPage> {
     });
   }
 
+  void updateMutedUser(MutedUser updatedUser) {
+    setState(() {
+      final index = mutedUsers
+          .indexWhere((user) => user.username == updatedUser.username);
+      if (index != -1) {
+        mutedUsers[index] = updatedUser;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -65,7 +77,9 @@ class _MutedUsersPageState extends State<MutedUsersPage> {
                   'initialModNotes': '',
                   'communityName': communityName,
                 },
-              );
+              ).then((_) async {
+                await fetchMutedUsers();
+              });
             },
           ),
         ],
@@ -88,18 +102,27 @@ class _MutedUsersPageState extends State<MutedUsersPage> {
                   child: ListView.builder(
                     itemCount: mutedUsers.length,
                     itemBuilder: (context, index) {
-                      return MutedUserTile(
-                        mutedUser: mutedUsers[index],
-                        communityName: communityName,
-                        onUnmute: () => removeMutedUser(mutedUsers[index]),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(
-                            '/user-profile',
-                            arguments: {
-                              'username': mutedUsers[index].username,
+                      return Column(
+                        children: [
+                          MutedUserTile(
+                            mutedUser: mutedUsers[index],
+                            communityName: communityName,
+                            onUnmute: () => removeMutedUser(mutedUsers[index]),
+                            onUpdate: updateMutedUser,
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                '/user-profile',
+                                arguments: {
+                                  'username': mutedUsers[index].username,
+                                },
+                              );
                             },
-                          );
-                        },
+                          ),
+                          Divider(
+                            height: 2,
+                            color: Colors.transparent,
+                          ),
+                        ],
                       );
                     },
                   ),

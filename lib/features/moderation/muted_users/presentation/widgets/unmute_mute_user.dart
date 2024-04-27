@@ -3,10 +3,11 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/data/mute_or_unmute_user.dart'; // Import necessary dependencies
 
 void muteUser(BuildContext context, String username, String communityName,
-    String type, String note) async {
+    String type, String note, bool post) async {
   print('community name $communityName');
   username = username.replaceFirst('u/', '');
-  int statusCode = await muteOrUnmuteUser(communityName, username, type, note);
+  int statusCode =
+      await muteOrUnmuteUser(communityName, username, type, note, post);
 
   switch (statusCode) {
     case 200:
@@ -23,6 +24,9 @@ void muteUser(BuildContext context, String username, String communityName,
       break;
     case 404:
       showSnackbar(context, "Community or User not found");
+      break;
+    case 406:
+      showSnackbar(context, "Moderator doesn't have permission");
       break;
     case 500:
       showSnackbar(context, "Internal server error");

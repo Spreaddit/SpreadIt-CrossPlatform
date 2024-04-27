@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import 'package:spreadit_crossplatform/user_info.dart';
 
-
-Future<int> muteOrUnmuteUser(String communityName, String username, String type, String note) async {
+Future<int> muteOrUnmuteUser(String communityName, String username, String type,
+    String note, bool post) async {
   try {
     String apiroute;
     String? accessToken = UserSingleton().accessToken;
@@ -13,9 +13,7 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
     switch (type) {
       case "mute":
         apiroute = "/community/moderation/$communityName/$username/mute";
-        data = {
-          'note': note,
-        };
+        data = {'muteReason': note, 'muteDuration': 28};
         break;
       case "unmute":
         apiroute = "/community/moderation/$communityName/$username/unmute";
@@ -26,17 +24,28 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
     }
 
     String requestURL = '$apiUrl$apiroute';
-
-    /// Send a POST request to the server to mute or unmute the user.
-    final response = await Dio().post(
-      requestURL,
-      data: type == 'mute' ? data : null,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      ),
-    );
+    var option = Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+    Response response;
+    
+    if (post) {
+       response = await Dio().post(
+        requestURL,
+        data: type == 'mute' ? data : null,
+        options: option,
+      );
+    }
+    else 
+    {
+       response = await Dio().put(
+        requestURL,
+        data: data,
+        options: option,
+      );
+    }
 
     /// Process the response based on the status code.
     switch (response.statusCode) {
@@ -55,6 +64,9 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
       case 404:
         print("Community or User not found: ${response.statusMessage}");
         return 404;
+      case 406:
+        print("Moderator doesn't have permission ${response.statusMessage}");
+        return 406;
       case 500:
         print("Internal server error: ${response.statusMessage}");
         return 500;
@@ -77,6 +89,10 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
         case 404:
           print("Community or User not found: ${e.response!.statusMessage}");
           return 404;
+        case 406:
+          print(
+              "Moderator doesn't have permission ${e.response!.statusMessage}");
+          return 406;
         case 500:
           print("Internal server error: ${e.response!.statusMessage}");
           return 500;

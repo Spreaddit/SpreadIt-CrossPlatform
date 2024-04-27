@@ -5,12 +5,12 @@ import 'package:spreadit_crossplatform/features/discover_communities/data/get_sp
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/data/get_muted_communities.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/presentation/widgets/muted_community_widget.dart';
 
-class MutedCommintyPage extends StatefulWidget {
+class MutedCommunityPage extends StatefulWidget {
   @override
-  _MutedCommintyPageState createState() => _MutedCommintyPageState();
+  _MutedCommunityPageState createState() => _MutedCommunityPageState();
 }
 
-class _MutedCommintyPageState extends State<MutedCommintyPage> {
+class _MutedCommunityPageState extends State<MutedCommunityPage> {
   List<Community> communities = [];
   bool isLoading = true;
 
