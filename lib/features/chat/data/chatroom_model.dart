@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Chatroom {
   final String groupName;
-  final String lastMessage;
+  final String? lastMessage;
   final DateTime timestamp;
   final List<String> users;
   final List<UserData> usersData;
@@ -25,7 +25,7 @@ class Chatroom {
     }).toList();
 
     return Chatroom(
-      groupName: documentSnapshot['groupname'],
+      groupName: documentSnapshot['groupName'],
       lastMessage: documentSnapshot['lastMessage'],
       timestamp: (documentSnapshot['timestamp'] as Timestamp).toDate(),
       users: users,

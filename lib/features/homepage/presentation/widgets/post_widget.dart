@@ -150,6 +150,7 @@ class _PostHeaderState extends State<_PostHeader> {
                 opacity: shouldRenderJoin ? 1 : 0,
                 child: JoinCommunityBtn(
                   shouldJoinButtonRender: () {
+                    if (!mounted) return;
                     setState(() {
                       shouldRenderJoin = true;
                     });
@@ -464,6 +465,8 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
             enableInfiniteScroll: true,
             onPageChanged: (index, reason) {
               setState(() {
+                if (!mounted) return;
+
                 _currentImageIndex = index;
               });
             },
@@ -779,6 +782,8 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void onDeleted() {
+    if (!mounted) return;
+
     if (widget.isFullView) {
       Navigator.of(context).pushNamed('/home');
     }
@@ -788,24 +793,32 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void onContentChanged(String newContent) {
+    if (!mounted) return;
+
     setState(() {
       content.add(newContent);
     });
   }
 
   void onChangeSpoiler(bool newIsSpoiler) {
+    if (!mounted) return;
+
     setState(() {
       isSpoiler = newIsSpoiler;
     });
   }
 
   void onSaved(bool newIsSaved) {
+    if (!mounted) return;
+
     setState(() {
       isSaved = newIsSaved;
     });
   }
 
   void onChangeNsfw(bool newIsNsfw) {
+    if (!mounted) return;
+
     setState(() {
       isNsfw = newIsNsfw;
     });

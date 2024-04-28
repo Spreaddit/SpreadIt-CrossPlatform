@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/theme/theme.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,8 +29,13 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     _user = types.User(
+      metadata: {
+        'email': UserSingleton().user!.email,
+      },
       // id: UserSingleton().user!.firebaseId,
-      id: 'KMmoAXLiVc9UBl0rNqTO',
+      id: userId,
+      imageUrl: UserSingleton().user!.avatarUrl,
+      lastName: UserSingleton().user!.username,
     );
     _loadMessages();
   }
@@ -90,83 +98,113 @@ class _ChatPageState extends State<ChatPage> {
 
     Map<String, dynamic> messageMap = {
       'chatRoomId': widget.id,
-      'content': textMessage.id,
+      'content': textMessage.text,
       'image': '',
-      'sender': UserData(
-        name: _user.lastName ?? '',
-        avatarUrl: _user.imageUrl ?? "",
-        id: _user.id,
-        email: _user.metadata!['email'],
-      ),
-      'time': DateTime.now() as Timestamp,
+      'sender': {
+        'avatarUrl': _user.imageUrl ?? "",
+        'email': _user.metadata!['email'],
+        'id': _user.id,
+        'name': _user.lastName ?? '',
+      },
+      'time': Timestamp.now(),
       'type': 'text',
     };
 
     CollectionReference messages =
         FirebaseFirestore.instance.collection('messages');
 
-    messages
-        .add(messageMap)
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    CollectionReference chatrooms =
+        FirebaseFirestore.instance.collection('chatrooms');
+
+    messages.add(messageMap).then((value) => print("Message sent")).catchError(
+          (error) => print("Failed to send message"),
+        );
+
+    chatrooms.doc(widget.id).update(
+      {'lastMessage': textMessage.text},
+    );
+    chatrooms.doc(widget.id).update(
+      {'timestamp': messageMap['time']},
+    );
   }
 
   void _loadMessages() {
     FirebaseFirestore.instance
         .collection('messages')
         .where('chatRoomId', isEqualTo: widget.id)
+        .orderBy('time', descending: false)
         .snapshots()
         .listen((snapshot) {
       setState(() {
-        _messages = snapshot.docs.map((doc) {
-          final data = doc.data();
-          String email = data['sender']['email'];
-          types.Message message = data['type'] == "text"
-              ? types.TextMessage(
-                  id: doc.id,
-                  text: data['content'] ?? '',
-                  author: types.User(
-                    metadata: {
-                      'email': email,
-                    },
-                    id: data['sender']['id'] ?? '',
-                    imageUrl: data['sender']['avatarUrl'] ?? '',
-                    lastName: data['sender']['name'] ?? '',
-                  ),
-                  createdAt: (data['time'] as Timestamp).millisecondsSinceEpoch,
-                )
-              : types.ImageMessage(
-                  id: doc.id,
-                  name: data['sender']['name'] ?? '',
-                  uri: data['image'] ?? '',
-                  size: 100,
-                  author: types.User(
-                    id: data['sender']['id'] ?? '',
-                    imageUrl: data['sender']['avatarUrl'] ?? '',
-                    lastName: data['sender']['name'] ?? '',
-                  ),
-                  createdAt: (data['time'] as Timestamp).millisecondsSinceEpoch,
-                );
-          return message;
-        }).toList();
+        _messages = snapshot.docs
+            .map((doc) {
+              print((doc.data()['time'] as Timestamp)
+                  .millisecondsSinceEpoch
+                  .toString());
+              final data = doc.data();
+              String email = data['sender']['email'];
+              types.Message message = data['type'] == "text"
+                  ? types.TextMessage(
+                      id: doc.id,
+                      text: data['content'] ?? '',
+                      author: types.User(
+                        metadata: {
+                          'email': email,
+                        },
+                        id: data['sender']['id'] ?? '',
+                        imageUrl: data['sender']['avatarUrl'] ?? '',
+                        lastName: data['sender']['name'] ?? '',
+                      ),
+                      createdAt:
+                          (data['time'] as Timestamp).millisecondsSinceEpoch,
+                    )
+                  : types.ImageMessage(
+                      id: doc.id,
+                      name: data['sender']['name'] ?? '',
+                      uri: data['image'] ?? '',
+                      size: 100,
+                      author: types.User(
+                        id: data['sender']['id'] ?? '',
+                        imageUrl: data['sender']['avatarUrl'] ?? '',
+                        lastName: data['sender']['name'] ?? '',
+                      ),
+                      createdAt:
+                          (data['time'] as Timestamp).millisecondsSinceEpoch,
+                    );
+              return message;
+            })
+            .toList()
+            .reversed
+            .toList();
       });
     }, onError: (error) {
-      print('Failed to load messages: $error');
+      CustomSnackbar(content: "Failed to display messages");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Chat(
-      messages: _messages,
-      onAttachmentPressed: _handleImageSelection,
-      onPreviewDataFetched: _handlePreviewDataFetched,
-      onSendPressed: _handleSendPressed,
-      showUserAvatars: true,
-      showUserNames: true,
-      user: _user,
-      theme: chatTheme,
-      imageMessageBuilder: imageMessageBuilder,
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: Chat(
+        messages: _messages,
+        onAttachmentPressed: _handleImageSelection,
+        onPreviewDataFetched: _handlePreviewDataFetched,
+        onSendPressed: _handleSendPressed,
+        showUserAvatars: true,
+        dateHeaderThreshold: 200000,
+        showUserNames: true,
+        user: _user,
+        theme: chatTheme,
+        imageMessageBuilder: imageMessageBuilder,
+      ),
     );
   }
 }
@@ -191,8 +229,8 @@ ChatTheme chatTheme = const DefaultChatTheme(
     inputMargin: EdgeInsets.all(8.0),
     inputPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
     inputTextColor: Colors.black87,
-    primaryColor: Color.fromARGB(255, 211, 0, 0),
     seenIcon: Icon(Icons.check_circle),
+    primaryColor: redditGrey,
     dateDividerTextStyle: TextStyle(
       fontSize: 12,
       color: Colors.grey,
@@ -206,6 +244,7 @@ ChatTheme chatTheme = const DefaultChatTheme(
     ),
     userAvatarNameColors: [Colors.black],
     userNameTextStyle: TextStyle(
+      fontWeight: FontWeight.bold,
       fontSize: 12,
       decoration: TextDecoration.none,
     ),

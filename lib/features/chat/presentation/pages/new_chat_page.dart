@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/navigate_to_chat.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
@@ -31,6 +30,31 @@ class _NewChatPageState extends State<NewChatPage> {
     CollectionReference chatrooms =
         FirebaseFirestore.instance.collection('chatrooms');
 
+    if (tags.isEmpty) {
+      CustomSnackbar(content: "Please enter a username to start chatting ")
+          .show(context);
+      return;
+    }
+
+    if (tags.length == 1) {
+      QuerySnapshot querySnapshot = await chatrooms
+          .where('users', arrayContains: tags[0].id)
+          .where('groupName', isEqualTo: "")
+          .get();
+
+      bool containsUser = querySnapshot.docs
+          .any((element) => element['users'].contains(userId));
+
+      if (querySnapshot.docs.isNotEmpty && containsUser) {
+        Navigator.pop(context);
+        navigateToChat(
+          context,
+          querySnapshot.docs[0].id,
+        );
+        return;
+      }
+    }
+
     if (tags.length > 1 && groupName == '') {
       CustomSnackbar(content: "Please choose a group name to start chatting ")
           .show(context);
@@ -38,7 +62,15 @@ class _NewChatPageState extends State<NewChatPage> {
     }
 
     List<String> users = [userId];
+
     Map<String, dynamic> usersData = {};
+    Map<String, dynamic> subMap = {
+      'avatarUrl': UserSingleton().user!.avatarUrl,
+      'email': UserSingleton().user!.email,
+      'id': userId,
+      'name': UserSingleton().user!.username,
+    };
+    usersData[userId] = subMap;
 
     print("tags${tags.toString()}");
     for (int i = 0; i < tags.length; i++) {

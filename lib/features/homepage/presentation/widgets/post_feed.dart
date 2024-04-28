@@ -77,6 +77,7 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   void didUpdateWidget(covariant PostFeed oldWidget) {
+    if (!mounted) return;
     if (widget.postCategory != oldWidget.postCategory) {
       setState(() {
         currentPostCategory = widget.postCategory;
@@ -130,6 +131,8 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void _loadMore() {
+    if (!mounted) return;
+
     if (!_loadingMore) {
       setState(() {
         _loadingMore = true;
@@ -139,6 +142,8 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void fetchExistingItems() {
+    if (!mounted) return;
+
     if (existingItems.length < newItems.length) {
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
@@ -169,9 +174,11 @@ class _PostFeedState extends State<PostFeed> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () {
-        setState(() {
-          isRefreshing = true;
-        });
+        if (mounted) {
+          setState(() {
+            isRefreshing = true;
+          });
+        }
         return fetchData();
       },
       child: SingleChildScrollView(

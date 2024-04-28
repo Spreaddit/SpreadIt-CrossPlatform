@@ -32,9 +32,9 @@ Widget usersList({
         children: snapshot.data!.docs
             .where((element) {
               if (selectedOption == 1) {
-                return element['groupname'] != '';
+                return element['groupName'] == '';
               } else if (selectedOption == 2) {
-                return element['groupname'] == '';
+                return element['groupName'] != '';
               }
               return true;
             })
@@ -92,7 +92,7 @@ Widget _userItem({
         fontWeight: FontWeight.bold,
       ),
     ),
-    subtitle: Text(data.lastMessage),
+    subtitle: Text(data.lastMessage ?? ""),
     trailing: Text(
       dateToDuration(data.timestamp),
     ),
