@@ -8,9 +8,7 @@ String apibase = apiUrl;
 
 Future <Map<String,dynamic>> getUsersSearchResults(String query) async {
   try {
-    print('entred data section');
     String? accessToken = UserSingleton().accessToken;
-    print('abl el response var 3ala toul');
     var response = await Dio().get(
       '$apiUrl/search',
       options: Options(
@@ -24,11 +22,9 @@ Future <Map<String,dynamic>> getUsersSearchResults(String query) async {
         "sort": "relevance",
       },
     );
-    print('abl el if 3ala toul');
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
-      print(response.data);
       return (response.data);
     } else {
       print(response.statusMessage);

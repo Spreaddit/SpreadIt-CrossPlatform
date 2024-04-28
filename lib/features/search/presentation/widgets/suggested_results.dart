@@ -11,26 +11,42 @@ class SuggestedResults extends StatefulWidget {
 
 class _SuggestedResultsState extends State<SuggestedResults> {
 
-  List communityList = [];
-  List usersList = [];
+  List<Map<String, dynamic>> communities = [];
+  List<Map<String, dynamic>> users = [];
 
 
   @override
   void initState() {
+    updateSuggestedResults();
     super.initState();
-    updateSuggestedResults;
   }
 
   void updateSuggestedResults() async {
-    List response  = await getSuggestedResults();
-    mapSuggestedResults(response);
+    Map<String,dynamic> response  = await getSuggestedResults();
+    Map<String, List<Map<String, dynamic>>> data = await separateCommunitiesAndUsers(response);
+    communities = data['communities']!;
+    users = data['users']!;
+    setState((){});
   }
 
-  void mapSuggestedResults (List response) {
-    setState(() {
-      communityList = response.where((item) => item['type'] == 'community').toList();
-      usersList = response.where((item) => item['type'] == 'user').toList();
-    });
+  Future<Map<String, List<Map<String, dynamic>>>> separateCommunitiesAndUsers(Map<String, dynamic> response) async {
+    List<Map<String, dynamic>> communities = [];
+    List<Map<String, dynamic>> users = [];
+    if (response.containsKey('communities')) {
+      for (var element in response['communities']) {
+        if (element is Map<String, dynamic>) {
+          communities.add(element);
+        }
+      }
+    }
+    if (response.containsKey('users')) {
+      for (var element in response['users']) {
+        if (element is Map<String, dynamic>) {
+          users.add(element);
+        }
+      }
+    }
+    return {'communities': communities, 'users': users};
   }
 
   void navigateToGeneralSearchResults() {
@@ -44,22 +60,44 @@ class _SuggestedResultsState extends State<SuggestedResults> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Communities'),
-          SearchDisplayList(
-            displayList: communityList,
-          ),
-          Text('People'),
-          SearchDisplayList(
-            displayList: usersList,
-          ),
-          InkWell(
-            onTap: navigateToGeneralSearchResults,  
-            child: Text('Search for kwak'),
-          ),
-        ],
+      child: Container(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Communities',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SearchDisplayList(
+              displayList: communities,
+            ),
+            Text(
+              'People',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SearchDisplayList(
+              displayList: users,
+            ),
+            InkWell(
+              onTap: navigateToGeneralSearchResults,  
+              child: Text(
+                'Search for kwak',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  color: Colors.blue[900],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

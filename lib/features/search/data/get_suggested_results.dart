@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future<List> getSuggestedResults() async {
+Future <Map<String,dynamic>> getSuggestedResults() async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
@@ -20,12 +20,12 @@ Future<List> getSuggestedResults() async {
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
-      print(response.data as List);
-      return (response.data as List).cast<Map<String, dynamic>>();
+      print(response.data);
+      return (response.data);
     } else {
       print(response.statusMessage);
       print(response.statusCode);
-      return [];
+      return {};
     }
   } on DioException catch (e) {
     if (e.response != null) {
@@ -34,12 +34,12 @@ Future<List> getSuggestedResults() async {
       } else if (e.response!.statusCode == 500) {
         print("Conflict: ${e.response!.statusMessage}");
       }
-      return [];
+      return {};
     }
     rethrow;
   } catch (e) {
     print("Error occurred: $e");
-    return [];
+    return {};
   }
 }
 
