@@ -116,10 +116,10 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AddingDataAppBar(
+      appBar: AddOrSaveDataAppBar(
         title: isAdding ? 'Add a banned user' : 'Edit banned user',
         actionText: isAdding ? 'Add' : 'Save',
-        onSavePressed: _usernameController.text.isNotEmpty &&
+        onButtonPressed: _usernameController.text.isNotEmpty &&
                 _violationController.text.isNotEmpty &&
                 days != null
             ? () {

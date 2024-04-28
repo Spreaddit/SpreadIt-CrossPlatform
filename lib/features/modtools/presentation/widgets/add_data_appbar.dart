@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 
-class AddingDataAppBar extends StatefulWidget implements PreferredSizeWidget {
-  AddingDataAppBar(
+class AddOrSaveDataAppBar extends StatefulWidget
+    implements PreferredSizeWidget {
+  AddOrSaveDataAppBar(
       {Key? key,
       required this.title,
-      required this.onSavePressed,
+      required this.onButtonPressed,
       required this.actionText})
       : super(key: key);
 
   final String title;
-  final VoidCallback? onSavePressed;
+  final VoidCallback? onButtonPressed;
   final String actionText;
 
   @override
   Size get preferredSize => AppBar().preferredSize;
 
   @override
-  State<AddingDataAppBar> createState() => _AddingDataAppBarState();
+  State<AddOrSaveDataAppBar> createState() => _AddOrSaveDataAppBarState();
 }
 
-class _AddingDataAppBarState extends State<AddingDataAppBar> {
+class _AddOrSaveDataAppBarState extends State<AddOrSaveDataAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -41,7 +42,7 @@ class _AddingDataAppBarState extends State<AddingDataAppBar> {
       ),
       actions: [
         TextButton(
-          onPressed: widget.onSavePressed,
+          onPressed: widget.onButtonPressed,
           child: Text(
             widget.actionText,
             style: TextStyle(
