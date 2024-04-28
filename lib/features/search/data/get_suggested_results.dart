@@ -6,16 +6,22 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future<List> getSeacrhHistory() async {
+Future<List> getSuggestedResults() async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
-      '$apiUrl/search/history',
+      '$apiUrl/search/suggestions',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
-      return (response.data);
+      print(response.data as List);
+      return (response.data as List).cast<Map<String, dynamic>>();
     } else {
       print(response.statusMessage);
       print(response.statusCode);
@@ -37,9 +43,4 @@ Future<List> getSeacrhHistory() async {
   }
 }
 
-/*options: Options(
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      ), */
 

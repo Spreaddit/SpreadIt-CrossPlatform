@@ -37,7 +37,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
       'image': './assets/images/SB-Standees-Spong-3_800x.png',
       'onTap': (){},
     },
-    ];
+  ];
 
   @override
   Widget build(BuildContext context) {

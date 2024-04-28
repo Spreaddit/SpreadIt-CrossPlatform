@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_communities.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/community_element.dart';
 
 class CommunitiesPageView extends StatefulWidget {
-  const CommunitiesPageView({Key? key}) : super(key: key);
+  final String searchItem;
+
+  const CommunitiesPageView({Key? key, required this.searchItem}) : super(key: key);
 
   @override
   State<CommunitiesPageView> createState() => _CommunitiesPageViewState();
@@ -10,70 +13,34 @@ class CommunitiesPageView extends StatefulWidget {
 
 class _CommunitiesPageViewState extends State<CommunitiesPageView> {
 
-  List communities = 
-  [
-    {
-      'communityName': 'r/FlutterEnthusiasts',
-      'communityDescription': 'A community for passionate Flutter developers to share knowledge and collaborate on projects.',
-      'communityIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'communityName': 'r/DartWizards',
-      'communityDescription': 'Join us to explore the magic of Dart programming language and its endless possibilities.',
-      'communityIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'communityName': 'r/UI/UXDesignersHub',
-      'communityDescription': 'Connect with fellow designers, share your creative ideas, and learn new design techniques.',
-      'communityIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'communityName': 'r/AskReddit',
-      'communityDescription': 'Just ask us about anything.',
-      'communityIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'communityName': 'r/Artists',
-      'communityDescription': 'A community for passionate artists where they can explore a whole new world.',
-      'communityIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'communityName': 'r/FIHateSoftware',
-      'communityDescription': 'Mayyetin abou el software 3ala mayyetin abou el project.',
-      'communityIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'communityName': 'r/FlutterEnthusiasts',
-      'communityDescription': 'A community for passionate Flutter developers to share knowledge and collaborate on projects.',
-      'communityIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'communityName': 'r/DartWizards',
-      'communityDescription': 'Join us to explore the magic of Dart programming language and its endless possibilities.',
-      'communityIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'communityName': 'r/UI/UXDesignersHub',
-      'communityDescription': 'Connect with fellow designers, share your creative ideas, and learn new design techniques.',
-      'communityIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'communityName': 'r/AskReddit',
-      'communityDescription': 'Just ask us about anything.',
-      'communityIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'communityName': 'r/Artists',
-      'communityDescription': 'A community for passionate artists where they can explore a whole new world.',
-      'communityIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'communityName': 'r/FIHateSoftware',
-      'communityDescription': 'Mayyetin abou el software 3ala mayyetin abou el project.',
-      'communityIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
+  Map<String,dynamic> communities = {};
+  List<Map<String, dynamic>> mappedCommunities = [];
+  
+  @override
+  void initState() {
+    super.initState();
+    getCommunitiesResults();
+  }
 
-  ];
+  void getCommunitiesResults() async {
+    communities = await getCommunitiesSearchResults(widget.searchItem);
+    mappedCommunities = extractCommunityDetails(communities);
+    setState(() {});
+  }
+
+  List<Map<String, dynamic>> extractCommunityDetails(Map<String, dynamic> data) {
+    List<dynamic> results = data['results'];
+    List<Map<String, dynamic>> mappedCommunities = [];
+    for (var community in results) {
+      mappedCommunities.add({
+        'communityName': community['communityName'],
+        'communityProfilePic': community['communityProfilePic'],
+        'communityInfo': community['communityInfo'],
+      });
+    }
+    return mappedCommunities;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -82,12 +49,12 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: communities.length,
+            itemCount: mappedCommunities.length,
             itemBuilder: (context, index) {
               return CommunityElement(
-                communityName: communities[index]['communityName'],
-                communityDescription:communities[index]['communityDescription'], 
-                communityIcon: communities[index]['communityIcon'],
+                communityName: mappedCommunities[index]['communityName'],
+                communityDescription: mappedCommunities[index]['communityInfo'],
+                communityIcon: mappedCommunities[index]['communityProfilePic'],
                 );
             }
           ),

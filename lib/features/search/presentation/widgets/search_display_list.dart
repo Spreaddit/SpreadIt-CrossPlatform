@@ -26,7 +26,7 @@ class _SearchDisplayListState extends State<SearchDisplayList> {
               onTap: () {} , // navigate l 7etta 
               child: CommunitiesCard(
                 communityName: widget.displayList[index]['name'],
-                communityIcon: widget.displayList[index]['icon'],
+                communityIcon: widget.displayList[index]['profilePic'],
                 boxSize: 5,
                 iconRadius: 10, 
                 fontSize: 10,
@@ -38,3 +38,5 @@ class _SearchDisplayListState extends State<SearchDisplayList> {
     );
   }
 }
+
+// awaddih lel page bta3et el community aw el user da

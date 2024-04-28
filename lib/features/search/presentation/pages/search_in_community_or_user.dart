@@ -3,7 +3,9 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/best
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 
 class SearchInCommunityOrUser extends StatefulWidget {
-  const SearchInCommunityOrUser({Key? key}) : super(key: key);
+  String searchItem ;
+
+  SearchInCommunityOrUser({Key? key, required this.searchItem}) : super(key: key);
 
   @override
   State<SearchInCommunityOrUser> createState() => _SearchInCommunityOrUserState();
@@ -58,6 +60,10 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
     searchForm.currentState!.save();
   }
 
+  void navigateToCommunityOrUserSearch (String searchItem) {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +74,9 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
             Row(
               children: [
                 CustomSearchBar(
+                  formKey: searchForm,
                   hintText: 'Search',
+                  navigateToSearchResult: navigateToCommunityOrUserSearch,
                   updateSearchItem: updateSearchItem,
                   communityOrUserName: communityOrUserName,
                   communityOrUserIcon: communityOrUserIcon,

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatefulWidget {
+  final GlobalKey<FormState> formKey;
   final String hintText;
   final Function(String) updateSearchItem;
+  final Function(String) navigateToSearchResult;
+  final String? initialBody;
   final String? communityOrUserName;
   final String? communityOrUserIcon;
 
   const CustomSearchBar({
+    required this.formKey,
     required this.hintText,
     required this.updateSearchItem,
+    required this.navigateToSearchResult,
+    this.initialBody,
     this.communityOrUserName,
     this.communityOrUserIcon,
   });
@@ -18,50 +24,58 @@ class CustomSearchBar extends StatefulWidget {
 }
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
-  final TextEditingController searchController = TextEditingController();
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    searchController.addListener(queryListener);
+    _controller = TextEditingController(text: widget.initialBody);
+    _controller.addListener(() {
+      setState(() {
+        widget.updateSearchItem(_controller.text);
+      });
+    });
   }
 
   @override
   void dispose() {
-    searchController.removeListener(queryListener);
-    searchController.dispose();
+    _controller.dispose();
     super.dispose();
   }
-
-  void queryListener() {
-    // call backend funcrion
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      margin: EdgeInsets.all(10),
+      height: 50,
       width: 330,
+      decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(25),
+      ),
       child: Stack(
-        alignment: Alignment.centerLeft,
         children: [
           Padding(
             padding: EdgeInsets.all(15),
-            child: SearchBar(
-              hintText: widget.communityOrUserName != null && widget.communityOrUserIcon != null ? '' : widget.hintText,
-              controller: searchController,
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  Color.fromARGB(255, 241, 243, 254)),
-              leading: Icon(Icons.search),
-              trailing: [
-                IconButton(
-                  icon: Icon(Icons.cancel),
-                  onPressed: () {
-                    searchController.clear();
-                  },
+            child: Form(
+              key: widget.formKey,
+              child: TextFormField(
+                onFieldSubmitted: widget.navigateToSearchResult,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: widget.hintText,
+                  prefixIcon: Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    onPressed:()=> setState(()=> _controller.clear()),
+                    icon: Icon(Icons.cancel),
+                  ),
                 ),
-              ],
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+                controller: _controller,
+              ),
             ),
           ),
           if (widget.communityOrUserIcon != null && widget.communityOrUserName != null)

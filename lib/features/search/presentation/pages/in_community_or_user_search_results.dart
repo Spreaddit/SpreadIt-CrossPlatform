@@ -64,6 +64,12 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
     });
   }
 
+  void navigateToSearchInCommunityOrUserResults (String searchItem) {
+    Navigator.of(context).pushNamed('./community-or-user-search-results', arguments :{
+      'searchItem': searchItem,
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +84,8 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
                 icon: Icon(Icons.arrow_back),
               ),
               CustomSearchBar(
+                formKey: searchForm,
+                navigateToSearchResult: navigateToSearchInCommunityOrUserResults,
                 hintText: 'hello',
                 updateSearchItem: updateSearchItem,
               ),

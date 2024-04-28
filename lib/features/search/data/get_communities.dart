@@ -6,20 +6,31 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future<List> getSeacrhHistory() async {
+Future <Map<String,dynamic>> getCommunitiesSearchResults(String query) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
-      '$apiUrl/search/history',
+      '$apiUrl/search',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+      data: {
+        "q": query,
+        "type": "communities",
+        "sort": "relevance",
+      },
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
+      print(response.data);
       return (response.data);
     } else {
       print(response.statusMessage);
       print(response.statusCode);
-      return [];
+      return {};
     }
   } on DioException catch (e) {
     if (e.response != null) {
@@ -28,18 +39,13 @@ Future<List> getSeacrhHistory() async {
       } else if (e.response!.statusCode == 500) {
         print("Conflict: ${e.response!.statusMessage}");
       }
-      return [];
+      return {};
     }
     rethrow;
   } catch (e) {
     print("Error occurred: $e");
-    return [];
+    return {};
   }
 }
 
-/*options: Options(
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      ), */
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/recent_searches.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/suggested_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_menu.dart';
 import '../widgets/search_display_list.dart';
 
@@ -16,51 +17,16 @@ class _GeneralSearchState extends State<GeneralSearch> {
 
   final GlobalKey<FormState> searchForm = GlobalKey<FormState>();
   String? searchItem ;
-  List communityList = 
-   [
-      {
-        'name': 'r/3abbas',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-      {
-        'name': 'r/AskReddit',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-      {
-        'name': 'Mayettin el software',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-      {
-        'name': '3abbasTani',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-   ];
-
-   List usersList = 
-   [
-      {
-        'name': 'r/3abbas',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-      {
-        'name': 'r/AskReddit',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-      {
-        'name': 'Mayettin el software',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-      {
-        'name': '3abbasTani',
-        'icon': './assets/images/LogoSpreadIt.png',
-      },
-   ];
-
-
 
   void updateSearchItem(String value) {
-    searchItem = value;
+    setState(() => searchItem = value);
     searchForm.currentState!.save();
+  }
+
+  void navigateToGeneralSearchResults(String searchItem) {
+    Navigator.of(context).pushNamed('./general-search-results', arguments : {
+      'searchItem': searchItem,
+    }); 
   }
 
 
@@ -71,9 +37,14 @@ class _GeneralSearchState extends State<GeneralSearch> {
           children: [
             Row(
               children: [
-                CustomSearchBar(
-                  hintText: 'Search',
-                  updateSearchItem: updateSearchItem,
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: CustomSearchBar(
+                    formKey: searchForm,
+                    hintText: 'Search',
+                    navigateToSearchResult: navigateToGeneralSearchResults,
+                    updateSearchItem: updateSearchItem,
+                  ),
                 ),
                 InkWell(
                   onTap: () {}, // navigate to home page 
@@ -87,26 +58,14 @@ class _GeneralSearchState extends State<GeneralSearch> {
                 ),
               ],
             ),
-            if(searchItem == null || RegExp(r'^[\W_]+$').hasMatch(searchItem!) )
-              RecentSearches(),
-              TrendingMenu(),  
-            if (searchItem != null && !RegExp(r'^[\W_]+$').hasMatch(searchItem!))
-             Column(
-              children: [
-                Text('Communities'),
-                SearchDisplayList(
-                  displayList: communityList,
-                ),
-                Text('People'),
-                SearchDisplayList(
-                  displayList: usersList,
-                ),
-                InkWell(
-                  onTap: () {},  // naviagate to el page el 3emalaqa di
-                  child: Text('Search for "$searchItem"' ),
-                ),
-              ],
-            ),  
+            (searchItem == null || RegExp(r'^[\W_]+$').hasMatch(searchItem!) ) ?
+              Column(
+                children: [
+                  RecentSearches(),
+                  TrendingMenu(),
+                ],
+              ) :
+              SuggestedResults(), 
           ],
         ),
     );
@@ -114,10 +73,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
 }
 
 /*TO DOS:
-1) logic el search nafso 
+
+1) api el trending 
 2) a-display elwidget bta3et el returned query 
-3) can i pass 2 lists simultaneously? aw at least wa7da wara el tania bas el final display yetla3 lamma el 2 yekhallaso
-4) ezzay a-check en el search bar fadi? (ha7tag form key w parameter ghaleban)
-5) ana mosta7il akhallas el kalam da kollo by next week
-6) aoi calls (agib el lists ml back)
 */

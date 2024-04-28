@@ -160,7 +160,21 @@ class SpreadIt extends StatelessWidget {
             sortFilter: args['sortFilter'],
             timeFilter: args['timeFilter'],
           );
-        }
+        },
+        './general-search-results': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          return SearchResult(
+            searchItem: args['searchItem'],
+          );
+        },
+        './community-or-user-search-results': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          return SearchResult(
+            searchItem: args['searchItem'],
+          );
+        },
       },
     );
   }
