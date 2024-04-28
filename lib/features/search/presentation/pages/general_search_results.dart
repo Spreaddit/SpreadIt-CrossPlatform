@@ -40,7 +40,7 @@ class _SearchResultState extends State<SearchResult> {
     pages.add(CommunitiesPageView(searchItem: searchItem)); 
     pages.add(CommentsPageView());
     pages.add(MediaPageView());
-    pages.add(PeoplePageView());
+    pages.add(PeoplePageView(searchItem: searchItem));
   }
 
 

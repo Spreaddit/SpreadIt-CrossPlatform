@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_users.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/people_elemet.dart';
 
 
 class PeoplePageView extends StatefulWidget {
-  const PeoplePageView({Key? key}) : super(key: key);
+  final String searchItem;
+  const PeoplePageView({Key? key, required this.searchItem}) : super(key: key);
 
   @override
   State<PeoplePageView> createState() => _PeoplePageViewState();
@@ -11,58 +13,33 @@ class PeoplePageView extends StatefulWidget {
 
 class _PeoplePageViewState extends State<PeoplePageView> {
 
-  List users = 
-  [
-    {
-      'username': 'u/FlutterEnthusiat',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'username': 'u/DartWizard',
-      'userIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'username': 'u/MohandesKa7yan',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'u/TheDarkWeeb',
-      'userIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'username': 'u/DepressedArtist',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'username': 'u/SoftwareHater',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'u/FlutterEnthusiat',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'username': 'u/DartWizard',
-      'userIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'username': 'u/MohandesKa7yan',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'u/TheDarkWeeb',
-      'userIcon': './assets/images/GoogleLogo.png',
-    },
-    {
-      'username': 'u/DepressedArtist',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-    },
-    {
-      'username': 'u/SoftwareHater',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
+  Map<String,dynamic> users = {};
+  List<Map<String, dynamic>> mappedUsers = [];
+  
+  @override
+  void initState() {
+    super.initState();
+    getUsersResults();
+  }
 
-  ];
+  void getUsersResults() async {
+    users = await getUsersSearchResults(widget.searchItem);
+    mappedUsers = extractUsersDetails(users);
+    setState(() {});
+  }
+
+  List<Map<String, dynamic>> extractUsersDetails(Map<String, dynamic> data) {
+    List<dynamic> results = data['results'];
+    List<Map<String, dynamic>> mappedUsers = [];
+    for (var user in results) {
+      mappedUsers.add({
+        'username': user['username'],
+        'userProfilePic': user['userProfilePic'],
+      });
+    }
+    return mappedUsers;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -71,11 +48,11 @@ class _PeoplePageViewState extends State<PeoplePageView> {
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: users.length,
+            itemCount: mappedUsers.length,
             itemBuilder: (context, index) {
               return PeopleElement(
-                username: users[index]['username'],
-                userIcon: users[index]['userIcon'],
+                username: mappedUsers[index]['username'],
+                userIcon: mappedUsers[index]['userProfilePic'],
               );
             }
           ),

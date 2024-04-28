@@ -65,5 +65,4 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
 }
 
 /* TO DOS :
-1) akhod boolean el community da followed walla laa w 3ala asaso ba-render el button
-2) mock service  */
+1) akhod boolean el community da followed walla laa w 3ala asaso ba-render el button */
