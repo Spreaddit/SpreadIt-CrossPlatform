@@ -13,7 +13,7 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
     switch (type) {
       case "mute":
         apiroute = "/community/moderation/$communityName/$username/mute";
-        data = {'muteReason': note, 'muteDuration': 28};
+        data = {'muteReason': note, 'muteDuration': 3};
         break;
       case "unmute":
         apiroute = "/community/moderation/$communityName/$username/unmute";

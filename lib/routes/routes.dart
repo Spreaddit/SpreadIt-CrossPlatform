@@ -25,6 +25,7 @@ import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/log_in
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/sign_up_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/start_up_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/edit_profile.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/follower_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/presentation/pages/muted_communities_page.dart';
@@ -87,8 +88,8 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: AddPasswordPage()),
     '/muted-commuinties': (context) =>  ProtectedRoute(child: MutedCommunityPage()),
     '/muted-users': (context) =>  ProtectedRoute(child: MutedUsersPage()),
-   // '/edit-muted-user': (context) =>  ProtectedRoute(child: EditMutedUserPage()),
-    '/edit-muted-user': (context) =>  EditMutedUserPage(),
+    '/edit-muted-user': (context) =>  ProtectedRoute(child: EditMutedUserPage()),
+    '/followers-page': (context) =>  ProtectedRoute(child:FollowUsersPage()),
     '/final-content-page': (context) => ProtectedRoute(
           child: Builder(
             builder: (context) {
