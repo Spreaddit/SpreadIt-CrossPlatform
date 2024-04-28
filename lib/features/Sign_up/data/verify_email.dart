@@ -12,10 +12,11 @@ Future<int> verifyEmail({
     final Response response = await Dio().post(
       requestURL,
     );
-
+    print('inside verify email');
     if (response.statusCode == 200) {
       UserSingleton().setAccessToken(response.data['accessToken'],
           DateTime.parse(response.data['token_expiration_date']));
+          print('verify successful');
       return 200;
     } else if (response.statusCode == 401) {
       print('Unautharized');

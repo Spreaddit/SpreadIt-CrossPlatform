@@ -17,7 +17,7 @@ Future<int> signUpApi({
   try {
     const apiroute = "/signup";
     String apiUrl = apibase + apiroute;
-    var data = {"username": username, "email": email, "password": password , "isCross": true };
+    var data = {"username": username, "email": email, "password": password , "is_cross": true };
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
@@ -29,7 +29,7 @@ Future<int> signUpApi({
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
       return 409;
-    } else if (response.statusCode == 400) {
+    } else if (response.statusCode == 400)    {
       print("Bad request: ${response.statusMessage}");
       return 400;
     } else {
