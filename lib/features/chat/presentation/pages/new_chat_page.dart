@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/navigate_to_chat.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
@@ -22,9 +23,11 @@ class NewChatPage extends StatefulWidget {
 class _NewChatPageState extends State<NewChatPage> {
   late double _distanceToField;
   late _UsernameTagController usernameController;
+  TextEditingController _controller = TextEditingController();
   String groupName = '';
+  List<UserData> tags = [];
 
-  void startNewChat(List<UserData> tags) async {
+  void startNewChat() async {
     CollectionReference chatrooms =
         FirebaseFirestore.instance.collection('chatrooms');
 
@@ -37,26 +40,30 @@ class _NewChatPageState extends State<NewChatPage> {
     List<String> users = [userId];
     Map<String, dynamic> usersData = {};
 
-    tags.map(
-      (tag) {
-        users.add(tag.id!);
-        Map<String, dynamic> subMap = {
-          'avatarUrl': tag.avatarUrl,
-          'email': tag.email,
-          'id': tag.id,
-          'name': tag.name,
-        };
-        usersData[tag.id!] = subMap;
-      },
-    );
+    print("tags${tags.toString()}");
+    for (int i = 0; i < tags.length; i++) {
+      UserData tag = tags[i];
+      print("tag:${tag.toString()}");
+      users.add(tag.id!);
+      Map<String, dynamic> subMap = {
+        'avatarUrl': tag.avatarUrl,
+        'email': tag.email,
+        'id': tag.id,
+        'name': tag.name,
+      };
+      usersData[tag.id!] = subMap;
+    }
 
     Map<String, dynamic> chatroomMap = {
       "groupName": groupName,
       "lastMessage": null,
-      "timestamp": DateTime.now() as Timestamp,
+      "timestamp": Timestamp.fromDate(
+        DateTime.now(),
+      ),
       "users": users,
       "usersData": usersData,
     };
+    print(chatroomMap);
     chatrooms.add(chatroomMap).then((value) {
       Navigator.pop(context);
       navigateToChat(context, value.id);
@@ -119,6 +126,9 @@ class _NewChatPageState extends State<NewChatPage> {
             )
           : UserData(),
     );
+    setState(() {
+      tags = usernameController.getTags ?? [];
+    });
   }
 
   @override
@@ -217,6 +227,11 @@ class _NewChatPageState extends State<NewChatPage> {
                                           onTap: () {
                                             inputFieldValues
                                                 .onTagRemoved(tagData);
+                                            setState(() {
+                                              tags =
+                                                  usernameController.getTags ??
+                                                      [];
+                                            });
                                           },
                                         )
                                       ],
@@ -245,11 +260,11 @@ class _NewChatPageState extends State<NewChatPage> {
             SizedBox(
               height: 20,
             ),
-            if (usernameController.getTags != null &&
-                usernameController.getTags!.length > 1)
+            if (tags.length > 1)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
+                  controller: _controller,
                   validator: (value) {
                     if (value == null) {
                       return 'Please enter group name';
@@ -258,6 +273,9 @@ class _NewChatPageState extends State<NewChatPage> {
                   },
                   onFieldSubmitted: (value) => setState(() {
                     groupName = value;
+                  }),
+                  onTapOutside: (event) => setState(() {
+                    groupName = _controller.text;
                   }),
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(
@@ -272,12 +290,11 @@ class _NewChatPageState extends State<NewChatPage> {
                         width: 3.0,
                       ),
                     ),
-                    helperText: 'Enter username...',
+                    helperText: 'Enter group name...',
                     helperStyle: const TextStyle(
                       color: redditOrange,
                     ),
-                    hintText: 'Enter chatroom name',
-                    errorText: 'Please choose a group name',
+                    hintText: 'Enter group name',
                     prefixIconConstraints:
                         BoxConstraints(maxWidth: _distanceToField * 0.74),
                   ),
@@ -294,7 +311,9 @@ class _NewChatPageState extends State<NewChatPage> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  startNewChat();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: redditOrange,
                   foregroundColor: Colors.white,
@@ -340,6 +359,16 @@ class _UsernameTagController<T extends UserData>
     } else {
       super.setError = 'Username does not exist';
     }
+    notifyListeners();
+    return null;
+  }
+
+  @override
+  bool? onTagRemoved(T tag) {
+    super.onTagRemoved(tag);
+    getTextEditingController?.clear();
+    getFocusNode?.requestFocus();
+    print(getTags);
     notifyListeners();
     return null;
   }

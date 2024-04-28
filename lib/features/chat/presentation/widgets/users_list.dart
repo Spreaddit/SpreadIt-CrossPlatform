@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
-import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/navigate_to_chat.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
