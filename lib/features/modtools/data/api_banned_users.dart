@@ -4,7 +4,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<int> banUserRequest(
     {required String communityName,
-    required String userName,
+    required String username,
     required String violation,
     required int days,
     required String banReason,
@@ -18,7 +18,7 @@ Future<int> banUserRequest(
       "messageToUser": messageToUser
     };
     final response = await Dio().post(
-      '$galalModUrl/community/moderation/$communityName/$userName/ban',
+      '$galalModUrl/community/moderation/$communityName/$username/ban',
       data: data,
       options: Options(
         headers: {
@@ -44,11 +44,11 @@ Future<int> banUserRequest(
 }
 
 Future<int> unbanUserRequest(
-    {required String communityName, required String userName}) async {
+    {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-      '$galalModUrl/community/moderation/$communityName/$userName/unban',
+      '$galalModUrl/community/moderation/$communityName/$username/unban',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -74,7 +74,7 @@ Future<int> unbanUserRequest(
 
 Future<int> editBannedUserRequest(
     {required String communityName,
-    required String userName,
+    required String username,
     required String violation,
     required int days,
     required String banReason,
@@ -88,7 +88,7 @@ Future<int> editBannedUserRequest(
       "messageToUser": messageToUser
     };
     final response = await Dio().put(
-      '$galalModUrl/community/moderation/$communityName/$userName/ban',
+      '$galalModUrl/community/moderation/$communityName/$username/ban',
       data: data,
       options: Options(
         headers: {
@@ -127,7 +127,7 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);
-      return response.data?? 0;
+      return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;

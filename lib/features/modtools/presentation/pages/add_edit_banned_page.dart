@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/add_data_appbar.dart';
 
-class AddOrEditBanned extends StatefulWidget {
-  AddOrEditBanned(
-      {Key? key, required this.communityName, required this.isAdding})
+class AddOrEditBannedPage extends StatefulWidget {
+  AddOrEditBannedPage(
+      {Key? key,
+      required this.communityName,
+      required this.isAdding,
+      this.username = '',
+      this.violation = '',
+      this.banReason = '',
+      this.days = -1,
+      this.messageToUser = ''})
       : super(key: key);
 
   /// The name of the community
@@ -15,38 +22,50 @@ class AddOrEditBanned extends StatefulWidget {
   /// true if adding, false if editing
   final bool isAdding;
 
+  final String username;
+  final String violation;
+  final String banReason;
+  final int days;
+  final String messageToUser;
+
   @override
-  State<AddOrEditBanned> createState() => _AddOrEditBannedState();
+  State<AddOrEditBannedPage> createState() => _AddOrEditBannedPageState();
 }
 
-class _AddOrEditBannedState extends State<AddOrEditBanned> {
+class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
+  bool isInitialized = false;
   bool isAdding = false;
-  bool hasEnteredEnoughData = false;
-  String userName = '';
-  int days = -1;
-  String banReason = '';
-  String messageToUser = '';
-  Future<List<Map<String, dynamic>>>? _bannedUsersData;
+  int? days = -1;
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _violationController = TextEditingController();
+  TextEditingController _banReasonController = TextEditingController();
+  TextEditingController _daysController = TextEditingController();
+  TextEditingController _messageToUserController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     isAdding = widget.isAdding;
     if (!isAdding) {
-      fetchData();
+      _usernameController.text = widget.username;
+      _violationController.text = widget.violation;
+      _banReasonController.text = widget.banReason;
+      _daysController.text = (widget.days != -1) ? widget.days.toString() : '';
+      _messageToUserController.text = widget.messageToUser;
+      days = widget.days;
+      return;
     }
+    days = -1;
   }
-
-  void fetchData() async {}
 
   void addBannedUser() async {
     int response = await banUserRequest(
         communityName: widget.communityName,
-        userName: userName,
-        violation: "",
-        days: days,
-        banReason: banReason,
-        messageToUser: messageToUser);
+        username: _usernameController.text,
+        violation: _violationController.text,
+        days: days ?? 0,
+        banReason: _banReasonController.text,
+        messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
       CustomSnackbar(content: "User banned!").show(context);
@@ -58,11 +77,11 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
   void editBannedUser() async {
     int response = await editBannedUserRequest(
         communityName: widget.communityName,
-        userName: userName,
-        violation: "",
-        days: days,
-        banReason: banReason,
-        messageToUser: messageToUser);
+        username: _usernameController.text,
+        violation: _violationController.text,
+        days: days ?? 0,
+        banReason: _banReasonController.text,
+        messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
       CustomSnackbar(content: "User ban edited!").show(context);
@@ -71,55 +90,43 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
     }
   }
 
-  InputDecoration getTextFieldDecoration(String? hintText) {
+  InputDecoration getReasonForBanDecoration() {
+    if (_violationController.text.isEmpty) {
+      return getTextFieldDecoration("Pick a reason", isBanReason: true);
+    }
+    return getTextFieldDecoration(_violationController.text, isBanReason: true);
+  }
+
+  InputDecoration getTextFieldDecoration(String? hintText,
+      {bool isUsername = false, bool isBanReason = false}) {
     return InputDecoration(
       filled: true,
       fillColor: Colors.grey[200],
       border: OutlineInputBorder(),
       hintText: hintText,
+      prefixStyle: TextStyle(
+        fontWeight: FontWeight.w800,
+        color: Colors.black,
+      ),
+      prefixText: isUsername ? "u/" : null,
+      suffixIcon: isBanReason ? Icon(Icons.expand_more_outlined) : null,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!isAdding) {
-      FutureBuilder(
-        future: _bannedUsersData,
-        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: LoaderWidget(
-                dotSize: 10,
-                logoSize: 100,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error fetching data'),
-            );
-          } else if (snapshot.hasData) {
-            return pageData();
-          } else {
-            CustomSnackbar(content: "Unknown error fetching data")
-                .show(context);
-            return Text("");
-          }
-        },
-      );
-    }
-    return pageData();
-  }
-
-  Widget pageData() {
     return Scaffold(
       appBar: AddingDataAppBar(
         title: isAdding ? 'Add a banned user' : 'Edit banned user',
-        onSavePressed: hasEnteredEnoughData
+        actionText: isAdding ? 'Add' : 'Save',
+        onSavePressed: _usernameController.text.isNotEmpty &&
+                _violationController.text.isNotEmpty &&
+                days != null
             ? () {
                 if (isAdding) {
-                  // Add user
+                  addBannedUser();
                 } else {
-                  // Edit user
+                  editBannedUser();
                 }
               }
             : null,
@@ -137,14 +144,12 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
-                    decoration: getTextFieldDecoration("Username"),
+                    controller: _usernameController,
+                    decoration:
+                        getTextFieldDecoration("Username", isUsername: true),
                     readOnly: !isAdding,
                     onChanged: (value) {
-                      setState(() {
-                        userName = value;
-                        hasEnteredEnoughData =
-                            userName.isNotEmpty && banReason.isNotEmpty;
-                      });
+                      setState(() {});
                     },
                   ),
                 ),
@@ -154,15 +159,30 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
                 width: double.infinity,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: TextField(
-                    decoration: getTextFieldDecoration("Pick a reason"),
-                    onChanged: (value) {
-                      setState(() {
-                        banReason = value;
-                        hasEnteredEnoughData =
-                            userName.isNotEmpty && banReason.isNotEmpty;
-                      });
+                  child: GestureDetector(
+                    onTap: () {
+                      showViolationsModal(context);
                     },
+                    child: AbsorbPointer(
+                      child: TextField(
+                        controller: _violationController,
+                        readOnly: true,
+                        decoration: getReasonForBanDecoration(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Text('Mod note'),
+              SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    controller: _banReasonController,
+                    maxLength: 300,
+                    decoration:
+                        getTextFieldDecoration("Will be seen by mods only"),
                   ),
                 ),
               ),
@@ -175,14 +195,19 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
                       padding:
                           EdgeInsets.only(top: 8.0, right: 8.0, bottom: 8.0),
                       child: TextField(
+                        controller: _daysController,
                         decoration: getTextFieldDecoration(null),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         onChanged: (value) {
                           setState(() {
                             if (value == '') {
-                              days = -1;
+                              days = null;
                               return;
                             }
-                            days = int.parse(value);
+                            days = int.parse(_daysController.text);
                           });
                         },
                       ),
@@ -196,7 +221,10 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
                     value: days == -1,
                     onChanged: (value) {
                       setState(() {
-                        days = -1;
+                        if (value == true) {
+                          days = -1;
+                          _daysController.text = '';
+                        }
                       });
                     },
                   ),
@@ -210,15 +238,12 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
+                    controller: _messageToUserController,
                     maxLines: null,
                     minLines: 4,
+                    maxLength: 5000,
                     decoration: getTextFieldDecoration(
                         "The user will receive this note in a message"),
-                    onChanged: (value) {
-                      setState(() {
-                        banReason = value;
-                      });
-                    },
                   ),
                 ),
               ),
@@ -226,6 +251,61 @@ class _AddOrEditBannedState extends State<AddOrEditBanned> {
           ),
         ),
       ),
+    );
+  }
+
+  showViolationsModal(context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(),
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Reason for ban',
+                style: TextStyle(
+                    fontWeight: FontWeight.w800, color: Colors.grey[600]),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Spam'),
+              onTap: () {
+                setState(() {
+                  _violationController.text = 'Spam';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Personal and confidential information'),
+              onTap: () {
+                setState(() {
+                  _violationController.text =
+                      'Personal and confidential information';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Threatening, harassing, or inciting violence'),
+              onTap: () {
+                setState(() {
+                  _violationController.text =
+                      'Threatening, harassing, or inciting violence';
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

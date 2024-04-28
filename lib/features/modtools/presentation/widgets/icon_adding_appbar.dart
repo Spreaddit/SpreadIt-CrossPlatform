@@ -40,7 +40,7 @@ class _IconAddingAppBarState extends State<IconAddingAppBar> {
           icon: Icon(Icons.add_outlined),
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
-                builder: (context) => AddOrEditBanned(
+                builder: (context) => AddOrEditBannedPage(
                     communityName: widget.communityName, isAdding: true)),
           ),
         ),
