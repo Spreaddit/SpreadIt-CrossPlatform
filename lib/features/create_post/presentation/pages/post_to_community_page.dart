@@ -134,7 +134,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          print('tap detected');
                           navigateToFinalContentPage(displayList[index]);
                         },
                         child: CommunitiesCard(

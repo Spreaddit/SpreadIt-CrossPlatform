@@ -28,40 +28,37 @@ class CommunitiesCard extends StatefulWidget {
 class _CommunitiesCardState extends State<CommunitiesCard> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        margin:EdgeInsets.all(15),
-        child: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage(widget.communityIcon),
-              radius: widget.iconRadius,
-            ),
-            SizedBox(width: widget.boxSize),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+    return  Container(
+      margin:EdgeInsets.all(15),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundImage: AssetImage(widget.communityIcon),
+            radius: widget.iconRadius,
+          ),
+          SizedBox(width: widget.boxSize),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.communityName,
+                style: TextStyle(
+                fontSize: widget.fontSize,
+                fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (widget.extraInfo != null)
                 Text(
-                  widget.communityName,
+                  widget.extraInfo!,
                   style: TextStyle(
-                  fontSize: widget.fontSize,
+                  fontSize: (widget.fontSize) - 4,
                   fontWeight: FontWeight.bold,
+                  color: Colors.grey,
                   ),
                 ),
-                if (widget.extraInfo != null)
-                  Text(
-                    widget.extraInfo!,
-                    style: TextStyle(
-                    fontSize: (widget.fontSize) - 4,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                    ),
-                  ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -58,8 +58,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
   
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.3,
+    return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.all(10),
         child: Column(

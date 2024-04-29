@@ -60,7 +60,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             child: Form(
               key: widget.formKey,
               child: TextFormField(
-                onFieldSubmitted: widget.navigateToSearchResult,
+                onFieldSubmitted: (text) {
+                  if (text.trim().isNotEmpty) {
+                    widget.navigateToSearchResult(text);
+                  } else {
+                    FocusScope.of(context).unfocus();
+                  }
+                },
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: widget.hintText,
