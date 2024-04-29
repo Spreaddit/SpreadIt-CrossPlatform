@@ -2,53 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-Future<int> banUserRequest(
-    {required String communityName,
-    required String username,
-    required String violation,
-    required int days,
-    required String banReason,
-    required String messageToUser}) async {
-  String? accessToken = UserSingleton().getAccessToken();
-  try {
-    var data = {
-      "violation": violation,
-      "days": days,
-      "banReason": banReason,
-      "messageToUser": messageToUser
-    };
-    final response = await Dio().post(
-      '$galalModUrl/community/moderation/$communityName/$username/ban',
-      data: data,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      ),
-    );
-    if (response.statusCode == 200) {
-      print(response.statusMessage);
-      return response.statusCode ?? 0;
-    } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
-      return response.statusCode ?? 0;
-    } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
-      return response.statusCode ?? 0;
-    }
-    return 0;
-  } catch (e) {
-    print("Error occurred: $e");
-    return 0;
-  }
-}
-
-Future<int> unbanUserRequest(
-    {required String communityName, required String username}) async {
+Future<int> approveUserRequest({
+  required String communityName,
+  required String username,
+}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
-      '$galalModUrl/community/moderation/$communityName/$username/unban',
+      '$galalModUrl/community/moderation/$communityName/$username/add-contributor',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -72,24 +33,14 @@ Future<int> unbanUserRequest(
   }
 }
 
-Future<int> editBannedUserRequest(
-    {required String communityName,
-    required String username,
-    required String violation,
-    required int days,
-    required String banReason,
-    required String messageToUser}) async {
+Future<int> removeApprovedUserRequest({
+  required String communityName,
+  required String username,
+}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
-    var data = {
-      "violation": violation,
-      "days": days,
-      "banReason": banReason,
-      "messageToUser": messageToUser
-    };
-    final response = await Dio().put(
-      '$galalModUrl/community/moderation/$communityName/$username/ban',
-      data: data,
+    final response = await Dio().delete(
+      '$galalModUrl/community/moderation/$communityName/$username/remove-contributor',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -113,12 +64,12 @@ Future<int> editBannedUserRequest(
   }
 }
 
-Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
+Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   List<dynamic> defaultResponse = [];
   try {
     final response = await Dio().get(
-      '$galalModUrl/community/moderation/$communityName/banned-users',
+      '$galalModUrl/community/moderation/$communityName/contributors',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -142,12 +93,12 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
   }
 }
 
-Future<Map<String, dynamic>?>? checkIfBannedRequest(
+Future<Map<String, dynamic>?>? checkIfApprovedRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().get(
-      '$galalModUrl2/community/moderation/$communityName/$username/is-banned',
+      '$galalModUrl/community/moderation/$communityName/$username/is-contributor',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

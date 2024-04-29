@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/pages/approved_users_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/banned_users_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/community_type_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/description_page.dart';
@@ -43,7 +44,7 @@ class ModtoolsPage extends StatelessWidget {
       "moderators_page": DummyPage(
         communityName: communityName,
       ),
-      "approved_users_page": DummyPage(
+      "approved_users_page": ApprovedUsersPage(
         communityName: communityName,
       ),
       "banned_users_page": BannedUsersPage(

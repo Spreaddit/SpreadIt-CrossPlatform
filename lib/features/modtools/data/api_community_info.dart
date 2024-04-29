@@ -11,20 +11,6 @@ import 'package:spreadit_crossplatform/user_info.dart';
 ///
 /// Throws an error if fetching data fails.
 Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
-  var defaultResponse = {
-    "name": "",
-    "is18plus": false,
-    "category": "",
-    "communityType": "Public",
-    "description": "",
-    "image": "",
-    "membersCount": 0,
-    "rules": [
-      {"title": "", "description": "", "reportReason": ""}
-    ],
-    "dateCreated": "",
-    "communityBanner": ""
-  };
   //TODO - FIX CORS PROBLEM
   String? accessToken = UserSingleton().getAccessToken();
   try {

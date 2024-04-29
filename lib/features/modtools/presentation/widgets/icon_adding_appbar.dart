@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_approved_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_edit_banned_page.dart';
 
 class IconAddingAppBar extends StatefulWidget implements PreferredSizeWidget {
-  IconAddingAppBar({Key? key, required this.title, required this.communityName})
-      : super(key: key);
+  IconAddingAppBar({
+    Key? key,
+    required this.title,
+    required this.communityName,
+    required this.isApproving,
+    required this.onRequestCompleted,
+  }) : super(key: key);
 
   final String title;
   final String communityName;
+
+  /// Callback function to be called when the request is completed
+  final Function onRequestCompleted;
+
+  /// true if approving, false if banning
+  final bool isApproving;
 
   @override
   Size get preferredSize => AppBar().preferredSize;
@@ -40,8 +52,17 @@ class _IconAddingAppBarState extends State<IconAddingAppBar> {
           icon: Icon(Icons.add_outlined),
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
-                builder: (context) => AddOrEditBannedPage(
-                    communityName: widget.communityName, isAdding: true)),
+              builder: (context) => widget.isApproving
+                  ? AddApprovedPage(
+                      communityName: widget.communityName,
+                      onRequestCompleted: widget.onRequestCompleted,
+                    )
+                  : AddOrEditBannedPage(
+                      communityName: widget.communityName,
+                      isAdding: true,
+                      onRequestCompleted: widget.onRequestCompleted,
+                    ),
+            ),
           ),
         ),
       ],

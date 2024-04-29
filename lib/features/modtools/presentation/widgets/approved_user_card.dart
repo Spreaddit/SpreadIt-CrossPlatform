@@ -1,75 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
-import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_edit_banned_page.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
 
-class BannedUserCard extends StatefulWidget {
-  BannedUserCard({
+class ApprovedUserCard extends StatefulWidget {
+  ApprovedUserCard({
     Key? key,
     required this.username,
     required this.communityName,
-    required this.violation,
-    required this.banReason,
-    required this.days,
-    required this.messageToUser,
-    required this.bannedDate,
     required this.avatarUrl,
-    required this.onUnban,
-    required this.onRequestCompleted,
+    required this.banner,
+    required this.onUnApprove,
   }) : super(key: key);
 
   final String username;
   final String communityName;
-  final String violation;
-  final String banReason;
-  final int days;
-  final String messageToUser;
-  final String bannedDate;
   final String avatarUrl;
-  final Function onUnban;
-  final Function onRequestCompleted;
+  final String banner;
+  final Function onUnApprove;
 
   @override
-  State<BannedUserCard> createState() => _BannedUserCardState();
+  State<ApprovedUserCard> createState() => _ApprovedUserCardState();
 }
 
-class _BannedUserCardState extends State<BannedUserCard> {
-  String passedBanLength = '';
+class _ApprovedUserCardState extends State<ApprovedUserCard> {
+  String passedApproveLength = '';
 
   @override
   void initState() {
     super.initState();
-    String banLength = widget.bannedDate.replaceAll('T', ' ');
-    banLength = widget.bannedDate.replaceAll('Z', '');
-    Duration banDuration = DateTime.parse(DateTime.now().toString())
-        .difference(DateTime.parse(banLength));
-
-    if (banDuration.inDays > 0) {
-      passedBanLength = '${banDuration.inDays}d';
-    } else if (banDuration.inHours > 0) {
-      passedBanLength = '${banDuration.inHours}h';
-    } else if (banDuration.inMinutes > 0) {
-      passedBanLength = '${banDuration.inMinutes}m';
-    } else {
-      passedBanLength = 'Now';
-    }
   }
 
-  void unbanUser() async {
-    var response = await unbanUserRequest(
+  void unApproveUser() async {
+    var response = await removeApprovedUserRequest(
       communityName: widget.communityName,
       username: widget.username,
     );
     if (response == 200) {
-      CustomSnackbar(content: "u/${widget.username} was unbanned")
-          .show(context);
-      widget.onUnban();
+      CustomSnackbar(content: "u/${widget.username} was removed").show(context);
+      widget.onUnApprove();
     } else {
-      CustomSnackbar(content: "Error unbanning user").show(context);
+      CustomSnackbar(content: "Error removing user").show(context);
     }
   }
 
-  void showBanMenuSheet(BuildContext context) {
+  void showApproveMenuSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(),
@@ -86,25 +60,11 @@ class _BannedUserCardState extends State<BannedUserCard> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddOrEditBannedPage(
-                      communityName: widget.communityName,
-                      isAdding: false,
-                      username: widget.username,
-                      violation: widget.violation,
-                      banReason: widget.banReason,
-                      days: widget.days,
-                      messageToUser: widget.messageToUser,
-                      onRequestCompleted: widget.onRequestCompleted,
-                    ),
-                  ),
-                );
+                //TODO INTEGRATE MESSAGING A USER W/FARIDA
               },
               child: ListTile(
                 leading: Icon(Icons.edit_outlined),
-                title: Text("See details"),
+                title: Text("Send Message"),
                 trailing: Icon(Icons.arrow_forward_outlined),
               ),
             ),
@@ -138,12 +98,12 @@ class _BannedUserCardState extends State<BannedUserCard> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                showUnbanAlertDialog(context);
+                showRemoveAlertDialog(context);
               },
               child: ListTile(
-                leading: Icon(Icons.hardware, color: Colors.red),
+                leading: Icon(Icons.close_outlined, color: Colors.red),
                 title: Text(
-                  "Unban",
+                  "Remove",
                   style: TextStyle(color: Colors.red),
                 ),
               ),
@@ -154,13 +114,16 @@ class _BannedUserCardState extends State<BannedUserCard> {
     );
   }
 
-  void showUnbanAlertDialog(BuildContext context) {
+  void showRemoveAlertDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Unban User"),
-          content: Text("Are you sure you want to unban this user?"),
+          title: Text("Remove u/${widget.username}"),
+          content: Text(
+            "Are you sure you want to remove this user as an approved user?",
+            softWrap: true,
+          ),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
@@ -176,14 +139,14 @@ class _BannedUserCardState extends State<BannedUserCard> {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: Colors.deepOrange,
               ),
               onPressed: () {
-                unbanUser();
+                unApproveUser();
                 Navigator.of(context).pop();
               },
               child: Text(
-                "Unban",
+                "Remove",
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -221,23 +184,10 @@ class _BannedUserCardState extends State<BannedUserCard> {
           trailing: IconButton(
             icon: Icon(Icons.more_vert),
             onPressed: () {
-              showBanMenuSheet(context);
+              showApproveMenuSheet(context);
             },
           ),
           title: Text("u/${widget.username}"),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$passedBanLength • ${widget.violation}',
-                softWrap: true,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

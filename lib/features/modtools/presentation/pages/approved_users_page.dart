@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
-import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
-import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/banned_user_card.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
+import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/approved_user_card.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/icon_adding_appbar.dart';
 
-class BannedUsersPage extends StatefulWidget {
-  BannedUsersPage({Key? key, required this.communityName}) : super(key: key);
+class ApprovedUsersPage extends StatefulWidget {
+  ApprovedUsersPage({Key? key, required this.communityName}) : super(key: key);
 
   final String communityName;
 
   @override
-  State<BannedUsersPage> createState() => _BannedUsersPageState();
+  State<ApprovedUsersPage> createState() => _ApprovedUsersPageState();
 }
 
-class _BannedUsersPageState extends State<BannedUsersPage> {
-  Future<List<dynamic>>? _bannedUsersData;
+class _ApprovedUsersPageState extends State<ApprovedUsersPage> {
+  Future<List<dynamic>>? _approvedUsersData;
   TextEditingController _searchController = TextEditingController();
   List<dynamic> _allUsers = [];
   List<dynamic> _filteredData = [];
@@ -27,7 +27,7 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
   }
 
   void fetchData() async {
-    _bannedUsersData = getBannedUsersRequest(widget.communityName);
+    _approvedUsersData = getApprovedUsersRequest(widget.communityName);
   }
 
   void filterResults() {
@@ -51,15 +51,15 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: IconAddingAppBar(
-        title: 'Banned Users',
+        title: 'Approved Users',
         communityName: widget.communityName,
-        isApproving: false,
+        isApproving: true,
         onRequestCompleted: () => setState(() {
           fetchData();
         }),
       ),
       body: FutureBuilder(
-        future: _bannedUsersData,
+        future: _approvedUsersData,
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -107,21 +107,14 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
                       shrinkWrap: true,
                       itemCount: _filteredData.length,
                       itemBuilder: (context, index) {
-                        return BannedUserCard(
+                        return ApprovedUserCard(
                           username: _filteredData[index]['username'],
-                          communityName: widget.communityName,
-                          violation: _filteredData[index]['violation'],
-                          banReason: _filteredData[index]['banReason'],
-                          days: _filteredData[index]['days'],
-                          messageToUser: _filteredData[index]['messageToUser'],
-                          bannedDate: _filteredData[index]['bannedDate'],
                           avatarUrl: _filteredData[index]['avatar'],
-                          onRequestCompleted: () => setState(() {
+                          banner: _filteredData[index]['banner'],
+                          onUnApprove: () => setState(() {
                             fetchData();
                           }),
-                          onUnban: () => setState(() {
-                            fetchData();
-                          }),
+                          communityName: widget.communityName,
                         );
                       },
                     ),

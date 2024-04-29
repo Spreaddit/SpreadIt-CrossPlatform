@@ -5,22 +5,26 @@ import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.d
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/add_data_appbar.dart';
 
 class AddOrEditBannedPage extends StatefulWidget {
-  AddOrEditBannedPage(
-      {Key? key,
-      required this.communityName,
-      required this.isAdding,
-      this.username = '',
-      this.violation = '',
-      this.banReason = '',
-      this.days = -1,
-      this.messageToUser = ''})
-      : super(key: key);
+  AddOrEditBannedPage({
+    Key? key,
+    required this.communityName,
+    required this.isAdding,
+    required this.onRequestCompleted,
+    this.username = '',
+    this.violation = '',
+    this.banReason = '',
+    this.days = -1,
+    this.messageToUser = '',
+  }) : super(key: key);
 
   /// The name of the community
   final String communityName;
 
   /// true if adding, false if editing
   final bool isAdding;
+
+  /// Callback function to be called when the request is completed
+  final Function onRequestCompleted;
 
   final String username;
   final String violation;
@@ -68,6 +72,7 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
+      widget.onRequestCompleted();
       CustomSnackbar(content: "u/${widget.username} was banned!").show(context);
     } else {
       CustomSnackbar(content: "Error banning user").show(context);
@@ -84,6 +89,7 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
+      widget.onRequestCompleted();
       CustomSnackbar(content: "u/${widget.username} ban edited!").show(context);
     } else {
       CustomSnackbar(content: "Error editing ban").show(context);
