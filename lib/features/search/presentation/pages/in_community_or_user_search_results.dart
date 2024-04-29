@@ -88,6 +88,7 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
                 navigateToSearchResult: navigateToSearchInCommunityOrUserResults,
                 hintText: 'hello',
                 updateSearchItem: updateSearchItem,
+                navigateToSuggestedResults: () {},
               ),
             ],
           ),

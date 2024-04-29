@@ -153,6 +153,7 @@ List sort = [ 'Most relevant','Hot', 'Top', 'New', 'Comment count'];
       child: Column(
         children: [
           ListView.builder(
+            padding: EdgeInsets.only(top:3),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: posts.length,

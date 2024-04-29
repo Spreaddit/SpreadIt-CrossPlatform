@@ -47,6 +47,7 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
       child: Column(
         children: [
           ListView.builder(
+            padding: EdgeInsets.only(top:3),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: mappedCommunities.length,

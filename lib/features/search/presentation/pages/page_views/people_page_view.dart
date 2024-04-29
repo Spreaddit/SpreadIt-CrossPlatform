@@ -46,6 +46,7 @@ class _PeoplePageViewState extends State<PeoplePageView> {
       child: Column(
         children: [
           ListView.builder(
+            padding: EdgeInsets.only(top:3),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: mappedUsers.length,

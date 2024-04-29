@@ -60,9 +60,14 @@ class _SearchResultState extends State<SearchResult> {
     });
   }
 
-   void navigateToGeneralSearch() {
+  void navigateToGeneralSearch() {
+    print('tao detected');
     Navigator.pop(context);
-   }
+  }
+
+  void navigateToGeneralSearchParam(String searchItem) {
+    Navigator.pop(context,searchItem);
+  }
 
 
   @override
@@ -71,23 +76,33 @@ class _SearchResultState extends State<SearchResult> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          InkWell(
-            onTap : navigateToGeneralSearch,
-            child: Container(
-              margin: EdgeInsets.all(10),
-              height: 50,
-              width: 330,
-              decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(25),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {},   // navigate to home page
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 40,
+                ),
               ),
-              child: Text(searchItem),
-            ),
+              CustomSearchBar(
+                formKey: searchForm,
+                hintText: '',
+                updateSearchItem: updateSearchItem,
+                navigateToSearchResult: navigateToGeneralSearchParam,
+                navigateToSuggestedResults: navigateToGeneralSearch,
+                initialBody: searchItem,
+              ),
+            ],
           ),
           SizedBox(height: 8),
           SearchResultHeader(
             labels: labelsList,
             onTabSelected: onTabSelected,
+          ),
+          Divider(
+            thickness: 1,
+            color: Colors.grey,
           ),
           Expanded(
             child: CustomPageView(

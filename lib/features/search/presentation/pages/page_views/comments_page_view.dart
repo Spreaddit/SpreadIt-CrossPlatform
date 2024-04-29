@@ -119,6 +119,7 @@ class _CommentsPageViewState extends State<CommentsPageView> {
             ),
           ),
           ListView.builder(
+            padding: EdgeInsets.only(top:3),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: comments.length,

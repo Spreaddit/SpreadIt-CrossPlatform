@@ -29,6 +29,10 @@ class _GeneralSearchState extends State<GeneralSearch> {
     }); 
   }
 
+  void navigateToSuggestedResults() {
+    setState(() {});
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
                       hintText: 'Search',
                       navigateToSearchResult: navigateToGeneralSearchResults,
                       updateSearchItem: updateSearchItem,
+                      navigateToSuggestedResults: navigateToSuggestedResults,
                     ),
                   ),
                   InkWell(

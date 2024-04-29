@@ -165,6 +165,7 @@ class _MediaPageViewState extends State<MediaPageView> {
                 Container(
                   width: MediaQuery.of(context).size.width/ 2,
                   child: ListView.builder(
+                    padding: EdgeInsets.only(top:3),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: media.length ~/ 2,
@@ -181,6 +182,7 @@ class _MediaPageViewState extends State<MediaPageView> {
                 Container(
                   width: MediaQuery.of(context).size.width /2,
                   child: ListView.builder(
+                    padding: EdgeInsets.only(top:3),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: media.length ~/ 2,

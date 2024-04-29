@@ -5,6 +5,7 @@ class CustomSearchBar extends StatefulWidget {
   final String hintText;
   final Function(String) updateSearchItem;
   final Function(String) navigateToSearchResult;
+  final VoidCallback navigateToSuggestedResults;
   final String? initialBody;
   final String? communityOrUserName;
   final String? communityOrUserIcon;
@@ -14,6 +15,7 @@ class CustomSearchBar extends StatefulWidget {
     required this.hintText,
     required this.updateSearchItem,
     required this.navigateToSearchResult,
+    required this.navigateToSuggestedResults,
     this.initialBody,
     this.communityOrUserName,
     this.communityOrUserIcon,
@@ -58,6 +60,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           Form(
             key: widget.formKey,
             child: TextFormField(
+              onTap: widget.navigateToSuggestedResults,
               onFieldSubmitted: (text) {
                 if (text.trim().isNotEmpty) {
                   widget.navigateToSearchResult(text);

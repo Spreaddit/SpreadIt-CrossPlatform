@@ -78,6 +78,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
                   hintText: 'Search',
                   navigateToSearchResult: navigateToCommunityOrUserSearch,
                   updateSearchItem: updateSearchItem,
+                  navigateToSuggestedResults: () {},
                   communityOrUserName: communityOrUserName,
                   communityOrUserIcon: communityOrUserIcon,
                 ),

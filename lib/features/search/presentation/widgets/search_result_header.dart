@@ -30,7 +30,7 @@ class _SearchResultHeaderState extends State<SearchResultHeader> {
               widget.onTabSelected(_selectedIndex);
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Stack(
                   children: [
                     Text(
