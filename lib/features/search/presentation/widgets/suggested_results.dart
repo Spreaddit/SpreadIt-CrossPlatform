@@ -74,6 +74,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
             ),
             SearchDisplayList(
               displayList: communities,
+              type: 'community',
             ),
             Text(
               'People',
@@ -84,6 +85,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
             ),
             SearchDisplayList(
               displayList: users,
+              type: 'user',
             ),
             InkWell(
               onTap: navigateToGeneralSearchResults,  

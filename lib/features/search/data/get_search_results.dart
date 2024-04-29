@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future <Map<String,dynamic>> getCommunitiesSearchResults(String query) async {
+Future <Map<String,dynamic>> getSearchResults(String query, String type, String sort) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
@@ -18,8 +18,8 @@ Future <Map<String,dynamic>> getCommunitiesSearchResults(String query) async {
       ),
       data: {
         "q": query,
-        "type": "communities",
-        "sort": "relevance",
+        "type": type,
+        "sort": sort,
       },
     );
     if (response.statusCode == 200) {

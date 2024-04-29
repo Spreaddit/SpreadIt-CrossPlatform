@@ -6,8 +6,11 @@ import '../../../generic_widgets/communities_search_card.dart';
 class SearchDisplayList extends StatefulWidget {
 
    final List displayList;
-  const SearchDisplayList({
+   final String type;
+
+   const SearchDisplayList({
     required this.displayList,
+    required this.type,
   });
 
   @override
@@ -29,9 +32,13 @@ class _SearchDisplayListState extends State<SearchDisplayList> {
               child: CommunitiesCard(
                 communityName: widget.displayList[index]['name'],
                 communityIcon: widget.displayList[index]['profilePic'],
-                boxSize: 10,
+                boxSize: 7,
                 iconRadius: 13, 
                 fontSize: 17,
+                extraInfo: 
+                     widget.type == 'community' ? 
+                        '${widget.displayList[index]['membersCount']} members' 
+                        : '${widget.displayList[index]['karmaCount']} karma' ,
               ),
             );
           }

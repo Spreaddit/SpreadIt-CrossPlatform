@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/search/data/get_communities.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/community_element.dart';
 
 class CommunitiesPageView extends StatefulWidget {
@@ -23,7 +23,7 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
   }
 
   void getCommunitiesResults() async {
-    communities = await getCommunitiesSearchResults(widget.searchItem);
+    communities = await getSearchResults(widget.searchItem, 'communities','relevance');
     mappedCommunities = extractCommunityDetails(communities);
     setState(() {});
   }

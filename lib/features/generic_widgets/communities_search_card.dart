@@ -10,6 +10,7 @@ class CommunitiesCard extends StatefulWidget {
   final double boxSize;
   final double iconRadius;
   final double fontSize;
+  final String? extraInfo;
 
   const CommunitiesCard({
     required this.communityName,
@@ -17,6 +18,7 @@ class CommunitiesCard extends StatefulWidget {
     required this.boxSize,
     required this.iconRadius,
     required this.fontSize,
+    this.extraInfo,
   });
 
   @override
@@ -40,12 +42,22 @@ class _CommunitiesCardState extends State<CommunitiesCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                  Text(widget.communityName,
+                Text(
+                  widget.communityName,
                   style: TextStyle(
                   fontSize: widget.fontSize,
                   fontWeight: FontWeight.bold,
                   ),
                 ),
+                if (widget.extraInfo != null)
+                  Text(
+                    widget.extraInfo!,
+                    style: TextStyle(
+                    fontSize: (widget.fontSize) - 4,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    ),
+                  ),
               ],
             ),
           ],

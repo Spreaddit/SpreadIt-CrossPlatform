@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/search/data/get_users.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/people_elemet.dart';
 
 
@@ -23,7 +23,7 @@ class _PeoplePageViewState extends State<PeoplePageView> {
   }
 
   void getUsersResults() async {
-    users = await getUsersSearchResults(widget.searchItem);
+    users = await getSearchResults(widget.searchItem, 'users','relevance');
     mappedUsers = extractUsersDetails(users);
     setState(() {});
   }
