@@ -103,8 +103,26 @@ class _CommentsPageViewState extends State<CommentsPageView> {
   },
   ];
 
-  List sort = [ 'Most relevant', 'Top', 'New'];
-  List sortActions = [(){}, (){}, (){}];
+  List sortList = [ 'Most relevant', 'Top', 'New'];
+  String sortText = 'Sort';
+   String sort = 'relevance';
+
+  void updateSortFilter(int value) {
+    switch (value) {
+      case (0):
+        sort = 'relevance';
+        sortText = sortList[0];
+        break;
+      case(1):
+        sort = 'top';
+        sortText = sortList[1];
+        break;
+      case(2):
+        sort = 'new';
+        sortText = sortList[2];
+        break;    
+    } // will i need set state fl switch cases ?
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +132,7 @@ class _CommentsPageViewState extends State<CommentsPageView> {
           Container(
             alignment: Alignment.centerLeft,
             child: FilterButton(
-              openBottomSheet: () => openBottomSheet('Sort', sort, sortActions,'Sort',context),
+              openBottomSheet: () => openBottomSheet(sortText,sortList,updateSortFilter,context),
               text: 'Sort',
             ),
           ),

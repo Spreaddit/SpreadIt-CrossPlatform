@@ -3,26 +3,11 @@ import 'package:flutter/material.dart';
 void openBottomSheet (
   String title,
   List items,
-  List actions,
-  String? filterInitialValue ,
+  Function(int) updateFilter,
   BuildContext context,
 )
 {
   int? selectedIndex ;
-  if (title == 'Sort') {
-    if(filterInitialValue == 'Top') {
-      selectedIndex = 2;
-    }
-    else if(filterInitialValue == 'New') {
-      selectedIndex = 3;
-    }
-    else {
-      selectedIndex = 0;
-    }
-  }
-  else {
-    selectedIndex = 0;
-  }
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -81,7 +66,7 @@ void openBottomSheet (
                         setState(() {
                           selectedIndex = value!;
                         });
-                        actions[index];
+                        updateFilter(selectedIndex!);
                       }
                     );
                   }, 

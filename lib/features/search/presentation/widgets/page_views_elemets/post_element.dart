@@ -71,7 +71,7 @@ class _PostElementState extends State<PostElement> {
                     ),
                     SizedBox(height:5),
                     SizedBox(
-                      width: widget.image != null || widget.video != null ? MediaQuery.of(context).size.width - 130 : MediaQuery.of(context).size.width - 25,
+                      width: widget.image != null || widget.video != null ? MediaQuery.of(context).size.width - 150 : MediaQuery.of(context).size.width - 25,
                       child: Text(
                         widget.postTitle,
                         softWrap: true,
@@ -86,7 +86,7 @@ class _PostElementState extends State<PostElement> {
                     Row(
                       children: [
                         Text(
-                          widget.upvotes,
+                          '${widget.upvotes} upvotes',
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 13,
@@ -94,7 +94,7 @@ class _PostElementState extends State<PostElement> {
                           ),
                         SizedBox(width: 5),  
                         Text(
-                          widget.comments,
+                          '${widget.comments} comments',
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 13,
@@ -104,14 +104,14 @@ class _PostElementState extends State<PostElement> {
                     ),
                   ],
                 ),
-                if (widget.image != null)...[
+                if (widget.image != null && (widget.image!.isNotEmpty || widget.image != '') )...[
                   Spacer(),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image(
                       image: AssetImage(widget.image!),
                       height: 70,
-                      width: 90,
+                      width: 80,
                       fit: BoxFit.fill,
                     ),
                   ),

@@ -5,19 +5,21 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/radi
 
 class MediaPageView extends StatefulWidget {
   
-  String? sortFilter;
-  String? timeFilter;
 
-  MediaPageView({
-    this.sortFilter,
-    this.timeFilter,
-  });
+  const MediaPageView({Key? key}) : super(key: key);
 
   @override
   State<MediaPageView> createState() => _MediaPageViewState();
 }
 
 class _MediaPageViewState extends State<MediaPageView> {
+
+  String sort = 'relevance';
+  String sortText = 'Sort';
+  String timeText = 'Time';
+  List sortList = [ 'Most relevant','Hot', 'Top', 'New', 'Comment count'];
+  List timeList = ['All time', 'Past hour', 'Today', 'Past week', 'Past month', 'Past year'];
+  bool showTimeFilter = true;
 
   List media = 
   [
@@ -95,69 +97,100 @@ class _MediaPageViewState extends State<MediaPageView> {
     },
   ];
 
-  List sort = [ 'Most relevant','Hot', 'Top', 'New', 'Comment count'];
-  List sortActions = [(){}, (){}, (){}, (){}, (){},];
 
-  List time = ['All time', 'Past hour', 'Today', 'Past week', 'Past month', 'Past year'];
-  List timeActions = [(){}, (){}, (){}, (){}, (){},(){}];
 
   void removeFilter() {
     setState(() {
-      widget.sortFilter = 'Most relevant';
-      widget.timeFilter = 'All time';
+      sortText = 'Sort';
+      showTimeFilter;
+      timeText = 'Time';
     });
   }
 
-  void updateSortFilter(value) {
-    setState(() => widget.sortFilter = value);
+  void updateSortFilter(int value) {
+    switch (value) {
+      case (0):
+        sort = 'relevance';
+        sortText = sortList[0];
+        break;
+      case(1):
+        sort = 'hot';
+        sortText = sortList[1];
+        break;
+      case(2):
+        sort = 'top';
+        sortText = sortList[2];
+        break;
+      case(3):
+        sort = 'new';
+        sortText = sortList[3];
+        break;
+      case(4):
+        sort = 'comment';
+        sortText = sortList[4];
+        break;     
+    }
+   // will i need set state fl switch cases ?
   }
 
-  void updateTimeFilter(value) {
-    setState(() => widget.timeFilter = value);
+  void updateTimeFilter(int value) {
+    switch (value) {
+      case (0):
+        timeText = timeList[0];
+        break;
+      case(1):
+        timeText = timeList[1];
+        break;
+      case(2):
+        timeText = timeList[2];
+        break;
+      case(3):
+        timeText = timeList[3];
+        break;
+      case(4):
+        timeText = timeList[4];
+        break;     
+    }
+    // implement time filter 
   }
 
 
   @override
   Widget build(BuildContext context) {
-
-    bool ShowTimeFilter = widget.sortFilter != 'New' && widget.sortFilter != 'Hot';
-
     return SingleChildScrollView(
       child: Column(
         children: [
           Row(
-              children: [
-                if(widget.sortFilter !=null)
-                  IconButton(
-                    onPressed: removeFilter,
-                    icon: Icon(Icons.cancel),
-                  ),
-                FilterButton(
+            children: [
+              if(sortText != 'Sort')
+                IconButton(
+                  onPressed: removeFilter,
+                  icon: Icon(Icons.cancel),
+                ),
+              FilterButton(
                 openBottomSheet: () {
                   openBottomSheet(
-                    'Sort',
-                     sort,
-                    sortActions,
-                    widget.sortFilter,
+                    sortText,
+                    sortList,
+                    updateSortFilter,
                     context,
                   );
                 },
-                text: widget.sortFilter != null ? widget.sortFilter! :'Sort',
-                ),
-                if (ShowTimeFilter)
-                  FilterButton(
+                text: sortText,
+              ),
+              if (showTimeFilter)
+                FilterButton(
                   openBottomSheet: () { 
                     openBottomSheet(
-                      'Time',
-                      time,
-                      timeActions,
-                      widget.timeFilter,
+                      timeText,
+                      timeList,
+                      updateTimeFilter,
                       context,
                     );  
                   },
-                  text: widget.timeFilter != null ? widget.timeFilter! :'Time',
-                  ),
-              ],
+                  text: timeText,
+                ),
+            ],
           ),
           Row(
               crossAxisAlignment: CrossAxisAlignment.start,

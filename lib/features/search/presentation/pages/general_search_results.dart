@@ -36,7 +36,7 @@ class _SearchResultState extends State<SearchResult> {
   void initState() {
     super.initState();
     searchItem = widget.searchItem;
-    pages.add(PostsPageView());
+    pages.add(PostsPageView(searchItem: searchItem));
     pages.add(CommunitiesPageView(searchItem: searchItem)); 
     pages.add(CommentsPageView());
     pages.add(MediaPageView());
