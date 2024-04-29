@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_user_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/widgets/floating_new_chat_button.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -25,6 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late CurrentPage currentPage;
   late GlobalKey<_HomePageState> _homePageKey;
+  int chatFilterSelectedOption = 3;
 
   @override
   void initState() {
@@ -32,13 +35,10 @@ class _HomePageState extends State<HomePage> {
     _homePageKey = GlobalKey<_HomePageState>();
     setState(() {
       currentPage = widget.currentPage;
-      print("Current Page Index:${currentPage.index}");
     });
   }
 
   void changeSelectedIndex(int newIndex) {
-    print("New Index:$newIndex");
-    print("previous page index: ${currentPage.index}");
     if (newIndex == 2) {
       Navigator.of(context).pushNamed('/primary-content-page');
       return;
@@ -52,6 +52,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void onChangeChatFilter(int chatFilterSelectedOption) {
+    setState(() {
+      this.chatFilterSelectedOption = chatFilterSelectedOption;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
@@ -61,7 +67,9 @@ class _HomePageState extends State<HomePage> {
       ),
       DiscoverCommunitiesBody(),
       CreatePost(),
-      Text("chat"),
+      ChatUserPage(
+        selectedOption: chatFilterSelectedOption,
+      ),
       NotificationPage(),
       PostFeed(
         postCategory: PostCategories.hot,
@@ -105,15 +113,19 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: TopBar(
-        key: _homePageKey,
-        context: context,
-        currentPage: currentPage,
-        onChangeHomeCategory: changeSelectedIndex,
-      ),
+          key: _homePageKey,
+          context: context,
+          currentPage: currentPage,
+          onChangeHomeCategory: changeSelectedIndex,
+          onChangeChatFilter: onChangeChatFilter,
+          chatFilterSelectedOption: chatFilterSelectedOption),
       body: screens[currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),
       bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: currentPage == CurrentPage.chat
+          ? floatingNewChatButton(context)
+          : null,
     );
   }
 }

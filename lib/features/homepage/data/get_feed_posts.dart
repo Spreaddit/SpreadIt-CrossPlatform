@@ -76,7 +76,6 @@ Future<List<Post>> getFeedPosts({
 }) async {
   try {
     String? accessToken = UserSingleton().getAccessToken();
-    print(accessToken);
 
     String requestURL = apiUrl +
         postCategoryEndpoint(
@@ -85,7 +84,6 @@ Future<List<Post>> getFeedPosts({
           timeSort: timeSort,
           username: username,
         );
-    print("post Category Endpoint: $requestURL");
     final response = await Dio().get(
       requestURL,
       options: Options(
@@ -134,7 +132,7 @@ Future<Post?> getPostById({
     String? accessToken = UserSingleton().getAccessToken();
 
     String requestURL = "$apiUrl/posts/$postId/";
-    print("post Category Endpoint: $requestURL");
+
     final response = await Dio().get(
       requestURL,
       options: Options(
@@ -144,7 +142,6 @@ Future<Post?> getPostById({
       ),
     );
     if (response.statusCode == 200) {
-      print(response.data);
       return Post.fromJson(response.data);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
