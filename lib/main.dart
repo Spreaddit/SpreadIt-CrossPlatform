@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
+import "package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart";
 import './user_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -33,7 +33,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: UserSingleton().user != null ? HomePage() : StartUpPage(),
+      home: UserSingleton().user != null ? InboxPage() : InboxPage(),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         if (pathSegments == null || pathSegments.isEmpty) {
