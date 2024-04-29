@@ -29,6 +29,7 @@ import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/schedule_posts/data/is_user_moderator_service.dart';
 import 'package:intl/intl.dart';
+import 'package:spreadit_crossplatform/features/schedule_posts/presentation/pages/schedule_posts_page.dart';
 
 /// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
 /// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
@@ -162,14 +163,11 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   /// [isModeratorFunction] : a function which checks if the user is a moderator of the community
   Future<void> isModeratorFunction() async {
-    print("inside isModeratorFunction");
     bool moderatorStatus =
         await IsUserModeratorService().isUserModerator(communityName);
     setState(() {
       isModerator = moderatorStatus;
     });
-
-    print(" the isModerator is $isModerator");
   }
 
   void updateTitle(String value) {
@@ -330,10 +328,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         finalVideo,
         finalVideoWeb,
         isSpoiler,
-        isNSFW);
+        isNSFW,
+        isScheduled ? selectedDate : null);
     if (response == 201) {
-      CustomSnackbar(content: 'Posted successfully !').show(context);
-      returnToHomePage(context);
+      if (isScheduled) {
+      } else {
+        CustomSnackbar(content: 'Posted successfully !').show(context);
+        returnToHomePage(context);
+      }
     } else if (response == 400) {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
     } else if (response == 500) {
