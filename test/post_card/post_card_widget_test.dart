@@ -42,7 +42,6 @@ void main() {
           body: PostCard(
             post: post,
             comments: comments,
-            isUserProfile: false,
           ),
         ),
       ),
