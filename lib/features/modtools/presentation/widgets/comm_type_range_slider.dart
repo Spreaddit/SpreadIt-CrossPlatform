@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
-import 'package:spreadit_crossplatform/features/modtools/data/api_community_info.dart';
 
 class CommunityRangeSlider extends StatefulWidget {
   CommunityRangeSlider(
-      {Key? key, required this.communityName, required this.onTypeChanged})
+      {Key? key,
+      required this.communityName,
+      required this.onTypeChanged,
+      required this.communityInfo})
       : super(key: key);
 
   final String communityName;
   final Function onTypeChanged;
+  final Map<String, dynamic> communityInfo;
 
   @override
   State<CommunityRangeSlider> createState() => CommunityRangeSliderState();
@@ -32,17 +33,14 @@ class CommunityRangeSliderState extends State<CommunityRangeSlider> {
   double currentRangeValue = 0;
   bool isTypeChanged = false;
   String currentType = "Public";
-  late Future<Map<String, dynamic>> communityInfo;
   bool initDone = false;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  void fetchData() async {
-    communityInfo = getModCommunityInfo(widget.communityName);
+    initialVal = communityTypeIdx[widget.communityInfo['communityType']] ?? 0;
+    currentRangeValue = initialVal;
+    currentType = widget.communityInfo['communityType'];
   }
 
   String getCommunityType() {
@@ -77,72 +75,47 @@ class CommunityRangeSliderState extends State<CommunityRangeSlider> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: communityInfo,
-        builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: LoaderWidget(
-                dotSize: 10,
-                logoSize: 100,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            CustomSnackbar(content: "Error ${snapshot.error}").show(context);
-            return Text("");
-          } else if (snapshot.hasData) {
-            initialVal = communityTypeIdx[snapshot.data!['communityType']] ?? 0;
-            if (!initDone) {
-              currentRangeValue = initialVal;
-              currentType = snapshot.data!['communityType'];
-              initDone = true;
-            }
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Slider(
-                    min: 0,
-                    max: 2,
-                    value: currentRangeValue,
-                    divisions: 2,
-                    onChanged: (double values) {
-                      setState(() {
-                        currentRangeValue = values;
-                        currentType = _setCurrentType(values);
-                        isTypeChanged = (currentRangeValue != initialVal);
-                      });
-                      widget.onTypeChanged();
-                    },
-                    activeColor: _getColorForValue(currentRangeValue),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Slider(
+            min: 0,
+            max: 2,
+            value: currentRangeValue,
+            divisions: 2,
+            onChanged: (double values) {
+              setState(() {
+                currentRangeValue = values;
+                currentType = _setCurrentType(values);
+                isTypeChanged = (currentRangeValue != initialVal);
+              });
+              widget.onTypeChanged();
+            },
+            activeColor: _getColorForValue(currentRangeValue),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  currentType,
+                  style: TextStyle(
+                    color: _getColorForValue(currentRangeValue),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          currentType,
-                          style: TextStyle(
-                            color: _getColorForValue(currentRangeValue),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          communityTypeText[currentType] ?? "",
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            CustomSnackbar(content: "Error: Couldn't fetch data").show(context);
-            return Text("");
-          }
-        });
+                ),
+                Text(
+                  communityTypeText[currentType] ?? "",
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

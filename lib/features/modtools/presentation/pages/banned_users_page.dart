@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/banned_user_card.dart';
@@ -50,6 +49,7 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: IconAddingAppBar(
         title: 'Banned Users',
         communityName: widget.communityName,
@@ -65,8 +65,9 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
               ),
             );
           } else if (snapshot.hasError) {
-            CustomSnackbar(content: "Error fetching data").show(context);
-            return Text('');
+            return Center(
+              child: Text("Error fetching data 😔"),
+            );
           } else if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
               return Center(
@@ -98,11 +99,9 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
                         onChanged: (value) => filterResults(),
                       ),
                     ),
-                    ListView.separated(
+                    ListView.builder(
                       shrinkWrap: true,
                       itemCount: _filteredData.length,
-                      separatorBuilder: (context, index) => Divider(),
-                      padding: EdgeInsets.all(0),
                       itemBuilder: (context, index) {
                         return BannedUserCard(
                           username: _filteredData[index]['username'],
@@ -124,9 +123,9 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
               );
             }
           } else {
-            CustomSnackbar(content: "Unknown error fetching data")
-                .show(context);
-            return Text("");
+            return Center(
+              child: Text("Unknown error fetching data 🤔"),
+            );
           }
         },
       ),

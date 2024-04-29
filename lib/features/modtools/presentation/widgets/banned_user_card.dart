@@ -192,45 +192,49 @@ class _BannedUserCardState extends State<BannedUserCard> {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
-        //TODO FIX THE "NULL" ERROR
-        Navigator.of(context).pushNamed(
-          '/user-profile',
-          arguments: {
-            'username': widget.username,
-          },
-        );
-      },
-      style: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
+    return Padding(
+      padding: const EdgeInsets.all(1.0),
+      child: TextButton(
+        onPressed: () {
+          //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
+          //TODO FIX THE "NULL" ERROR
+          Navigator.of(context).pushNamed(
+            '/user-profile',
+            arguments: {
+              'username': widget.username,
+            },
+          );
+        },
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
         ),
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(widget.avatarUrl),
-        ),
-        trailing: IconButton(
-          icon: Icon(Icons.more_vert),
-          onPressed: () {
-            showBanMenuSheet(context);
-          },
-        ),
-        title: Text("u/${widget.username}"),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$passedBanLength • ${widget.violation}',
-              softWrap: true,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(widget.avatarUrl),
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {
+              showBanMenuSheet(context);
+            },
+          ),
+          title: Text("u/${widget.username}"),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$passedBanLength • ${widget.violation}',
+                softWrap: true,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

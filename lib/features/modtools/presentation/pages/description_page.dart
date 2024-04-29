@@ -15,7 +15,7 @@ class DescriptionPage extends StatefulWidget {
 
 class _DescriptionPageState extends State<DescriptionPage> {
   TextEditingController _textController = TextEditingController();
-  late Future<Map<String, dynamic>> communityInfo;
+  Future<Map<String, dynamic>?>? communityInfo;
   bool isTextChanged = false;
   bool initDone = false;
 
@@ -51,7 +51,7 @@ class _DescriptionPageState extends State<DescriptionPage> {
       ),
       body: FutureBuilder(
           future: communityInfo,
-          builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+          builder: (context, AsyncSnapshot<Map<String, dynamic>?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: LoaderWidget(
@@ -60,8 +60,9 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 ),
               );
             } else if (snapshot.hasError) {
-              CustomSnackbar(content: "Error fetching data").show(context);
-              return Text("");
+              return Center(
+                child: Text("Error fetching data 😔"),
+              );
             } else if (snapshot.hasData) {
               if (!initDone) {
                 _textController.text = snapshot.data!['description'] ?? '';
@@ -87,9 +88,9 @@ class _DescriptionPageState extends State<DescriptionPage> {
                 ),
               );
             } else {
-              CustomSnackbar(content: "Unknown error fetching data")
-                  .show(context);
-              return Text("");
+              return Center(
+                child: Text("Unknown error fetching data 🤔"),
+              );
             }
           }),
     );

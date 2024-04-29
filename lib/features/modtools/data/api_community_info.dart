@@ -10,7 +10,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// Returns a [Map] with default values if fetching fails.
 ///
 /// Throws an error if fetching data fails.
-Future<Map<String, dynamic>> getModCommunityInfo(String communityName) async {
+Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
   var defaultResponse = {
     "name": "",
     "is18plus": false,
@@ -40,17 +40,16 @@ Future<Map<String, dynamic>> getModCommunityInfo(String communityName) async {
     if (response.statusCode == 200) {
       {
         print(response.statusMessage);
-        print('MOD COMMUNITY INFO: ${response.data}');
         return response.data;
       }
     } else {
       print(
           'Failed to fetch MOD COMMUNITY data. Status code: ${response.statusCode}');
-      return defaultResponse;
+      return null;
     }
   } catch (e) {
     print('Error fetching MOD COMMUNITY data: $e');
-    return defaultResponse;
+    return null;
   }
 }
 
@@ -82,7 +81,6 @@ Future<int> updateModCommunityInfo(
     if (response.statusCode == 200) {
       {
         print(response.statusMessage);
-        print('MOD COMMUNITY INFO: ${response.data}');
         return response.statusCode ?? 0;
       }
     } else {

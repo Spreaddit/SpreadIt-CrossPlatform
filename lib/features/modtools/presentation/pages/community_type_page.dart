@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/comm_type_nsfw.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/comm_type_range_slider.dart';
@@ -20,7 +21,19 @@ class _CommunityTypePageState extends State<CommunityTypePage> {
   final GlobalKey<CommunityNSFWSwitchState> _nsfwSwitchSliderKey =
       GlobalKey<CommunityNSFWSwitchState>();
 
+  Future<Map<String, dynamic>?>? communityInfo;
+
   bool changesOccured = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    communityInfo = getModCommunityInfo(widget.communityName);
+  }
 
   void isTypeOrNSFWChanged() {
     if (_rangeSliderKey.currentState!.isTypeChanged ||
@@ -55,20 +68,43 @@ class _CommunityTypePageState extends State<CommunityTypePage> {
         title: "Community type",
         onSavePressed: changesOccured ? () => updateCommunityType() : null,
       ),
-      body: Column(
-        children: [
-          CommunityRangeSlider(
-            key: _rangeSliderKey,
-            communityName: widget.communityName,
-            onTypeChanged: isTypeOrNSFWChanged,
-          ),
-          CommunityNSFWSwitch(
-            key: _nsfwSwitchSliderKey,
-            communityName: widget.communityName,
-            onTypeChanged: isTypeOrNSFWChanged,
-          ),
-        ],
-      ),
+      body: FutureBuilder(
+          future: communityInfo,
+          builder: (context, AsyncSnapshot<Map<String, dynamic>?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: LoaderWidget(
+                  dotSize: 10,
+                  logoSize: 100,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Error fetching data 😔"),
+              );
+            } else if (snapshot.hasData) {
+              return Column(
+                children: [
+                  CommunityRangeSlider(
+                    key: _rangeSliderKey,
+                    communityName: widget.communityName,
+                    onTypeChanged: isTypeOrNSFWChanged,
+                    communityInfo: snapshot.data!,
+                  ),
+                  CommunityNSFWSwitch(
+                    key: _nsfwSwitchSliderKey,
+                    communityName: widget.communityName,
+                    onTypeChanged: isTypeOrNSFWChanged,
+                    communityInfo: snapshot.data!,
+                  ),
+                ],
+              );
+            } else {
+              return Center(
+                child: Text("Unknown error fetching data 🤔"),
+              );
+            }
+          }),
     );
   }
 }

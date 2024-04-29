@@ -68,7 +68,7 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
-      CustomSnackbar(content: "User banned!").show(context);
+      CustomSnackbar(content: "u/${widget.username} was banned!").show(context);
     } else {
       CustomSnackbar(content: "Error banning user").show(context);
     }
@@ -84,7 +84,7 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
-      CustomSnackbar(content: "User ban edited!").show(context);
+      CustomSnackbar(content: "u/${widget.username} ban edited!").show(context);
     } else {
       CustomSnackbar(content: "Error editing ban").show(context);
     }
@@ -110,6 +110,71 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
       ),
       prefixText: isUsername ? "u/" : null,
       suffixIcon: isBanReason ? Icon(Icons.expand_more_outlined) : null,
+    );
+  }
+
+  showViolationsModal(context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(),
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Reason for ban',
+                style: TextStyle(
+                    fontWeight: FontWeight.w800, color: Colors.grey[600]),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Spam'),
+              onTap: () {
+                setState(() {
+                  _violationController.text = 'Spam';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Personal and confidential information'),
+              onTap: () {
+                setState(() {
+                  _violationController.text =
+                      'Personal and confidential information';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Threatening, harassing, or inciting violence'),
+              onTap: () {
+                setState(() {
+                  _violationController.text =
+                      'Threatening, harassing, or inciting violence';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Other'),
+              onTap: () {
+                setState(() {
+                  _violationController.text = 'Other';
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -251,61 +316,6 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
           ),
         ),
       ),
-    );
-  }
-
-  showViolationsModal(context) {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(),
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Reason for ban',
-                style: TextStyle(
-                    fontWeight: FontWeight.w800, color: Colors.grey[600]),
-              ),
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Spam'),
-              onTap: () {
-                setState(() {
-                  _violationController.text = 'Spam';
-                });
-                Navigator.pop(context);
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Personal and confidential information'),
-              onTap: () {
-                setState(() {
-                  _violationController.text =
-                      'Personal and confidential information';
-                });
-                Navigator.pop(context);
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Threatening, harassing, or inciting violence'),
-              onTap: () {
-                setState(() {
-                  _violationController.text =
-                      'Threatening, harassing, or inciting violence';
-                });
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
