@@ -97,7 +97,11 @@ Widget _userItem({
       dateToDuration(data.timestamp),
     ),
     onTap: () => {
-      navigateToChat(context, docId),
+      navigateToChat(
+        context: context,
+        docId: docId,
+        chatroomName: title,
+      ),
     },
   );
 }

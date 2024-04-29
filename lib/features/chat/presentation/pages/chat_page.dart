@@ -17,9 +17,11 @@ import 'package:uuid/uuid.dart';
 
 class ChatPage extends StatefulWidget {
   final String id;
+  final String chatroomName;
   const ChatPage({
     Key? key,
     required this.id,
+    required this.chatroomName,
   }) : super(key: key);
 
   @override
@@ -29,6 +31,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
   late types.User _user;
+  bool isUploading = false;
+  bool isMuted = false; //TODO: change accoridng to mariam's settings
 
   @override
   void initState() {
@@ -54,6 +58,9 @@ class _ChatPageState extends State<ChatPage> {
   void _handleImageSelection() async {
     File? image;
     bool isResult = false;
+    setState(() {
+      isUploading = true;
+    });
 
     final imagePicked =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -73,45 +80,67 @@ class _ChatPageState extends State<ChatPage> {
       uri: image!.path,
     );
 
-    _addMessage(message);
-
     final metadata = SettableMetadata(contentType: "image/jpeg");
 
     final storageRef =
         FirebaseStorage.instance.ref().child('images/${message.id}');
-    final uploadTask = storageRef.putFile(image, metadata);
 
-    uploadTask.then((taskSnapshot) async {
-      final imageUrl = await taskSnapshot.ref.getDownloadURL();
+    String imageUrl = '';
 
-      print("image url $imageUrl");
+    kIsWeb
+        ? storageRef
+            .putData(
+            await imagePicked.readAsBytes(),
+            SettableMetadata(contentType: 'image/jpeg'),
+          )
+            .whenComplete(() async {
+            await storageRef.getDownloadURL().then((value) {
+              imageUrl = value;
+              setState(() {
+                isUploading = false;
+              });
+            });
+          })
+        : storageRef.putFile(image, metadata).whenComplete(() async {
+            await storageRef.getDownloadURL().then((value) {
+              imageUrl = value;
+              setState(() {
+                isUploading = false;
+              });
+            });
 
-      Map<String, dynamic> messageMap = {
-        'chatRoomId': widget.id,
-        'content': "",
-        'image': imageUrl,
-        'sender': {
-          'avatarUrl': _user.imageUrl ?? "",
-          'email': _user.metadata!['email'],
-          'id': _user.id,
-          'name': _user.lastName ?? '',
-        },
-        'time': Timestamp.now(),
-        'type': 'image',
-      };
+            while (isUploading) {}
 
-      CollectionReference messages =
-          FirebaseFirestore.instance.collection('messages');
+            _addMessage(message);
 
-      messages
-          .add(messageMap)
-          .then((value) => print("Message sent"))
-          .catchError(
-            (error) => print("Failed to send message"),
-          );
-    }).catchError((error) {
-      print('Error uploading image: $error');
-    });
+            print("image url $imageUrl");
+
+            Map<String, dynamic> messageMap = {
+              'chatRoomId': widget.id,
+              'content': "",
+              'image': imageUrl,
+              'sender': {
+                'avatarUrl': _user.imageUrl ?? "",
+                'email': _user.metadata!['email'],
+                'id': _user.id,
+                'name': _user.lastName ?? '',
+              },
+              'time': Timestamp.now(),
+              'type': 'image',
+            };
+
+            CollectionReference messages =
+                FirebaseFirestore.instance.collection('messages');
+
+            messages
+                .add(messageMap)
+                .then((value) => print("Message sent"))
+                .catchError(
+                  (error) => print("Failed to send message"),
+                );
+          }).catchError((error) {
+            print('Error uploading image: $error');
+          });
   }
 
   void _handlePreviewDataFetched(
@@ -350,19 +379,49 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  void showChatroomOptions() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                leading: Icon(Icons.alarm_off),
+                title: Text(
+                    isMuted ? "Unmute Notifications" : "Mute Notifications"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Text(
+            widget.chatroomName,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showChatroomOptions();
+              },
+              icon: Icon(Icons.more_horiz),
+            )
+          ]),
       body: Chat(
         messages: _messages,
+        isAttachmentUploading: isUploading,
         onAttachmentPressed: _handleImageSelection,
         onPreviewDataFetched: _handlePreviewDataFetched,
         onSendPressed: _handleSendPressed,

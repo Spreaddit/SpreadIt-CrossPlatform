@@ -46,10 +46,12 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
           PostCardPage(postId: postId, isUserProfile: isUserProfile),
     );
   } else if (pathSegments.contains('chatroom')) {
-    final chatId = pathSegments[pathSegments.length - 1];
+    final chatId = pathSegments[pathSegments.length - 2];
+    final chatroomName = pathSegments[pathSegments.length - 1];
     return MaterialPageRoute(
       builder: (_) => ChatPage(
         id: chatId,
+        chatroomName: chatroomName,
       ),
     );
   }

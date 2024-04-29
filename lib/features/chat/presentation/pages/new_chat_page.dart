@@ -48,8 +48,9 @@ class _NewChatPageState extends State<NewChatPage> {
       if (querySnapshot.docs.isNotEmpty && containsUser) {
         Navigator.pop(context);
         navigateToChat(
-          context,
-          querySnapshot.docs[0].id,
+          context: context,
+          docId: querySnapshot.docs[0].id,
+          chatroomName: tags[0].name!,
         );
         return;
       }
@@ -98,7 +99,11 @@ class _NewChatPageState extends State<NewChatPage> {
     print(chatroomMap);
     chatrooms.add(chatroomMap).then((value) {
       Navigator.pop(context);
-      navigateToChat(context, value.id);
+      navigateToChat(
+        context: context,
+        docId: value.id,
+        chatroomName: groupName,
+      );
     }).catchError((error) {
       CustomSnackbar(content: "Failed to start a new chatroom").show(context);
     });
