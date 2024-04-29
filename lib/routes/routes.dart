@@ -38,12 +38,10 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
   }
 
   if (pathSegments.contains('post-card-page') && pathSegments.length >= 3) {
-    final postId = pathSegments[pathSegments.length - 2];
-    final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
+    final postId = pathSegments[pathSegments.length - 1];
 
     return MaterialPageRoute(
-      builder: (_) =>
-          PostCardPage(postId: postId, isUserProfile: isUserProfile),
+      builder: (_) => PostCardPage(postId: postId),
     );
   } else if (pathSegments.contains('chatroom')) {
     final chatId = pathSegments[pathSegments.length - 2];
@@ -54,6 +52,14 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
         chatroomName: chatroomName,
       ),
     );
+  } else if (pathSegments.contains('moderators') &&
+      pathSegments.contains('community')) {
+    final communityName = pathSegments[pathSegments.length - 1];
+    // return MaterialPageRoute(
+    //   builder: (_) => ModeratorsPage(
+    //     communityName: communityName,
+    //   ),
+    // );
   }
 
   return null;

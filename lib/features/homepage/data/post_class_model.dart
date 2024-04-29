@@ -31,8 +31,12 @@ class Post extends Equatable {
   final bool? isSaved;
   final bool? hasVotedOnPoll;
   final String? selectedPollOption;
+  final bool? hasUpvoted;
+  final bool? hasDownvoted;
 
   Post({
+    this.hasUpvoted,
+    this.hasDownvoted,
     required this.postId,
     required this.userId,
     required this.username,
@@ -110,6 +114,8 @@ class Post extends Equatable {
       isSaved: json['isSaved'] ?? false,
       hasVotedOnPoll: json['hasVotedOnPoll'] == true,
       selectedPollOption: json['selectedPollOption'],
+      hasDownvoted: json['hasDownvoted'],
+      hasUpvoted: json['hasUpvoted'],
     );
   }
 

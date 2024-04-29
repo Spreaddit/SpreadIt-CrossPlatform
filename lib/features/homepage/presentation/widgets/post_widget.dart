@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter_polls/flutter_polls.dart';
-import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_post_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
@@ -112,11 +113,9 @@ class _PostHeaderState extends State<_PostHeader> {
             alignment: WrapAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => CommunityPage(
-                            communityName: widget.post.community,
-                          )),
+                onTap: () => navigateToCommunity(
+                  context,
+                  widget.post.community,
                 ),
                 child: Text(
                   "r/${widget.post.community}",
@@ -678,6 +677,8 @@ class _PostInteractions extends StatefulWidget {
   final bool isUserProfile;
   final String postId;
   final bool isFullView;
+  final bool hasUpvoted;
+  final bool hasDownvoted;
 
   _PostInteractions({
     required this.votesCount,
@@ -686,6 +687,8 @@ class _PostInteractions extends StatefulWidget {
     required this.isUserProfile,
     required this.postId,
     required this.isFullView,
+    required this.hasUpvoted,
+    required this.hasDownvoted,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -704,22 +707,31 @@ class _PostInteractionsState extends State<_PostInteractions> {
           children: [
             VoteButton(
               initialVotesCount: widget.votesCount,
+              isUpvoted: widget.hasUpvoted,
+              isDownvoted: widget.hasDownvoted,
             ),
-            CommentButton(
-                initialCommensCount: widget.commentsCount,
-                onCommentsPressed: () => {
-                      if (!widget.isFullView)
-                        {
-                          navigateToPostCardPage(
-                            context,
-                            widget.postId,
-                            widget.isUserProfile,
-                          ),
-                        }
-                    }),
-            ShareButton(
-              initialSharesCount: widget.sharesCount,
-              message: "false",
+            TextButton.icon(
+              onPressed: () => navigateToPostCardPage(
+                context,
+                widget.postId,
+                widget.isUserProfile,
+              ),
+              icon: Icon(
+                Icons.comment,
+              ),
+              label: Text(
+                widget.commentsCount.toString(),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () => sharePressed("should render"),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.shield,
+              ),
             ),
           ],
         ),
@@ -891,6 +903,8 @@ class _PostWidgetState extends State<PostWidget> {
                     sharesCount: widget.post.sharesCount!,
                     commentsCount: widget.post.commentsCount!,
                     isFullView: widget.isFullView,
+                    hasDownvoted: widget.post.hasDownvoted??false,
+                    hasUpvoted: widget.post.hasUpvoted??false,
                   )
                 ],
               )

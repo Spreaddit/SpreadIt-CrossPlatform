@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
@@ -131,13 +132,7 @@ class CommentWidget extends StatelessWidget {
                       ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => CommunityPage(
-                              communityName: comment.subredditName!,
-                            ),
-                          ),
-                        );
+                        navigateToCommunity(context, comment.subredditName!);
                       },
                       child: Text(
                         'r/${comment.subredditName} • $date',
