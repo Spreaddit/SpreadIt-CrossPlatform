@@ -52,14 +52,17 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: SizedBox(
-                      height: 50,
-                      width: 100,
-                      child: Image(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: SizedBox(
                         height: 50,
                         width: 100,
-                        image: AssetImage(widget.image),
-                        fit: BoxFit.cover,
+                        child: Image(
+                          height: 50,
+                          width: 100,
+                          image: AssetImage(widget.image),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),

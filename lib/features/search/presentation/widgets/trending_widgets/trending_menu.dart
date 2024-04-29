@@ -62,6 +62,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
             ),
             Expanded(
                 child: ListView.builder(
+                  padding: EdgeInsets.only(top:3),
                   itemCount: trending.length,
                   itemBuilder: (context, index) {
                     return InkWell(

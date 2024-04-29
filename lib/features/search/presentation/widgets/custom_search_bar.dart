@@ -55,33 +55,31 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.all(15),
-            child: Form(
-              key: widget.formKey,
-              child: TextFormField(
-                onFieldSubmitted: (text) {
-                  if (text.trim().isNotEmpty) {
-                    widget.navigateToSearchResult(text);
-                  } else {
-                    FocusScope.of(context).unfocus();
-                  }
-                },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: widget.hintText,
-                  prefixIcon: Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    onPressed:()=> setState(()=> _controller.clear()),
-                    icon: Icon(Icons.cancel),
-                  ),
+          Form(
+            key: widget.formKey,
+            child: TextFormField(
+              onFieldSubmitted: (text) {
+                if (text.trim().isNotEmpty) {
+                  widget.navigateToSearchResult(text);
+                } else {
+                  FocusScope.of(context).unfocus();
+                }
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                hintText: widget.hintText,
+                prefixIcon: Icon(Icons.search),
+                suffixIcon: IconButton(
+                  onPressed:()=> setState(()=> _controller.clear()),
+                  icon: Icon(Icons.cancel),
                 ),
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-                controller: _controller,
               ),
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+              controller: _controller,
             ),
           ),
           if (widget.communityOrUserIcon != null && widget.communityOrUserName != null)

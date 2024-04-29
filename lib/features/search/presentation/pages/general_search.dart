@@ -33,41 +33,43 @@ class _GeneralSearchState extends State<GeneralSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: CustomSearchBar(
-                    formKey: searchForm,
-                    hintText: 'Search',
-                    navigateToSearchResult: navigateToGeneralSearchResults,
-                    updateSearchItem: updateSearchItem,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {}, // navigate to home page 
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+      body: SingleChildScrollView(
+        child: Column(
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: CustomSearchBar(
+                      formKey: searchForm,
+                      hintText: 'Search',
+                      navigateToSearchResult: navigateToGeneralSearchResults,
+                      updateSearchItem: updateSearchItem,
                     ),
                   ),
-                ),
-              ],
-            ),
-            (searchItem == null || RegExp(r'^[\W_]+$').hasMatch(searchItem!) ) ?
-              Column(
-                children: [
-                  RecentSearches(),
-                  TrendingMenu(),
+                  InkWell(
+                    onTap: () {}, // navigate to home page 
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
                 ],
-              ) :
-              SuggestedResults(), 
-          ],
-        ),
+              ),
+              (searchItem == null || RegExp(r'^[\W_]+$').hasMatch(searchItem!) ) ?
+                Column(
+                  children: [
+                    RecentSearches(),
+                    TrendingMenu(),
+                  ],
+                ) :
+                SuggestedResults(), 
+            ],
+          ),
+      ),
     );
   }
 }
