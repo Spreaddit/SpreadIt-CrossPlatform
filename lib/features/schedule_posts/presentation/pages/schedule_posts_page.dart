@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import '../widgets/schedule_posts_body.dart';
 
 class SchedulePostsPage extends StatefulWidget {
   final String communityName;
@@ -13,7 +14,7 @@ class SchedulePostsPage extends StatefulWidget {
 }
 
 class _SchedulePostsPageState extends State<SchedulePostsPage> {
-  bool isThereScheduledPosts = false;
+  bool isThereScheduledPosts = true;
   late Community community = Community(
     name: '',
     description: '',
@@ -53,13 +54,28 @@ class _SchedulePostsPageState extends State<SchedulePostsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Scheduled Posts'),
+          title: const Text(
+            'Scheduled Posts',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(1.0),
+            child: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 1,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         body: isThereScheduledPosts
-            ? const Center(
-                child:
-                    CircularProgressIndicator(), // add the scheduled posts here
-              )
+            ? ScheduledPostsBody()
             : Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
