@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
@@ -47,29 +52,66 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleImageSelection() async {
-    final result = await ImagePicker().pickImage(
-      imageQuality: 70,
-      maxWidth: 1440,
-      source: ImageSource.gallery,
+    File? image;
+    bool isResult = false;
+
+    final imagePicked =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (imagePicked != null) {
+      isResult = true;
+      image = File(imagePicked.path);
+    }
+
+    if (!isResult) return;
+
+    final message = types.ImageMessage(
+      author: _user,
+      name: imagePicked!.name,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      size: 100,
+      uri: image!.path,
     );
 
-    if (result != null) {
-      final bytes = await result.readAsBytes();
-      final image = await decodeImageFromList(bytes);
+    _addMessage(message);
 
-      final message = types.ImageMessage(
-        author: _user,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        height: image.height.toDouble(),
-        id: const Uuid().v4(),
-        name: result.name,
-        size: bytes.length,
-        uri: result.path,
-        width: image.width.toDouble(),
-      );
+    final metadata = SettableMetadata(contentType: "image/jpeg");
 
-      _addMessage(message);
-    }
+    final storageRef =
+        FirebaseStorage.instance.ref().child('images/${message.id}');
+    final uploadTask = storageRef.putFile(image, metadata);
+
+    uploadTask.then((taskSnapshot) async {
+      final imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+      print("image url $imageUrl");
+
+      Map<String, dynamic> messageMap = {
+        'chatRoomId': widget.id,
+        'content': "",
+        'image': imageUrl,
+        'sender': {
+          'avatarUrl': _user.imageUrl ?? "",
+          'email': _user.metadata!['email'],
+          'id': _user.id,
+          'name': _user.lastName ?? '',
+        },
+        'time': Timestamp.now(),
+        'type': 'image',
+      };
+
+      CollectionReference messages =
+          FirebaseFirestore.instance.collection('messages');
+
+      messages
+          .add(messageMap)
+          .then((value) => print("Message sent"))
+          .catchError(
+            (error) => print("Failed to send message"),
+          );
+    }).catchError((error) {
+      print('Error uploading image: $error');
+    });
   }
 
   void _handlePreviewDataFetched(
@@ -138,9 +180,6 @@ class _ChatPageState extends State<ChatPage> {
       setState(() {
         _messages = snapshot.docs
             .map((doc) {
-              print((doc.data()['time'] as Timestamp)
-                  .millisecondsSinceEpoch
-                  .toString());
               final data = doc.data();
               String email = data['sender']['email'];
               types.Message message = data['type'] == "text"
@@ -182,6 +221,137 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+  void deleteMessage(String messageId, MessageType type, String? imageUrl) {
+    void deleteMessageFromFirebase() {
+      FirebaseFirestore.instance.collection('messages').doc(messageId).delete();
+    }
+
+    if (type == MessageType.image) {
+      FirebaseStorage.instance.refFromURL(imageUrl!).delete();
+    }
+
+    void updateLatestMessage() {
+      CollectionReference chatrooms =
+          FirebaseFirestore.instance.collection('chatrooms');
+
+      types.Message? lastMessage = _messages.first;
+      String lastMessageContent;
+      if (lastMessage.id == messageId) {
+        print(_messages.length);
+        if (_messages.length == 1) {
+          lastMessageContent = "";
+          lastMessage = null;
+        } else {
+          types.Message lastMessage = _messages[1];
+          if (lastMessage is types.TextMessage) {
+            lastMessageContent = lastMessage.text;
+          } else {
+            lastMessageContent = "image";
+          }
+        }
+
+        chatrooms.doc(widget.id).update(
+          {'lastMessage': lastMessageContent},
+        );
+        chatrooms.doc(widget.id).update(
+          {
+            'timestamp': lastMessage == null
+                ? Timestamp.now()
+                : Timestamp.fromMillisecondsSinceEpoch(lastMessage.createdAt!)
+          },
+        );
+      }
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Delete Message',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content:
+            Text('Are you sure you want to delete this message for everyone?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Delete Message'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              updateLatestMessage();
+              deleteMessageFromFirebase();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void copyMessage(String? messageText) {
+    if (messageText != null) {
+      Clipboard.setData(
+        ClipboardData(
+          text: messageText,
+        ),
+      );
+      CustomSnackbar(content: "Message copied to clipboard").show(context);
+    } else {
+      CustomSnackbar(content: "Failed to copy message to clipboard")
+          .show(context);
+    }
+  }
+
+  void onMessageLongPress({
+    required BuildContext context,
+    required types.Message message,
+  }) {
+    if (message.author.id == userId) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (message is types.TextMessage)
+                ListTile(
+                  leading: Icon(Icons.copy),
+                  title: Text("Copy Message"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    copyMessage(message.text);
+                  },
+                ),
+              ListTile(
+                leading: Icon(Icons.delete),
+                title: Text("Delete Message"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  deleteMessage(message.id, 
+                  message.type,
+                  message is types.ImageMessage? message.uri:null
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (message is types.TextMessage) {
+      copyMessage(message.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,6 +374,14 @@ class _ChatPageState extends State<ChatPage> {
         user: _user,
         theme: chatTheme,
         imageMessageBuilder: imageMessageBuilder,
+        onMessageLongPress: (context, message) => onMessageLongPress(
+          context: context,
+          message: message,
+        ),
+        onMessageDoubleTap: (context, message) => onMessageLongPress(
+          context: context,
+          message: message,
+        ),
       ),
     );
   }
@@ -215,6 +393,7 @@ Widget Function(types.ImageMessage, {required int messageWidth})?
     placeholder: kTransparentImage,
     image: message.uri,
     width: messageWidth.toDouble(),
+    height: messageWidth.toDouble(),
     fit: BoxFit.cover,
   );
 };
