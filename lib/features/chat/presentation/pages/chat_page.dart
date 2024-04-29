@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -334,10 +334,8 @@ class _ChatPageState extends State<ChatPage> {
                 title: Text("Delete Message"),
                 onTap: () {
                   Navigator.of(context).pop();
-                  deleteMessage(message.id, 
-                  message.type,
-                  message is types.ImageMessage? message.uri:null
-                  );
+                  deleteMessage(message.id, message.type,
+                      message is types.ImageMessage ? message.uri : null);
                 },
               ),
             ],
