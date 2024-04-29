@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Widget representing a post card.
 class PostCard extends StatefulWidget {
@@ -9,7 +10,6 @@ class PostCard extends StatefulWidget {
   Post post;
 
   /// Indicates whether the current user is the owner of the post.
-  bool isUserProfile;
 
   /// List of comments associated with the post.
   List<Comment> comments;
@@ -18,7 +18,6 @@ class PostCard extends StatefulWidget {
   PostCard({
     required this.post,
     required this.comments,
-    required this.isUserProfile,
   });
 
   @override
@@ -91,7 +90,7 @@ class _PostCardState extends State<PostCard> {
           PostWidget(
             post: widget.post,
             isFullView: true,
-            isUserProfile: widget.isUserProfile,
+            isUserProfile: widget.post.userId == UserSingleton().user!.id,
           ),
           Container(
             decoration: BoxDecoration(

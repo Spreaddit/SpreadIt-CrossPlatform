@@ -29,11 +29,10 @@ void navigateToPostCardPage(
     context,
     MaterialPageRoute(
       settings: RouteSettings(
-        name: '/post-card-page/$postId/$isUserProfile',
+        name: '/post-card-page/$postId',
       ),
       builder: (context) => PostCardPage(
         postId: postId,
-        isUserProfile: isUserProfile,
       ),
     ),
   );

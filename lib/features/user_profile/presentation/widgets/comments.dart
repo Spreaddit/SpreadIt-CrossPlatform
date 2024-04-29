@@ -64,7 +64,6 @@ class CommentWidget extends StatelessWidget {
         ),
         builder: (context) => PostCardPage(
           postId: postId,
-          isUserProfile: isUserProfile,
         ),
       ),
     );
