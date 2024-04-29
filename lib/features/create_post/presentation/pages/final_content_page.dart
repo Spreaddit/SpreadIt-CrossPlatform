@@ -12,6 +12,7 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/widgets
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:time_machine/time_machine.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
@@ -27,6 +28,7 @@ import '../../../generic_widgets/validations.dart';
 import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/schedule_posts/data/is_user_moderator_service.dart';
+import 'package:intl/intl.dart';
 
 /// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
 /// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
@@ -92,6 +94,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool isNSFW = false;
   bool finalIsLinkAdded = false;
   bool finalCreatePoll = false;
+  bool isDateChanged = false;
 
   File? finalImage;
   Uint8List? finalImageWeb;
@@ -99,6 +102,10 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   Uint8List? finalVideoWeb;
   String? finalLink;
   IconData? lastPressedIcon;
+
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  bool isScheduled = false;
 
   /// [mapCommunityData] : a function which extracts the [communityName], [communityIcon] and [communityRules] from the passsed list of communities
 
@@ -334,6 +341,213 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     }
   }
 
+  void showDateTimePickerModalSheet(BuildContext context, Function callback) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return IntrinsicHeight(
+                key: UniqueKey(),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            callback();
+                          },
+                        ),
+                        title: Text('Schedule Post',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: OutlinedButton(
+                          onPressed: () {
+                            if (isScheduled && !isDateChanged) {
+                              setState(() {
+                                isScheduled = false;
+                                isDateChanged = false;
+                                selectedDate = null;
+                                selectedTime = null;
+                              });
+                            }
+                            Navigator.of(context).pop();
+                            callback();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(0, 69, 172, 1.0),
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0),
+                                width: 2),
+                          ),
+                          child: isScheduled && !isDateChanged
+                              ? Text('Clear')
+                              : Text('Save'),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Starts on date'),
+                        trailing: TextButton(
+                          child: Text(
+                            selectedDate != null
+                                ? '${DateFormat.MMMd().format(selectedDate!)}, ${selectedDate!.year}'
+                                : '${DateFormat.MMMd().format(DateTime.now())}, ${DateTime.now().year}',
+                            style: TextStyle(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0)),
+                          ),
+                          onPressed: () async {
+                            isScheduled = true;
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null &&
+                                pickedDate != selectedDate) {
+                              setState(() {
+                                selectedDate = pickedDate;
+                                isScheduled = true;
+                                isDateChanged = true;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Starts on time'),
+                        trailing: TextButton(
+                          child: Text(
+                            selectedTime != null
+                                ? selectedTime!.format(context)
+                                : DateFormat.jm().format(DateTime.now()),
+                            style: TextStyle(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0)),
+                          ),
+                          onPressed: () async {
+                            isScheduled = true;
+                            selectedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                              initialEntryMode: TimePickerEntryMode.dialOnly,
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData.light().copyWith(
+                                    textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          const Color.fromRGBO(0, 69, 172, 1.0),
+                                    )),
+                                    canvasColor: Colors.red,
+                                    primaryColor:
+                                        Colors.white, // header background color
+                                    colorScheme: ColorScheme.light(
+                                      primary: Colors.grey, // dial hand color
+                                      onPrimary:
+                                          Colors.white, // dial hand dot color
+                                      onSurface:
+                                          Colors.black, // dial numbers color
+                                      surface: Colors
+                                          .white, // dial inner background color
+                                    ),
+                                    dialogBackgroundColor:
+                                        Colors.white, // dialog background color
+                                    timePickerTheme: TimePickerThemeData(
+                                      dialHandColor: const Color.fromRGBO(
+                                          0, 69, 172, 1.0), // dial hand color
+                                      hourMinuteTextColor:
+                                          Colors.black, // dial numbers color
+                                      hourMinuteColor: Colors
+                                          .white, // time background colour
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            );
+                            if (selectedTime != null) {
+                              setState(() {
+                                isScheduled = true;
+                                isDateChanged = true;
+                              });
+                            }
+                            // Use selectedTime here
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  void showSchedulePostBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return IntrinsicHeight(
+                key: UniqueKey(),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('Post Settings',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.calendar_today),
+                        title: Text('Schedule Post'),
+                        trailing: isScheduled
+                            ? Text(
+                                '${DateFormat.MMMd().format(selectedDate!)}, ${selectedDate!.year} ${selectedTime!.format(context)}',
+                                style: TextStyle(color: Colors.blue),
+                              )
+                            : Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          if (!isScheduled) {
+                            setState(() {
+                              isScheduled = true;
+                              selectedDate = DateTime.now();
+                              selectedTime = TimeOfDay(
+                                  hour: TimeOfDay.now().hour + 1,
+                                  minute: TimeOfDay.now().minute);
+                              isDateChanged = true;
+                            });
+                          }
+                          if (isScheduled) {
+                            setState(() {
+                              isDateChanged = false;
+                              isScheduled = true;
+                            });
+                          }
+                          showDateTimePickerModalSheet(context, () {
+                            setState(() {});
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -345,7 +559,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                 Container(
                   child: CreatePostHeader(
                     allowScheduling: allowScheduling,
-                    buttonText: "Post",
+                    showSchedulePostBottomSheet: showSchedulePostBottomSheet,
+                    buttonText: isScheduled ? "Schedule" : "Post",
                     onPressed: submit,
                     isEnabled: isButtonEnabled,
                     onIconPress: () {
