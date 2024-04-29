@@ -68,6 +68,7 @@ dependencies:
   cloud_firestore: ^4.17.2
   transparent_image: ^2.0.1
   textfield_tags: ^3.0.1
+  flutter_slidable: ^3.1.0
 
 dev_dependencies:
   flutter_test:

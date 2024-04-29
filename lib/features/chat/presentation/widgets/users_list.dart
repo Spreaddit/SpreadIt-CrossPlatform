@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:spreadit_crossplatform/features/chat/data/chatroom_model.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/widgets/mute_chat.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/navigate_to_chat.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
@@ -38,12 +41,30 @@ Widget usersList({
               }
               return true;
             })
-            .map<Widget>(
-              (doc) => _userItem(
-                docId: doc.id,
-                document: doc,
-                context: context,
-              ),
+            .mapIndexed<Widget>(
+              (index, doc) => Slidable(
+                  key: ValueKey(index),
+                  endActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    children: [
+                      SlidableAction(
+                        flex: 1,
+                        onPressed: (context) =>
+                            muteNotifications(context, doc.id),
+                        backgroundColor: Color.fromARGB(255, 179, 179, 179),
+                        foregroundColor: Colors.white,
+                        icon: getIsMuted(doc.id)
+                            ? Icons.alarm_on
+                            : Icons.alarm_off,
+                        label: getIsMuted(doc.id) ? "UnMute" : "Mute",
+                      ),
+                    ],
+                  ),
+                  child: _userItem(
+                    docId: doc.id,
+                    document: doc,
+                    context: context,
+                  )),
             )
             .toList(),
       );

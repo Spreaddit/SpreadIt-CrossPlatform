@@ -8,12 +8,14 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/widgets/mute_chat.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:uuid/uuid.dart';
+
+String userId = 'KMmoAXLiVc9UBl0rNqTO';
 
 class ChatPage extends StatefulWidget {
   final String id;
@@ -32,20 +34,22 @@ class _ChatPageState extends State<ChatPage> {
   List<types.Message> _messages = [];
   late types.User _user;
   bool isUploading = false;
-  bool isMuted = false; //TODO: change accoridng to mariam's settings
 
   @override
   void initState() {
     super.initState();
-    _user = types.User(
-      metadata: {
-        'email': UserSingleton().user!.email,
-      },
-      // id: UserSingleton().user!.firebaseId,
-      id: userId,
-      imageUrl: UserSingleton().user!.avatarUrl,
-      lastName: UserSingleton().user!.username,
-    );
+    setState(() {
+      _user = types.User(
+        metadata: {
+          'email': UserSingleton().user!.email,
+        },
+        // id: UserSingleton().user!.firebaseId,
+        id: userId,
+        imageUrl: UserSingleton().user!.avatarUrl,
+        lastName: UserSingleton().user!.username,
+      );
+    });
+
     _loadMessages();
   }
 
@@ -385,9 +389,12 @@ class _ChatPageState extends State<ChatPage> {
         builder: (context) => Container(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: ListTile(
-                leading: Icon(Icons.alarm_off),
-                title: Text(
-                    isMuted ? "Unmute Notifications" : "Mute Notifications"),
+                leading: Icon(
+                  getIsMuted(widget.id) ? Icons.alarm_on : Icons.alarm_off,
+                ),
+                title: Text(getIsMuted(widget.id)
+                    ? "Unmute Notifications"
+                    : "Mute Notifications"),
                 onTap: () {
                   Navigator.of(context).pop();
                 },
