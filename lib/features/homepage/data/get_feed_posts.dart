@@ -74,10 +74,11 @@ Future<List<Post>> getFeedPosts({
   String? timeSort = "",
   String? username = "",
 }) async {
+  String? requestURL;
   try {
     String? accessToken = UserSingleton().getAccessToken();
 
-    String requestURL = apiUrl +
+     requestURL = apiUrl +
         postCategoryEndpoint(
           action: category,
           subspreaditName: subspreaditName,
@@ -105,6 +106,7 @@ Future<List<Post>> getFeedPosts({
     }
     return [];
   } on DioException catch (e) {
+          print("URL: $requestURL");
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         print("Bad request: ${e.response!.statusMessage}");

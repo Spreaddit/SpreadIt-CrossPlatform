@@ -201,6 +201,7 @@ class _PostFeedState extends State<PostFeed> {
                 ),
               ),
             Container(
+              color: Colors.white,
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 0,
