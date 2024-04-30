@@ -15,7 +15,7 @@ Future<List<dynamic>> getModeratorsRequest(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("getModeratorsRequest Response: ${response.statusMessage}");
       return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -44,7 +44,7 @@ Future<Map<String, dynamic>?>? checkIfModeratorRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("checkIfModeratorRequest Response: ${response.statusMessage}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");

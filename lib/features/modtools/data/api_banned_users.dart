@@ -27,7 +27,7 @@ Future<int> banUserRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("banUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -56,7 +56,7 @@ Future<int> unbanUserRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("unbanUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -97,7 +97,7 @@ Future<int> editBannedUserRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("editBannedUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -126,7 +126,7 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("getBannedUsersRequest Response: ${response.statusMessage}");
       return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -155,7 +155,7 @@ Future<Map<String, dynamic>?>? checkIfBannedRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("checkIfBannedRequest Response: ${response.statusMessage}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");

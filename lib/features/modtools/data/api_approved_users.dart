@@ -17,7 +17,7 @@ Future<int> approveUserRequest({
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("approveUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -48,7 +48,7 @@ Future<int> removeApprovedUserRequest({
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("removeApprovedUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -77,7 +77,7 @@ Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("getApprovedUsersRequest Response: ${response.statusMessage}");
       return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
@@ -106,7 +106,7 @@ Future<Map<String, dynamic>?>? checkIfApprovedRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("checkIfApprovedRequest Response: ${response.statusMessage}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");

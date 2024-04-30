@@ -5,7 +5,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// Retrieves community information from the API endpoint '$communityApiUrlGalal/community/get-info'.
 /// Takes the [String] parameter [communityName]
 ///
-/// Returns a [Map] containing community information including 'avatar', 'email', and 'username'.
+/// Returns a [Map] containing community information.
 ///
 /// Returns a [Map] with default values if fetching fails.
 ///

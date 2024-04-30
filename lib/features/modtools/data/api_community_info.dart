@@ -2,16 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-/// Retrieves community information from the API endpoint '$communityApiUrlGalal/community/get-info'.
-/// Takes the [String] parameter [communityName]
-///
-/// Returns a [Map] containing community information including 'avatar', 'email', and 'username'.
-///
-/// Returns a [Map] with default values if fetching fails.
-///
-/// Throws an error if fetching data fails.
 Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
-  //TODO - FIX CORS PROBLEM
+  //TODO - CHECK CORS PROBLEM IN BE INTEGRATION
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
@@ -24,10 +16,8 @@ Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
-      {
-        print(response.statusMessage);
-        return response.data;
-      }
+      print("getModCommunityInfo Response: ${response.statusMessage}");
+      return response.data;
     } else {
       print(
           'Failed to fetch MOD COMMUNITY data. Status code: ${response.statusCode}');
@@ -46,7 +36,7 @@ Future<int> updateModCommunityInfo(
   String? communityType,
   String? description,
 }) async {
-  //TODO - FIX CORS PROBLEM
+  //TODO - CHECK CORS PROBLEM IN BE INTEGRATION 
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var data = {};
@@ -65,10 +55,8 @@ Future<int> updateModCommunityInfo(
       ),
     );
     if (response.statusCode == 200) {
-      {
-        print(response.statusMessage);
-        return response.statusCode ?? 0;
-      }
+      print("updateModCommunityInfo Response: ${response.statusMessage}");
+      return response.statusCode ?? 0;
     } else {
       print(
           'Failed to update MOD COMMUNITY data. Status code: ${response.statusCode}');

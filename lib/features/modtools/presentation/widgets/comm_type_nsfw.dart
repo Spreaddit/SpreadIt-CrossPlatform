@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/modtools/data/api_community_info.dart';
 
 class CommunityNSFWSwitch extends StatefulWidget {
   CommunityNSFWSwitch(
@@ -29,11 +28,6 @@ class CommunityNSFWSwitchState extends State<CommunityNSFWSwitch> {
     super.initState();
     initialVal = widget.communityInfo['is18plus'];
     isNSFW = initialVal;
-    fetchData();
-  }
-
-  void fetchData() async {
-    communityInfo = getModCommunityInfo(widget.communityName);
   }
 
   @override
