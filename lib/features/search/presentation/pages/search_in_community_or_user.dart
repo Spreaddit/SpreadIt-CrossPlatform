@@ -3,9 +3,8 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/best
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 
 class SearchInCommunityOrUser extends StatefulWidget {
-  String searchItem ;
 
-  SearchInCommunityOrUser({Key? key, required this.searchItem}) : super(key: key);
+  SearchInCommunityOrUser({Key? key}) : super(key: key);
 
   @override
   State<SearchInCommunityOrUser> createState() => _SearchInCommunityOrUserState();
@@ -18,7 +17,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   String? sortFilter;
   String? timeFilter;
   List filteredList = [];
-  String communityOrUserName = 'r/AskReddit';
+  String communityOrUserName = 'r/AskReddit';    // y=to be taken from navigation into this page
   String communityOrUserIcon = './assets/images/SB-Standees-Spong-3_800x.png';
 
   void setSortFilter(String value) {
@@ -61,7 +60,12 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   }
 
   void navigateToCommunityOrUserSearch (String searchItem) {
-    Navigator.pop(context);
+    Navigator.of(context).pushNamed('./community-or-user-search-results',
+    arguments: {
+      'searchItem' : searchItem,
+      'communityOrUserName' : communityOrUserName,
+      'communityOrUserIcon': communityOrUserIcon,
+    });
   }
 
   @override
@@ -76,11 +80,13 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
                 CustomSearchBar(
                   formKey: searchForm,
                   hintText: 'Search',
-                  navigateToSearchResult: navigateToCommunityOrUserSearch,
                   updateSearchItem: updateSearchItem,
+                  navigateToSearchResult: navigateToCommunityOrUserSearch,
                   navigateToSuggestedResults: () {},
+                  initialBody: '',
                   communityOrUserName: communityOrUserName,
                   communityOrUserIcon: communityOrUserIcon,
+                  isContained: true,
                 ),
                 InkWell(
                   onTap: () {}, // navigate to home page 
@@ -88,7 +94,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
                     'Cancel',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 12,
                     ),
                   ),
                 ),

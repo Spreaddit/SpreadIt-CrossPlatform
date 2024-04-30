@@ -9,6 +9,7 @@ class CustomSearchBar extends StatefulWidget {
   final String? initialBody;
   final String? communityOrUserName;
   final String? communityOrUserIcon;
+  final bool? isContained;
 
   const CustomSearchBar({
     required this.formKey,
@@ -19,6 +20,7 @@ class CustomSearchBar extends StatefulWidget {
     this.initialBody,
     this.communityOrUserName,
     this.communityOrUserIcon,
+    this.isContained,
   });
 
   @override
@@ -59,55 +61,75 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         children: [
           Form(
             key: widget.formKey,
-            child: TextFormField(
-              onTap: widget.navigateToSuggestedResults,
-              onFieldSubmitted: (text) {
-                if (text.trim().isNotEmpty) {
-                  widget.navigateToSearchResult(text);
-                } else {
-                  FocusScope.of(context).unfocus();
-                }
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                hintText: widget.hintText,
-                prefixIcon: Icon(Icons.search),
-                suffixIcon: IconButton(
-                  onPressed:()=> setState(()=> _controller.clear()),
-                  icon: Icon(Icons.cancel),
+            child: Row(
+              children: [
+                if (widget.isContained != null && widget.isContained == true && widget.communityOrUserName != null)
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[300],
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10), 
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: AssetImage(widget.communityOrUserIcon!),
+                          radius: 10,
+                        ),
+                        SizedBox(width:4),
+                        Text(
+                          widget.communityOrUserName!,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  child: FocusScope(
+                    child: TextFormField(
+                      onTap: widget.navigateToSuggestedResults,
+                      onFieldSubmitted: (text) {
+                        if (text.trim().isNotEmpty) {
+                          widget.navigateToSearchResult(text);
+                        } else {
+                          FocusScope.of(context).unfocus();
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
+                        hintText: widget.hintText,
+                        prefixIcon: widget.communityOrUserIcon != null
+                            ? null
+                            : Icon(Icons.search), 
+                      ),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      controller: _controller,
+                      /*selectionControls: widget.isContained != null && widget.isContained == true && widget.initialBody != null
+                          ? TextSelectionControls.from(
+                              TextSelection(
+                                baseOffset: widget.initialBody!.length,
+                                extentOffset: _controller.text.length,
+                              ),
+                            )
+                          : null,*/
+                    ),
+                  ),
                 ),
-              ),
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-              controller: _controller,
+              ],
             ),
           ),
-          if (widget.communityOrUserIcon != null && widget.communityOrUserName != null)
-            Positioned(
-              left: 50,
-              child: Container(
-                padding : EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.grey,
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage:AssetImage(widget.communityOrUserIcon!),
-                      radius:10,
-                    ),  
-                    SizedBox(width: 4),
-                    Text(widget.communityOrUserName!),
-                  ],
-                ),
-              ),
-            ),
         ],
       ),
     );
   }
 }
+
+
+         

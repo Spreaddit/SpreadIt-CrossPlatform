@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/comments_page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/media_page_view.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/posts_page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/search_result_header.dart';
 
 class InCommunityOrUserSearchResults extends StatefulWidget {
 
-  final String? sortFilter;
-  final String? timeFilter;
+  final String searchItem;
+  final String communityOrUserName;
+  final String communityOrUserIcon;
 
   const InCommunityOrUserSearchResults({
     Key? key,
-    this.sortFilter,
-    this.timeFilter,
+    required this.searchItem,
+    required this.communityOrUserName,
+    required this.communityOrUserIcon,
   }) : super(key: key);
 
   @override
@@ -21,22 +25,21 @@ class InCommunityOrUserSearchResults extends StatefulWidget {
 
 class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearchResults> {
   final GlobalKey<FormState> searchForm = GlobalKey<FormState>();
-  String? searchItem ;
+  String searchItem = '' ;
   List filteredList = [];
-  List labelsList = ['Posts', 'Media'];
+  List labelsList = ['Posts','Comments', 'Media'];
   int selectedIndex = 0;
-  late List<Widget> pages ;
-  late PageController _pageController;  
+  List<Widget> pages = [];
+  PageController _pageController = PageController(initialPage: 0);  
 
 
-    @override
+  @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
-    pages = [
-      Center(child: Text('Posts')),
-      MediaPageView(searchItem:searchItem!),
-    ];
+    searchItem = widget.searchItem;
+    pages.add(PostsPageView(searchItem: searchItem));
+    pages.add(CommentsPageView(searchItem: searchItem));
+    pages.add(MediaPageView(searchItem: searchItem));
   }
 
   void onSearch(List filteredList) {
@@ -67,6 +70,10 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
     });
   }
 
+  void navigateToInCommunityOrUserSearch () {
+    Navigator.pop(context);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +89,14 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
               ),
               CustomSearchBar(
                 formKey: searchForm,
+                hintText: '',
                 navigateToSearchResult: navigateToSearchInCommunityOrUserResults,
-                hintText: 'hello',
                 updateSearchItem: updateSearchItem,
-                navigateToSuggestedResults: () {},
+                navigateToSuggestedResults: navigateToInCommunityOrUserSearch,
+                initialBody: searchItem,
+                communityOrUserName: widget.communityOrUserName,
+                communityOrUserIcon: widget.communityOrUserIcon,
+                isContained: true,
               ),
             ],
           ),
