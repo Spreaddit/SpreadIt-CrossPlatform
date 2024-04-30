@@ -61,7 +61,6 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   void navigateToGeneralSearch() {
-    print('tao detected');
     Navigator.pop(context);
   }
 

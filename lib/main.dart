@@ -18,6 +18,7 @@ import 'package:spreadit_crossplatform/features/search/presentation/pages/genera
 import 'package:spreadit_crossplatform/features/search/presentation/pages/in_community_or_user_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/search_in_community_or_user.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search_results.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_web_carousel.dart';
 import 'features/saved/presentation/page/saved_page.dart';
 import 'features/user_profile/presentation/pages/edit_profile.dart';
 import 'firebase_options.dart';
