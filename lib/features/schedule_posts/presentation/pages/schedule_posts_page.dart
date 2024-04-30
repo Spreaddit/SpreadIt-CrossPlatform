@@ -75,6 +75,9 @@ class _SchedulePostsPageState extends State<SchedulePostsPage> {
           ),
         ),
         body: ScheduledPostsBody(
+          refreshScheduledPosts: () {
+            setState(() {});
+          },
           subspreaditName: community.name,
           community: community,
         ));

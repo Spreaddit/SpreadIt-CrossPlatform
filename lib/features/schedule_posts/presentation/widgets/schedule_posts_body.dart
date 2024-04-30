@@ -8,10 +8,12 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/pages/f
 class ScheduledPostsBody extends StatelessWidget {
   final String subspreaditName;
   final Community community;
+  final Function refreshScheduledPosts;
 
   ScheduledPostsBody({
     required this.subspreaditName,
     required this.community,
+    required this.refreshScheduledPosts,
   });
 
   @override
@@ -87,6 +89,7 @@ class ScheduledPostsBody extends StatelessWidget {
               children: snapshot.data!.map((Post post) {
                 return ScheduledPostCard(
                   id: post.postId,
+                  refreshScheduledPosts: refreshScheduledPosts,
                   dateAndTime: post.date,
                   username: post.username,
                   title: post.title!,

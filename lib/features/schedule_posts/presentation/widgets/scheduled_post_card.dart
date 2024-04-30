@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_post_page.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/delete_post.dart';
 
 class ScheduledPostCard extends StatelessWidget {
   final String username;
@@ -7,6 +10,7 @@ class ScheduledPostCard extends StatelessWidget {
   final String content;
   final DateTime dateAndTime;
   final String id;
+  final Function refreshScheduledPosts;
 
   ScheduledPostCard({
     required this.username,
@@ -14,6 +18,7 @@ class ScheduledPostCard extends StatelessWidget {
     required this.content,
     required this.dateAndTime,
     required this.id,
+    required this.refreshScheduledPosts,
   });
 
   @override
@@ -59,13 +64,39 @@ class ScheduledPostCard extends StatelessWidget {
                     label: Text('Edit Post'),
                     onPressed: () {
                       //navigate to edit post page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPost(
+                            postId: id,
+                            postContent: content,
+                            onContentChanged: (String newContent) {},
+                          ),
+                        ),
+                      ).then((_) {
+                        //refresh scheduled posts
+                        refreshScheduledPosts.call();
+                      });
                     },
                   ),
                   TextButton.icon(
                     icon: Icon(Icons.delete),
                     label: Text('Delete Post'),
-                    onPressed: () {
-                      //delete post
+                    onPressed: () async {
+                      int response = await deletePost(id);
+                      if (response == 200) {
+                        CustomSnackbar(
+                                content: 'Your post is deleted successfully')
+                            .show(context);
+                        refreshScheduledPosts.call();
+                      } else if (response == 500) {
+                        CustomSnackbar(
+                                content:
+                                    'Internal server error, try again later')
+                            .show(context);
+                      } else {
+                        CustomSnackbar(content: 'Post not found').show(context);
+                      }
                     },
                   ),
                 ],
