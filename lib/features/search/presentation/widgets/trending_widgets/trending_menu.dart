@@ -34,11 +34,18 @@ class _TrendingMenuState extends State<TrendingMenu> {
     final content = data['content'][0] as String;
     String? link;
     for (var attachment in data['attachments']) {
-      if (attachment['type'] == 'image') { 
+      if (attachment['type'] == 'image') {
         link = attachment['link'];
-        break;
+        print(link);
+        break; 
       }
     }
+    if (link == null) {
+      link = '';
+      print('No image found in attachments');
+    }
+
+    print('link : $link');
     processedData.add({
       'title': title,
       'content': content,

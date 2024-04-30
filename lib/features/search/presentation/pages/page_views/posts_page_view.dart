@@ -122,61 +122,66 @@ class _PostsPageViewState extends State<PostsPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              if(sortText != 'Sort')
-                IconButton(
-                  onPressed: removeFilter,
-                  icon: Icon(Icons.cancel),
-                ),
-              FilterButton(
-                openBottomSheet: () {
-                  openBottomSheet(
-                    sortText,
-                    sortList,
-                    updateSortFilter,
-                    context,
-                  );
-                },
-                text: sortText,
-              ),
-              if (showTimeFilter)
+    if (mappedPosts.isEmpty) {
+      return Image.asset('./assets/images/Empty_Toast.png');
+    }
+    else {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if(sortText != 'Sort')
+                  IconButton(
+                    onPressed: removeFilter,
+                    icon: Icon(Icons.cancel),
+                  ),
                 FilterButton(
-                  openBottomSheet: () { 
+                  openBottomSheet: () {
                     openBottomSheet(
-                      timeText,
-                      timeList,
-                      updateTimeFilter,
+                      sortText,
+                      sortList,
+                      updateSortFilter,
                       context,
-                    );  
+                    );
                   },
-                  text: timeText,
+                  text: sortText,
                 ),
-            ],
-          ),
-          ListView.builder(
-            padding: EdgeInsets.only(top:3),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: mappedPosts.length,
-            itemBuilder: (context, index) {
-              return PostElement(
-                communityIcon: mappedPosts[index]['userProfilePic'],
-                communityName: mappedPosts[index]['username'],
-                time : mappedPosts[index]['createdAt'], 
-                postTitle: mappedPosts[index]['title'],
-                upvotes: mappedPosts[index]['votesCount'].toString(),
-                comments: mappedPosts[index]['commentCount'].toString(),
-                image: mappedPosts[index]['image'] ,
-                video: mappedPosts[index]['video'],
-                );
-            }
-          ),
-        ],
-      ), 
-    );
+                if (showTimeFilter)
+                  FilterButton(
+                    openBottomSheet: () { 
+                      openBottomSheet(
+                        timeText,
+                        timeList,
+                        updateTimeFilter,
+                        context,
+                      );  
+                    },
+                    text: timeText,
+                  ),
+              ],
+            ),
+            ListView.builder(
+              padding: EdgeInsets.only(top:3),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: mappedPosts.length,
+              itemBuilder: (context, index) {
+                return PostElement(
+                  communityIcon: mappedPosts[index]['userProfilePic'],
+                  communityName: mappedPosts[index]['username'],
+                  time : mappedPosts[index]['createdAt'], 
+                  postTitle: mappedPosts[index]['title'],
+                  upvotes: mappedPosts[index]['votesCount'].toString(),
+                  comments: mappedPosts[index]['commentCount'].toString(),
+                  image: mappedPosts[index]['image'] ,
+                  video: mappedPosts[index]['video'],
+                  );
+              }
+            ),
+          ],
+        ), 
+      );
+    }
   }
 }

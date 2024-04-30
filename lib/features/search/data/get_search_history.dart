@@ -11,6 +11,11 @@ Future<List> getSeacrhHistory() async {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
       '$apiUrl/search/history',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);
@@ -37,9 +42,5 @@ Future<List> getSeacrhHistory() async {
   }
 }
 
-/*options: Options(
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-        },
-      ), */
+
 

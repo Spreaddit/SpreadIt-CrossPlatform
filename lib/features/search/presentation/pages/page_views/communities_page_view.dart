@@ -24,7 +24,7 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
 
   void getCommunitiesResults() async {
     communities = await getSearchResults(widget.searchItem, 'communities','relevance');
-    mappedCommunities = extractCommunityDetails(communities);
+    mappedCommunities = communities != {} ? extractCommunityDetails(communities) : [];
     setState(() {});
   }
 
@@ -43,25 +43,30 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListView.builder(
-            padding: EdgeInsets.only(top:3),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: mappedCommunities.length,
-            itemBuilder: (context, index) {
-              return CommunityElement(
-                communityName: mappedCommunities[index]['communityName'],
-                communityDescription: mappedCommunities[index]['communityInfo'],
-                communityIcon: mappedCommunities[index]['communityProfilePic'],
-                );
-            }
-          ),
-        ],
-      ), 
-    );
+    if (mappedCommunities.isEmpty) {
+      return Image.asset('./assets/images/Empty_Toast.png');
+    }
+    else {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            ListView.builder(
+              padding: EdgeInsets.only(top:3),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: mappedCommunities.length,
+              itemBuilder: (context, index) {
+                return CommunityElement(
+                  communityName: mappedCommunities[index]['communityName'],
+                  communityDescription: mappedCommunities[index]['communityInfo'],
+                  communityIcon: mappedCommunities[index]['communityProfilePic'],
+                  );
+              }
+            ),
+          ],
+        ), 
+      );
+    }
   }
 }
 

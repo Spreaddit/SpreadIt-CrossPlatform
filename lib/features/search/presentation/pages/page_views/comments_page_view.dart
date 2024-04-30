@@ -126,38 +126,43 @@ class _CommentsPageViewState extends State<CommentsPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: FilterButton(
-              openBottomSheet: () => openBottomSheet(sortText,sortList,updateSortFilter,context),
-              text: 'Sort',
+    if (comments.isEmpty) {
+      return Image.asset('./assets/images/Empty_Toast.png');
+    }
+    else {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              child: FilterButton(
+                openBottomSheet: () => openBottomSheet(sortText,sortList,updateSortFilter,context),
+                text: 'Sort',
+              ),
             ),
-          ),
-          ListView.builder(
-            padding: EdgeInsets.only(top:3),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: comments.length,
-            itemBuilder: (context, index) {
-              return CommentElement(
-                communityName: comments[index]['communityName'],
-                communityIcon: comments[index]['communityIcon'],
-                commentorName: comments[index]['commentorName'],
-                commentorIcon: comments[index]['commentorIcon'],
-                postTitle: comments[index]['postTitle'],
-                comment: comments[index]['comment'],
-                commentUpvotes: comments[index]['commentUpvotes'],
-                postUpvotes: comments[index]['postUpvotes'],
-                commentsCount: comments[index]['commentsCount'],
-              );
-            }
-          ),
-        ],
-      ), 
-    );
+            ListView.builder(
+              padding: EdgeInsets.only(top:3),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: comments.length,
+              itemBuilder: (context, index) {
+                return CommentElement(
+                  communityName: comments[index]['communityName'],
+                  communityIcon: comments[index]['communityIcon'],
+                  commentorName: comments[index]['commentorName'],
+                  commentorIcon: comments[index]['commentorIcon'],
+                  postTitle: comments[index]['postTitle'],
+                  comment: comments[index]['comment'],
+                  commentUpvotes: comments[index]['commentUpvotes'],
+                  postUpvotes: comments[index]['postUpvotes'],
+                  commentsCount: comments[index]['commentsCount'],
+                );
+              }
+            ),
+          ],
+        ), 
+      );
+    }
   }
 }
 

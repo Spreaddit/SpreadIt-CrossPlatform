@@ -49,6 +49,7 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                     ),
                   ],
                 ),
+                if (widget.image != '')
                 Expanded(
                   child: Align(
                     alignment: Alignment.centerRight,

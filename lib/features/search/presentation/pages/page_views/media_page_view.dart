@@ -157,83 +157,88 @@ class _MediaPageViewState extends State<MediaPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              if(sortText != 'Sort')
-                IconButton(
-                  onPressed: removeFilter,
-                  icon: Icon(Icons.cancel),
-                ),
-              FilterButton(
-                openBottomSheet: () {
-                  openBottomSheet(
-                    sortText,
-                    sortList,
-                    updateSortFilter,
-                    context,
-                  );
-                },
-                text: sortText,
-              ),
-              if (showTimeFilter)
+    if (media.isEmpty) {
+      return Image.asset('./assets/images/Empty_Toast.png');
+    }
+    else {
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if(sortText != 'Sort')
+                  IconButton(
+                    onPressed: removeFilter,
+                    icon: Icon(Icons.cancel),
+                  ),
                 FilterButton(
-                  openBottomSheet: () { 
+                  openBottomSheet: () {
                     openBottomSheet(
-                      timeText,
-                      timeList,
-                      updateTimeFilter,
+                      sortText,
+                      sortList,
+                      updateSortFilter,
                       context,
-                    );  
+                    );
                   },
-                  text: timeText,
+                  text: sortText,
                 ),
-            ],
-          ),
-          Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                Container(
-                  width: MediaQuery.of(context).size.width/ 2,
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(top:3),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: media.length ~/ 2,
-                    itemBuilder: (context, index) {
-                      return MediaElement(
-                        username: media[index]['username'],
-                        userIcon: media[index]['userIcon'],
-                        postTitle: media[index]['postTitle'],
-                        media: media[index]['media'],
-                      );
-                    }
+                if (showTimeFilter)
+                  FilterButton(
+                    openBottomSheet: () { 
+                      openBottomSheet(
+                        timeText,
+                        timeList,
+                        updateTimeFilter,
+                        context,
+                      );  
+                    },
+                    text: timeText,
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width /2,
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(top:3),
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: media.length ~/ 2,
-                    itemBuilder: (context, index) {
-                      return MediaElement(
-                        username: media[index + media.length ~/2]['username'],
-                        userIcon: media[index + media.length ~/2]['userIcon'],
-                        postTitle: media[index + media.length ~/2]['postTitle'],
-                        media: media[index + media.length ~/2]['media'],
-                      );
-                    }
+              ],
+            ),
+            Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                  Container(
+                    width: MediaQuery.of(context).size.width/ 2,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top:3),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: media.length ~/ 2,
+                      itemBuilder: (context, index) {
+                        return MediaElement(
+                          username: media[index]['username'],
+                          userIcon: media[index]['userIcon'],
+                          postTitle: media[index]['postTitle'],
+                          media: media[index]['media'],
+                        );
+                      }
+                    ),
                   ),
-                ),
-            ],
-          ),
-        ],
-      ), 
-    );
+                  Container(
+                    width: MediaQuery.of(context).size.width /2,
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top:3),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: media.length ~/ 2,
+                      itemBuilder: (context, index) {
+                        return MediaElement(
+                          username: media[index + media.length ~/2]['username'],
+                          userIcon: media[index + media.length ~/2]['userIcon'],
+                          postTitle: media[index + media.length ~/2]['postTitle'],
+                          media: media[index + media.length ~/2]['media'],
+                        );
+                      }
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ), 
+      );
+    }
   }
 }
 
