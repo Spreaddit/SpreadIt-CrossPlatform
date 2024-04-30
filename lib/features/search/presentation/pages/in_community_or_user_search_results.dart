@@ -35,7 +35,7 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
     _pageController = PageController(initialPage: 0);
     pages = [
       Center(child: Text('Posts')),
-      MediaPageView(),
+      MediaPageView(searchItem:searchItem!),
     ];
   }
 

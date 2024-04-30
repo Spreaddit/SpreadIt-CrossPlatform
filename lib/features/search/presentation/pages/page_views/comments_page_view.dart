@@ -4,7 +4,8 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/page
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
 
 class CommentsPageView extends StatefulWidget {
-  const CommentsPageView({Key? key}) : super(key: key);
+  final String searchItem;
+  const CommentsPageView({Key? key, required this.searchItem}) : super(key: key);
 
   @override
   State<CommentsPageView> createState() => _CommentsPageViewState();

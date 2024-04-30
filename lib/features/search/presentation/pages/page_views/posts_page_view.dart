@@ -95,7 +95,7 @@ class _PostsPageViewState extends State<PostsPageView> {
         showTimeFilter = true;
         break;     
     }
-    getPostsResults(); // will i need set state fl switch cases ?
+    getPostsResults(); 
   }
 
   void updateTimeFilter(int value) {

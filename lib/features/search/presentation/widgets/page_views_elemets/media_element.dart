@@ -55,6 +55,9 @@ class _MediaElementState extends State<MediaElement> {
           ),
           Text(
             widget.postTitle,
+            softWrap: true,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,

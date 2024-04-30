@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/media_element.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
 
 class MediaPageView extends StatefulWidget {
-  
-
-  const MediaPageView({Key? key}) : super(key: key);
+  final String searchItem;
+  const MediaPageView({Key? key,required this.searchItem}) : super(key: key);
 
   @override
   State<MediaPageView> createState() => _MediaPageViewState();
@@ -14,90 +14,48 @@ class MediaPageView extends StatefulWidget {
 
 class _MediaPageViewState extends State<MediaPageView> {
 
+  Map<String,dynamic> media = {};
+  List<Map<String, dynamic>> mappedMedia = [];
   String sort = 'relevance';
   String sortText = 'Sort';
   String timeText = 'Time';
   List sortList = [ 'Most relevant','Hot', 'Top', 'New', 'Comment count'];
   List timeList = ['All time', 'Past hour', 'Today', 'Past week', 'Past month', 'Past year'];
   bool showTimeFilter = true;
+  
+  @override
+  void initState() {
+    super.initState(); 
+    getPostsResults();
+  }
 
-  List media = 
-  [
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/GoogleLogo.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/GoogleLogo.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/GoogleLogo.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/SB-Standees-Spong-3_800x.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-    {
-      'username': 'r/FlutterEnthusiasts',
-      'userIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'I think I hate Hello Kitty',
-      'media': './assets/images/SB-Standees-Spong-3_800x.png',
-    },
-  ];
+  void getPostsResults() async {
+    media = await getSearchResults(widget.searchItem, 'posts', sort);
+    mappedMedia = extractMediaDetails(media);
+    setState(() {});
+  }
 
-
+  List<Map<String, dynamic>> extractMediaDetails(Map<String, dynamic> data) {
+    List<dynamic> results = data['results'];
+    List<Map<String, dynamic>> mappedMedia = [];
+    for (var post in results) {
+      if ((post['image'] != null && post['image'].isNotEmpty) || (post['video'] != null && post['video'].isNotEmpty))
+      {
+        mappedMedia.add({
+        'postId': post['postId'],
+        'username': post['username'],
+        'userProfilePic': post['userProfilePic'],
+        'votesCount': post['votesCount'],
+        'commentCount': post['commentCount'],
+        'title': post['title'],
+        'createdAt': post['createdAt'],
+        'image': post['image'],
+        'video': null,
+        });
+      }
+    }
+    return mappedMedia;
+  }
 
   void removeFilter() {
     setState(() {
@@ -112,25 +70,30 @@ class _MediaPageViewState extends State<MediaPageView> {
       case (0):
         sort = 'relevance';
         sortText = sortList[0];
+        showTimeFilter = true;
         break;
       case(1):
         sort = 'hot';
         sortText = sortList[1];
+        showTimeFilter = false;
         break;
       case(2):
         sort = 'top';
         sortText = sortList[2];
+        showTimeFilter = true;
         break;
       case(3):
         sort = 'new';
         sortText = sortList[3];
+        showTimeFilter = false;
         break;
       case(4):
         sort = 'comment';
         sortText = sortList[4];
+        showTimeFilter = true;
         break;     
     }
-   // will i need set state fl switch cases ?
+    getPostsResults(); 
   }
 
   void updateTimeFilter(int value) {
@@ -153,6 +116,7 @@ class _MediaPageViewState extends State<MediaPageView> {
     }
     // implement time filter 
   }
+
 
 
   @override
@@ -205,13 +169,13 @@ class _MediaPageViewState extends State<MediaPageView> {
                       padding: EdgeInsets.only(top:3),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: media.length ~/ 2,
+                      itemCount: mappedMedia.length ~/ 2,
                       itemBuilder: (context, index) {
                         return MediaElement(
-                          username: media[index]['username'],
-                          userIcon: media[index]['userIcon'],
-                          postTitle: media[index]['postTitle'],
-                          media: media[index]['media'],
+                          username: mappedMedia[index]['username'],
+                          userIcon: mappedMedia[index]['userProfilePic'],
+                          postTitle: mappedMedia[index]['title'],
+                          media: mappedMedia[index]['image'] != null ? mappedMedia[index]['image'] : mappedMedia[index]['video'],
                         );
                       }
                     ),
@@ -222,13 +186,15 @@ class _MediaPageViewState extends State<MediaPageView> {
                       padding: EdgeInsets.only(top:3),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: media.length ~/ 2,
+                      itemCount: mappedMedia.length ~/ 2,
                       itemBuilder: (context, index) {
                         return MediaElement(
-                          username: media[index + media.length ~/2]['username'],
-                          userIcon: media[index + media.length ~/2]['userIcon'],
-                          postTitle: media[index + media.length ~/2]['postTitle'],
-                          media: media[index + media.length ~/2]['media'],
+                          username: mappedMedia[index + mappedMedia.length ~/2]['username'],
+                          userIcon: mappedMedia[index + mappedMedia.length ~/2]['userProfilePic'],
+                          postTitle: mappedMedia[index + mappedMedia.length ~/2]['title'],
+                          media: mappedMedia[index + mappedMedia.length ~/2]['image'] != null ?
+                             mappedMedia[index + mappedMedia.length ~/2]['image']
+                             :mappedMedia[index + mappedMedia.length ~/2]['video'],
                         );
                       }
                     ),

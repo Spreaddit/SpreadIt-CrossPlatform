@@ -38,8 +38,8 @@ class _SearchResultState extends State<SearchResult> {
     searchItem = widget.searchItem;
     pages.add(PostsPageView(searchItem: searchItem));
     pages.add(CommunitiesPageView(searchItem: searchItem)); 
-    pages.add(CommentsPageView());
-    pages.add(MediaPageView());
+    pages.add(CommentsPageView(searchItem: searchItem));
+    pages.add(MediaPageView(searchItem: searchItem));
     pages.add(PeoplePageView(searchItem: searchItem));
   }
 
