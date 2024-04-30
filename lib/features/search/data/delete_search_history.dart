@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future<int> deleteSearchHistory() async {
+Future<int> deleteSearchHistory(String query) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
@@ -16,6 +16,9 @@ Future<int> deleteSearchHistory() async {
           'Authorization': 'Bearer $accessToken',
         },
       ),
+      data : {
+        "query": query,
+      },
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);

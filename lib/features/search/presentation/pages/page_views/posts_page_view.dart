@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/post_element.dart';
@@ -59,6 +60,29 @@ class _PostsPageViewState extends State<PostsPageView> {
     return mappedPosts;
   }
 
+  List<Map<String, dynamic>> sortByTime(List<Map<String, dynamic>> posts,String timePeriod) {
+    posts.sort((a, b) => b['createdAt'].compareTo(a['createdAt']));
+    final filteredPosts = posts.where((post) {
+      final createdAt = DateTime.parse(post['createdAt']);
+      switch (timePeriod) {
+        case 'Past hour':
+          return createdAt.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
+        case 'Today':
+          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 1)));
+        case 'Past week':
+          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 7)));
+        case 'Past month':
+          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30)));
+        case 'Past year':
+          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 365)));
+        default:
+          return true; 
+      }
+    }).toList();
+
+    return filteredPosts;
+  }
+
   void removeFilter() {
     setState(() {
       sortText = 'Sort';
@@ -116,7 +140,9 @@ class _PostsPageViewState extends State<PostsPageView> {
         timeText = timeList[4];
         break;     
     }
-    // implement time filter 
+    final filteredPosts = sortByTime(mappedPosts, timeText);
+    mappedPosts = filteredPosts;
+    setState((){});
   }
 
 
@@ -170,7 +196,7 @@ class _PostsPageViewState extends State<PostsPageView> {
                 return PostElement(
                   communityIcon: mappedPosts[index]['userProfilePic'],
                   communityName: mappedPosts[index]['username'],
-                  time : mappedPosts[index]['createdAt'], 
+                  time : dateToDuration(DateTime.parse(mappedPosts[index]['createdAt'])), 
                   postTitle: mappedPosts[index]['title'],
                   upvotes: mappedPosts[index]['votesCount'].toString(),
                   comments: mappedPosts[index]['commentCount'].toString(),

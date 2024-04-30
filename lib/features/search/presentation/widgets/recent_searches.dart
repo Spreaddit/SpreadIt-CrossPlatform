@@ -32,7 +32,7 @@ class _RecentSearchesState extends State<RecentSearches> {
   }
 
   void deleteRecentSearch (String query) async{
-    int response = await deleteSearchHistory();
+    int response = await deleteSearchHistory(query);
     getSeacrhHistory();
   }
 
@@ -87,6 +87,3 @@ class _RecentSearchesState extends State<RecentSearches> {
     }
   }
 }
-
-/*TO DOS
-1) fix el delete */
