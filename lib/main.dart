@@ -65,11 +65,7 @@ class SpreadIt extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else {
             final bool loggedIn = snapshot.data!;
-            return loggedIn
-                ? SchedulePostsPage(
-                    communityName: "CodeCrafters",
-                  )
-                : StartUpPage();
+            return loggedIn ? HomePage() : StartUpPage();
           }
         },
       ),
