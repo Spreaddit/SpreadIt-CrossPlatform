@@ -74,62 +74,9 @@ class _SchedulePostsPageState extends State<SchedulePostsPage> {
             ),
           ),
         ),
-        body: isThereScheduledPosts
-            ? ScheduledPostsBody()
-            : Center(
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.schedule,
-                    size: 35,
-                    color: const Color.fromARGB(255, 92, 92, 92),
-                  ),
-                  Text(
-                    'There aren\'t any scheduled posts in',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: const Color.fromARGB(255, 92, 92, 92),
-                    ),
-                  ),
-                  Text(
-                    'in r/${community.name} yet.',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: const Color.fromARGB(255, 92, 92, 92),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(16),
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FinalCreatePost(
-                              title: '',
-                              content: '',
-                              community: [community],
-                            ),
-                          ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.all(16),
-                        backgroundColor: Color.fromARGB(255, 6, 107, 190),
-                      ),
-                      child: Text(
-                        'Schedule Post',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              )));
+        body: ScheduledPostsBody(
+          subspreaditName: community.name,
+          community: community,
+        ));
   }
 }
