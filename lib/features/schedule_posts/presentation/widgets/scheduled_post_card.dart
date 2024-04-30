@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ScheduledPostCard extends StatelessWidget {
-  final String date;
   final String username;
   final String title;
   final String content;
-  final String time;
+  final DateTime dateAndTime;
+  final String id;
 
   ScheduledPostCard({
-    required this.date,
-    required this.time,
     required this.username,
     required this.title,
     required this.content,
+    required this.dateAndTime,
+    required this.id,
   });
 
   @override
@@ -31,8 +32,8 @@ class ScheduledPostCard extends StatelessWidget {
                 children: <Widget>[
                   Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
                   Text(
-                    ' Scheduled $date @ $time Africa/Cairo',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    ' Scheduled ${DateFormat('M/d').format(dateAndTime)} @ ${DateFormat('h:mm a').format(dateAndTime)} Africa/Cairo',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                 ],
               ),
@@ -56,12 +57,16 @@ class ScheduledPostCard extends StatelessWidget {
                   TextButton.icon(
                     icon: Icon(Icons.edit),
                     label: Text('Edit Post'),
-                    onPressed: () {},
+                    onPressed: () {
+                      //navigate to edit post page
+                    },
                   ),
                   TextButton.icon(
                     icon: Icon(Icons.delete),
                     label: Text('Delete Post'),
-                    onPressed: () {},
+                    onPressed: () {
+                      //delete post
+                    },
                   ),
                 ],
               ),

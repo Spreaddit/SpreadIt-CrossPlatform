@@ -29,6 +29,7 @@ import 'features/Sign_up/Presentaion/pages/createusername.dart';
 import 'features/create_post/presentation/pages/primary_content_page.dart';
 import 'features/create_post/presentation/pages/rules_page.dart';
 import 'features/user_profile/presentation/pages/user_profile.dart';
+import 'features/schedule_posts/presentation/pages/schedule_posts_page.dart';
 import './user_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -64,7 +65,11 @@ class SpreadIt extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else {
             final bool loggedIn = snapshot.data!;
-            return loggedIn ? HomePage() : StartUpPage();
+            return loggedIn
+                ? SchedulePostsPage(
+                    communityName: "CodeCrafters",
+                  )
+                : StartUpPage();
           }
         },
       ),
