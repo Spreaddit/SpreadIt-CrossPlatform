@@ -4,10 +4,14 @@ class PeopleElement extends StatefulWidget {
 
   final String username;
   final String userIcon;
+  final String followersCount;
+  final bool isFollowing;
 
   const PeopleElement({
     required this.username,
     required this.userIcon,
+    required this.followersCount,
+    required this.isFollowing,
   });
 
   @override
@@ -34,38 +38,51 @@ class _PeopleElementState extends State<PeopleElement> {
                         radius: 17,
                       ),
                     ),
-                    Text(
-                      widget.username,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.username,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '${widget.followersCount} followers',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
               Spacer(), 
-              Container(
-                margin: EdgeInsets.only(left: 7),
-                child: ElevatedButton(
-                  onPressed: () {},   // follow user
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                    backgroundColor: Colors.blue[900],
-                    fixedSize: Size(15,7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+              if (!widget.isFollowing)
+                Container(
+                  margin: EdgeInsets.only(left: 7),
+                  child: ElevatedButton(
+                    onPressed: () {},   // follow user
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+                      backgroundColor: Colors.blue[900],
+                      fixedSize: Size(15,7),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ), 
                     ), 
-                  ), 
-                  child: Text(
-                    'Follow',
-                    style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    child: Text(
+                      'Follow',
+                      style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-              ), 
+                ), 
             ],
           ),
           Divider(

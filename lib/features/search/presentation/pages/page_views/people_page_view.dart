@@ -33,8 +33,12 @@ class _PeoplePageViewState extends State<PeoplePageView> {
     List<Map<String, dynamic>> mappedUsers = [];
     for (var user in results) {
       mappedUsers.add({
+        'userId': user['userId'],
         'username': user['username'],
         'userProfilePic': user['userProfilePic'],
+        'userInfo': user['userinfo'],
+        'followersCount': user['followersCount'],
+        'isFollowing': user['isFollowing'],
       });
     }
     return mappedUsers;
@@ -58,6 +62,10 @@ class _PeoplePageViewState extends State<PeoplePageView> {
                 return PeopleElement(
                   username: mappedUsers[index]['username'],
                   userIcon: mappedUsers[index]['userProfilePic'],
+                  followersCount: mappedUsers[index]['followersCount'] < 1000 ?
+                        mappedUsers[index]['followersCount'].toString() 
+                        : '${(mappedUsers[index]['followersCount']/100).truncateToDouble() /10.0}k',
+                  isFollowing: mappedUsers[index]['isFollowing'],
                 );
               }
             ),
@@ -68,6 +76,3 @@ class _PeoplePageViewState extends State<PeoplePageView> {
   }
 }
 
-/* TO DOS :
-1) akhod boolean el user da followed walla laa w 3ala asaso ba-render el button
- */
