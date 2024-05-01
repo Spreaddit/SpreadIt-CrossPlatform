@@ -167,6 +167,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             onPressed: () {
                               // TO DO : Update this when search is implemented
                             },
+
                             color: Colors.white,
                             iconSize: iconSize,
                           ),

@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.d
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
@@ -115,11 +116,15 @@ class CommentWidget extends StatelessWidget {
                     if (saved)
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushNamed(
-                            '/user-profile',
-                            arguments: {
-                              'username': comment.user!.username,
-                            },
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              settings: RouteSettings(
+                                name: '/user-profile/${comment.user!.username}',
+                              ),
+                              builder: (context) => UserProfile(
+                                username: comment.user!.username,
+                              ),
+                            ),
                           );
                         },
                         child: Text(

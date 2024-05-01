@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -61,6 +62,15 @@ class SpreadIt extends StatelessWidget {
               isUserProfile: isUserProfile,
               commentId: commentId,
               oneComment: oneComment,
+            ),
+          );
+        } else if (pathSegments.contains('user-profile-page') &&
+            pathSegments.length == 2) {
+          final username = pathSegments[pathSegments.length - 1];
+
+          return MaterialPageRoute(
+            builder: (_) => UserProfile(
+              username: username,
             ),
           );
         }

@@ -5,6 +5,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
 class NotificationData extends Equatable {
   final IconData? icon;
@@ -36,11 +37,15 @@ NotificationData processNotification(
       buttonText = "View Profile";
       String username = notification.relatedUser!.username!;
       onPress = () {
-        Navigator.of(context).pushNamed(
-          '/user-profile',
-          arguments: {
-            'username': username,
-          },
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/user-profile/$username',
+            ),
+            builder: (context) => UserProfile(
+              username: username,
+            ),
+          ),
         );
       };
       break;

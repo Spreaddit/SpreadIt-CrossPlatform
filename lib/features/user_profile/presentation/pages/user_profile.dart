@@ -27,7 +27,9 @@ import '../../data/get_follow_status.dart';
 /// This widget fetches user data asynchronously and updates its state accordingly. It provides
 /// functionality to toggle follow status, view user comments, and navigate to edit profile.
 class UserProfile extends StatefulWidget {
-  const UserProfile({Key? key}) : super(key: key);
+  final String? username;
+
+  const UserProfile({Key? key, this.username}) : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -64,7 +66,7 @@ class _UserProfileState extends State<UserProfile> {
     super.didChangeDependencies();
     final Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    username = args?['username'] ?? '';
+    username = args?['username'] ?? widget.username ??'';
     username = username == '' ? UserSingleton().user!.username : username;
     myProfile = username == UserSingleton().user!.username;
     fetchUserInfoAsync();
