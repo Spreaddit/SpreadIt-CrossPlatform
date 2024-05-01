@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/comment_element.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
@@ -13,100 +14,59 @@ class CommentsPageView extends StatefulWidget {
 
 class _CommentsPageViewState extends State<CommentsPageView> {
 
-  List comments = [
-    {
-      'communityName': 'r/Cats',
-      'communityIcon': './assets/images/GoogleLogo.png',
-      'commentorName': 'HeartlessUniverse',
-      'commentorIcon': './assets/images/LogoSpreadIt.png',
-      'postTitle': 'My cat has a brain tumor',
-      'comment': 'Hello friend, I am a veterinary technician who specializes in end-of-life care. I strongly support your decision no to purue surgery or other invasive and painfull therapies. Here is my advice: Provide your little friend with comfort and love.Enjoy the love they give you with renewed understanding of how preccious it is.',
-      'commentUpvotes': '3.9k',
-      'postUpvotes': '18.1k',
-      'commentsCount': '558',
-    },
-    {
-    'communityName': 'r/Dogs',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'DogLover123',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Looking for advice on training my new puppy',
-    'comment': 'Hi there! I have a new puppy and I\'m struggling with potty training. Any tips or advice would be greatly appreciated.',
-    'commentUpvotes': '1.2k',
-    'postUpvotes': '5.7k',
-    'commentsCount': '220',
-  },
-  {
-    'communityName': 'r/Travel',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'WanderlustExplorer',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Solo backpacking trip through Europe',
-    'comment': 'I just returned from a solo backpacking trip through Europe, and it was an incredible experience! Feel free to ask me anything about planning, budgeting, or traveling solo.',
-    'commentUpvotes': '2.5k',
-    'postUpvotes': '10.3k',
-    'commentsCount': '380',
-  },
-  {
-    'communityName': 'r/Food',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'FoodieQueen',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Homemade pizza night!',
-    'comment': 'Who else loves homemade pizza night? Share your favorite pizza toppings and recipes!',
-    'commentUpvotes': '4.8k',
-    'postUpvotes': '22.6k',
-    'commentsCount': '780',
-  },
-  {
-    'communityName': 'r/Technology',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'TechGeek42',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Latest advancements in AI technology',
-    'comment': 'AI technology is evolving rapidly. Let\'s discuss the latest advancements, applications, and implications of artificial intelligence.',
-    'commentUpvotes': '3.2k',
-    'postUpvotes': '15.9k',
-    'commentsCount': '640',
-  },
-  {
-    'communityName': 'r/Gaming',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'GamerPro99',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Upcoming game releases',
-    'comment': 'Excited for any upcoming game releases? Share your most anticipated games and discuss your gaming plans!',
-    'commentUpvotes': '2.9k',
-    'postUpvotes': '12.7k',
-    'commentsCount': '450',
-  },
-  {
-    'communityName': 'r/Photography',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'PhotoEnthusiast',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Tips for capturing stunning landscapes',
-    'comment': 'Landscape photography is one of my passions. Let\'s share tips, techniques, and favorite locations for capturing stunning landscapes!',
-    'commentUpvotes': '1.9k',
-    'postUpvotes': '8.6k',
-    'commentsCount': '320',
-  },
-  {
-    'communityName': 'r/Science',
-    'communityIcon': './assets/images/GoogleLogo.png',
-    'commentorName': 'ScienceNerd88',
-    'commentorIcon': './assets/images/LogoSpreadIt.png',
-    'postTitle': 'Recent breakthroughs in medical research',
-    'comment': 'Medical research is constantly advancing. Let\'s discuss recent breakthroughs, discoveries, and their potential impact on healthcare.',
-    'commentUpvotes': '3.6k',
-    'postUpvotes': '17.2k',
-    'commentsCount': '590',
-  },
-  ];
-
-  List sortList = [ 'Most relevant', 'Top', 'New'];
+  Map<String,dynamic> comments = {};
+  List<Map<String, dynamic>> mappedComments = [];
+  String sort = 'relevance';
   String sortText = 'Sort';
-   String sort = 'relevance';
+  List sortList = [ 'Most relevant','Top', 'New'];
+  
+  @override
+  void initState() {
+    super.initState(); 
+    getCommentssResults();
+  }
+
+  void getCommentssResults() async {
+    comments = await getSearchResults(widget.searchItem, 'posts', sort);
+    mappedComments = extractCommentDetails(comments);
+    setState(() {});
+  }
+
+  List<Map<String, dynamic>> extractCommentDetails(Map<String, dynamic> data) {
+    List<dynamic> results = data['results'];
+    List<Map<String, dynamic>> mappedComments = [];
+    for (var comment in results) {
+      String? imageLink; 
+      String? videoLink;
+      if (comment['attachments'].isNotEmpty) {
+        Map<String, dynamic> firstAttachment = comment['attachments'][0];
+        if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
+          imageLink = firstAttachment['link'];
+        }
+        if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
+          videoLink = firstAttachment['link'];
+        }
+      }
+      mappedComments.add({
+        'commentId': comment['commentId'],
+        'commentContent': comment['commentContent'],
+        'commentVotes': comment['commentVotes'],
+        'commentDate': comment['commentDate'],
+        'communityName': comment['communityName'],
+        'communityProfilePic': comment['communityProfilePic'],
+        'username': comment['username'],
+        'userProfilePic': comment['userProfilePic'],
+        'postDate': comment['postDate'],
+        'postVotes': comment['postVotes'],
+        'postCommentsCount': comment['postCommentsCount'],
+        'postTitle': comment['postTitle'],
+        'image':  imageLink,
+        'video': videoLink,
+      });
+    }
+    return mappedComments;
+  }
+
 
   void updateSortFilter(int value) {
     switch (value) {
@@ -123,6 +83,7 @@ class _CommentsPageViewState extends State<CommentsPageView> {
         sortText = sortList[2];
         break;    
     } 
+    getCommentssResults();
   }
 
   @override
@@ -145,18 +106,24 @@ class _CommentsPageViewState extends State<CommentsPageView> {
               padding: EdgeInsets.only(top:3),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: comments.length,
+              itemCount: mappedComments.length,
               itemBuilder: (context, index) {
                 return CommentElement(
-                  communityName: comments[index]['communityName'],
-                  communityIcon: comments[index]['communityIcon'],
-                  commentorName: comments[index]['commentorName'],
-                  commentorIcon: comments[index]['commentorIcon'],
-                  postTitle: comments[index]['postTitle'],
-                  comment: comments[index]['comment'],
-                  commentUpvotes: comments[index]['commentUpvotes'],
-                  postUpvotes: comments[index]['postUpvotes'],
-                  commentsCount: comments[index]['commentsCount'],
+                  communityName: mappedComments[index]['communityName'],
+                  communityIcon: mappedComments[index]['communityProfilePic'],
+                  commentorName: mappedComments[index]['username'],
+                  commentorIcon: mappedComments[index]['userProfilePic'],
+                  postTitle: mappedComments[index]['postTitle'],
+                  comment: mappedComments[index]['commentContent'],
+                  commentUpvotes: mappedComments[index]['commentVotes'] < 1000 ?
+                        mappedComments[index]['commentVotes'].toString() 
+                        : '${(mappedComments[index]['commentVotes']/100).truncateToDouble() /10.0}k',
+                  postUpvotes: mappedComments[index]['postVotes'] < 1000 ?
+                        mappedComments[index]['postVotes'].toString() 
+                        : '${(mappedComments[index]['postVotes']/100).truncateToDouble() /10.0}k',
+                  commentsCount: mappedComments[index]['postCommentsCount'] < 1000 ?
+                        mappedComments[index]['postCommentsCount'].toString() 
+                        : '${(mappedComments[index]['postCommentsCount']/100).truncateToDouble() /10.0}k',
                 );
               }
             ),
