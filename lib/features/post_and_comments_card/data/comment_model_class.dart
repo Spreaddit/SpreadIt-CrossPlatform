@@ -86,7 +86,7 @@ class Comment extends Equatable {
       subredditName: json['community_title']??"ayhaga",
       username: usernameFetched,
       profilePic: avatarFetched,
-      postId:  json['postId'] ?? '0', //////// CHECK HYKTOBHA EZAY
+      postId:  json['postId'] ?? '0', 
     );
   }
   @override

@@ -71,7 +71,6 @@ class _UserProfileState extends State<UserProfile> {
     myProfile = username == UserSingleton().user!.username;
     fetchUserInfoAsync();
     fetchComments();
-    loadCommunities();
     checkFollowStatus();
   }
 
@@ -80,15 +79,6 @@ class _UserProfileState extends State<UserProfile> {
     super.initState();
   }
 
-  /// Loads communities that the user is active in.
-  void loadCommunities() async {
-    GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
-    List<Community> loadedCommunities =
-        await getSpecificCommunity.getCommunities('🔥 Trending globally');
-    setState(() {
-      communitiesList = loadedCommunities;
-    });
-  }
 
   /// Checks the follow status of the current user.
   void checkFollowStatus() async {
@@ -122,6 +112,7 @@ class _UserProfileState extends State<UserProfile> {
                   'displayName': socialMedia.displayname,
                 })
             .toList();
+        communitiesList = userInfoFuture!.subscribedCommunities;
       });
     } catch (e) {
       print('Error fetching user info: $e');

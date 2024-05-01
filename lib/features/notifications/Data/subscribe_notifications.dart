@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/api.dart'; 
 
@@ -38,7 +39,7 @@ Future<int> subscribeToNotifications() async {
     );
 
     if (response.statusCode == 200) {
-      print(response.statusMessage);
+      print("message ${response.data['message']}");
       return 200;
     } else if (response.statusCode == 500) {
       print("Server error: ${response.statusMessage}");

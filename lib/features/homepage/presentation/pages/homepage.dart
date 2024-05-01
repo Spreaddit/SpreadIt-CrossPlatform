@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/home_page_drawer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
 
 CurrentPage previousPage = CurrentPage.home;
@@ -34,7 +36,29 @@ class _HomePageState extends State<HomePage> {
       currentPage = widget.currentPage;
       print("Current Page Index:${currentPage.index}");
     });
+     _getCurrentUrlAndProcessToken();
   }
+
+  Future<void> _getCurrentUrlAndProcessToken() async {
+  try {
+    String currentUrl = Uri.base.toString();
+    final List<String> parts = currentUrl.split('/');
+    final String token = parts.last;
+    print("token $token");
+    int response =100;
+    if(token!='home')
+    {
+        response= await verifyEmail(emailToken: token);
+
+    }
+    if (response ==200)
+    {
+      CustomSnackbar(content: "Email verifed Succesfully").show(context);
+    }
+  } catch (e) {
+    print("Error while getting current URL: $e");
+  }
+}
 
   void changeSelectedIndex(int newIndex) {
     print("New Index:$newIndex");
