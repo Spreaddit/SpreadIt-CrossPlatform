@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
@@ -43,16 +45,16 @@ NotificationData processNotification(
       };
       break;
     case "upvoteComments":
-      icon = Icons.thumb_up;
-      content = notification.comment!.content;
-      buttonText = "View Comment";
+      icon = Icons.arrow_upward;
+      content = notification.post!.title;
+      buttonText = null;
       onPress = () {
-        //need to scroll to comment
         Navigator.push(
           context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
@@ -65,9 +67,9 @@ NotificationData processNotification(
       };
       break;
     case "upvotePosts":
-      icon = Icons.thumb_up;
+      icon = Icons.arrow_upward;
       content = notification.post!.title;
-      buttonText = "View Post";
+      buttonText = null;
       onPress = () {
         Navigator.push(
           context,
@@ -87,14 +89,14 @@ NotificationData processNotification(
     case "commentReply":
       icon = Icons.reply;
       content = notification.comment!.content;
-      buttonText = "View Comment";
+      buttonText = "Reply";
       onPress = () {
-        //need to scroll ll comment
-         Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
@@ -107,16 +109,15 @@ NotificationData processNotification(
       };
       break;
     case "comment":
-      icon = Icons.comment;
+      icon = Ionicons.chatbubble;
       content = notification.comment!.content;
-      buttonText = "View Comment";
       onPress = () {
-        //need to scroll ll comment
-         Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
@@ -129,7 +130,7 @@ NotificationData processNotification(
       };
       break;
     case "community":
-      icon = Icons.comment;
+      icon = CupertinoIcons.bell;
       content = 'Recommended : ${notification.communityname}';
       buttonText = null;
       onPress = () {
@@ -154,4 +155,21 @@ NotificationData processNotification(
     buttonText: buttonText,
     onPress: onPress,
   );
+}
+
+String getNotificationType(Notifications notification) {
+  switch (notification.notificationType) {
+    case "follow":
+      return "newFollowers";
+    case "upvoteComments":
+      return "upvotes";
+    case "upvotePosts":
+      return "upvotes";
+    case "commentReply":
+      return "repliesToComments";
+    case "comment":
+      return "commentsOnYourPost";
+    default:
+      return "other";
+  }
 }

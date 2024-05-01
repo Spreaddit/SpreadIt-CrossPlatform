@@ -10,6 +10,8 @@ class NotificationWidget extends StatefulWidget {
   final IconData? iconData;
   final VoidCallback? onPressed;
   final void Function(String, Notifications) onHide;
+  final void Function(String) disable;
+
   final String? buttonText;
   final IconData? buttonIcon;
   final String date;
@@ -25,6 +27,7 @@ class NotificationWidget extends StatefulWidget {
     this.iconData,
     this.onPressed,
     required this.onHide,
+    required this.disable,
     this.buttonText,
     this.buttonIcon,
     this.isRead = false,
@@ -46,21 +49,20 @@ class _NotificationWidgetState extends State<NotificationWidget> {
   }
 
   Future<void> markmessageasRead() async {
-    await MarkAsRead(id: widget.notification!.id!, type: 'one');
-    setState(() {
-      isRead = true;
-    });
+    if (widget.notification!.isRead == false) {
+      await MarkAsRead(id: widget.notification!.id!, type: 'one');
+      setState(() {
+        isRead = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-      tileColor: isRead ? null : Colors.lightBlueAccent.withOpacity(0.2),
-      title: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical : 10.0),
+      tileColor: isRead ? null : Colors.lightBlueAccent.withOpacity(0.1),
+      leading: SizedBox(
             width: 40.0,
             height: 40.0,
             child: Stack(
@@ -81,81 +83,77 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                     bottom: 0,
                     right: 0,
                     child: CircleAvatar(
-                      radius: 8,
+                      radius: 10,
                       backgroundColor: Colors.white,
                       child: Icon(
                         widget.iconData,
                         color: Theme.of(context).colorScheme.tertiary,
-                        size: 12,
+                        size: 15,
                       ),
                     ),
                   ),
               ],
             ),
           ),
-          SizedBox(width: 16), // Add some space between CircleAvatar and title
-          Expanded(
+      title:Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 widget.community
                     ? Text(widget.content)
                     : Text("${widget.notification!.content} ${widget.date}"),
-                SizedBox(height: 4), // Add some space between title and content
-                if (!widget.community) Text(widget.content),
-              ],
+                SizedBox(height: 4),
+              ]
             ),
           ),
-          GestureDetector(
+      subtitle: (widget.buttonText != null && widget.buttonIcon != null)
+          ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await markmessageasRead();
+                        widget.onPressed?.call();
+                      },
+                      icon: Icon(
+                        widget.buttonIcon,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                      label: Text(
+                        widget.buttonText!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        side: MaterialStateProperty.all<BorderSide>(
+                          BorderSide(
+                              color: Theme.of(context).colorScheme.tertiary),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]
+            )
+          : !widget.community ? Text(widget.content) : null,
+          trailing : GestureDetector(
             onTap: () {
               markmessageasRead();
               showModalBottomSheet(
                 context: context,
                 builder: (context) => ManageNotificationBottomSheet(
-                  followed: widget.followed,
                   community: widget.community,
                   onHide: widget.onHide,
                   notification: widget.notification!,
+                  disable: widget.disable,
                 ),
               );
             },
             child: Icon(Icons.more_vert),
           ),
-        ],
-      ),
-      subtitle: Container(
-        margin: EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.buttonText != null && widget.buttonIcon != null)
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    await markmessageasRead();
-                    widget.onPressed?.call();
-                  },
-                  icon: Icon(
-                    widget.buttonIcon,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                  label: Text(
-                    widget.buttonText!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ),
-                  style: ButtonStyle(
-                    side: MaterialStateProperty.all<BorderSide>(
-                      BorderSide(color: Theme.of(context).colorScheme.tertiary),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_notifications_settings.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_notifications.dart';
@@ -22,18 +23,47 @@ class _NotificationPageState extends State<NotificationPage> {
   bool isLoading = true;
   Notifications? recommendedCommunity;
 
+  Map<String, dynamic> notificationsSettingsValues = {
+    "newFollowers": false,
+    "mentions": false,
+    "inboxMessages": false,
+    "chatMessages": false,
+    "chatRequests": false,
+    "repliesToComments": false,
+    "cakeDay": false,
+    "modNotifications": false,
+    "commentsOnYourPost": false,
+    "commentsYouFollow": false,
+    "upvotes": false
+  };
+
   @override
   void initState() {
     super.initState();
     fetchData();
   }
 
+  Future<void> getSuggestedCommunity() async {
+    recommendedCommunity = await getRecommendedCommunity();
+    DateTime now = DateTime.now();
+    DateTime date = recommendedCommunity!.createdAt;
+    bool isToday = (now.year == date.year &&
+        now.month == date.month &&
+        now.day == date.day);
+    setState(() {
+      if (isToday) {
+        todayNotifications.add(recommendedCommunity!);
+      } else {
+        earlierNotifications.add(recommendedCommunity!);
+      }
+    });
+  }
+
   Future<void> fetchData() async {
     try {
       notifications = await fetchNotifications();
       if (notifications.isEmpty) {
-        recommendedCommunity = await getRecommendedCommunity();
-        notifications.add(recommendedCommunity!);
+        await getSuggestedCommunity();
       } else {
         final today = DateTime.now().toLocal();
         setState(() {
@@ -54,9 +84,7 @@ class _NotificationPageState extends State<NotificationPage> {
     } catch (e) {
       print(e);
       if (notifications.isEmpty) {
-        recommendedCommunity = await getRecommendedCommunity();
-        notifications.add(recommendedCommunity!);
-        print(notifications);
+        await getSuggestedCommunity();
       }
     } finally {
       setState(() {
@@ -65,12 +93,19 @@ class _NotificationPageState extends State<NotificationPage> {
     }
   }
 
-  void onHide(String id, Notifications removedNotification) async {
+  Future<void> turnOffNotification(String key) async {
     try {
-      final status = await HideNotification(id: id);
-      if (status == 200) {
+      var data = await getData();
+      setState(() {
+        notificationsSettingsValues = data;
+        notificationsSettingsValues[key] = !notificationsSettingsValues[key];
+      });
+      print("Updated notifics: $notificationsSettingsValues");
+      var result = await updateData(
+          updatedNotificationsSettings: notificationsSettingsValues);
+      if (result != 200) {
         setState(() {
-          notifications.removeWhere((n) => n.id == id);
+          notificationsSettingsValues[key] = !notificationsSettingsValues[key];
         });
       }
     } catch (e) {
@@ -78,85 +113,103 @@ class _NotificationPageState extends State<NotificationPage> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: isLoading
-        ? LoaderWidget(
-            dotSize: 10,
-            logoSize: 100,
-          )
-        : ListView.builder(
-            itemCount: todayNotifications.length + earlierNotifications.length + 2, // +2 for the headers
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                // Display header for today's notifications
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Text(
-                    "Today",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              } else if (index == todayNotifications.length + 1) {
-                // Display header for earlier notifications
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Text(
-                    "Earlier",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              } else if (index < todayNotifications.length + 1) {
-                // Display today's notifications
-                final notification = todayNotifications[index - 1];
-                final data = processNotification(notification, context);
-                return NotificationWidget(
-                  content: data.content!,
-                  notification: notification,
-                  date: dateToDuration(notification.createdAt),
-                  iconData: data.icon,
-                  buttonIcon: data.icon,
-                  buttonText: data.buttonText ?? '',
-                  onPressed: data.onPress,
-                  isRead: notification.isRead,
-                  followed: true,
-                  onHide: onHide,
-                  community: community(notification.notificationType),
-                );
-              } else {
-                // Display earlier notifications
-                final earlierIndex = index - todayNotifications.length - 2; // -2 to account for the headers
-                final notification = earlierNotifications[earlierIndex];
-                final data = processNotification(notification, context);
-                return NotificationWidget(
-                  content: data.content!,
-                  notification: notification,
-                  date: dateToDuration(notification.createdAt),
-                  iconData: data.icon,
-                  buttonIcon: data.icon,
-                  buttonText: data.buttonText ?? '',
-                  onPressed: data.onPress,
-                  isRead: notification.isRead,
-                  followed: true,
-                  onHide: onHide,
-                  community: community(notification.notificationType),
-                );
-              }
-            },
-          ),
-  );
-}
-}
+  void onHide(String id, Notifications removedNotification) async {
+    try {
+      final status = await HideNotification(id: id);
+      if (status == 200) {
+        setState(() {
+          earlierNotifications.removeWhere((n) => n.id == id);
+          todayNotifications.removeWhere((n) => n.id == id);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
-bool followed(String notificationType) {
-  return notificationType == "posts" || notificationType == "comments";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: isLoading
+          ? LoaderWidget(
+              dotSize: 10,
+              logoSize: 100,
+            )
+          : ListView.builder(
+              itemCount:
+                  todayNotifications.length + earlierNotifications.length + 2,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  if (todayNotifications.isNotEmpty) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      child: Text(
+                        "Today",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                } else if (index == todayNotifications.length + 1) {
+                  if (earlierNotifications.isNotEmpty) {
+                    return Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      child: Text(
+                        "Earlier",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                } else if (index < todayNotifications.length + 1) {
+                  final notification = todayNotifications[index - 1];
+                  final data = processNotification(notification, context);
+                  return NotificationWidget(
+                    content: data.content!,
+                    notification: notification,
+                    date: dateToDuration(notification.createdAt),
+                    iconData: data.icon,
+                    buttonIcon: data.icon,
+                    buttonText: data.buttonText,
+                    onPressed: data.onPress,
+                    isRead: notification.isRead,
+                    onHide: onHide,
+                    community: community(notification.notificationType),
+                    disable: turnOffNotification,
+                  );
+                } else {
+                  final earlierIndex = index - todayNotifications.length - 2;
+                  final notification = earlierNotifications[earlierIndex];
+                  final data = processNotification(notification, context);
+                  return NotificationWidget(
+                    content: data.content!,
+                    notification: notification,
+                    date: dateToDuration(notification.createdAt),
+                    iconData: data.icon,
+                    buttonIcon: data.icon,
+                    buttonText: data.buttonText,
+                    onPressed: data.onPress,
+                    isRead: notification.isRead,
+                    onHide: onHide,
+                    community: community(notification.notificationType),
+                    disable: turnOffNotification,
+                  );
+                }
+              },
+            ),
+    );
+  }
 }
 
 bool community(String notificationType) {
