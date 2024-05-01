@@ -122,7 +122,7 @@ class _CommentsPageViewState extends State<CommentsPageView> {
         sort = 'new';
         sortText = sortList[2];
         break;    
-    } // will i need set state fl switch cases ?
+    } 
   }
 
   @override
@@ -166,6 +166,3 @@ class _CommentsPageViewState extends State<CommentsPageView> {
     }
   }
 }
-
-/*
-1) mock service */

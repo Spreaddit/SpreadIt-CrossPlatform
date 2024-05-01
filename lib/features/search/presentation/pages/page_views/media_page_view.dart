@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/search/data/get_search_results.d
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/media_element.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/time_sort.dart';
 
 class MediaPageView extends StatefulWidget {
   final String searchItem;
@@ -16,6 +17,7 @@ class _MediaPageViewState extends State<MediaPageView> {
 
   Map<String,dynamic> media = {};
   List<Map<String, dynamic>> mappedMedia = [];
+  List<Map<String,dynamic>> orgMappedMedia = [];
   String sort = 'relevance';
   String sortText = 'Sort';
   String timeText = 'Time';
@@ -32,6 +34,7 @@ class _MediaPageViewState extends State<MediaPageView> {
   void getPostsResults() async {
     media = await getSearchResults(widget.searchItem, 'posts', sort);
     mappedMedia = extractMediaDetails(media);
+    orgMappedMedia = mappedMedia;
     setState(() {});
   }
 
@@ -39,18 +42,21 @@ class _MediaPageViewState extends State<MediaPageView> {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedMedia = [];
     for (var post in results) {
-      if ((post['image'] != null && post['image'].isNotEmpty) || (post['video'] != null && post['video'].isNotEmpty))
+      if (post['attachments'].isNotEmpty)
       {
         mappedMedia.add({
         'postId': post['postId'],
+        'title': post['title'],
+        'isNsfw': post['isNsfw'],
+        'isSpoiler': post['isSpoiler'],
+        'votesCount': post['votesCount'],
+        'commentCount': post['commentsCount'],
+        'createdAt': post['date'],
         'username': post['username'],
         'userProfilePic': post['userProfilePic'],
-        'votesCount': post['votesCount'],
-        'commentCount': post['commentCount'],
-        'title': post['title'],
-        'createdAt': post['createdAt'],
-        'image': post['image'],
-        'video': null,
+        'communityName': post['communityName'],
+        'communityProfilePic': post['communityProfilePic'],
+        'image': post['attachments'][0],
         });
       }
     }
@@ -114,7 +120,9 @@ class _MediaPageViewState extends State<MediaPageView> {
         timeText = timeList[4];
         break;     
     }
-    // implement time filter 
+    final filteredPosts = sortByTime(orgMappedMedia, timeText);
+    mappedMedia = filteredPosts;
+    setState((){}); 
   }
 
 
@@ -211,6 +219,5 @@ class _MediaPageViewState extends State<MediaPageView> {
 /* TO DOS :
 1) azabat na2l el photos sa7
 2) a7ot videos (ask farida)
-3) lamma aghayyar el filter fl bottom sheet yeghayyaro fl page nafsaha 
-4) a7ot el community fl search bar
-5) mock service  */
+
+*/

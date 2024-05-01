@@ -4,6 +4,7 @@ import 'package:spreadit_crossplatform/features/search/data/get_search_results.d
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/post_element.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/widgets/time_sort.dart';
 
 class PostsPageView extends StatefulWidget {
 
@@ -22,6 +23,7 @@ class _PostsPageViewState extends State<PostsPageView> {
   
   Map<String,dynamic> posts = {};
   List<Map<String, dynamic>> mappedPosts = [];
+  List<Map<String,dynamic>> orgMappedPosts = [];
   String sort = 'relevance';
   String sortText = 'Sort';
   String timeText = 'Time';
@@ -38,6 +40,7 @@ class _PostsPageViewState extends State<PostsPageView> {
   void getPostsResults() async {
     posts = await getSearchResults(widget.searchItem, 'posts', sort);
     mappedPosts = extractPostDetails(posts);
+    orgMappedPosts = mappedPosts;
     setState(() {});
   }
 
@@ -61,29 +64,6 @@ class _PostsPageViewState extends State<PostsPageView> {
       });
     }
     return mappedPosts;
-  }
-
-  List<Map<String, dynamic>> sortByTime(List<Map<String, dynamic>> posts,String timePeriod) {
-    posts.sort((a, b) => b['createdAt'].compareTo(a['createdAt']));
-    final filteredPosts = posts.where((post) {
-      final createdAt = DateTime.parse(post['createdAt']);
-      switch (timePeriod) {
-        case 'Past hour':
-          return createdAt.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
-        case 'Today':
-          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 1)));
-        case 'Past week':
-          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 7)));
-        case 'Past month':
-          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30)));
-        case 'Past year':
-          return createdAt.isAfter(DateTime.now().subtract(const Duration(days: 365)));
-        default:
-          return true; 
-      }
-    }).toList();
-
-    return filteredPosts;
   }
 
   void removeFilter() {
@@ -143,7 +123,7 @@ class _PostsPageViewState extends State<PostsPageView> {
         timeText = timeList[4];
         break;     
     }
-    final filteredPosts = sortByTime(mappedPosts, timeText);
+    final filteredPosts = sortByTime(orgMappedPosts, timeText);
     mappedPosts = filteredPosts;
     setState((){});
   }
