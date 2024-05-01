@@ -47,14 +47,16 @@ class _PostsPageViewState extends State<PostsPageView> {
     for (var post in results) {
       mappedPosts.add({
         'postId': post['postId'],
+        'title': post['title'],
+        'isNsfw': post['isNsfw'],
+        'votesCount': post['votesCount'],
+        'commentCount': post['commentsCount'],
+        'createdAt': post['date'],
         'username': post['username'],
         'userProfilePic': post['userProfilePic'],
-        'votesCount': post['votesCount'],
-        'commentCount': post['commentCount'],
-        'title': post['title'],
-        'createdAt': post['createdAt'],
-        'image': post['image'],
-        'video': null,
+        'communityName': post['communityName'],
+        'communityProfilePic': post['communityProfilePic'],
+        'image':  post['attachments'].isEmpty ? null : post['attachments'][0],
       });
     }
     return mappedPosts;
@@ -194,14 +196,14 @@ class _PostsPageViewState extends State<PostsPageView> {
               itemCount: mappedPosts.length,
               itemBuilder: (context, index) {
                 return PostElement(
-                  communityIcon: mappedPosts[index]['userProfilePic'],
-                  communityName: mappedPosts[index]['username'],
+                  communityIcon: mappedPosts[index]['communityProfilePic'],
+                  communityName: mappedPosts[index]['communityName'],
                   time : dateToDuration(DateTime.parse(mappedPosts[index]['createdAt'])), 
                   postTitle: mappedPosts[index]['title'],
                   upvotes: mappedPosts[index]['votesCount'].toString(),
                   comments: mappedPosts[index]['commentCount'].toString(),
                   image: mappedPosts[index]['image'] ,
-                  video: mappedPosts[index]['video'],
+                  //video: mappedPosts[index]['video'],
                   );
               }
             ),
