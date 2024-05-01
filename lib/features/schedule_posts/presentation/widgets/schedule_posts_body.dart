@@ -93,7 +93,7 @@ class ScheduledPostsBody extends StatelessWidget {
                   dateAndTime: post.date,
                   username: post.username,
                   title: post.title!,
-                  content: post.content?.join(' ') ?? '',
+                  content: post.content?.last ?? '',
                 );
               }).toList(),
             ),
