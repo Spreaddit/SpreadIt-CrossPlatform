@@ -23,7 +23,7 @@ Future<int> signUpApi({
     if (response.statusCode == 200) {
       User user = User.fromJson(response.data['user']);
       UserSingleton().setUser(user);
-      await signInwithEmailandPasswird(email , password);
+      await signInwithEmailandPassword(email , password);
       print('User ID: ${user.id}');
       return 200;
     } else if (response.statusCode == 409) {
