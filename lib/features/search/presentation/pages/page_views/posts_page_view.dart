@@ -48,19 +48,31 @@ class _PostsPageViewState extends State<PostsPageView> {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedPosts = [];
     for (var post in results) {
+      String? imageLink; 
+      String? videoLink;
+      if (post['attachments'].isNotEmpty) {
+        Map<String, dynamic> firstAttachment = post['attachments'][0];
+        if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
+          imageLink = firstAttachment['link'];
+        }
+        if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
+          videoLink = firstAttachment['link'];
+        }
+      }
       mappedPosts.add({
         'postId': post['postId'],
         'title': post['title'],
         'isNsfw': post['isNsfw'],
         'isSpoiler': post['isSpoiler'],
         'votesCount': post['votesCount'],
-        'commentCount': post['commentsCount'],
+        'commentsCount': post['commentsCount'],
         'createdAt': post['date'],
         'username': post['username'],
         'userProfilePic': post['userProfilePic'],
         'communityName': post['communityName'],
         'communityProfilePic': post['communityProfilePic'],
-        'image':  post['attachments'].isEmpty ? null : post['attachments'][0],
+        'image':  imageLink,
+        'video': videoLink,
       });
     }
     return mappedPosts;
@@ -181,12 +193,16 @@ class _PostsPageViewState extends State<PostsPageView> {
                   communityName: mappedPosts[index]['communityName'],
                   time : dateToDuration(DateTime.parse(mappedPosts[index]['createdAt'])), 
                   postTitle: mappedPosts[index]['title'],
-                  upvotes: mappedPosts[index]['votesCount'].toString(),
-                  comments: mappedPosts[index]['commentCount'].toString(),
-                  image: mappedPosts[index]['image'] ,
+                  upvotes: mappedPosts[index]['votesCount'] < 1000 ?
+                        mappedPosts[index]['votesCount'].toString() 
+                        : '${(mappedPosts[index]['votesCount']/100).truncateToDouble() /10.0}k',
+                  comments: mappedPosts[index]['commentsCount'] < 1000 ?
+                        mappedPosts[index]['commentsCount'].toString() 
+                        : '${(mappedPosts[index]['commentsCount']/100).truncateToDouble() /10.0}k',
                   isNsfw: mappedPosts[index]['isNsfw'],
                   isSpoiler: mappedPosts[index]['isSpoiler'],
-                  //video: mappedPosts[index]['video'],
+                  image: mappedPosts[index]['image'] ,
+                  video: mappedPosts[index]['video'],
                   );
               }
             ),

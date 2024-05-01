@@ -151,8 +151,30 @@ class _PostElementState extends State<PostElement> {
                     ),
                   ),
                 ],
-                //if (widget.video != null) 
-                  // render video  
+                if (widget.video != null && (widget.video!.isNotEmpty || widget.video != '') )...[
+                  Spacer(),
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image(
+                          image: AssetImage(widget.video!),
+                          height: 70,
+                          width: 80,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 5.0, 
+                        left: 5.0, 
+                        child: Icon(
+                          Icons.play_circle_fill_rounded, 
+                          size: 17, 
+                        ),
+                      ),
+                    ],
+                  ),
+                ], 
               ],
             ),
             Divider(
@@ -167,5 +189,3 @@ class _PostElementState extends State<PostElement> {
 }
 
 
-// to do : akhod parameter is spoiler w is nsfw w a-render them bardou when needed 
-// a render el video (mayyetin abou el video)
