@@ -14,20 +14,20 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
   var defaultResponse = {
     "name": "",
     "category": "",
+    "is18plus": "false",
     "communityType": "Public",
     "description": "",
     "image": "",
     "membersCount": 0,
-    "rules": [
-      {"title": "", "description": "", "reportReason": ""}
-    ],
+    "rules": [],
     "dateCreated": "",
     "communityBanner": ""
   };
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
-      '$apiUrl/community/get-info',
+      //TODO: Change the API URL to: '$apiUrl/community/$communityName/get-info'
+      '$galalModUrl/community/get-info',
       queryParameters: {"communityName": communityName},
       options: Options(
         headers: {
@@ -38,7 +38,6 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
     if (response.statusCode == 200) {
       {
         print(response.statusMessage);
-        print('COMMUNITU INFO: ${response.data}');
         return response.data;
       }
     } else {

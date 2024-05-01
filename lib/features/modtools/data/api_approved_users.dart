@@ -9,6 +9,7 @@ Future<int> approveUserRequest({
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/$username/add-contributor',
       options: Options(
         headers: {
@@ -40,6 +41,7 @@ Future<int> removeApprovedUserRequest({
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().delete(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/$username/remove-contributor',
       options: Options(
         headers: {
@@ -69,6 +71,7 @@ Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
   List<dynamic> defaultResponse = [];
   try {
     final response = await Dio().get(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/contributors',
       options: Options(
         headers: {
@@ -93,11 +96,12 @@ Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
   }
 }
 
-Future<Map<String, dynamic>?>? checkIfApprovedRequest(
+Future<Map<String, dynamic>> checkIfApprovedRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().get(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/$username/is-contributor',
       options: Options(
         headers: {
@@ -106,18 +110,18 @@ Future<Map<String, dynamic>?>? checkIfApprovedRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print("checkIfApprovedRequest Response: ${response.statusMessage}");
+      print("checkIfApprovedRequest Response: ${response.statusMessage} ${response.data}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
-      return null;
+      print("Error checkIfApprovedRequest: ${response.statusMessage}, code: ${response.statusCode}");
+      return {};
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
-      return null;
+      print("Error checkIfApprovedRequest: ${response.statusMessage}, code: ${response.statusCode}");
+      return {};
     }
-    return null;
+    return {};
   } catch (e) {
-    print("Error occurred: $e");
-    return null;
+    print("Error checkIfApprovedRequest occurred: $e");
+    return {};
   }
 }

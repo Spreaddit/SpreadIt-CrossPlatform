@@ -7,8 +7,8 @@ Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var response = await Dio().get(
+      //TODO: Change the API URL to: '$apiUrl/community/$communityName/get-info'
       '$galalModUrl/community/get-info',
-      queryParameters: {"communityName": communityName},
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -36,7 +36,7 @@ Future<int> updateModCommunityInfo(
   String? communityType,
   String? description,
 }) async {
-  //TODO - CHECK CORS PROBLEM IN BE INTEGRATION 
+  //TODO - CHECK CORS PROBLEM IN BE INTEGRATION
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var data = {};
@@ -46,6 +46,7 @@ Future<int> updateModCommunityInfo(
     if (description != null) data["description"] = description;
 
     var response = await Dio().put(
+      //TODO: Change the API URL to: '$apiUrl/community/$communityName/edit-info'
       '$galalModUrl/community/$communityName/edit-info',
       data: data,
       options: Options(

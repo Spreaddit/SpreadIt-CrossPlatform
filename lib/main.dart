@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/modtools_page.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
@@ -35,7 +36,8 @@ class SpreadIt extends StatelessWidget {
       title: 'Spread It',
       theme: spreadItTheme,
       //home: UserSingleton().user != null ? HomePage() : StartUpPage(),
-      home: ModtoolsPage(communityName: "hardware"),
+      //home: ModtoolsPage(communityName: "hardware"),
+      home: CommunityPage(communityName: "hardware"),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         if (pathSegments == null || pathSegments.isEmpty) {

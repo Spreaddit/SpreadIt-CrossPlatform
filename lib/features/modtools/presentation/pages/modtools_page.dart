@@ -40,9 +40,8 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
   @override
   void initState() {
     super.initState();
-    modUsername = (UserSingleton().user != null)
-        ? UserSingleton().user!.username
-        : "";
+    modUsername =
+        (UserSingleton().user != null) ? UserSingleton().user!.username : "";
     fetchData();
     initializeRoutes();
   }
@@ -188,9 +187,11 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
         future: _moderatorsData,
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoaderWidget(
-              dotSize: 10,
-              logoSize: 100,
+            return Center(
+              child: LoaderWidget(
+                dotSize: 10,
+                logoSize: 100,
+              ),
             );
           } else if (snapshot.hasError) {
             return Center(child: Text("Error fetching data 😔"));

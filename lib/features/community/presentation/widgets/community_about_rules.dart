@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 
 /// A widget that displays the rules of a community.
 class CommunityAboutRules extends StatefulWidget {
@@ -7,8 +6,11 @@ class CommunityAboutRules extends StatefulWidget {
   final String communityName;
 
   /// Creates a [CommunityAboutRules] widget.
-  CommunityAboutRules({Key? key, required this.communityName})
+  CommunityAboutRules(
+      {Key? key, required this.communityName, required this.communityRules})
       : super(key: key);
+
+  final List<dynamic> communityRules;
 
   @override
   State<CommunityAboutRules> createState() => _CommunityAboutRulesState();
@@ -21,16 +23,8 @@ class _CommunityAboutRulesState extends State<CommunityAboutRules> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  /// Fetches the community information including the rules.
-  Future<void> fetchData() async {
-    var communityData = await getCommunityInfo(widget.communityName);
-    setState(() {
-      communityRules = communityData["rules"];
-      expansionState = List.filled(communityRules.length, false);
-    });
+    communityRules = widget.communityRules;
+    expansionState = List.filled(communityRules.length, false);
   }
 
   @override

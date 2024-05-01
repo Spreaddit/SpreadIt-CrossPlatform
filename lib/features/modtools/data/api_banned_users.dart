@@ -18,6 +18,7 @@ Future<int> banUserRequest(
       "messageToUser": messageToUser
     };
     final response = await Dio().post(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/$username/ban',
       data: data,
       options: Options(
@@ -48,6 +49,7 @@ Future<int> unbanUserRequest(
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().post(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/$username/unban',
       options: Options(
         headers: {
@@ -88,6 +90,7 @@ Future<int> editBannedUserRequest(
       "messageToUser": messageToUser
     };
     final response = await Dio().put(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/$username/ban',
       data: data,
       options: Options(
@@ -118,6 +121,7 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
   List<dynamic> defaultResponse = [];
   try {
     final response = await Dio().get(
+      //TODO USE REAL API URL
       '$galalModUrl/community/moderation/$communityName/banned-users',
       options: Options(
         headers: {
@@ -142,11 +146,12 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
   }
 }
 
-Future<Map<String, dynamic>?>? checkIfBannedRequest(
+Future<Map<String, dynamic>> checkIfBannedRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     final response = await Dio().get(
+      //TODO USE REAL API URL
       '$galalModUrl2/community/moderation/$communityName/$username/is-banned',
       options: Options(
         headers: {
@@ -155,18 +160,19 @@ Future<Map<String, dynamic>?>? checkIfBannedRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print("checkIfBannedRequest Response: ${response.statusMessage}");
+      print(
+          "checkIfBannedRequest Response: ${response.statusMessage} ${response.data}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
-      return null;
+      return {};
     } else if (response.statusCode == 500) {
       print("Error: ${response.statusMessage}, code: ${response.statusCode}");
-      return null;
+      return {};
     }
-    return null;
+    return {};
   } catch (e) {
     print("Error occurred: $e");
-    return null;
+    return {};
   }
 }

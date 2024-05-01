@@ -33,8 +33,10 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
 
   /// Fetches the subscription data for the community.
   Future<void> fetchData() async {
-    subscriptionData = await getCommunitySubStatus(widget.communityName);
-    if (subscriptionData["isSubscribed"] == -1) {
+    //TODO FIX MODIFICATIONS
+    //subscriptionData = await getCommunitySubStatus(widget.communityName);
+    subscriptionData = {"isSubscribed": true};
+    if (false || subscriptionData["isSubscribed"] == -1) {
       CustomSnackbar(content: "Failed to retrieve subscription data")
           .show(context);
     } else {
