@@ -49,6 +49,7 @@ class _PostsPageViewState extends State<PostsPageView> {
         'postId': post['postId'],
         'title': post['title'],
         'isNsfw': post['isNsfw'],
+        'isSpoiler': post['isSpoiler'],
         'votesCount': post['votesCount'],
         'commentCount': post['commentsCount'],
         'createdAt': post['date'],
@@ -203,6 +204,8 @@ class _PostsPageViewState extends State<PostsPageView> {
                   upvotes: mappedPosts[index]['votesCount'].toString(),
                   comments: mappedPosts[index]['commentCount'].toString(),
                   image: mappedPosts[index]['image'] ,
+                  isNsfw: mappedPosts[index]['isNsfw'],
+                  isSpoiler: mappedPosts[index]['isSpoiler'],
                   //video: mappedPosts[index]['video'],
                   );
               }

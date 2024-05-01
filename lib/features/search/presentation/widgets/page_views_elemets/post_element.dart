@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/rendered_tag.dart';
 
 class PostElement extends StatefulWidget {
 
@@ -10,6 +11,8 @@ class PostElement extends StatefulWidget {
   final String postTitle;
   final String upvotes;
   final String comments;
+  final bool isNsfw;
+  final bool isSpoiler;
   final String? image;
   final String? video;
 
@@ -20,6 +23,8 @@ class PostElement extends StatefulWidget {
     required this.postTitle,
     required this.upvotes,
     required this.comments,
+    required this.isNsfw,
+    required this.isSpoiler,
     this.image,
     this.video,
   });
@@ -72,14 +77,44 @@ class _PostElementState extends State<PostElement> {
                     SizedBox(height:5),
                     SizedBox(
                       width: widget.image != null || widget.video != null ? MediaQuery.of(context).size.width - 150 : MediaQuery.of(context).size.width - 25,
-                      child: Text(
-                        widget.postTitle,
-                        softWrap: true,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (widget.isNsfw && !widget.isSpoiler)
+                           RenderedTag(
+                            icon: Icons.warning_rounded,
+                            text: 'NSFW',
+                            height: 15,
+                            width: 40,
+                            fontSize: 9,
+                            iconSize: 12,
+                            ),
+                          if (widget.isSpoiler && !widget.isNsfw)
+                           RenderedTag(
+                            icon: Icons.new_releases_rounded,
+                            text: 'Spoiler',
+                            height: 15,
+                            width: 40,
+                            fontSize: 8,
+                            iconSize: 12,
+                            ),
+                          if (widget.isSpoiler && widget.isNsfw)
+                            Row (
+                              children: [
+                                RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler', height: 15, width: 40, fontSize: 8,iconSize: 12),
+                                RenderedTag(icon: Icons.warning_rounded, text: 'NSFW',height: 15, width: 40, fontSize: 9,iconSize: 12),
+                              ],
+                            ),    
+                          Text(
+                            widget.postTitle,
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height:5),
