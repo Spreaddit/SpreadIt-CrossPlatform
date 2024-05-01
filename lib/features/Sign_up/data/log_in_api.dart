@@ -26,7 +26,11 @@ Future<int> logInApi({
       UserSingleton().setUser(user);
       UserSingleton().setAccessToken(response.data['access_token'],
           DateTime.parse(response.data['token_expiration_date']));
-      await loginWithEmailAndPassword(user.email! , password);
+      try {
+        await loginWithEmailAndPassword(user.email!, password);
+      } catch (e) {
+        print('walahi ya ama error bgd ya ama 34an dh local 3la db el backend w msh mawgod 3la firebase dh el data el at3mlha seeding y3ny: $e');
+      }
       try {
         await subscribeToNotifications();
       } catch (e) {
@@ -42,7 +46,7 @@ Future<int> logInApi({
       print("Bad request: ${response.statusMessage}");
       return 400;
     } else if (response.statusCode == 401) {
-      print("Unauthorized ${response.statusMessage}");
+      print("Unauthorized hena ${response.statusMessage}");
       return 401;
     } else {
       print("Unexpected status code: ${response.statusCode}");

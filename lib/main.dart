@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +17,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  final token = await messaging.getToken(
+    vapidKey: 'BDdxkpSfsZfMF7ZyPklut-xQVgp6HH8GkJnTRHXGlsGv6u3oDujnIiqPF9_iqq_POtjU8tLuEISutYyAiyZC7dw',
+  );
+  print(token);
   await UserSingleton().loadFromPrefs();
   runApp(SpreadIt());
 }
