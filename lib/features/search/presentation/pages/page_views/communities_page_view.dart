@@ -33,9 +33,12 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
     List<Map<String, dynamic>> mappedCommunities = [];
     for (var community in results) {
       mappedCommunities.add({
+        'communityId' : community['communityId'],
         'communityName': community['communityName'],
         'communityProfilePic': community['communityProfilePic'],
+        'membersCount': community['membersCount'],
         'communityInfo': community['communityInfo'],
+        'isFollowing': community['isFollowing'],
       });
     }
     return mappedCommunities;
@@ -60,6 +63,10 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
                   communityName: mappedCommunities[index]['communityName'],
                   communityDescription: mappedCommunities[index]['communityInfo'],
                   communityIcon: mappedCommunities[index]['communityProfilePic'],
+                  membersCount: mappedCommunities[index]['membersCount'] < 1000 ?
+                        mappedCommunities[index]['membersCount'].toString() 
+                        : '${(mappedCommunities[index]['membersCount']/100).truncateToDouble() /10.0}k',
+                  isFollowing: mappedCommunities[index]['isFollowing'],      
                   );
               }
             ),
@@ -69,6 +76,3 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
     }
   }
 }
-
-/* TO DOS :
-1) akhod boolean el community da followed walla laa w 3ala asaso ba-render el button */
