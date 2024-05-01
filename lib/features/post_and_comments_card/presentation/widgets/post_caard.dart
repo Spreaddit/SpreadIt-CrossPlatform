@@ -18,12 +18,16 @@ class PostCard extends StatefulWidget {
 
   /// List of comments associated with the post.
   List<Comment> comments;
+  VoidCallback? setIsloaded;
+  bool oneComment;
 
   /// Constructs a [PostCard] with the specified [post], [comments], and [isUserProfile] flag.
   PostCard({
     required this.post,
     required this.comments,
     required this.isUserProfile,
+    this.setIsloaded,
+    this.oneComment=false,
   });
 
   @override
@@ -116,6 +120,8 @@ class _PostCardState extends State<PostCard> {
                   CommentCard(
                     comment: widget.comments[index],
                     community: widget.post.community,
+                    setIsLoaded : widget.setIsloaded,
+                    onecomment: widget.oneComment,
                   ),
                   Container(
                     decoration: BoxDecoration(

@@ -20,7 +20,8 @@ void main() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   final token = await messaging.getToken(
-    vapidKey: 'BDdxkpSfsZfMF7ZyPklut-xQVgp6HH8GkJnTRHXGlsGv6u3oDujnIiqPF9_iqq_POtjU8tLuEISutYyAiyZC7dw',
+    vapidKey:
+        'BDdxkpSfsZfMF7ZyPklut-xQVgp6HH8GkJnTRHXGlsGv6u3oDujnIiqPF9_iqq_POtjU8tLuEISutYyAiyZC7dw',
   );
   print(token);
   await UserSingleton().loadFromPrefs();
@@ -48,13 +49,19 @@ class SpreadIt extends StatelessWidget {
         }
 
         if (pathSegments.contains('post-card-page') &&
-            pathSegments.length >= 3) {
-          final postId = pathSegments[pathSegments.length - 2];
-          final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
+            pathSegments.length >= 5) {
+          final postId = pathSegments[pathSegments.length - 4];
+          final isUserProfile = pathSegments[pathSegments.length - 3] == 'true';
+          final commentId = pathSegments[pathSegments.length - 2];
+          final oneComment = pathSegments[pathSegments.length - 1] == 'fa;se';
 
           return MaterialPageRoute(
-            builder: (_) =>
-                PostCardPage(postId: postId, isUserProfile: isUserProfile),
+            builder: (_) => PostCardPage(
+              postId: postId,
+              isUserProfile: isUserProfile,
+              commentId: commentId,
+              oneComment: oneComment,
+            ),
           );
         }
         return null;

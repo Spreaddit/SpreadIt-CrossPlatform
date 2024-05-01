@@ -52,11 +52,13 @@ NotificationData processNotification(
           context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true',
+              name: '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
               isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
             ),
           ),
         );
@@ -88,15 +90,17 @@ NotificationData processNotification(
       buttonText = "View Comment";
       onPress = () {
         //need to scroll ll comment
-        Navigator.push(
+         Navigator.push(
           context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true',
+              name: '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
               isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
             ),
           ),
         );
@@ -108,15 +112,17 @@ NotificationData processNotification(
       buttonText = "View Comment";
       onPress = () {
         //need to scroll ll comment
-        Navigator.push(
+         Navigator.push(
           context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true',
+              name: '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
               isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
             ),
           ),
         );
