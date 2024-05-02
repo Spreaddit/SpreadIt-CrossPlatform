@@ -20,30 +20,23 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   String communityOrUserName = 'r/AskReddit';    // y=to be taken from navigation into this page
   String communityOrUserIcon = './assets/images/SB-Standees-Spong-3_800x.png';
 
-  void setSortFilter(String value) {
-    setState(() => sortFilter = value);
-  }
-
-  void setTimeFilter(String value) {
-    setState(() => timeFilter = value);
-  }
-
-
   void navigateFilterTop () {
-    setSortFilter('Top');
-    setTimeFilter('All time');
-    Navigator.of(context).pushNamed('/in-community-or-user-search-results', arguments: {
-      'sortFilter': sortFilter,
-      'timeFilter': timeFilter,
+    Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
+      'searchItem': searchItem,
+      'communityOrUserName': communityOrUserName,
+      'communityOrUserIcon': communityOrUserIcon,
+      'sortFilter': 'Top',
+      'timeFilter': 'All time',
       }
     );
   }
 
   void navigateFilterNew () {
-    setSortFilter('New');
-    Navigator.of(context).pushNamed('/in-community-or-user-search-results', arguments: {
-      'sortFilter': sortFilter,
-      'timeFilter': timeFilter,
+    Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
+      'searchItem': searchItem,
+      'communityOrUserName': communityOrUserName,
+      'communityOrUserIcon': communityOrUserIcon,
+      'sortFilter': 'New',
       }
     );
   }
@@ -60,7 +53,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   }
 
   void navigateToCommunityOrUserSearch (String searchItem) {
-    Navigator.of(context).pushNamed('./community-or-user-search-results',
+    Navigator.of(context).pushNamed('/community-or-user-search-results',
     arguments: {
       'searchItem' : searchItem,
       'communityOrUserName' : communityOrUserName,

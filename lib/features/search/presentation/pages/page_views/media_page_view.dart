@@ -7,7 +7,15 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/time
 
 class MediaPageView extends StatefulWidget {
   final String searchItem;
-  const MediaPageView({Key? key,required this.searchItem}) : super(key: key);
+  final String? initialSortFilter;
+  final String? initialTimeFilter;
+
+  const MediaPageView({
+    Key? key,
+    required this.searchItem,
+    this.initialSortFilter,
+    this.initialTimeFilter,
+    }) : super(key: key);
 
   @override
   State<MediaPageView> createState() => _MediaPageViewState();
@@ -28,6 +36,16 @@ class _MediaPageViewState extends State<MediaPageView> {
   @override
   void initState() {
     super.initState(); 
+    if (widget.initialSortFilter != null) {
+      sort = widget.initialSortFilter!.toLowerCase();
+      sortText = widget.initialSortFilter!; 
+      if(widget.initialSortFilter == 'New') {
+        showTimeFilter = false;
+      }
+    }
+    if(widget.initialTimeFilter != null) {
+      timeText = widget.initialTimeFilter!;
+    }
     getPostsResults();
   }
 

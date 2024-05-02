@@ -24,7 +24,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
   }
 
   void navigateToGeneralSearchResults(String searchItem) {
-    Navigator.of(context).pushNamed('./general-search-results', arguments : {
+    Navigator.of(context).pushNamed('/general-search-results', arguments : {
       'searchItem': searchItem,
     }); 
   }

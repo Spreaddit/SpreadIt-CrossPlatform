@@ -26,7 +26,6 @@ class _SearchResultState extends State<SearchResult> {
 
   final GlobalKey<FormState> searchForm = GlobalKey<FormState>();
   String searchItem = '' ;
-  List filteredList = [];
   List labelsList = ['Posts', 'Communities', 'Comments', 'Media', 'People'];
   int selectedIndex = 0;
   List<Widget> pages = [];

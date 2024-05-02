@@ -50,7 +50,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
   }
 
   void navigateToGeneralSearchResults() {
-    Navigator.of(context).pushNamed('./general-search-results', arguments : {
+    Navigator.of(context).pushNamed('/general-search-results', arguments : {
       'searchItem': '',
     }); 
   }

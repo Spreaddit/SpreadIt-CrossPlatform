@@ -6,7 +6,13 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/radi
 
 class CommentsPageView extends StatefulWidget {
   final String searchItem;
-  const CommentsPageView({Key? key, required this.searchItem}) : super(key: key);
+  final String? initialSortFilter;
+
+  const CommentsPageView({
+    Key? key,
+    required this.searchItem,
+    this.initialSortFilter,
+    }) : super(key: key);
 
   @override
   State<CommentsPageView> createState() => _CommentsPageViewState();
@@ -23,6 +29,10 @@ class _CommentsPageViewState extends State<CommentsPageView> {
   @override
   void initState() {
     super.initState(); 
+    if (widget.initialSortFilter != null) {
+      sort = widget.initialSortFilter!.toLowerCase();
+      sortText = widget.initialSortFilter!; 
+    }
     getCommentssResults();
   }
 

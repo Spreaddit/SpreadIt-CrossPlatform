@@ -64,7 +64,7 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
 
 
   void navigateToSearchResult (String searchItem) {
-    Navigator.of(context).pushNamed('./general-search-results', arguments : {
+    Navigator.of(context).pushNamed('/general-search-results', arguments : {
       'searchItem': searchItem,
     }); 
   }

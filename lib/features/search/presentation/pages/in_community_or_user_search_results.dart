@@ -11,12 +11,16 @@ class InCommunityOrUserSearchResults extends StatefulWidget {
   final String searchItem;
   final String communityOrUserName;
   final String communityOrUserIcon;
+  final String? sortFilter;
+  final String? timeFilter;
 
   const InCommunityOrUserSearchResults({
     Key? key,
     required this.searchItem,
     required this.communityOrUserName,
     required this.communityOrUserIcon,
+    this.sortFilter,
+    this.timeFilter,
   }) : super(key: key);
 
   @override
@@ -26,7 +30,8 @@ class InCommunityOrUserSearchResults extends StatefulWidget {
 class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearchResults> {
   final GlobalKey<FormState> searchForm = GlobalKey<FormState>();
   String searchItem = '' ;
-  List filteredList = [];
+  String? initalSortFilter ;
+  String? initialTimeFilter;
   List labelsList = ['Posts','Comments', 'Media'];
   int selectedIndex = 0;
   List<Widget> pages = [];
@@ -37,15 +42,22 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
   void initState() {
     super.initState();
     searchItem = widget.searchItem;
-    pages.add(PostsPageView(searchItem: searchItem));
-    pages.add(CommentsPageView(searchItem: searchItem));
-    pages.add(MediaPageView(searchItem: searchItem));
-  }
-
-  void onSearch(List filteredList) {
-    setState(() {
-      this.filteredList = List.from(filteredList);
-    });
+    initalSortFilter = widget.sortFilter;
+    initialTimeFilter = widget.timeFilter;
+    pages.add(PostsPageView(
+      searchItem: searchItem,
+      initialSortFilter: initalSortFilter,
+      initialTimeFilter: initialTimeFilter,
+      ));
+    pages.add(CommentsPageView(
+      searchItem: searchItem,
+      initialSortFilter: initalSortFilter,
+      ));
+    pages.add(MediaPageView(
+      searchItem: searchItem,
+      initialSortFilter: initalSortFilter,
+      initialTimeFilter: initialTimeFilter,
+      ));
   }
 
   void updateSearchItem(String value) {
@@ -65,7 +77,7 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
   }
 
   void navigateToSearchInCommunityOrUserResults (String searchItem) {
-    Navigator.of(context).pushNamed('./community-or-user-search-results', arguments :{
+    Navigator.of(context).pushNamed('/community-or-user-search-results', arguments :{
       'searchItem': searchItem,
     });
   }

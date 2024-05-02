@@ -61,7 +61,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home:GeneralSearch(),
+      home:SearchInCommunityOrUser(),
        onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
@@ -154,20 +154,22 @@ class SpreadIt extends StatelessWidget {
         '/edit-profile': (context) => EditProfilePage(),
         '/edit_comment': (context) => EditComment(),
         '/settings/account-settings/add-password': (context) => AddPasswordPage(),
-        './general-search-results': (context) {
+        '/general-search-results': (context) {
           final args = ModalRoute.of(context)!.settings.arguments
               as Map<String, dynamic>;
           return SearchResult(
             searchItem: args['searchItem'],
           );
         },
-        './community-or-user-search-results': (context) {
+        '/community-or-user-search-results': (context) {
           final args = ModalRoute.of(context)!.settings.arguments
               as Map<String, dynamic>;
           return InCommunityOrUserSearchResults(
             searchItem: args['searchItem'],
             communityOrUserName: args['communityOrUserName'],
             communityOrUserIcon: args['communityOrUserIcon'],
+            sortFilter: args['sortFilter'],
+            timeFilter: args['timeFilter'],
           );
         },
       },

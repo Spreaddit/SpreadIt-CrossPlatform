@@ -5,12 +5,14 @@ class TrendingCardMobile extends StatefulWidget {
 
   final String title;
   final String content;
-  final String image;
+  final String? image;
+  final String? video;
 
   const TrendingCardMobile({
     required this.title,
     required this.content,
-    required this.image,
+    this.image,
+    this.video,
   });
 
   @override
@@ -49,25 +51,58 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                     ),
                   ],
                 ),
-                if (widget.image != '')
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: SizedBox(
-                        height: 50,
-                        width: 100,
-                        child: Image(
+                if (widget.image != null && (widget.image!.isNotEmpty || widget.image != '') )...[
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: SizedBox(
                           height: 50,
                           width: 100,
-                          image: AssetImage(widget.image),
-                          fit: BoxFit.cover,
+                          child: Image(
+                            height: 50,
+                            width: 100,
+                            image: AssetImage(widget.image!),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
+                if (widget.video != null && (widget.video!.isNotEmpty || widget.video != '') )...[
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: SizedBox(
+                              height: 50,
+                              width: 100,
+                              child: Image(
+                                height: 50,
+                                width: 100,
+                                image: AssetImage(widget.video!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 5.0, 
+                            left: 5.0, 
+                            child: Icon(
+                              Icons.play_circle_fill_rounded, 
+                              size: 17, 
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ],
           ),
           Divider(

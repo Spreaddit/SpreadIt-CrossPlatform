@@ -32,24 +32,35 @@ class _TrendingMenuState extends State<TrendingMenu> {
     final processedData = <Map<String, dynamic>>[];
     final title = data['title'];
     final content = data['content'][0] as String;
-    String? link;
+    String? imageLink;
+    String? videoLink;
     for (var attachment in data['attachments']) {
       if (attachment['type'] == 'image') {
-        link = attachment['link'];
-        print(link);
+        imageLink = attachment['link'];
+        print(imageLink);
+        break; 
+      }
+      else if (attachment['type'] == 'video') {
+        videoLink = attachment['link'];
+        print(videoLink);
         break; 
       }
     }
-    if (link == null) {
-      link = '';
+    if (imageLink == null) {
+      imageLink = '';
       print('No image found in attachments');
     }
+    if (videoLink == null) {
+      videoLink = '';
+      print('No video found in attachments');
+    }
 
-    print('link : $link');
+    print('link : $imageLink');
     processedData.add({
       'title': title,
       'content': content,
-      'image': link,
+      'image': imageLink,
+      'video': videoLink,
     });
     return processedData;
   }
@@ -57,7 +68,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
   
 
   void navigateToSearchResult (String searchItem) {
-    Navigator.of(context).pushNamed('./general-search-results', arguments : {
+    Navigator.of(context).pushNamed('/general-search-results', arguments : {
       'searchItem': searchItem,
     }); 
   }
@@ -90,6 +101,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
                         title: mappedTrending[index]['title'],
                         content: mappedTrending[index]['content'],
                         image: mappedTrending[index]['image'],
+                        video: mappedTrending[index]['video'],
                       ),
                     );
                   },
