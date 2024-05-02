@@ -30,6 +30,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
   }
 
   void navigateToSuggestedResults() {
+    print('called from searchbar');
     setState(() {});
   }
 
@@ -79,8 +80,3 @@ class _GeneralSearchState extends State<GeneralSearch> {
   }
 }
 
-/*TO DOS:
-
-1) api el trending 
-2) a-display elwidget bta3et el returned query 
-*/

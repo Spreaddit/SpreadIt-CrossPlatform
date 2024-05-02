@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatefulWidget {
@@ -35,11 +37,36 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     super.initState();
     _controller = TextEditingController(text: widget.initialBody);
     _controller.addListener(() {
-      setState(() {
-        widget.updateSearchItem(_controller.text);
-      });
+      debounce(_controller.text, Duration(milliseconds: 500), (text) => widget.updateSearchItem(text));
     });
   }
+
+  void debounce(String text, Duration duration, void Function(String) callback) {
+  // Stores the latest value
+  String? latestValue;
+
+  // Timer to delay the callback execution
+  Timer? timer;
+
+  // Function to be called after the debounce period
+  void handleUpdate() {
+    if (latestValue != null) {
+      callback(latestValue!);
+      timer = null; // Cleanup timer after execution
+    }
+  }
+
+  // Cancel any existing timer if a new event occurs
+  timer?.cancel();
+
+  // Update latest value and set a new timer
+  latestValue = text;
+  timer = Timer(duration, handleUpdate);
+}
+
+
+// Map to store timers for each stream (optional for multiple debounced streams)
+final Map<Stream, Timer?> _timers = {};
 
   @override
   void dispose() {
@@ -111,14 +138,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         fontWeight: FontWeight.bold,
                       ),
                       controller: _controller,
-                      /*selectionControls: widget.isContained != null && widget.isContained == true && widget.initialBody != null
-                          ? TextSelectionControls.from(
-                              TextSelection(
-                                baseOffset: widget.initialBody!.length,
-                                extentOffset: _controller.text.length,
-                              ),
-                            )
-                          : null,*/
                     ),
                   ),
                 ),

@@ -99,7 +99,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
                   itemCount: mappedTrending.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () => navigateToSearchResult(trending[index]['title']) ,
+                      onTap: () => navigateToSearchResult(mappedTrending[index]['title']) ,
                       child: TrendingCardMobile(
                         title: mappedTrending[index]['title'],
                         content: mappedTrending[index]['content'],

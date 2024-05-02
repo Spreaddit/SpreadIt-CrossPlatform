@@ -36,6 +36,12 @@ class _RecentSearchesState extends State<RecentSearches> {
     getSeacrhHistory();
   }
 
+  void navigateToSearchResults (String searchItem) async {
+    Navigator.of(context).pushNamed('/general-search-results', arguments : {
+      'searchItem': searchItem,
+    }); 
+  }
+
   @override
   Widget build(BuildContext context) { 
     if (recents != [] || recents.isNotEmpty) {
@@ -49,7 +55,7 @@ class _RecentSearchesState extends State<RecentSearches> {
             return Row(
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () => navigateToSearchResults(recents[index]),
                   child: Row(
                     children: [
                       Container(
