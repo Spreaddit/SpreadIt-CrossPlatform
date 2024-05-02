@@ -29,40 +29,43 @@ class _TrendingMenuState extends State<TrendingMenu> {
   }
 
   List<Map<String, dynamic>> extractTrendingData(Map<String, dynamic> data) {
-    final processedData = <Map<String, dynamic>>[];
-    final title = data['title'];
-    final content = data['content'][0] as String;
-    String? imageLink;
-    String? videoLink;
-    for (var attachment in data['attachments']) {
-      if (attachment['type'] == 'image') {
-        imageLink = attachment['link'];
-        print(imageLink);
-        break; 
+    List<dynamic> results = data['results'];
+    List<Map<String, dynamic>> mappedTrending = [];
+    try {
+      for (var trending in results) {
+        String? imageLink; 
+        String? videoLink;
+        if (trending['attachments'].isNotEmpty) {
+          Map<String, dynamic> firstAttachment = trending['attachments'][0];
+          if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
+            imageLink = firstAttachment['link'];
+          }
+          if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
+            videoLink = firstAttachment['link'];
+          }
+        }
+        mappedTrending.add({
+          'postId': trending['postId'] ?? (throw Exception('null')),
+          'title': trending['title'] ?? (throw Exception('null')),
+          'content': trending['content'] ?? (throw Exception('null')),
+          'isNsfw': trending['isNsfw'] ?? (throw Exception('null')),
+          'isSpoiler': trending['isSpoiler'] ?? (throw Exception('null')),
+          'votesCount': trending['votesCount'] ?? (throw Exception('null')),
+          'commentsCount': trending['commentsCount'] ?? (throw Exception('null')),
+          'createdAt': trending['date'] ?? (throw Exception('null')),
+          'username': trending['username'] ?? (throw Exception('null')),
+          'userProfilePic': trending['userProfilePic'] ?? (throw Exception('null')),
+          'communityName': trending['communityName'] ?? (throw Exception('null')),
+          'communityProfilePic': trending['communityProfilePic'] ?? (throw Exception('null')),
+          'image':  imageLink,
+          'video': videoLink,
+        });
       }
-      else if (attachment['type'] == 'video') {
-        videoLink = attachment['link'];
-        print(videoLink);
-        break; 
-      }
+      return mappedTrending;
     }
-    if (imageLink == null) {
-      imageLink = '';
-      print('No image found in attachments');
+    catch(e) {
+      return [];
     }
-    if (videoLink == null) {
-      videoLink = '';
-      print('No video found in attachments');
-    }
-
-    print('link : $imageLink');
-    processedData.add({
-      'title': title,
-      'content': content,
-      'image': imageLink,
-      'video': videoLink,
-    });
-    return processedData;
   }
 
   
