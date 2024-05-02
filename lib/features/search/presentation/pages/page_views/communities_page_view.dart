@@ -46,6 +46,14 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
 
   @override
   Widget build(BuildContext context) {
+    if (communities.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF4500),
+          ),
+        ),
+      );
+    }
     if (mappedCommunities.isEmpty) {
       return Image.asset('./assets/images/Empty_Toast.png');
     }

@@ -46,10 +46,18 @@ class _PeoplePageViewState extends State<PeoplePageView> {
 
   @override
   Widget build(BuildContext context) {
+    if (users.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF4500),
+          ),
+        ),
+      );
+    }
     if (mappedUsers.isEmpty) {
       return Image.asset('./assets/images/Empty_Toast.png');
     }
-    else {
+    else{  
       return SingleChildScrollView(
         child: Column(
           children: [

@@ -148,6 +148,14 @@ class _MediaPageViewState extends State<MediaPageView> {
   @override
   Widget build(BuildContext context) {
     if (media.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF4500),
+          ),
+        ),
+      );
+    }
+    if (mappedMedia.isEmpty) {
       return Image.asset('./assets/images/Empty_Toast.png');
     }
     else {

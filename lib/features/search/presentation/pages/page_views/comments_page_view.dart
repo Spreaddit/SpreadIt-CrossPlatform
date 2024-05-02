@@ -99,6 +99,14 @@ class _CommentsPageViewState extends State<CommentsPageView> {
   @override
   Widget build(BuildContext context) {
     if (comments.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF4500),
+          ),
+        ),
+      );
+    }
+    if (mappedComments.isEmpty) {
       return Image.asset('./assets/images/Empty_Toast.png');
     }
     else {

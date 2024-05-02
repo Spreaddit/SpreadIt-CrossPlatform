@@ -157,6 +157,14 @@ class _PostsPageViewState extends State<PostsPageView> {
 
   @override
   Widget build(BuildContext context) {
+    if (posts.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF4500),
+          ),
+        ),
+      );
+    }
     if (mappedPosts.isEmpty) {
       return Image.asset('./assets/images/Empty_Toast.png');
     }
