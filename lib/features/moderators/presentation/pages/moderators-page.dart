@@ -267,6 +267,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
                               },
                               () {
                                 removeModeratorFromList(e);
+                                Navigator.pop(context);
                               }
                             ],
                           );

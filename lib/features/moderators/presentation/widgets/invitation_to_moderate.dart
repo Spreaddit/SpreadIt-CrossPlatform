@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/moderators/data/invite_moderator.dart';
 
 List<Map<String, String>> communities = [
   {
@@ -63,7 +64,7 @@ void _showModalBottomSheetInvite(BuildContext context) {
                               _selectedCommunity = community;
                               _messageController = TextEditingController(
                                   text:
-                                      'I invite you to be a moderator of (${community["name"]}) [//route]');
+                                      'I invite you to be a moderator of r/${community["name"]}');
                             });
                           },
                           child: Column(
@@ -189,7 +190,12 @@ void _showModalBottomSheetInvite(BuildContext context) {
                                 print(_manageUsersClicked);
                                 print(_manageSettingsClicked);
                                 print(_selectedCommunity!["name"]);
-                                //TODO: send invitation api by sending these parameters
+                                inviteModerator(
+                                    communityName: "_selectedCommunity",
+                                    username: "username",
+                                    managePostsAndComments: _managePostsClicked,
+                                    manageUsers: _manageUsersClicked,
+                                    manageSettings: _manageSettingsClicked);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Invitation sent!'),

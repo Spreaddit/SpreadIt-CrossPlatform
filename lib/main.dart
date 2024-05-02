@@ -12,6 +12,7 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/p
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/pages/edit_moderators_permissions.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/invite_moderator_page.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
@@ -197,9 +198,9 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: ModeratorsPage(
+      home: InviteModeratorPage(
           communityName:
-              "community"), //ModeratorsPage(communityName: "community"), // ModeratorsPage(communityName: "community"), //StartUpPage(),
+              "communityName"), //ModeratorsPage(communityName: "community"), // ModeratorsPage(communityName: "community"), //StartUpPage(),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         print(pathSegments);
