@@ -31,7 +31,7 @@ NotificationData processNotification(
   String? buttonText;
   VoidCallback? onPress = () {};
   switch (notification.notificationType) {
-    case "follow":
+    case "Follow":
       icon = Icons.person_add;
       content = "";
       buttonText = "View Profile";
@@ -49,7 +49,7 @@ NotificationData processNotification(
         );
       };
       break;
-    case "upvoteComments":
+    case "Upvote Comments":
       icon = Icons.arrow_upward;
       content = notification.post!.title;
       buttonText = null;
@@ -71,7 +71,7 @@ NotificationData processNotification(
         );
       };
       break;
-    case "upvotePosts":
+    case "Upvote Posts":
       icon = Icons.arrow_upward;
       content = notification.post!.title;
       buttonText = null;
@@ -91,7 +91,7 @@ NotificationData processNotification(
       };
       break;
 
-    case "commentReply":
+    case "Comment Reply":
       icon = Icons.reply;
       content = notification.comment!.content;
       buttonText = "Reply";
@@ -113,7 +113,7 @@ NotificationData processNotification(
         );
       };
       break;
-    case "comment":
+    case "Comment":
       icon = Ionicons.chatbubble;
       content = notification.comment!.content;
       onPress = () {
@@ -148,7 +148,29 @@ NotificationData processNotification(
         );
       };
       break;
-
+      case "Mention":
+      icon = CupertinoIcons.person;
+      content = notification.relatedUser!.username!;
+      buttonText = null;
+      onPress = () {
+       Navigator.of(context).push(
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/user-profile/${notification.relatedUser!.username!}',
+            ),
+            builder: (context) => UserProfile(
+              username: notification.relatedUser!.username!,
+            ),
+          ),
+        );
+      };
+      break;
+      case "Account Update":
+      icon = Ionicons.ban;
+      content = '';
+      buttonText = null;
+      onPress = () {};
+      break;
     default:
       throw ArgumentError(
           'Invalid notification type: ${notification.notificationType}');

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
@@ -17,6 +18,7 @@ Future<int> verifyEmail({
       UserSingleton().setAccessToken(response.data['accessToken'],
           DateTime.parse(response.data['token_expiration_date']));
           print('verify successful');
+          UserSingleton().setVerifed();
       return 200;
     } else if (response.statusCode == 401) {
       print('Unautharized');

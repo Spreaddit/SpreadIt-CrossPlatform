@@ -59,55 +59,68 @@ class _NotificationWidgetState extends State<NotificationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical : 10.0),
-      tileColor: isRead ? null : Colors.lightBlueAccent.withOpacity(0.1),
-      leading: SizedBox(
-            width: 40.0,
-            height: 40.0,
-            child: Stack(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    widget.onPressed?.call();
-                  },
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(widget.community
+    return GestureDetector(
+      onTap: () {
+        markmessageasRead();
+        widget.onPressed?.call();
+      },
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        tileColor: isRead ? null : Colors.lightBlueAccent.withOpacity(0.1),
+        leading: SizedBox(
+          width: 40.0,
+          height: 40.0,
+          child: Stack(
+            children: [
+              if (widget.notification!.communitypic != null ||
+                  widget.notification!.relatedUser != null)
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    widget.community
                         ? widget.notification!.communitypic!
-                        : widget.notification!.relatedUser!.avatarUrl!),
-                    radius: 20.0,
+                        : widget.notification!.relatedUser!.avatarUrl!,
                   ),
+                  radius: 20.0,
                 ),
-                if (widget.iconData != null)
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: CircleAvatar(
-                      radius: 10,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        widget.iconData,
-                        color: Theme.of(context).colorScheme.tertiary,
-                        size: 15,
-                      ),
+              if (widget.notification!.communitypic == null &&
+                  widget.notification!.relatedUser == null)
+                CircleAvatar(
+                  backgroundImage:
+                      AssetImage('assets/images/LogoSpreadIt.png'),
+                  radius: 20.0,
+                ),
+              if (widget.iconData != null)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      widget.iconData,
+                      color: Theme.of(context).colorScheme.tertiary,
+                      size: 15,
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
-      title:Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                widget.community
-                    ? Text(widget.content)
-                    : Text("${widget.notification!.content} ${widget.date}"),
-                SizedBox(height: 4),
-              ]
-            ),
+        ),
+        title: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.notification!.notificationType == 'Account Update'
+                  ? Text('You have been banned from Spreddit')
+                  : widget.community
+                      ? Text(widget.content)
+                      : Text("${widget.notification!.content} ${widget.date}"),
+              SizedBox(height: 4),
+            ],
           ),
-      subtitle: (widget.buttonText != null && widget.buttonIcon != null)
-          ? Column(
+        ),
+        subtitle: (widget.buttonText != null && widget.buttonIcon != null)
+            ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
@@ -136,24 +149,27 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                       ),
                     ),
                   ),
-                ]
-            )
-          : !widget.community ? Text(widget.content) : null,
-          trailing : GestureDetector(
-            onTap: () {
-              markmessageasRead();
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => ManageNotificationBottomSheet(
-                  community: widget.community,
-                  onHide: widget.onHide,
-                  notification: widget.notification!,
-                  disable: widget.disable,
-                ),
-              );
-            },
-            child: Icon(Icons.more_vert),
-          ),
+                ],
+              )
+            : (!widget.community)
+                ? Text(widget.content)
+                : null,
+        trailing: GestureDetector(
+          onTap: () {
+            markmessageasRead();
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => ManageNotificationBottomSheet(
+                community: widget.community,
+                onHide: widget.onHide,
+                notification: widget.notification!,
+                disable: widget.disable,
+              ),
+            );
+          },
+          child: Icon(Icons.more_vert),
+        ),
+      ),
     );
   }
 }

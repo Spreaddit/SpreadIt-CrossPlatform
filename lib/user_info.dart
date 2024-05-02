@@ -30,6 +30,14 @@ class UserSingleton {
     _saveToPrefs(); 
   }
 
+  void setVerifed()
+  {
+    User newUser = user!;
+    newUser.isVerified=true;  
+    user=newUser;
+    _saveToPrefs(); 
+  }
+
   void setGoogleInfo(String token , String email) {
     googleEmail=email;
     googleToken=token;
