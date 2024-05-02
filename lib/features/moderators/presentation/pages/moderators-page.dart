@@ -3,8 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/custom_bar.dart';
+import 'package:spreadit_crossplatform/features/moderators/data/delete_moderator.dart';
 import 'package:spreadit_crossplatform/features/moderators/data/get_moderators.dart';
 import 'package:spreadit_crossplatform/features/moderators/data/moderator_class_model.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/edit_moderators_permissions.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/widgets/invitation_to_moderate.dart';
@@ -80,30 +82,39 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
   @override
   void initState() {
     super.initState();
-    //fetchModerators();
-    ModeratorsList = fetchModeratorsData(widget.communityName, _selectedIndex);
+    fetchModerators();
+    //ModeratorsList = fetchModeratorsData(widget.communityName, _selectedIndex);
   }
 
   void _onIndexChanged(int index) {
     setState(() {
       _selectedIndex = index;
+      fetchModerators();
     });
   }
 
-  /*Future<void> fetchModerators() async {
+  void onPermissionsChanged(bool newManagePostAndComments, bool newManageUsers,
+      bool newMnageSettings) {
+    setState(() {});
+  }
+
+  Future<void> fetchModerators() async {
     try {
-      var data = await fetchModeratorsData(communityName, selectedIndex);
+      var data =
+          await fetchModeratorsData(widget.communityName, _selectedIndex);
+      print(data);
       setState(() {
-       ModeratorsList = data;
+        ModeratorsList = data;
       });
     } catch (e) {
-      print('Error fetching comments: $e');
+      print('Error fetching moderators: $e');
     }
-  }*/
+  }
 
   void removeModeratorFromList(Moderator moderator) {
     setState(() {
       ModeratorsList.remove(moderator);
+      deleteModerator(widget.communityName, moderator.username);
     });
   }
 
@@ -117,55 +128,93 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
               shrinkWrap: true,
               children: ModeratorsList.map((e) {
                 return ListTile(
-                    leading: CircleAvatar(
-                        foregroundImage: NetworkImage(e.profilepic)),
+                    leading:
+                        CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
                     title: Text(e.username,
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,
                             fontWeight: FontWeight.bold)),
                     subtitle: Row(children: [
-                      Text(dateToDuration(e.moderatorSince)),
-                      e.isFullPermissions
-                          ? Text('   .Full permissions')
-                          : e.isAccess && e.isPosts
-                              ? Text('   .Access, Posts')
-                              : e.isAccess
-                                  ? Text("   .Access")
-                                  : e.isPosts
-                                      ? Text('   .Posts')
-                                      : Text(""),
+                      Text(dateToDuration(e.moderationDate)),
+                      e.managePostsAndComments &&
+                              e.manageSettings &&
+                              e.manageUsers
+                          ? Text(
+                              '   .Manage posts and comments, Manage settings, Manage users')
+                          : e.managePostsAndComments && e.manageSettings
+                              ? Text(
+                                  '   .Manage posts and comments, Manage settings')
+                              : e.managePostsAndComments && e.manageUsers
+                                  ? Text(
+                                      '   .Manage posts and comments, Manage users')
+                                  : e.manageSettings && e.manageUsers
+                                      ? Text(
+                                          '   .Manage settings, Manage users')
+                                      : e.managePostsAndComments
+                                          ? Text(
+                                              '   .Manage posts and comments')
+                                          : e.manageSettings
+                                              ? Text('   .Manage settings')
+                                              : e.manageUsers
+                                                  ? Text('   .Manage users')
+                                                  : Text(""),
                     ]),
                     onTap: () {});
               }).toList()),
         );
-      case 1:
+      case 1: //editable moderators
         return SliverToBoxAdapter(
           child: ListView(
               shrinkWrap: true,
               children: ModeratorsList.map((e) {
+                void onPermissionsChanged(bool newManagePostAndComments,
+                    bool newManageUsers, bool newManageSettings) {
+                  setState(() {
+                    e.managePostsAndComments = newManagePostAndComments;
+                    e.manageUsers = newManageUsers;
+                    e.manageSettings = newManageSettings;
+                  });
+                }
+
                 return ListTile(
                   leading:
-                      CircleAvatar(foregroundImage: NetworkImage(e.profilepic)),
+                      CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
                   title: Text(e.username,
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.bold)),
                   subtitle: Row(children: [
-                    Text(dateToDuration(e.moderatorSince)),
-                    e.isFullPermissions
-                        ? Text('   .Full permissions')
-                        : e.isAccess && e.isPosts
-                            ? Text('   .Access, Posts')
-                            : e.isAccess
-                                ? Text("   .Access")
-                                : e.isPosts
-                                    ? Text('   .Posts')
-                                    : Text(""),
+                    Text(dateToDuration(e.moderationDate)),
+                    e.managePostsAndComments &&
+                            e.manageSettings &&
+                            e.manageUsers
+                        ? Text(
+                            '   .Manage posts and comments, Manage settings, Manage users')
+                        : e.managePostsAndComments && e.manageSettings
+                            ? Text(
+                                '   .Manage posts and comments, Manage settings')
+                            : e.managePostsAndComments && e.manageUsers
+                                ? Text(
+                                    '   .Manage posts and comments, Manage users')
+                                : e.manageSettings && e.manageUsers
+                                    ? Text('   .Manage settings, Manage users')
+                                    : e.managePostsAndComments
+                                        ? Text('   .Manage posts and comments')
+                                        : e.manageSettings
+                                            ? Text('   .Manage settings')
+                                            : e.manageUsers
+                                                ? Text('   .Manage users')
+                                                : Text(""),
                   ]),
                   onTap: () {
-                    //navigate to user profile
+                    Navigator.of(context).pushNamed(
+                      '/user-profile',
+                      arguments: {
+                        'username': e.username,
+                      },
+                    );
                   },
                   trailing: IconButton(
                     icon: Icon(Icons.more_vert_rounded),
@@ -187,13 +236,34 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
                               "Remove"
                             ],
                             onPressedList: [
-                              //if (e.username != UserSingleton().user!.username)
+                              // if (e.username != UserSingleton().user!.username)
                               if (e.username != "rehab")
                                 () {
                                   //navigate to edit permissions page
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditPermissionsPage(
+                                        communityName: widget.communityName,
+                                        username: e.username,
+                                        managePostsAndComments:
+                                            e.managePostsAndComments,
+                                        manageUsers: e.manageUsers,
+                                        manageSettings: e.manageSettings,
+                                        onPermissionsChanged:
+                                            onPermissionsChanged,
+                                      ),
+                                    ),
+                                  );
                                 },
                               () {
-                                // navigate to user profile
+                                Navigator.of(context).pushNamed(
+                                  '/user-profile',
+                                  arguments: {
+                                    'username': e.username,
+                                  },
+                                );
                               },
                               () {
                                 removeModeratorFromList(e);
@@ -214,23 +284,34 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
               children: ModeratorsList.map((e) {
                 return ListTile(
                   leading:
-                      CircleAvatar(foregroundImage: NetworkImage(e.profilepic)),
+                      CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
                   title: Text(e.username,
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black,
                           fontWeight: FontWeight.bold)),
                   subtitle: Row(children: [
-                    Text(dateToDuration(e.moderatorSince)),
-                    e.isFullPermissions
-                        ? Text('     .Full permissions')
-                        : e.isAccess && e.isPosts
-                            ? Text('    .Access, Posts')
-                            : e.isAccess
-                                ? Text("  .Access")
-                                : e.isPosts
-                                    ? Text('  .Posts')
-                                    : Text(""),
+                    Text(dateToDuration(e.moderationDate)),
+                    e.managePostsAndComments &&
+                            e.manageSettings &&
+                            e.manageUsers
+                        ? Text(
+                            '   .Manage posts and comments, Manage settings, Manage users')
+                        : e.managePostsAndComments && e.manageSettings
+                            ? Text(
+                                '   .Manage posts and comments, Manage settings')
+                            : e.managePostsAndComments && e.manageUsers
+                                ? Text(
+                                    '   .Manage posts and comments, Manage users')
+                                : e.manageSettings && e.manageUsers
+                                    ? Text('   .Manage settings, Manage users')
+                                    : e.managePostsAndComments
+                                        ? Text('   .Manage posts and comments')
+                                        : e.manageSettings
+                                            ? Text('   .Manage settings')
+                                            : e.manageUsers
+                                                ? Text('   .Manage users')
+                                                : Text(""),
                   ]),
                   onTap: () {
                     //navigate to user profile
@@ -309,7 +390,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
                                             _messageController =
                                                 TextEditingController(
                                                     text:
-                                                        'I invite you to be a moderator of (${community["name"]}) [//route]');
+                                                        'I invite you to be a moderator of r/${community["name"]} ');
                                           });
                                         },
                                         child: Column(
