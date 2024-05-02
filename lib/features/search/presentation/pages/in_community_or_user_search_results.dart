@@ -8,7 +8,7 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/sear
 
 class InCommunityOrUserSearchResults extends StatefulWidget {
 
-  final String searchItem;
+  final String? searchItem;
   final String communityOrUserName;
   final String communityOrUserIcon;
   final String? sortFilter;
@@ -16,7 +16,7 @@ class InCommunityOrUserSearchResults extends StatefulWidget {
 
   const InCommunityOrUserSearchResults({
     Key? key,
-    required this.searchItem,
+    this.searchItem,
     required this.communityOrUserName,
     required this.communityOrUserIcon,
     this.sortFilter,
@@ -41,7 +41,9 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
   @override
   void initState() {
     super.initState();
-    searchItem = widget.searchItem;
+    if (widget.searchItem != null){
+      searchItem = widget.searchItem!;
+    }
     initalSortFilter = widget.sortFilter;
     initialTimeFilter = widget.timeFilter;
     pages.add(PostsPageView(
