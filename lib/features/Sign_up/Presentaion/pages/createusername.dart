@@ -32,6 +32,7 @@ class _CreateUsernameState extends State<CreateUsername> {
     _userName = username;
       var responseCode = await checkUsernameAvailability(
       username: _userName,
+      checkIfAvaliable: true,
     );
     setState(() {
       invalidText = validateusernametext(_userName);

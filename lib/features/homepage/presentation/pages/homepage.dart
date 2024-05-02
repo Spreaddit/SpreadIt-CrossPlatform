@@ -9,6 +9,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 CurrentPage previousPage = CurrentPage.home;
 
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     final String token = parts.last;
     print("token $token");
     int response =100;
-    if(token!='home')
+    if(token!='home' || token=='' || UserSingleton().user!.isVerified! == false)
     {
         response= await verifyEmail(emailToken: token);
 

@@ -2,10 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/get_moderator_community.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/comments_shimmering.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
@@ -62,13 +63,14 @@ class _UserProfileState extends State<UserProfile> {
   Uint8List? imageProfileWeb;
   late String username;
   List<Community> moderatorCommunities = [];
+  bool isCommentsLoaded = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    username = args?['username'] ?? widget.username ??'';
+    username = args?['username'] ?? widget.username ?? '';
     username = username == '' ? UserSingleton().user!.username : username;
     myProfile = username == UserSingleton().user!.username;
     fetchUserInfoAsync();
@@ -80,7 +82,6 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     super.initState();
   }
-
 
   /// Checks the follow status of the current user.
   void checkFollowStatus() async {
@@ -150,6 +151,7 @@ class _UserProfileState extends State<UserProfile> {
       var data = await fetchCommentsData(username, 'user', '1');
       setState(() {
         commentsList = data;
+        isCommentsLoaded = true;
       });
     } catch (e) {
       print('Error fetching comments: $e');
@@ -252,15 +254,27 @@ class _UserProfileState extends State<UserProfile> {
         );
 
       case 1:
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final comment = commentsList[index];
-              return CommentWidget(comment: comment);
-            },
-            childCount: commentsList.length,
-          ),
-        );
+        return isCommentsLoaded
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final comment = commentsList[index];
+                    return CommentWidget(comment: comment);
+                  },
+                  childCount: commentsList.length,
+                ),
+              )
+            : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return CommentShimmerWidget(
+                      saved: false,
+                    );
+                  },
+                  childCount: 10,
+                ),
+              );
+
       case 2:
         return SliverToBoxAdapter(
           child: AboutWidget(
@@ -296,20 +310,9 @@ class _UserProfileState extends State<UserProfile> {
                         maxWidth: 50.0,
                         maxHeight: 200.0,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.blue),
-                            backgroundColor: Colors.grey,
-                            strokeWidth: 3,
-                          ),
-                          SizedBox(height: 8),
-                          Text('Loading'),
-                        ],
-                      ),
-                    )
+                      child: Center(
+                        child: LoaderWidget(dotSize: 10, logoSize: 50.0),
+                      ))
                   : ProfileHeader(
                       backgroundImage: background,
                       profilePicture: profilePicture,
@@ -317,7 +320,8 @@ class _UserProfileState extends State<UserProfile> {
                       profileImageWeb: imageProfileWeb,
                       backgroundImageWeb: imageBackgroundWeb,
                       profileImageFile: profileImageFile,
-                      username: displayName,
+                      username: username,
+                      displayName: displayName,
                       userinfo: userinfo,
                       about: about,
                       myProfile: myProfile,

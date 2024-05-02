@@ -17,7 +17,7 @@ import '../../../generic_widgets/share.dart';
 
 /// The `ProfileHeader` widget displays the header section of a user's profile.
 ///
-/// It includes the user's profile picture, background image, username, user info, about section,
+/// It includes the user's profile picture, background image, displayName, user info, about section,
 /// follow button (if applicable), chat button, and social media links.
 class ProfileHeader extends StatefulWidget {
   /// The URL of the background image.
@@ -25,6 +25,9 @@ class ProfileHeader extends StatefulWidget {
 
   /// The URL of the profile picture.
   final String profilePicture;
+
+  /// The displayName of the user.
+  final String displayName;
 
   /// The username of the user.
   final String username;
@@ -54,25 +57,26 @@ class ProfileHeader extends StatefulWidget {
   final List<Map<String, dynamic>> socialMediaLinks;
 
   /// The file representing the background image (for local images).
-  File? backgroundImageFile;
+  final File? backgroundImageFile;
 
   /// The file representing the profile picture (for local images).
-  File? profileImageFile;
+  final File? profileImageFile;
 
   /// The byte data representing the background image (for web images).
-  Uint8List? backgroundImageWeb;
+  final Uint8List? backgroundImageWeb;
 
   /// The byte data representing the profile picture (for web images).
-  Uint8List? profileImageWeb;
+  final Uint8List? profileImageWeb;
 
-  List<Community> moderatorCommunities;
+  final List<Community> moderatorCommunities;
 
   /// Creates a `ProfileHeader` widget.
   ///
-  /// The `backgroundImage`, `profilePicture`, `username`, `userinfo`, `about`, and `myProfile` parameters are required.
+  /// The `backgroundImage`, `profilePicture`, `displayName`, `userinfo`, `about`, and `myProfile` parameters are required.
   ProfileHeader({
     required this.backgroundImage,
     required this.profilePicture,
+    required this.displayName,
     required this.username,
     required this.userinfo,
     required this.about,
@@ -97,16 +101,24 @@ class ProfileHeader extends StatefulWidget {
 class _ProfileHeaderState extends State<ProfileHeader> {
   double _headerHeight = 0;
   List<FollowUser> followerslist = [];
+  String url ='';
 
   @override
   void initState() {
     super.initState();
+    getFollowers();
+    url =Uri.base.toString();
+    List<String> parts = url.split('/');
+    String username = parts.last;
+     if(username=='user-profile')
+     {
+      url= '$url/${widget.username}';
+     }
     // Set _headerHeight when the widget is first inserted into the tree
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        _headerHeight = context.size!.height;
+        _headerHeight = context.size!.height + 50.0;
       });
-        getFollowers();
     });
   }
 
@@ -181,14 +193,13 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             onPressed: () {
                               // TO DO : Update this when search is implemented
                             },
-
                             color: Colors.white,
                             iconSize: iconSize,
                           ),
                           IconButton(
                             icon: Icon(Icons.share),
-                            onPressed: () {
-                              sharePressed('Profile Link isa');
+                             onPressed: () {
+                              sharePressed(url);
                             },
                             color: Colors.white,
                             iconSize: iconSize,
@@ -218,7 +229,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                         () => {},
                                         () => {
                                               interactWithUser(
-                                                  userId: widget.username,
+                                                  userId: widget.displayName,
                                                   action:
                                                       InteractWithUsersActions
                                                           .block)
@@ -304,7 +315,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                 ),
                                 child: IconButton(
                                   icon: Icon(Ionicons.person_add_outline),
-                                  onPressed: (){},
+                                  onPressed: () {},
                                   color: Colors.white,
                                   iconSize: iconSize * 0.75,
                                 ),
@@ -329,7 +340,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           ],
                         ),
                         Text(
-                          widget.username,
+                          widget.displayName,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -337,8 +348,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             color: Colors.white,
                           ),
                         ),
-                        if(followerslist.isNotEmpty)
-                        TextButton(
+                        if (followerslist.isNotEmpty)
+                          TextButton(
                             onPressed: () {
                               Navigator.of(context)
                                   .pushNamed('/followers-page', arguments: {
@@ -357,13 +368,16 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                   ),
                                 ),
                                 SizedBox(width: 5),
-                                Icon(Icons.arrow_forward , color: Colors.white,),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                           ),
-                           SizedBox(
+                        SizedBox(
                             height: kIsWeb
-                                ? screenHeight * 0.02
+                                ? screenHeight * 0.015
                                 : screenHeight * 0.02),
                         Text(
                           widget.userinfo,
@@ -376,8 +390,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         ),
                         SizedBox(
                             height: kIsWeb
-                                ? screenHeight * 0.02
+                                ? screenHeight * 0.015
                                 : screenHeight * 0.02),
+                        if(widget.about!='')
                         Text(
                           widget.about,
                           style: TextStyle(
@@ -389,7 +404,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         ),
                         SizedBox(
                             height: kIsWeb
-                                ? screenHeight * 0.02
+                                ? screenHeight * 0.015
                                 : screenHeight * 0.02),
                         Wrap(
                           alignment: WrapAlignment.start,
