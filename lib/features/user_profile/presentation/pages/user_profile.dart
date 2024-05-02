@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
+import 'package:spreadit_crossplatform/features/user_profile/data/get_moderator_community.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
@@ -60,6 +61,7 @@ class _UserProfileState extends State<UserProfile> {
   ScrollController _scrollController = ScrollController();
   Uint8List? imageProfileWeb;
   late String username;
+  List<Community> moderatorCommunities = [];
 
   @override
   void didChangeDependencies() {
@@ -93,7 +95,8 @@ class _UserProfileState extends State<UserProfile> {
   void fetchUserInfoAsync() async {
     try {
       userInfoFuture = await fetchUserInfo(username);
-
+      List<Community> moderatorCommunitiess =
+          await GetUserModeratorCommunity().getCommunities();
       setState(() {
         formattedDate = formatDate(userInfoFuture!.dateOfJoining);
         userinfo =
@@ -105,6 +108,7 @@ class _UserProfileState extends State<UserProfile> {
         profilePicture = userInfoFuture!.avatar;
         displayName = userInfoFuture!.displayname;
         isActive = userInfoFuture!.isActive;
+        moderatorCommunities = moderatorCommunitiess;
         socialMediaLinks = userInfoFuture!.socialMedia
             .map((socialMedia) => {
                   'platform': socialMedia.platform,
@@ -194,8 +198,6 @@ class _UserProfileState extends State<UserProfile> {
 
   /// Builds the selected page based on the current index.
   Widget _buildSelectedPage() {
-    print(
-        "isActive $isActive communitiesList.isNotEmpty ${communitiesList.isNotEmpty}");
     switch (_selectedIndex) {
       case 0:
         return SliverToBoxAdapter(
@@ -324,6 +326,7 @@ class _UserProfileState extends State<UserProfile> {
                       onStartChatPressed: () => {},
                       editprofile: () => navigateToEditProfile(context),
                       socialMediaLinks: socialMediaLinks,
+                      moderatorCommunities: moderatorCommunities,
                     ),
             ),
             SliverToBoxAdapter(

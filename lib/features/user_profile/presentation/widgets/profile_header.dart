@@ -3,12 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:ionicons/ionicons.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
+import 'package:spreadit_crossplatform/features/user_profile/data/class_models/followers_class_model.dart';
+import 'package:spreadit_crossplatform/features/user_profile/data/get_users_follow.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/icon_picker.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/social_media_button.dart';
-
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../generic_widgets/share.dart';
 
@@ -51,16 +54,18 @@ class ProfileHeader extends StatefulWidget {
   final List<Map<String, dynamic>> socialMediaLinks;
 
   /// The file representing the background image (for local images).
-   File? backgroundImageFile;
+  File? backgroundImageFile;
 
   /// The file representing the profile picture (for local images).
-   File? profileImageFile;
+  File? profileImageFile;
 
   /// The byte data representing the background image (for web images).
-   Uint8List? backgroundImageWeb;
+  Uint8List? backgroundImageWeb;
 
   /// The byte data representing the profile picture (for web images).
-   Uint8List? profileImageWeb;
+  Uint8List? profileImageWeb;
+
+  List<Community> moderatorCommunities;
 
   /// Creates a `ProfileHeader` widget.
   ///
@@ -81,6 +86,7 @@ class ProfileHeader extends StatefulWidget {
     this.profileImageFile,
     this.backgroundImageWeb,
     this.profileImageWeb,
+    this.moderatorCommunities = const [],
   });
 
   @override
@@ -90,6 +96,7 @@ class ProfileHeader extends StatefulWidget {
 /// The state for the `ProfileHeader` widget.
 class _ProfileHeaderState extends State<ProfileHeader> {
   double _headerHeight = 0;
+  List<FollowUser> followerslist = [];
 
   @override
   void initState() {
@@ -99,6 +106,14 @@ class _ProfileHeaderState extends State<ProfileHeader> {
       setState(() {
         _headerHeight = context.size!.height;
       });
+        getFollowers();
+    });
+  }
+
+  Future<void> getFollowers() async {
+    List<FollowUser> users = await getFollwersusers();
+    setState(() {
+      followerslist = users;
     });
   }
 
@@ -114,7 +129,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         ? screenHeight * 0.065
         : (screenWidth < screenHeight ? screenWidth : screenHeight) * 0.1;
 
-   
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
@@ -202,7 +216,13 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                       onPressedList: [
                                         () => {},
                                         () => {},
-                                        () => { interactWithUser(userId:widget.username, action :InteractWithUsersActions.block)},
+                                        () => {
+                                              interactWithUser(
+                                                  userId: widget.username,
+                                                  action:
+                                                      InteractWithUsersActions
+                                                          .block)
+                                            },
                                         () => {},
                                       ],
                                     );
@@ -273,6 +293,22 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                   iconSize: iconSize * 0.75,
                                 ),
                               ),
+                            if (!widget.myProfile &&
+                                widget.moderatorCommunities.isNotEmpty)
+                              Container(
+                                padding: EdgeInsets.zero,
+                                margin: EdgeInsets.only(left: 5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white),
+                                ),
+                                child: IconButton(
+                                  icon: Icon(Ionicons.person_add_outline),
+                                  onPressed: (){},
+                                  color: Colors.white,
+                                  iconSize: iconSize * 0.75,
+                                ),
+                              ),
                             if (widget.myProfile)
                               OutlinedButton(
                                 onPressed: widget.editprofile,
@@ -301,7 +337,31 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(
+                        if(followerslist.isNotEmpty)
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed('/followers-page', arguments: {
+                                'followers': followerslist,
+                              });
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${followerslist.length} followers',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Icon(Icons.arrow_forward , color: Colors.white,),
+                              ],
+                            ),
+                          ),
+                           SizedBox(
                             height: kIsWeb
                                 ? screenHeight * 0.02
                                 : screenHeight * 0.02),
