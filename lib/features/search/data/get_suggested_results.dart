@@ -6,7 +6,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future <Map<String,dynamic>> getSuggestedResults() async {
+Future <Map<String,dynamic>> getSuggestedResults(String query) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
@@ -16,6 +16,9 @@ Future <Map<String,dynamic>> getSuggestedResults() async {
           'Authorization': 'Bearer $accessToken',
         },
       ),
+      data: {
+        "q": query,
+      }
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);

@@ -16,7 +16,7 @@ class GeneralSearch extends StatefulWidget {
 class _GeneralSearchState extends State<GeneralSearch> {
 
   final GlobalKey<FormState> searchForm = GlobalKey<FormState>();
-  String? searchItem ;
+  String searchItem = '' ;
 
   void updateSearchItem(String value) {
     setState(() => searchItem = value);
@@ -64,14 +64,14 @@ class _GeneralSearchState extends State<GeneralSearch> {
                   ),
                 ],
               ),
-              (searchItem == null || RegExp(r'^[\W_]+$').hasMatch(searchItem!) ) ?
+              (searchItem.isEmpty || RegExp(r'^[\W_]+$').hasMatch(searchItem) ) ?
                 Column(
                   children: [
                     RecentSearches(),
                     TrendingMenu(),
                   ],
                 ) :
-                SuggestedResults(), 
+                SuggestedResults(searchItem: searchItem), 
             ],
           ),
       ),

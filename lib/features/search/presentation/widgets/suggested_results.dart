@@ -3,7 +3,9 @@ import 'package:spreadit_crossplatform/features/search/data/get_suggested_result
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/search_display_list.dart';
 
 class SuggestedResults extends StatefulWidget {
-  const SuggestedResults({Key? key}) : super(key: key);
+  final String searchItem;
+
+  const SuggestedResults({Key? key, required this.searchItem}) : super(key: key);
 
   @override
   State<SuggestedResults> createState() => _SuggestedResultsState();
@@ -13,16 +15,18 @@ class _SuggestedResultsState extends State<SuggestedResults> {
 
   List<Map<String, dynamic>> communities = [];
   List<Map<String, dynamic>> users = [];
+  String searchItem = '';
 
 
   @override
   void initState() {
+    searchItem = widget.searchItem;
     updateSuggestedResults();
     super.initState();
   }
 
   void updateSuggestedResults() async {
-    Map<String,dynamic> response  = await getSuggestedResults();
+    Map<String,dynamic> response  = await getSuggestedResults(searchItem);
     Map<String, List<Map<String, dynamic>>> data = await separateCommunitiesAndUsers(response);
     communities = data['communities']!;
     users = data['users']!;
@@ -51,7 +55,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
 
   void navigateToGeneralSearchResults() {
     Navigator.of(context).pushNamed('/general-search-results', arguments : {
-      'searchItem': '',
+      'searchItem': searchItem,
     }); 
   }
 
@@ -89,7 +93,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
             InkWell(
               onTap: navigateToGeneralSearchResults,  
               child: Text(
-                'Search for kwak',
+                'Search for $searchItem',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
@@ -103,7 +107,3 @@ class _SuggestedResultsState extends State<SuggestedResults> {
     );
   }
 }
-
-// 'Search for "$searchItem"'
-
-//to do : akhod el searchitem hena kaman
