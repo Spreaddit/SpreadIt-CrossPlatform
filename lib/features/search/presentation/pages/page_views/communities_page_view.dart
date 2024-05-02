@@ -24,24 +24,29 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
 
   void getCommunitiesResults() async {
     communities = await getSearchResults(widget.searchItem, 'communities','relevance');
-    mappedCommunities = communities != {} ? extractCommunityDetails(communities) : [];
+    mappedCommunities = extractCommunityDetails(communities);
     setState(() {});
   }
 
   List<Map<String, dynamic>> extractCommunityDetails(Map<String, dynamic> data) {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedCommunities = [];
-    for (var community in results) {
-      mappedCommunities.add({
-        'communityId' : community['communityId'],
-        'communityName': community['communityName'],
-        'communityProfilePic': community['communityProfilePic'],
-        'membersCount': community['membersCount'],
-        'communityInfo': community['communityInfo'],
-        'isFollowing': community['isFollowing'],
-      });
+    try {
+      for (var community in results) {
+        mappedCommunities.add({
+          'communityId' : community['communityId'] ?? (throw Exception('null')),
+          'communityName': community['communityName'] ?? (throw Exception('null')),
+          'communityProfilePic': community['communityProfilePic'] ?? (throw Exception('null')),
+          'membersCount': community['membersCount'] ?? (throw Exception('null')),
+          'communityInfo': community['communityInfo'] ?? (throw Exception('null')),
+          'isFollowing': community['isFollowing'] ?? (throw Exception('null')),
+        });
+      }
+      return mappedCommunities;
     }
-    return mappedCommunities;
+    catch(e) {
+      return [];
+    }
   }
 
   @override

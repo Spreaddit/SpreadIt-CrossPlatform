@@ -31,17 +31,22 @@ class _PeoplePageViewState extends State<PeoplePageView> {
   List<Map<String, dynamic>> extractUsersDetails(Map<String, dynamic> data) {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedUsers = [];
-    for (var user in results) {
-      mappedUsers.add({
-        'userId': user['userId'],
-        'username': user['username'],
-        'userProfilePic': user['userProfilePic'],
-        'userInfo': user['userinfo'],
-        'followersCount': user['followersCount'],
-        'isFollowing': user['isFollowing'],
-      });
+    try {
+      for (var user in results) {
+        mappedUsers.add({
+          'userId': user['userId'] ?? (throw Exception('null')),
+          'username': user['username'] ?? (throw Exception('null')),
+          'userProfilePic': user['userProfilePic'] ?? (throw Exception('null')),
+          'userInfo': user['userinfo'] ?? (throw Exception('null')),
+          'followersCount': user['followersCount'] ?? (throw Exception('null')),
+          'isFollowing': user['isFollowing'] ?? (throw Exception('null')),
+        });
+      }
+      return mappedUsers;
     }
-    return mappedUsers;
+    catch(e) {
+      return [];
+    }
   }
 
   @override

@@ -45,36 +45,41 @@ class _CommentsPageViewState extends State<CommentsPageView> {
   List<Map<String, dynamic>> extractCommentDetails(Map<String, dynamic> data) {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedComments = [];
-    for (var comment in results) {
-      String? imageLink; 
-      String? videoLink;
-      if (comment['attachments'].isNotEmpty) {
-        Map<String, dynamic> firstAttachment = comment['attachments'][0];
-        if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
-          imageLink = firstAttachment['link'];
+    try {
+      for (var comment in results) {
+        String? imageLink; 
+        String? videoLink;
+        if (comment['attachments'].isNotEmpty) {
+          Map<String, dynamic> firstAttachment = comment['attachments'][0];
+          if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
+            imageLink = firstAttachment['link'];
+          }
+          if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
+            videoLink = firstAttachment['link'];
+          }
         }
-        if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
-          videoLink = firstAttachment['link'];
-        }
+        mappedComments.add({
+          'commentId': comment['commentId'] ?? (throw Exception('null')),
+          'commentContent': comment['commentContent'] ?? (throw Exception('null')),
+          'commentVotes': comment['commentVotes'] ?? (throw Exception('null')),
+          'commentDate': comment['commentDate'] ?? (throw Exception('null')),
+          'communityName': comment['communityName'] ?? (throw Exception('null')),
+          'communityProfilePic': comment['communityProfilePic'] ?? (throw Exception('null')),
+          'username': comment['username'] ?? (throw Exception('null')),
+          'userProfilePic': comment['userProfilePic'] ?? (throw Exception('null')),
+          'postDate': comment['postDate'] ?? (throw Exception('null')),
+          'postVotes': comment['postVotes'] ?? (throw Exception('null')),
+          'postCommentsCount': comment['postCommentsCount'] ?? (throw Exception('null')),
+          'postTitle': comment['postTitle'] ?? (throw Exception('null')),
+          'image':  imageLink,
+          'video': videoLink,
+        });
       }
-      mappedComments.add({
-        'commentId': comment['commentId'],
-        'commentContent': comment['commentContent'],
-        'commentVotes': comment['commentVotes'],
-        'commentDate': comment['commentDate'],
-        'communityName': comment['communityName'],
-        'communityProfilePic': comment['communityProfilePic'],
-        'username': comment['username'],
-        'userProfilePic': comment['userProfilePic'],
-        'postDate': comment['postDate'],
-        'postVotes': comment['postVotes'],
-        'postCommentsCount': comment['postCommentsCount'],
-        'postTitle': comment['postTitle'],
-        'image':  imageLink,
-        'video': videoLink,
-      });
+      return mappedComments;
     }
-    return mappedComments;
+    catch(e) {
+      return [];
+    }
   }
 
 

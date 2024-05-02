@@ -59,26 +59,31 @@ class _MediaPageViewState extends State<MediaPageView> {
   List<Map<String, dynamic>> extractMediaDetails(Map<String, dynamic> data) {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedMedia = [];
-    for (var post in results) {
-      if (post['attachments'].isNotEmpty)
-      {
-        mappedMedia.add({
-        'postId': post['postId'],
-        'title': post['title'],
-        'isNsfw': post['isNsfw'],
-        'isSpoiler': post['isSpoiler'],
-        'votesCount': post['votesCount'],
-        'commentCount': post['commentsCount'],
-        'createdAt': post['date'],
-        'username': post['username'],
-        'userProfilePic': post['userProfilePic'],
-        'communityName': post['communityName'],
-        'communityProfilePic': post['communityProfilePic'],
-        'image': post['attachments'][0],
-        });
+    try {
+      for (var post in results) {
+        if (post['attachments'].isNotEmpty)
+        {
+          mappedMedia.add({
+          'postId': post['postId'] ?? (throw Exception('null')),
+          'title': post['title'] ?? (throw Exception('null')),
+          'isNsfw': post['isNsfw'] ?? (throw Exception('null')),
+          'isSpoiler': post['isSpoiler'] ?? (throw Exception('null')),
+          'votesCount': post['votesCount'] ?? (throw Exception('null')),
+          'commentCount': post['commentsCount'] ?? (throw Exception('null')),
+          'createdAt': post['date'] ?? (throw Exception('null')),
+          'username': post['username'] ?? (throw Exception('null')),
+          'userProfilePic': post['userProfilePic'] ?? (throw Exception('null')),
+          'communityName': post['communityName'] ?? (throw Exception('null')),
+          'communityProfilePic': post['communityProfilePic'] ?? (throw Exception('null')),
+          'image': post['attachments'][0],
+          });
+        }
       }
+      return mappedMedia;
     }
-    return mappedMedia;
+    catch(e) {
+      return [];
+    }
   }
 
   void removeFilter() {

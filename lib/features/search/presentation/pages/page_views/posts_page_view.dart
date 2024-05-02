@@ -61,35 +61,40 @@ class _PostsPageViewState extends State<PostsPageView> {
   List<Map<String, dynamic>> extractPostDetails(Map<String, dynamic> data) {
     List<dynamic> results = data['results'];
     List<Map<String, dynamic>> mappedPosts = [];
-    for (var post in results) {
-      String? imageLink; 
-      String? videoLink;
-      if (post['attachments'].isNotEmpty) {
-        Map<String, dynamic> firstAttachment = post['attachments'][0];
-        if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
-          imageLink = firstAttachment['link'];
+    try {
+      for (var post in results) {
+        String? imageLink; 
+        String? videoLink;
+        if (post['attachments'].isNotEmpty) {
+          Map<String, dynamic> firstAttachment = post['attachments'][0];
+          if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
+            imageLink = firstAttachment['link'];
+          }
+          if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
+            videoLink = firstAttachment['link'];
+          }
         }
-        if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
-          videoLink = firstAttachment['link'];
-        }
+        mappedPosts.add({
+          'postId': post['postId'] ?? (throw Exception('null')),
+          'title': post['title'] ?? (throw Exception('null')),
+          'isNsfw': post['isNsfw'] ?? (throw Exception('null')),
+          'isSpoiler': post['isSpoiler'] ?? (throw Exception('null')),
+          'votesCount': post['votesCount'] ?? (throw Exception('null')),
+          'commentsCount': post['commentsCount'] ?? (throw Exception('null')),
+          'createdAt': post['date'] ?? (throw Exception('null')),
+          'username': post['username'] ?? (throw Exception('null')),
+          'userProfilePic': post['userProfilePic'] ?? (throw Exception('null')),
+          'communityName': post['communityName'] ?? (throw Exception('null')),
+          'communityProfilePic': post['communityProfilePic'] ?? (throw Exception('null')),
+          'image':  imageLink,
+          'video': videoLink,
+        });
       }
-      mappedPosts.add({
-        'postId': post['postId'],
-        'title': post['title'],
-        'isNsfw': post['isNsfw'],
-        'isSpoiler': post['isSpoiler'],
-        'votesCount': post['votesCount'],
-        'commentsCount': post['commentsCount'],
-        'createdAt': post['date'],
-        'username': post['username'],
-        'userProfilePic': post['userProfilePic'],
-        'communityName': post['communityName'],
-        'communityProfilePic': post['communityProfilePic'],
-        'image':  imageLink,
-        'video': videoLink,
-      });
+      return mappedPosts;
     }
-    return mappedPosts;
+    catch(e) {
+      return [];
+    }
   }
 
   void removeFilter() {
