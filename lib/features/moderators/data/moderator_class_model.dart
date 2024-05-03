@@ -66,28 +66,3 @@ class Moderator {
     };
   }
 }
-
-
-/*void main() {
-  String jsonData = '''
-  [
-    {
-      "username": "example_user",
-      "banner": "example_banner",
-      "avatar": "example_avatar",
-      "moderationDate": "2023-04-15",
-      "managePostsAndComments": true,
-      "manageUsers": false,
-      "manageSettings": true,
-      "communityName": "example_community"
-    }
-  ]
-  ''';
-
-  List<dynamic> jsonList = jsonDecode(jsonData);
-  List<CommunityModerator> moderators = jsonList.map((json) => CommunityModerator.fromJson(json)).toList();
-
-  // Example usage:
-  print(moderators[0].username);
-  print(moderators[0].moderationDate);
-}*/

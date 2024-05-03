@@ -43,7 +43,6 @@ class _InviteModeratorPageState extends State<InviteModeratorPage> {
     manageUsers = true;
     manageSettings = true;
 
-    // Add a listener to the text field controller to update button state
     _usernameController.addListener(updateButtonState);
   }
 

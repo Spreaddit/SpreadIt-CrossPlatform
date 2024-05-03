@@ -2,21 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/switch_type_1.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/switch_type_2.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/test_page.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/get_allowed_post_settings.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_settings_model_class.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/update_allowed_post_settings.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/widgets/post_options_widget.dart';
 
 class PostTypes extends StatefulWidget {
-  const PostTypes({Key? key}) : super(key: key);
+  final String communityName;
+  const PostTypes({required this.communityName});
 
   @override
   State<PostTypes> createState() => _PostTypesState();
 }
 
 class _PostTypesState extends State<PostTypes> {
-  bool isImageLinksAllowed = false;
-  bool isVideoLinksAllowed = false;
   bool isPollsAllowed = false;
+  bool isSpoilerEnabled = false;
+  bool isMultipleImagesPerPostAllowed = false;
+  bool isMediaInCommentsAllowed = false;
+  String postOption = 'any';
+
+  Future<void> getPostSettings() async {
+    try {
+      var data = await fetchPostSettingsData(widget.communityName);
+      print(
+          "isPollsAllowed =${data!.pollsAllowed!} isSpoilerEnabled = ${data.spoilerEnabled} isMultipleImagesPerPostAllowed = ${data.multipleImagesPerPostAllowed} isMediaInCommentsAllowed =${data.mediaInCommentsAllowed} postOption = ${data.postTypeOptions}");
+      setState(() {
+        isPollsAllowed = data.pollsAllowed;
+        isSpoilerEnabled = data.spoilerEnabled;
+        isMultipleImagesPerPostAllowed = data.multipleImagesPerPostAllowed;
+        isMediaInCommentsAllowed = data.mediaInCommentsAllowed;
+        postOption = data.postTypeOptions;
+      });
+    } catch (e) {
+      print('Error fetching moderators: $e');
+    }
+  }
+
   @override
   void initState() {
-    //TODO GET ALLOWED POSTS
+    getPostSettings();
     super.initState();
   }
 
@@ -32,44 +57,52 @@ class _PostTypesState extends State<PostTypes> {
           },
         ),
         actions: [
-          TextButton(onPressed: (() {}), child: Text('Save')),
+          TextButton(
+              onPressed: (() {
+                PostSettings updatedSettings = PostSettings(
+                    postTypeOptions: postOption,
+                    spoilerEnabled: isSpoilerEnabled,
+                    multipleImagesPerPostAllowed:
+                        isMultipleImagesPerPostAllowed,
+                    pollsAllowed: isPollsAllowed,
+                    mediaInCommentsAllowed: isMediaInCommentsAllowed);
+                updatePostSettings(updatedSettings, widget.communityName);
+              }),
+              child: Text('Save')),
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SwitchBtn1(
-            mainText: 'Image Links',
-            onPressed: () {
-              setState(() {
-                isImageLinksAllowed = !isImageLinksAllowed;
-                //TODO UPDATE BACk
-              });
-            },
-            currentLightVal: isImageLinksAllowed,
-            tertiaryText:
-                "Allow images uploaded direcrtly to Spredit as well as links to popular image hosting sites such as Imgur",
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PostOptionsBox(
+              onOptionSelected: (option) {
+                setState(() {
+                  postOption = option;
+                });
+              },
+              initialOption: postOption,
+            ),
           ),
-          SwitchBtn1(
-            mainText: 'Video Links',
-            onPressed: () {
-              setState(() {
-                isVideoLinksAllowed = !isVideoLinksAllowed;
-                //TODO UPDATE BACk
-              });
-            },
-            currentLightVal: isVideoLinksAllowed,
-            tertiaryText: "Allow videos uploaded directly to Spreadit",
+          Container(
+            color: Colors.grey.shade200,
+            height: 1,
+            margin: EdgeInsets.symmetric(horizontal: 8.0),
           ),
-          SwitchBtn1(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SwitchBtn1(
               mainText: 'Polls',
               onPressed: () {
                 setState(() {
                   isPollsAllowed = !isPollsAllowed;
-                  //TODO UPDATE BACk
                 });
               },
               currentLightVal: isPollsAllowed,
-              tertiaryText: "Allow polls in your community"),
+              tertiaryText: "Allow polls in your community",
+            ),
+          ),
         ],
       ),
     );

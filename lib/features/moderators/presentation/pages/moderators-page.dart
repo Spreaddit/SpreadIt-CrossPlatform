@@ -386,7 +386,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
         ],
       ),
       body: Container(
-        color: _selectedIndex == 1 ? Colors.grey[200] : Colors.transparent,
+        color: _selectedIndex == 1 ? Colors.grey[200] : Colors.grey[200],
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

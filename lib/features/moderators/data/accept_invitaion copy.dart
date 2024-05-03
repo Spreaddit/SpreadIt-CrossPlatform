@@ -2,41 +2,29 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-const apiUrl =
-    "http://localhost:3006/FAROUQDIAA52/Module9V2/1.0.0"; //EMSA7eeehaaaaaaaaaaaaa
 String apibase = apiUrl;
 
-Future<void> updatePermissions({
+Future<void> inviteModerator({
   required String communityName,
   required String username,
-  required bool managePostsAndComments,
-  required bool manageUsers,
-  required bool manageSettings,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
 
-    var apiRoute = "/community/moderation/$communityName/$username/permissions";
+    var apiRoute =
+        "/community/moderation/$communityName/$username/decline-invite";
     String apiUrl = apibase + apiRoute;
 
-    final response = await Dio().put(
+    final response = await Dio().post(
       apiUrl,
       options: Options(headers: {
         'Authorization': 'Bearer $accessToken',
       }),
-      data: {
-        "managePostsAndComments": managePostsAndComments,
-        "manageUsers": manageUsers,
-        "manageSettings": manageSettings,
-      },
     );
 
     if (response.statusCode == 200) {
-      print("$managePostsAndComments,$manageUsers,$manageSettings");
-      print(response.data);
       print(response.statusCode);
       print(response.statusMessage);
-
       return;
     } else if (response.statusCode == 400) {
       print(response.statusMessage);

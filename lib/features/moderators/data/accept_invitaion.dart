@@ -1,73 +1,65 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/moderators/data/moderator_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-const apiUrl =
-    "http://localhost:3006/FAROUQDIAA52/Module9V2/1.0.0"; //EMSA7eeehaaaaaaaaaaaaa
 String apibase = apiUrl;
 
-Future<void> updatePermissions({
+Future<Moderator?> inviteModerator({
   required String communityName,
   required String username,
-  required bool managePostsAndComments,
-  required bool manageUsers,
-  required bool manageSettings,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
 
-    var apiRoute = "/community/moderation/$communityName/$username/permissions";
+    var apiRoute =
+        "/community/moderation/$communityName/$username/accept-invite";
     String apiUrl = apibase + apiRoute;
 
-    final response = await Dio().put(
+    final response = await Dio().post(
       apiUrl,
       options: Options(headers: {
         'Authorization': 'Bearer $accessToken',
       }),
-      data: {
-        "managePostsAndComments": managePostsAndComments,
-        "manageUsers": manageUsers,
-        "manageSettings": manageSettings,
-      },
     );
 
     if (response.statusCode == 200) {
-      print("$managePostsAndComments,$manageUsers,$manageSettings");
+      Map<String, dynamic> responseData = response.data;
+      Moderator moderator = Moderator.fromJson(responseData);
       print(response.data);
       print(response.statusCode);
       print(response.statusMessage);
-
-      return;
+      return moderator;
     } else if (response.statusCode == 400) {
       print(response.statusMessage);
       print(response.statusCode);
-      return;
+      return null;
     } else if (response.statusCode == 401) {
       print(response.statusMessage);
       print(response.statusCode);
-      return;
+      return null;
     } else if (response.statusCode == 500) {
       print(response.statusMessage);
       print(response.statusCode);
-      return;
+      return null;
     } else {
       print(response.statusMessage);
       print(response.statusCode);
-      return;
+      return null;
     }
   } on DioException catch (e) {
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         print(e.response!.statusMessage);
-        return;
+        return null;
       } else if (e.response!.statusCode == 500) {
         print("Conflict: ${e.response!.statusMessage}");
-        return;
+        return null;
       }
     }
     rethrow;
   } catch (e) {
     print("Error occurred: $e");
-    return;
+    return null;
   }
 }
