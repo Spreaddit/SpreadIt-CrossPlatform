@@ -21,7 +21,7 @@ class User {
   bool? isActive;
   String? displayName;
   String? about;
-  bool? cakeDay;
+  String? cakeDay;
   List<String?>? subscribedCommunities;
   List<String?>? favouriteCommunities;
   final List<SocialMedia?>? socialLinks;
@@ -119,7 +119,7 @@ class User {
       isVerified: json['isVerified'],
       displayName: json['displayName'],
       about: json['about'],
-      cakeDay: json['cakeDay'] as bool?,
+      cakeDay: json['cakeDay'],
       subscribedCommunities: json['subscribedCommunities'] != null
           ? List<String>.from(json['subscribedCommunities'])
           : [],
@@ -133,7 +133,7 @@ class User {
 
 class SocialMedia {
   final String? platform;
-  final String? displayName; 
+  final String? displayName;
   final String? url;
 
   SocialMedia({
@@ -145,7 +145,7 @@ class SocialMedia {
   Map<String, dynamic> toJson() {
     return {
       'platform': platform,
-      'displayName': displayName, 
+      'displayName': displayName,
       'url': url,
     };
   }
@@ -153,7 +153,7 @@ class SocialMedia {
   factory SocialMedia.fromJson(Map<String, dynamic> json) {
     return SocialMedia(
       platform: json['platform'],
-      displayName: json['displayName'], 
+      displayName: json['displayName'],
       url: json['url'],
     );
   }

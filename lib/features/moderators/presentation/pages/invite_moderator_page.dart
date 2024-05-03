@@ -140,7 +140,7 @@ class _InviteModeratorPageState extends State<InviteModeratorPage> {
                   Navigator.pop(context);
                 }
               : null,
-          text: 'Save',
+          text: 'Add',
           backgroundColor: _buttonState ? Colors.blue : Color(0xFFEFEFED),
           foregroundColor:
               _buttonState ? Colors.white : Color.fromARGB(255, 113, 112, 112),

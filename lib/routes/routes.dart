@@ -18,6 +18,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/add_muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/muted_user_page.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/createusername.dart';
@@ -88,10 +89,11 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
     '/settings/account-settings/add-password': (context) =>
         ProtectedRoute(child: AddPasswordPage()),
-    '/muted-commuinties': (context) =>  ProtectedRoute(child: MutedCommunityPage()),
-    '/muted-users': (context) =>  ProtectedRoute(child: MutedUsersPage()),
-    '/edit-muted-user': (context) =>  ProtectedRoute(child: EditMutedUserPage()),
-    '/followers-page': (context) =>  ProtectedRoute(child:FollowUsersPage()),
+    '/muted-commuinties': (context) =>
+        ProtectedRoute(child: MutedCommunityPage()),
+    '/muted-users': (context) => ProtectedRoute(child: MutedUsersPage()),
+    '/edit-muted-user': (context) => ProtectedRoute(child: EditMutedUserPage()),
+    '/followers-page': (context) => ProtectedRoute(child: FollowUsersPage()),
     '/final-content-page': (context) => ProtectedRoute(
           child: Builder(
             builder: (context) {
@@ -126,6 +128,8 @@ Map<String, WidgetBuilder> generateRoutes() {
             },
           ),
         ),
+    '/moderators-page': (context) =>
+        ProtectedRoute(child: ModeratorsPage(communityName: "chjk")),
   };
 }
 
