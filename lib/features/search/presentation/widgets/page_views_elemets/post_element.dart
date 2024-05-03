@@ -51,7 +51,7 @@ class _PostElementState extends State<PostElement> {
                         Padding(
                           padding: EdgeInsets.only(right: 5),
                           child: CircleAvatar(
-                            backgroundImage: AssetImage(widget.communityIcon),
+                            backgroundImage: NetworkImage(widget.communityIcon),
                             radius: 15,
                           ),
                         ),
@@ -144,7 +144,7 @@ class _PostElementState extends State<PostElement> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image(
-                      image: AssetImage(widget.image!),
+                      image: NetworkImage(widget.image!),
                       height: 70,
                       width: 80,
                       fit: BoxFit.fill,
@@ -158,7 +158,7 @@ class _PostElementState extends State<PostElement> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image(
-                          image: AssetImage(widget.video!),
+                          image: NetworkImage(widget.video!),
                           height: 70,
                           width: 80,
                           fit: BoxFit.fill,

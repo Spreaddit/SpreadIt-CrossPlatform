@@ -141,6 +141,11 @@ Widget chooseTitle(
   return titles[currentPage.index % 5];
 }
 
+  void navigateToGeneralSearch(BuildContext context) {
+    Navigator.of(context).pushNamed('/general-search');
+  }
+
+
 Widget chooseActions({
   required CurrentPage currentPage,
   required BuildContext context,
@@ -150,15 +155,15 @@ Widget chooseActions({
   List<Widget> actions = [
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
     IconButton(
       onPressed: () {
@@ -178,7 +183,7 @@ Widget chooseActions({
     ),
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
   ];
   return actions[currentPage.index % 5];

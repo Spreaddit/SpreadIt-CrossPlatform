@@ -33,7 +33,7 @@ class _CommunitiesCardState extends State<CommunitiesCard> {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: AssetImage(widget.communityIcon),
+            backgroundImage: NetworkImage(widget.communityIcon),
             radius: widget.iconRadius,
           ),
           SizedBox(width: widget.boxSize),

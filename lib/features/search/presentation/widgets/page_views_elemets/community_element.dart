@@ -37,7 +37,7 @@ class _CommunityElementState extends State<CommunityElement> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                       child: CircleAvatar(
-                        backgroundImage: AssetImage(widget.communityIcon),
+                        backgroundImage: NetworkImage(widget.communityIcon),
                         radius: 17,
                       ),
                     ),

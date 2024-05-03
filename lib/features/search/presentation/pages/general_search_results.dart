@@ -77,7 +77,7 @@ class _SearchResultState extends State<SearchResult> {
           Row(
             children: [
               IconButton(
-                onPressed: () {},   // navigate to home page
+                onPressed: () => Navigator.pop(context),   
                 icon: Icon(
                   Icons.arrow_back,
                   size: 40,

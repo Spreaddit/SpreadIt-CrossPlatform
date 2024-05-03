@@ -4,7 +4,14 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/cust
 
 class SearchInCommunityOrUser extends StatefulWidget {
 
-  SearchInCommunityOrUser({Key? key}) : super(key: key);
+  final String communityOrUserName;
+  final String communityOrUserIcon;
+
+  SearchInCommunityOrUser({
+    Key? key,
+    required this.communityOrUserName,
+    required this.communityOrUserIcon,
+    }) : super(key: key);
 
   @override
   State<SearchInCommunityOrUser> createState() => _SearchInCommunityOrUserState();
@@ -17,8 +24,8 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   String? sortFilter;
   String? timeFilter;
   List filteredList = [];
-  String communityOrUserName = 'r/AskReddit';    // y=to be taken from navigation into this page
-  String communityOrUserIcon = './assets/images/SB-Standees-Spong-3_800x.png';
+  String communityOrUserName = '';    
+  String communityOrUserIcon = '';
 
   void navigateFilterTop () {
     Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
@@ -59,6 +66,13 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
       'communityOrUserName' : communityOrUserName,
       'communityOrUserIcon': communityOrUserIcon,
     });
+  }
+
+  @override 
+  void initState() {
+    communityOrUserName = widget.communityOrUserName;
+    communityOrUserIcon = widget.communityOrUserIcon;
+    super.initState();
   }
 
   @override

@@ -54,7 +54,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {}, // navigate to home page 
+                    onTap: () => Navigator.pop(context), 
                     child: Text(
                       'Cancel',
                       style: TextStyle(

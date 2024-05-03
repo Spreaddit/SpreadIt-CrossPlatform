@@ -22,8 +22,16 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(65);
 
+
   @override
   Widget build(BuildContext context) {
+      void navigateToCommunitySearch() {
+        Navigator.of(context).pushNamed('/community-or-user-search', 
+        arguments: {
+          'communityOrUserName': communityName,
+          'communityOrUserIcon': bannerImageLink != '' ? bannerImageLink : 'assets/images/LogoSpreadIt.png' ,
+        });
+      }
     return AppBar(
       backgroundColor: Colors.transparent,
       titleSpacing: 0,
@@ -62,14 +70,32 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: IconButton(
             icon: Icon(
               Icons.arrow_back,
+              ),
+              color: Colors.white,
+              onPressed: (() {
+                Navigator.pop(context);
+              }),
             ),
-            color: Colors.white,
-            onPressed: (() {
-              Navigator.pop(context);
-            }),
           ),
-        ),
-      ),
+        ), 
+       actions: [
+        Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.75),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            icon: Icon(
+              Icons.search,
+              ),
+              color: Colors.white,
+              onPressed: navigateToCommunitySearch,
+            ),
+          ),
+        ), 
+       ],  
       title: blurImage
           ? Padding(
               padding: EdgeInsets.only(left: 8),

@@ -63,7 +63,7 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                           child: Image(
                             height: 50,
                             width: 100,
-                            image: AssetImage(widget.image!),
+                            image: NetworkImage(widget.image!),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -85,7 +85,7 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                               child: Image(
                                 height: 50,
                                 width: 100,
-                                image: AssetImage(widget.video!),
+                                image: NetworkImage(widget.video!),
                                 fit: BoxFit.cover,
                               ),
                             ),

@@ -40,7 +40,7 @@ class _TrendingCardWebState extends State<TrendingCardWeb> {
                 child: Stack(
                   children: [
                     Image(
-                      image: AssetImage(widget.image),
+                      image: NetworkImage(widget.image),
                       fit: BoxFit.cover, 
                     ),
                     Container( 
@@ -85,7 +85,7 @@ class _TrendingCardWebState extends State<TrendingCardWeb> {
                       Row(
                         children: [
                           CircleAvatar(
-                            backgroundImage: AssetImage(widget.communityIcon),
+                            backgroundImage: NetworkImage(widget.communityIcon),
                             radius: 10,
                           ),
                           Text(

@@ -41,7 +41,7 @@ class _CommentElementState extends State<CommentElement> {
               Padding(
                 padding : EdgeInsets.only(right: 5),
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(widget.communityIcon),
+                  backgroundImage: NetworkImage(widget.communityIcon),
                   radius: 13,
                 ),
               ),
@@ -74,7 +74,7 @@ class _CommentElementState extends State<CommentElement> {
                   child: Row(
                     children: [
                       CircleAvatar(
-                      backgroundImage: AssetImage(widget.commentorIcon),
+                      backgroundImage: NetworkImage(widget.commentorIcon),
                       radius: 10,
                       ),
                       Padding(

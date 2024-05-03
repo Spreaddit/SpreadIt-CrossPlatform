@@ -34,7 +34,7 @@ class _PeopleElementState extends State<PeopleElement> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                       child: CircleAvatar(
-                        backgroundImage: AssetImage(widget.userIcon),
+                        backgroundImage: NetworkImage(widget.userIcon),
                         radius: 17,
                       ),
                     ),

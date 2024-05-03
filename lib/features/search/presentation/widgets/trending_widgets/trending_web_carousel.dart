@@ -36,30 +36,43 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
   }
 
   List<Map<String, dynamic>> extractTrendingData(Map<String, dynamic> data) {
-    final processedData = <Map<String, dynamic>>[];
-    final title = data['title'];
-    final content = data['content'][0] as String;
-    final communityName = data['community'];
-    String? link;
-    final firstAttachment = data['attachments'].first; 
-    if (firstAttachment['type'] == 'image') {
-      link = firstAttachment['link'];
-      print(link);
+     List<dynamic> results = data['results'];
+    List<Map<String, dynamic>> mappedTrending = [];
+    try {
+      for (var trending in results) {
+        String? imageLink; 
+        String? videoLink;
+        if (trending['attachments'].isNotEmpty) {
+          Map<String, dynamic> firstAttachment = trending['attachments'][0];
+          if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
+            imageLink = firstAttachment['link'];
+          }
+          if  (firstAttachment['type'] == 'video' && firstAttachment['link'] != null) {
+            videoLink = firstAttachment['link'];
+          }
+        }
+        mappedTrending.add({
+          'postId': trending['postId'] ?? (throw Exception('null')),
+          'title': trending['title'] ?? (throw Exception('null')),
+          'content': trending['content'] ?? (throw Exception('null')),
+          'isNsfw': trending['isNsfw'] ?? (throw Exception('null')),
+          'isSpoiler': trending['isSpoiler'] ?? (throw Exception('null')),
+          'votesCount': trending['votesCount'] ?? (throw Exception('null')),
+          'commentsCount': trending['commentsCount'] ?? (throw Exception('null')),
+          'createdAt': trending['date'] ?? (throw Exception('null')),
+          'username': trending['username'] ?? (throw Exception('null')),
+          'userProfilePic': trending['userProfilePic'] ?? (throw Exception('null')),
+          'communityName': trending['communityName'] ?? (throw Exception('null')),
+          'communityProfilePic': trending['communityProfilePic'] ?? (throw Exception('null')),
+          'image':  imageLink,
+          'video': videoLink,
+        });
+      }
+      return mappedTrending;
     }
-    if (link == null) {
-      link = '';
-      print('No image found in attachments');
+    catch(e) {
+      return [];
     }
-
-    print('link : $link');
-    processedData.add({
-      'title': title,
-      'content': content,
-      'image': link,
-      'communityName': communityName,
-      'communityIcon': './assets/images/SB-Standees-Spong-3_800x.png'  // hardcoded for now
-    });
-    return processedData;
   }
 
 
@@ -85,7 +98,7 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
                 image: mappedTrending[index]['image'],
                 title: mappedTrending[index]['title'],
                 content: mappedTrending[index]['content'],
-                communityIcon: mappedTrending[index]['communityIcon'],
+                communityIcon: mappedTrending[index]['communityProfilePic'],
                 communityName: mappedTrending[index]['communityName'],
               ),
             );

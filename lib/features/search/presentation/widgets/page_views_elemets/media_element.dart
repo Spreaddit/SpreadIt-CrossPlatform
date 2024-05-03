@@ -30,7 +30,7 @@ class _MediaElementState extends State<MediaElement> {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image(
-              image: AssetImage(widget.media),
+              image: NetworkImage(widget.media),
               height: 200,
               width: 170,
               fit: BoxFit.fill,
@@ -41,7 +41,7 @@ class _MediaElementState extends State<MediaElement> {
               Container(
                 margin: EdgeInsets.fromLTRB(10, 5, 5, 2),
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(widget.userIcon),
+                  backgroundImage: NetworkImage(widget.userIcon),
                   radius: 10,
                 ),
               ),

@@ -100,7 +100,7 @@ final Map<Stream, Timer?> _timers = {};
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: AssetImage(widget.communityOrUserIcon!),
+                          backgroundImage: NetworkImage(widget.communityOrUserIcon!),
                           radius: 10,
                         ),
                         SizedBox(width:4),
