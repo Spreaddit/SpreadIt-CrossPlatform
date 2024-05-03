@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_user_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/widgets/floating_new_chat_button.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -6,18 +8,13 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
 
-/// This widget represents the home page of the application and all its subpages.
-/// It takes a parameter [currentPage] of type [CurrentPage] representing the current page.
-/// 
-/// Example:
-/// ```dart
-/// HomePage(
-///   currentPage: CurrentPage.home,
-/// )
-/// ```
+CurrentPage previousPage = CurrentPage.home;
+
 class HomePage extends StatefulWidget {
   final CurrentPage currentPage;
+
   HomePage({
     Key? key,
     this.currentPage = CurrentPage.home,
@@ -29,73 +26,40 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late CurrentPage currentPage;
+  late GlobalKey<_HomePageState> _homePageKey;
+  int chatFilterSelectedOption = 3;
 
   @override
   void initState() {
     super.initState();
+    _homePageKey = GlobalKey<_HomePageState>();
     setState(() {
       currentPage = widget.currentPage;
     });
   }
 
   void changeSelectedIndex(int newIndex) {
+    if (newIndex == 2) {
+      Navigator.of(context).pushNamed('/primary-content-page');
+      return;
+    }
     if (currentPage.index == newIndex) return;
     setState(() {
       currentPage = CurrentPage.values[newIndex];
     });
-    switch (currentPage) {
-      case (CurrentPage.home):
-        Navigator.of(context).pushNamed(
-          '/home',
-        );
-        break;
-      case CurrentPage.discover:
-        Navigator.of(context).pushNamed(
-          '/discover',
-        );
-        break;
-      case CurrentPage.createPost:
-        Navigator.of(context).pushNamed(
-          '/primary-content-page',
-        );
-        break;
-      case CurrentPage.chat:
-        // Handle case when "Chat" icon is tapped
-        break;
-      case CurrentPage.inbox:
-        // Handle case when "Inbox" icon is tapped
-        break;
-      case CurrentPage.popular:
-        Navigator.of(context).pushNamed(
-          '/popular',
-        );
-        break;
-      case CurrentPage.all:
-        Navigator.of(context).pushNamed(
-          '/all',
-        );
+    if (currentPage.index <= 5) {
+      previousPage = currentPage;
     }
+  }
+
+  void onChangeChatFilter(int chatFilterSelectedOption) {
+    setState(() {
+      this.chatFilterSelectedOption = chatFilterSelectedOption;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<PreferredSizeWidget?> appBars = [
-      TopBar(
-        currentPage: widget.currentPage,
-        context: context,
-        onChangeHomeCategory: changeSelectedIndex,
-      ),
-      AppBar(
-        title: Text('Communities'),
-      ),
-      null,
-      AppBar(
-        title: Text('Chat'),
-      ),
-      AppBar(
-        title: Text('Inbox'),
-      ),
-    ];
     List<Widget> screens = [
       PostFeed(
         postCategory: PostCategories.best,
@@ -103,48 +67,65 @@ class _HomePageState extends State<HomePage> {
       ),
       DiscoverCommunitiesBody(),
       CreatePost(),
-      Text("chat"),
-      Text("Inbox"),
+      ChatUserPage(
+        selectedOption: chatFilterSelectedOption,
+      ),
+      NotificationPage(),
       PostFeed(
-        //TODO: implement trending searches in popular
         postCategory: PostCategories.hot,
         showSortTypeChange: false,
       ),
+      PostFeed(
+        postCategory: PostCategories.best,
+        showSortTypeChange: true,
+      ),
     ];
 
+    Widget bottomNavigationBar = BottomNavigationBar(
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.group),
+          label: 'Community',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.create),
+          label: 'Create',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: 'Chat',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.inbox),
+          label: 'Inbox',
+        ),
+      ],
+      currentIndex:
+          currentPage.index <= 5 ? currentPage.index % 5 : previousPage.index,
+      selectedItemColor: const Color.fromARGB(255, 255, 72, 0),
+      onTap: (index) => changeSelectedIndex(index),
+      unselectedItemColor: Colors.black,
+    );
+
     return Scaffold(
-      appBar: appBars[widget.currentPage.index % 5],
-      body: screens[widget.currentPage.index],
+      appBar: TopBar(
+          key: _homePageKey,
+          context: context,
+          currentPage: currentPage,
+          onChangeHomeCategory: changeSelectedIndex,
+          onChangeChatFilter: onChangeChatFilter,
+          chatFilterSelectedOption: chatFilterSelectedOption),
+      body: screens[currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Community',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.create),
-            label: 'Create',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.inbox),
-            label: 'Inbox',
-          ),
-        ],
-        currentIndex: widget.currentPage.index % 5,
-        selectedItemColor: const Color.fromARGB(255, 255, 72, 0),
-        onTap: (index) => changeSelectedIndex(index),
-        unselectedItemColor: Colors.black,
-      ),
+      bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: currentPage == CurrentPage.chat
+          ? floatingNewChatButton(context)
+          : null,
     );
   }
 }

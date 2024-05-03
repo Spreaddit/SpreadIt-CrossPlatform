@@ -220,6 +220,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         'socialMedia': socialMediaLinks,
         'about': _about,
         'displayname': _displayname,
+        'isVisible' :_switchValue1,
+        'isActive' : _switchValue2,
       };
       if (statusCode == 200) {
         Navigator.of(context).pop(data);

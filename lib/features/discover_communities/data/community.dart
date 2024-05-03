@@ -39,7 +39,7 @@ class Community extends Equatable {
 
   Community.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-        description = json['description'],
+        description = json['description'] ?? "",
         image = json['image'] ??
             "https://i.pinimg.com/200x/16/ed/ff/16edfff4cfc69f8c58054793e2947aa0.jpg",
         membersCount = json['membersCount'],
@@ -60,7 +60,7 @@ class Community extends Equatable {
       ];
 }
 
-class Rule {
+class Rule extends Equatable {
   final String id;
   final String title;
   final String description;
@@ -77,11 +77,19 @@ class Rule {
 
   factory Rule.fromJson(Map<String, dynamic> json) {
     return Rule(
-      id: json['_id'],
+      id: json['_id']?? "0",
       title: json['title'],
       description: json['description'],
       reportReason: json['reportReason'],
-      communityName: json['communityName'],
+      communityName: json['communityName'] ?? '0',
     );
   }
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        description,
+        reportReason,
+        communityName,
+      ];
 }

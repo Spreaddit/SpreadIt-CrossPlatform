@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/oauth_service.dart';
 import '../../../user_info.dart';
 import '../../user.dart';
 
@@ -22,8 +23,7 @@ Future<int> signUpApi({
     if (response.statusCode == 200) {
       User user = User.fromJson(response.data['user']);
       UserSingleton().setUser(user);
-      //UserSingleton().setAccessToken(response.data['access_token'], DateTime.parse(response.data['token_expiration_date']));
-
+      await signInwithEmailandPasswird(email , password);
       print('User ID: ${user.id}');
       return 200;
     } else if (response.statusCode == 409) {

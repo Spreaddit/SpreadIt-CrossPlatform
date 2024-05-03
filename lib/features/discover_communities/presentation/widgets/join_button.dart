@@ -32,14 +32,21 @@ class _JoinButtonState extends State<JoinButton> {
     setupInitialJoinState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void setupInitialJoinState() async {
     var subscriptionData = await getCommunitySubStatus(widget.communityName);
     if (subscriptionData["isSubscribed"] == -1) {
       print("Failed to retrieve subscription data");
     } else {
-      setState(() {
-        isJoined = subscriptionData["isSubscribed"];
-      });
+      if (mounted) {
+        setState(() {
+          isJoined = subscriptionData["isSubscribed"];
+        });
+      }
     }
   }
 
@@ -47,47 +54,43 @@ class _JoinButtonState extends State<JoinButton> {
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(Duration(seconds: 1));
 
-    if (isJoined) {
-      // Unjoin the community
-      String? accessToken = UserSingleton().getAccessToken();
-      var postRequestInfo = {
-        "communityName": widget.communityName,
-        "token": accessToken
-      };
-      var response =
-          await postUnsubscribeRequest(postRequestInfo: postRequestInfo);
-      if (response == 200) {
-        setState(() {
-          isJoined = false;
-        });
+    try {
+      if (isJoined) {
+        // Unjoin the community
+        String? accessToken = UserSingleton().getAccessToken();
+        var postRequestInfo = {
+          "communityName": widget.communityName,
+          "token": accessToken
+        };
+        var response =
+            await postUnsubscribeRequest(postRequestInfo: postRequestInfo);
+        if (response == 200) {
+          setState(() {
+            isJoined = false;
+          });
+        } else {
+          print(response);
+        }
       } else {
-        print(response);
-        setState(() {
-          isLoading = false;
-        });
+        User? currentUser = UserSingleton().getUser();
+        String? userId = currentUser?.id;
+        var postRequestInfo = {"name": widget.communityName, "userId": userId};
+        var response =
+            await postSubscribeRequest(postRequestInfo: postRequestInfo);
+        if (response == 200) {
+          setState(() {
+            isJoined = true;
+          });
+        }
       }
-    } else {
-      User? currentUser = UserSingleton().getUser();
-      String? userId = currentUser?.id;
-      var postRequestInfo = {"name": widget.communityName, "userId": userId};
-      var response =
-          await postSubscribeRequest(postRequestInfo: postRequestInfo);
-      if (response == 200) {
-        setState(() {
-          isJoined = true;
-        });
-      } else {
+    } finally {
+      if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
     }
-
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override

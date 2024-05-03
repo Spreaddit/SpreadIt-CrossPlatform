@@ -1,4 +1,6 @@
-class Post {
+import 'package:equatable/equatable.dart';
+
+class Post extends Equatable {
   final String postId;
   final String userId;
   final String username;
@@ -26,8 +28,15 @@ class Post {
   final bool? isCommentsLocked;
   final bool? isNsfw;
   final bool? sendPostReplyNotification;
+  final bool? isSaved;
+  final bool? hasVotedOnPoll;
+  final String? selectedPollOption;
+  final bool? hasUpvoted;
+  final bool? hasDownvoted;
 
   Post({
+    this.hasUpvoted,
+    this.hasDownvoted,
     required this.postId,
     required this.userId,
     required this.username,
@@ -55,6 +64,9 @@ class Post {
     this.isCommentsLocked,
     this.isNsfw,
     this.sendPostReplyNotification,
+    this.isSaved = true,
+    this.hasVotedOnPoll,
+    this.selectedPollOption,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -62,7 +74,7 @@ class Post {
       postId: json['_id'],
       userId: json['userId'],
       username: json['username'] ?? "anonymous",
-      userProfilePic: json['userProfilePic']??
+      userProfilePic: json['userProfilePic'] ??
           "https://i.pinimg.com/200x/16/ed/ff/16edfff4cfc69f8c58054793e2947aa0.jpg",
       votesUpCount: json['votesUpCount'],
       votesDownCount: json['votesDownCount'],
@@ -83,29 +95,66 @@ class Post {
       pollExpiration: json['pollExpiration'] != null
           ? DateTime.parse(json['pollExpiration'])
           : null,
-      isPollEnabled: json['isPollEnabled'],
+      isPollEnabled: json['isPollEnabled'] ?? true,
       link: json['link'],
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((attachment) => Attachment.fromJson(attachment))
           .toList(),
-      comments: json['comments'] != null
-          ? List<dynamic>.from(json['comments'])
-          : null,
-      hiddenBy: json['hiddenBy'] != null
-          ? List<dynamic>.from(json['hiddenBy'])
-          : null,
+      comments:
+          json['comments'] != null ? List<dynamic>.from(json['comments']) : [],
+      hiddenBy:
+          json['hiddenBy'] != null ? List<dynamic>.from(json['hiddenBy']) : [],
       votedUsers: json['votedUsers'] != null
           ? List<dynamic>.from(json['votedUsers'])
-          : null,
+          : [],
       isSpoiler: json['isSpoiler'],
       isCommentsLocked: json['isCommentsLocked'],
       isNsfw: json['isNsfw'],
       sendPostReplyNotification: json['sendPostReplyNotification'],
+      isSaved: json['isSaved'] ?? false,
+      hasVotedOnPoll: json['hasVotedOnPoll'] == true,
+      selectedPollOption: json['selectedPollOption'],
+      hasDownvoted: json['hasDownvoted'],
+      hasUpvoted: json['hasUpvoted'],
     );
   }
+
+  @override
+  List<Object?> get props => [
+        postId,
+        userId,
+        username,
+        userProfilePic,
+        votesUpCount,
+        votesDownCount,
+        sharesCount,
+        commentsCount,
+        numberOfViews,
+        date,
+        title,
+        content,
+        community,
+        type,
+        pollOptions,
+        pollVotingLength,
+        pollExpiration,
+        isPollEnabled,
+        link,
+        attachments,
+        comments,
+        hiddenBy,
+        votedUsers,
+        isSpoiler,
+        isCommentsLocked,
+        isNsfw,
+        sendPostReplyNotification,
+        isSaved,
+        hasVotedOnPoll,
+        selectedPollOption,
+      ];
 }
 
-class PollOptions {
+class PollOptions extends Equatable {
   final String? option;
   final int? votes;
 
@@ -127,6 +176,12 @@ class PollOptions {
     );
   }
 
+  @override
+  List<Object?> get props => [
+        option,
+        votes,
+      ];
+
   Map<String, dynamic> toJson() {
     return {
       'option': option,
@@ -135,7 +190,7 @@ class PollOptions {
   }
 }
 
-class Attachment {
+class Attachment extends Equatable {
   final String? type;
   final String? link;
 
@@ -150,4 +205,10 @@ class Attachment {
       link: json['link'],
     );
   }
+
+  @override
+  List<Object?> get props => [
+        type,
+        link,
+      ];
 }

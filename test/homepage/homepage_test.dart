@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/pages/all.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/home_page_drawer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/sort_menu.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 
 class CustomBindings extends AutomatedTestWidgetsFlutterBinding {
   @override
@@ -36,7 +36,10 @@ void main() {
     expect(find.byIcon(Icons.watch_later_outlined), findsOneWidget);
   });
   testWidgets('Post feed sorting test (All Page)', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: AllPage()));
+    await tester.pumpWidget(MaterialApp(
+        home: HomePage(
+      currentPage: CurrentPage.all,
+    )));
     await tester.pumpAndSettle();
     // Expect to find SortTypeMenu dialog
     expect(find.byType(SortTypeMenu), findsOneWidget);

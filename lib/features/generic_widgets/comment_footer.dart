@@ -47,17 +47,17 @@ class CommentFooter extends StatelessWidget {
                 ),
               ),
               SizedBox(width: screenWidth * 0.01),
-              UpVoteButton(
-                color: upvoted ? Colors.orange : Colors.grey,
-                width: screenHeight * 0.02,
-                height: screenHeight * 0.02,
-              ),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.arrow_upward,
+                  )),
               Text('$number'),
-              DownVoteButton(
-                color: downvoted ? Colors.purple : Colors.grey,
-                width: screenHeight * 0.02,
-                height: screenHeight * 0.02,
-              ),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.arrow_downward,
+                  )),
             ],
           ),
         ],

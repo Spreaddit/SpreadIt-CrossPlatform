@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
 import '../../../saved/data/save_or_unsave.dart';
-import '../../data/class_models/comments_class_model.dart';
 
 /// The `CommentWidget` class is responsible for displaying a single comment within a user interface.
 ///
@@ -20,6 +23,7 @@ class CommentWidget extends StatelessWidget {
 
   /// Callback function triggered when the user interacts with the widget.
   final VoidCallback? onPressed;
+  final bool isUserProfile;
 
   /// Constructor for the `CommentWidget` class.
   ///
@@ -31,9 +35,10 @@ class CommentWidget extends StatelessWidget {
     required this.comment,
     this.saved = false,
     this.onPressed,
+    this.isUserProfile = false, /////// Check
   });
 
-void unsaveComment(BuildContext context) async {
+  void unsaveComment(BuildContext context) async {
     int statusCode = await saveOrUnsave(id: comment.id, type: 'comments');
     Navigator.pop(context);
     if (statusCode == 200) {
@@ -42,8 +47,27 @@ void unsaveComment(BuildContext context) async {
         onPressed!();
       }
     } else {
-      CustomSnackbar(content: "Error occurred while trying to unsave").show(context);
+      CustomSnackbar(content: "Error occurred while trying to unsave")
+          .show(context);
     }
+  }
+
+  void navigateToPostCardPage(
+    BuildContext context,
+    String postId,
+    bool isUserProfile,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        settings: RouteSettings(
+          name: '/post-card-page/$postId/$isUserProfile',
+        ),
+        builder: (context) => PostCardPage(
+          postId: postId,
+        ),
+      ),
+    );
   }
 
   @override
@@ -69,29 +93,53 @@ void unsaveComment(BuildContext context) async {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  comment.postTitle!,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    navigateToPostCardPage(
+                      context,
+                      comment.postId!,
+                      isUserProfile,
+                    );
+                  },
+                  child: Text(
+                    comment.postTitle!,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 Row(
                   children: [
                     if (saved)
-                      Text(
-                        'u/${comment.user!.username} • ',
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            '/user-profile',
+                            arguments: {
+                              'username': comment.user!.username,
+                            },
+                          );
+                        },
+                        child: Text(
+                          'u/${comment.user!.username} • ',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    GestureDetector(
+                      onTap: () {
+                        navigateToCommunity(context, comment.subredditName!);
+                      },
+                      child: Text(
+                        'r/${comment.subredditName} • $date',
                         style: TextStyle(
                           fontSize: 14.0,
                           color: Colors.grey,
                         ),
-                      ),
-                    Text(
-                      'r/${comment.subredditName} • $date ',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.grey,
                       ),
                     ),
                     if (!saved)
@@ -105,7 +153,7 @@ void unsaveComment(BuildContext context) async {
                             ),
                           ),
                           Center(
-                            child:Image.asset(
+                            child: Image.asset(
                               "assets/images/upvoteicon.png",
                               height: screenHeight * 0.015,
                               color: Colors.grey,
@@ -116,15 +164,25 @@ void unsaveComment(BuildContext context) async {
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.02),
-                Text(
-                  comment.content,
-                  style: TextStyle(
-                    fontSize: 14.0,
+                GestureDetector(
+                  onTap: () {
+                    navigateToPostCardPage(
+                      context,
+                      comment.postId!,
+                      isUserProfile,
+                    );
+                  },
+                  child: Text(
+                    comment.content,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
                   ),
                 ),
                 if (comment.media!.isNotEmpty)
                   SizedBox(height: screenHeight * 0.02),
-                if (comment.media!.isNotEmpty) Image.network(comment.media![0].link),
+                if (comment.media!.isNotEmpty)
+                  Image.network(comment.media![0].link),
               ],
             ),
           ),
@@ -148,8 +206,8 @@ void unsaveComment(BuildContext context) async {
                         },
                         () => unsaveComment(context),
                         () => {
-                          Navigator.pop(context),
-                        }
+                              Navigator.pop(context),
+                            }
                       ],
                     );
                   },
