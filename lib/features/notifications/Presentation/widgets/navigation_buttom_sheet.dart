@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/disable_community_notification.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/get_according_to_type.dart';
 
 class ManageNotificationBottomSheet extends StatelessWidget {
-  final bool followed;
+  final Function(String) disable;
   final bool community;
+  final void Function(String, Notifications) onHide;
+  final Notifications notification;
 
   ManageNotificationBottomSheet({
-    required this.followed,
+    required this.disable,
     required this.community,
+    required this.onHide,
+    required this.notification,
   });
 
   @override
@@ -33,36 +40,42 @@ class ManageNotificationBottomSheet extends StatelessWidget {
               ),
             ),
             Divider(),
-            if (!followed && !community)
+            if (!community)
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Don't get updates on this"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  String key = getNotificationType(notification);
+                  disable(key);
+                  Navigator.pop(context);
                 },
               ),
-            if (followed || community)
+            if (community)
               ListTile(
                 leading: Icon(Icons.visibility_off, color: Colors.black),
                 title: Text("Hide this notification"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  onHide(notification.id!, notification);
+                  Navigator.pop(context);
                 },
               ),
-            if (followed || community)
+            if (community)
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Turn off this notification type"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  String key = getNotificationType(notification);
+                  disable(key);
+                  Navigator.pop(context);
                 },
               ),
             if (community)
               ListTile(
                 leading: Icon(Icons.do_not_disturb_on, color: Colors.black),
                 title: Text("Disable updates from this community"),
-                onTap: () {
-                  // Add your logic here for handling this action
+                onTap: () async {
+                  await disableCommunitynotifications(id: "1");
+                  Navigator.pop(context);
                 },
               ),
             Button(
@@ -70,10 +83,10 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 Navigator.pop(context);
               },
               text: 'Close',
-              backgroundColor: Color(0xFFEFEFED), 
-              foregroundColor: Color.fromARGB(255, 113, 112, 112), 
+              backgroundColor: Color(0xFFEFEFED),
+              foregroundColor: Color.fromARGB(255, 113, 112, 112),
             ),
-            SizedBox(height: 8), 
+            SizedBox(height: 8),
           ],
         ),
       ),

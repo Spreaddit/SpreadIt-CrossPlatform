@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/oauth_service.dart';
 import '../../../user_info.dart';
 import '../../user.dart';
 
@@ -16,14 +17,13 @@ Future<int> signUpApi({
   try {
     const apiroute = "/signup";
     String apiUrl = apibase + apiroute;
-    var data = {"username": username, "email": email, "password": password};
+    var data = {"username": username, "email": email, "password": password , "is_cross" :true};
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
       User user = User.fromJson(response.data['user']);
       UserSingleton().setUser(user);
-      //UserSingleton().setAccessToken(response.data['access_token'], DateTime.parse(response.data['token_expiration_date']));
-
+      await signInwithEmailandPassword(email , password);
       print('User ID: ${user.id}');
       return 200;
     } else if (response.statusCode == 409) {
