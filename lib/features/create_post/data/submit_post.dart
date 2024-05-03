@@ -39,6 +39,15 @@ Future<int> submitPost(
   bool isNSFW,
 ) async {
   try {
+
+    Future<File> createTempFileFromUint8List(Uint8List bytes) async {
+      Directory tempDir = await Directory.systemTemp.createTemp('temp_files');
+      String tempFileName = '${DateTime.now().millisecondsSinceEpoch}.tmp';
+      File tempFile = File('${tempDir.path}/$tempFileName');
+      await tempFile.writeAsBytes(bytes);
+      return tempFile;
+    }
+
     String? accessToken = UserSingleton().accessToken;
     List<PollOptions> pollOptionsData =
         pollOptions.map((option) => PollOptions.fromOption(option)).toList();
@@ -55,27 +64,26 @@ Future<int> submitPost(
       pollVotingLength += ' Days';
     }
     String? fileType;
+    List<File> attachment = [];
     int flagMedia = 0;
     if (images != null) {
       flagMedia = 1;
-      List<int> bytes = await images.readAsBytes();
-      String base64Image = base64Encode(bytes);
-      fileType = base64Image;
+      fileType = "image";
+      attachment.add(images);
     } else if (videos != null) {
       flagMedia = 1;
-      List<int> bytes = await videos.readAsBytes();
-      String base64Image = base64Encode(bytes);
-      fileType = base64Image;
+      fileType = "video";
+      attachment.add(videos);
     } else if (imageWeb != null) {
       flagMedia = 1;
-      List<int> bytes = imageWeb.cast<int>();
-      String base64Image = base64Encode(bytes);
-      fileType = base64Image;
+      fileType = "image";
+      File image = await createTempFileFromUint8List(imageWeb);
+      attachment.add(image);
     } else if (videoWeb != null) {
       flagMedia = 1;
-      List<int> bytes = videoWeb.cast<int>();
-      String base64Image = base64Encode(bytes);
-      fileType = base64Image;
+      fileType = "video";
+      File video = await createTempFileFromUint8List(videoWeb);
+      attachment.add(video);
     } else {
       fileType = null;
     }
@@ -130,12 +138,7 @@ Future<int> submitPost(
       "fileType": fileType,
       "isSpoiler": isSpoiler,
       "isNSFW": isNSFW,
-      //TODO:
-      //"file": await MultipartFile.fromFile(file.path),
-      //     }, FormData.files.add(MapEntry(
-      //   'file',
-      //   await MultipartFile.fromFile(files[i].path),
-      // ));
+      "attachments": attachment,
     };
 
     Map<String, Object?> postType() {

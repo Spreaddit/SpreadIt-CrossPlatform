@@ -55,7 +55,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: CreatePost(),
+      home: UserSingleton().user != null ? HomePage() : StartUpPage(),
       /*FutureBuilder<bool>(
         future: _checkIfUserLoggedIn(),
         builder: (context, snapshot) {
