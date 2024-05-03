@@ -112,7 +112,7 @@ class _SavedPageState extends State<SavedPage> {
         ),
       ),
       body: Container(
-        color: _selectedIndex == 1 ? Colors.grey[200] : Colors.transparent,
+        color:  Colors.transparent,
         child: CustomScrollView(
           physics: ScrollPhysics(),
           controller: _scrollController,

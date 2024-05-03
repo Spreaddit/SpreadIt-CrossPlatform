@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     final String token = parts.last;
     print("token $token");
     int response =100;
-    if(token!='home' || token=='' || UserSingleton().user!.isVerified! == false)
+    if((token!='home' || token=='' )&& UserSingleton().user!.isVerified! == false)
     {
         response= await verifyEmail(emailToken: token);
 

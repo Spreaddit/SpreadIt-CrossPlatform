@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import 'package:dio/dio.dart'; // Importing the Dio package.
 import 'package:spreadit_crossplatform/user_info.dart'; // Importing user information.
- import 'package:http_parser/http_parser.dart';
+import 'package:http_parser/http_parser.dart';
 
 /// Updates user information via API request.
 ///
@@ -54,21 +54,27 @@ Future<int> updateUserApi({
       'about': aboutUs,
       'isVisible': contentVisibility,
       'isActive': showActiveComments,
-      'avatar': profilePicImageUrl,
-      'banner': backgroundImageUrl,
     });
 
     if (profilePicImage != null) {
       formData.files.add(MapEntry(
         'avatar',
-        await MultipartFile.fromFile(profilePicImage.path, filename: 'avatar' , contentType: MediaType('image', 'jpg'),),
+        await MultipartFile.fromFile(
+          profilePicImage.path,
+          filename: 'avatar',
+          contentType: MediaType('image', 'jpg'),
+        ),
       ));
     }
 
     if (backgroundImage != null) {
       formData.files.add(MapEntry(
         'banner',
-        await MultipartFile.fromFile(backgroundImage.path, filename: 'banner', contentType: MediaType('image', 'jpg'),),
+        await MultipartFile.fromFile(
+          backgroundImage.path,
+          filename: 'banner',
+          contentType: MediaType('image', 'jpg'),
+        ),
       ));
     }
 
@@ -76,8 +82,7 @@ Future<int> updateUserApi({
       formData.files.add(MapEntry(
         'avatar',
         MultipartFile.fromBytes(profileImageWeb,
-            contentType:
-                MediaType('image', 'jpg')), 
+            contentType: MediaType('image', 'jpg')),
       ));
     }
 
@@ -85,8 +90,21 @@ Future<int> updateUserApi({
       formData.files.add(MapEntry(
         'banner',
         MultipartFile.fromBytes(backgroundImageWeb,
-            contentType:
-                MediaType('image', 'jpg')), 
+            contentType: MediaType('image', 'jpg')),
+      ));
+    }
+
+    if (profileImageWeb == null && profilePicImage == null) {
+      formData.fields.add(MapEntry(
+        'avatar',
+        profilePicImageUrl!,
+      ));
+    }
+
+   if (backgroundImage == null && backgroundImageWeb == null) {
+      formData.fields.add(MapEntry(
+        'banner',
+        backgroundImageUrl!,
       ));
     }
 
