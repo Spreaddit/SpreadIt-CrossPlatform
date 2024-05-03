@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/moderators/data/invite_moderator.dart';
 
-List<Map<String, String>> communities = [
+/*List<Map<String, String>> communities = [
   {
     'name': 'Icon 1',
     'url': 'https://via.placeholder.com/150',
@@ -15,23 +17,19 @@ List<Map<String, String>> communities = [
     'url': 'https://via.placeholder.com/150',
   },
   // Add more icons as needed
-];
+]; */
 
-void _showModalBottomSheetInvite(BuildContext context) {
-  Map<String, String>? _selectedCommunity;
+void showModalBottomSheetInvite(
+    BuildContext context, List<Community> communities, String username) {
+  Community _selectedCommunity = communities.first;
   bool _managePostsClicked = false;
   bool _manageUsersClicked = false;
   bool _manageSettingsClicked = false;
 
-  late TextEditingController _messageController;
+  late TextEditingController _messageController = TextEditingController(
+      text: 'I invite you to be a moderator of r/${_selectedCommunity.name}');
 
   @override
-
-  /*void initState() {
-                _messageController =
-                    TextEditingController(text: 'Initial Value');
-              }*/
-
   void dispose() {
     _messageController.dispose();
   }
@@ -64,7 +62,7 @@ void _showModalBottomSheetInvite(BuildContext context) {
                               _selectedCommunity = community;
                               _messageController = TextEditingController(
                                   text:
-                                      'I invite you to be a moderator of r/${community["name"]}');
+                                      'I invite you to be a moderator of r/${community.name}');
                             });
                           },
                           child: Column(
@@ -73,13 +71,12 @@ void _showModalBottomSheetInvite(BuildContext context) {
                                 backgroundColor: isSelected
                                     ? Colors.blue
                                     : Colors.transparent,
-                                backgroundImage:
-                                    NetworkImage(community['url']!),
+                                backgroundImage: NetworkImage(community.image!),
                                 child: CircleAvatar(
                                   radius: isSelected ? 25 : 30,
                                   backgroundColor: Colors.transparent,
                                   backgroundImage:
-                                      NetworkImage(community['url']!),
+                                      NetworkImage(community.image!),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
@@ -94,7 +91,7 @@ void _showModalBottomSheetInvite(BuildContext context) {
                                 ),
                               ),
                               SizedBox(height: 8.0),
-                              Text(community['name']!),
+                              Text(community.name!),
                             ],
                           ),
                         ),
@@ -189,18 +186,17 @@ void _showModalBottomSheetInvite(BuildContext context) {
                                 print(_managePostsClicked);
                                 print(_manageUsersClicked);
                                 print(_manageSettingsClicked);
-                                print(_selectedCommunity!["name"]);
+                                print(_selectedCommunity.name);
                                 inviteModerator(
-                                    communityName: "_selectedCommunity",
-                                    username: "username",
+                                    communityName: _selectedCommunity.name,
+                                    username: username,
                                     managePostsAndComments: _managePostsClicked,
                                     manageUsers: _manageUsersClicked,
                                     manageSettings: _manageSettingsClicked);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Invitation sent!'),
-                                  ),
-                                );
+                                Navigator.pop(context);
+                                CustomSnackbar(
+                                        content: "Invitaion sent successfully!")
+                                    .show(context);
                               }
                             : null,
                         icon: Icon(Icons.send),
