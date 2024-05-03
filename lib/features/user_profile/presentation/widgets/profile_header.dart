@@ -102,6 +102,14 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     });
   }
 
+  void navigateToUserSearch() {
+        Navigator.of(context).pushNamed('/community-or-user-search', 
+        arguments: {
+          'communityOrUserName': widget.username,
+          'communityOrUserIcon': widget.profilePicture ,
+        });
+      }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -164,9 +172,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.search),
-                            onPressed: () {
-                              // TO DO : Update this when search is implemented
-                            },
+                            onPressed: navigateToUserSearch,
                             color: Colors.white,
                             iconSize: iconSize,
                           ),
