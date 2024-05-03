@@ -17,14 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  final token = await messaging.getToken(
-    vapidKey:
-        'BDdxkpSfsZfMF7ZyPklut-xQVgp6HH8GkJnTRHXGlsGv6u3oDujnIiqPF9_iqq_POtjU8tLuEISutYyAiyZC7dw',
-  );
-  print(token);
+  );  
   await UserSingleton().loadFromPrefs();
   runApp(SpreadIt());
 }
