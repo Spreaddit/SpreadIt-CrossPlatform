@@ -48,6 +48,10 @@ Future<int> logInApi({
     } else if (response.statusCode == 401) {
       print("Unauthorized hena ${response.statusMessage}");
       return 401;
+    }
+    else if (response.statusCode == 402) {
+      print("User banned  ${response.statusMessage}");
+      return 402;
     } else {
       print("Unexpected status code: ${response.statusCode}");
       return 409;
@@ -60,7 +64,11 @@ Future<int> logInApi({
       } else if (e.response!.statusCode == 401) {
         print("Unauthorized ${e.response!.statusMessage}");
         return 401;
-      } else if (e.response!.statusCode == 404) {
+      }    else if (e.response!.statusCode == 402) {
+      print("User banned  ${e.response!.statusMessage}");
+      return 402;
+    } 
+      else if (e.response!.statusCode == 404) {
         print("Not Found: ${e.response!.statusMessage}");
         return 404;
       }

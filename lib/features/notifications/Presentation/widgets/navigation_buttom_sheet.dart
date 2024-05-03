@@ -40,7 +40,7 @@ class ManageNotificationBottomSheet extends StatelessWidget {
               ),
             ),
             Divider(),
-            if (!community)
+            if (notification.notificationType== "Comment Reply" || notification.notificationType== "Comment")
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Don't get updates on this"),
@@ -50,7 +50,7 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-            if (community)
+            if (notification.notificationType!= "Comment Reply" && notification.notificationType!= "Comment" && !community)
               ListTile(
                 leading: Icon(Icons.visibility_off, color: Colors.black),
                 title: Text("Hide this notification"),
@@ -59,7 +59,7 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-            if (community)
+            if (notification.notificationType!= "Comment Reply" && notification.notificationType!= "Comment" && !community)
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Turn off this notification type"),
@@ -74,7 +74,7 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 leading: Icon(Icons.do_not_disturb_on, color: Colors.black),
                 title: Text("Disable updates from this community"),
                 onTap: () async {
-                  await disableCommunitynotifications(id: "1");
+                  await disableCommunitynotifications(id: notification.id!);
                   Navigator.pop(context);
                 },
               ),

@@ -311,7 +311,7 @@ class _UserProfileState extends State<UserProfile> {
                         maxHeight: 200.0,
                       ),
                       child: Center(
-                        child: LoaderWidget(dotSize: 10, logoSize: 50.0),
+                        child: LoaderWidget(dotSize: 10, logoSize: 0.0),
                       ))
                   : ProfileHeader(
                       backgroundImage: background,

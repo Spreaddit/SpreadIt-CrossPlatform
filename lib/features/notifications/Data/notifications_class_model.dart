@@ -6,6 +6,7 @@ class Notifications extends Equatable {
   final String notificationType;
   final RelatedUser? relatedUser;
   final bool isRead;
+  final bool isHidden;
   final DateTime createdAt;
   final Comment? comment;
   final Post? post;
@@ -21,6 +22,7 @@ class Notifications extends Equatable {
     required this.notificationType,
     this.relatedUser,
     required this.isRead,
+    required this.isHidden,
     required this.createdAt,
     this.comment,
     this.post,
@@ -38,6 +40,7 @@ class Notifications extends Equatable {
         notificationType,
         relatedUser,
         isRead,
+        isHidden,
         createdAt,
         comment,
         post,
@@ -47,26 +50,33 @@ class Notifications extends Equatable {
         communityname,
         communitypic,
       ];
-
   factory Notifications.fromJson(Map<String, dynamic> json) {
     return Notifications(
-      id: json['_id']??'id',
-      content: json['content']??'content',
-      notificationType: json['notificationType'] ?? 'community',
-      relatedUser: json.containsKey('relatedUser')
-          ? RelatedUser.fromJson(json['relatedUser'])
+      id: json['_id'] ?? 'id',
+      content: json['content'] ?? 'content',
+      notificationType: json['notification_type'] ?? 'community',
+      relatedUser: json.containsKey('related_user')
+          ? RelatedUser.fromJson(json['related_user'])
           : null,
       isRead: json['is_read'] ?? false,
-      createdAt: DateTime.parse(json['created_at'] ?? json['dateCreated'] ??''),
-      comment: json.containsKey('comment')
-          ? Comment.fromJson(json['comment'])
+      isHidden: json['is_hidden'] ?? false,
+      createdAt:
+          DateTime.parse(json['created_at'] ?? json['dateCreated'] ?? ''),
+      comment: json['comment'] != null
+          ? json.containsKey('comment')
+              ? Comment.fromJson(json['comment'])
+              : null
           : null,
-      post: json.containsKey('post') ? Post.fromJson(json['post']) : null,
+      post: json['post'] != null
+          ? json.containsKey('post')
+              ? Post.fromJson(json['post'])
+              : null
+          : Post(),
       userId: json['userId'] ?? "-1",
       postId: json['postId'] ?? "-1",
       commentId: json['commentId'] ?? "-1",
-      communityname: json['name'],
-      communitypic: json['image'],
+      communityname: json['name'] ?? '',
+      communitypic: json['image'] ?? '',
     );
   }
 }
@@ -76,8 +86,8 @@ class RelatedUser extends Equatable {
   final String? avatarUrl;
 
   RelatedUser({
-    required this.username,
-    required this.avatarUrl,
+     this.username='',
+     this.avatarUrl='',
   });
 
   @override
@@ -86,7 +96,7 @@ class RelatedUser extends Equatable {
   factory RelatedUser.fromJson(Map<String, dynamic> json) {
     return RelatedUser(
       username: json['username'] ?? '',
-      avatarUrl: json['avatarUrl'] ?? '',
+      avatarUrl: json['avatar'] ?? '',
     );
   }
 }
@@ -96,8 +106,8 @@ class Post extends Equatable {
   final String community;
 
   Post({
-    required this.title,
-    required this.community,
+     this.title='',
+     this.community='',
   });
 
   @override

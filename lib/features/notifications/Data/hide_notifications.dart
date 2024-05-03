@@ -7,16 +7,13 @@ Future<int> HideNotification({
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String requestURL = '$apiUrl/notifications/hide';
+    String requestURL = '$apiUrl/notifications/hide/$id';
     
-      var data = {
-      "notificationId": id,
-    };
+  
 
     /// Send a POST request to the server to save or unsave the post or comment.
     final response = await Dio().post(
       requestURL,
-      data: data,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -28,9 +25,9 @@ Future<int> HideNotification({
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return 200;
-    } else if (response.statusCode == 404) {
-      print("Not Found: ${response.statusMessage}");
-      return 404;
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
+      return 400;
     } else if (response.statusCode == 500) {
       print("Server Error: ${response.statusMessage}");
       return 500;
@@ -40,9 +37,9 @@ Future<int> HideNotification({
     }
   } on DioException catch (e) {
     if (e.response != null) {
-      if (e.response!.statusCode == 404) {
-        print("Not Found: ${e.response!.statusMessage}");
-        return 404;
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+        return 400;
       } else if (e.response!.statusCode == 500) {
         print("Server Error: ${e.response!.statusMessage}");
         return 500;

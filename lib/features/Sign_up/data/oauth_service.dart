@@ -36,7 +36,7 @@ Future<bool> signOutWithGoogle(BuildContext context) async {
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
     await _auth.signOut();
-    print('sign out');
+    print('Signned out from google');
   }
   return true;
 }
