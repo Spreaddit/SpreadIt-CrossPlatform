@@ -16,6 +16,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -76,6 +77,9 @@ class _PostHeaderState extends State<_PostHeader> {
   late String dateFormatted;
   late Timer timer;
   bool shouldRenderJoin = false;
+
+  //bool isAdmin = UserSingleton().user?.role == "Admin";
+  bool isAdmin = true;
 
   @override
   void initState() {
@@ -291,9 +295,10 @@ class _PostHeaderState extends State<_PostHeader> {
       context: context,
       builder: (BuildContext context) {
         return CustomBottomSheet(
-          icons: widget.isUserProfile ? writerIcons : viewerIcons,
-          text: widget.isUserProfile ? writerOptions : viewerOptions,
-          onPressedList: widget.isUserProfile ? writerActions : viewerActions,
+          icons: widget.isUserProfile || isAdmin ? writerIcons : viewerIcons,
+          text: widget.isUserProfile || isAdmin ? writerOptions : viewerOptions,
+          onPressedList:
+              widget.isUserProfile || isAdmin ? writerActions : viewerActions,
         );
       },
     );
@@ -726,7 +731,7 @@ class PostWidget extends StatefulWidget {
     required this.post,
     this.isFullView = false,
     required this.isUserProfile,
-    this.isSavedPage=false,
+    this.isSavedPage = false,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -787,73 +792,74 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   @override
-Widget build(BuildContext context) {
-  return (widget.isSavedPage && !isSaved)
-      ? Center(
+  Widget build(BuildContext context) {
+    return (widget.isSavedPage && !isSaved)
+        ? Center(
             child: Text("Post Has Been Unsaved"),
           )
-      : (!isDeleted) 
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _PostHeader(
-                  post: widget.post,
-                  onContentChanged: onContentChanged,
-                  isUserProfile: widget.isUserProfile,
-                  isNsfw: isNsfw,
-                  isSpoiler: isSpoiler,
-                  isSaved: isSaved,
-                  onsaved: onSaved,
-                  onNsfwChanged: onChangeNsfw,
-                  onSpoilerChanged: onChangeSpoiler,
-                  onDeleted: onDeleted,
-                  content: widget.post.content != null &&
-                          widget.post.content!.isNotEmpty
-                      ? widget.post.content![widget.post.content!.length - 1]
-                      : widget.post.title,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("tapped");
-                    if (!widget.isFullView) {
-                      navigateToPostCardPage(
-                        context,
-                        widget.post.postId,
-                        widget.isUserProfile,
-                      );
-                    }
-                  },
-                  child: _PostBody(
-                    title: widget.post.title!,
+        : (!isDeleted)
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _PostHeader(
+                    post: widget.post,
+                    onContentChanged: onContentChanged,
+                    isUserProfile: widget.isUserProfile,
+                    isNsfw: isNsfw,
+                    isSpoiler: isSpoiler,
+                    isSaved: isSaved,
+                    onsaved: onSaved,
+                    onNsfwChanged: onChangeNsfw,
+                    onSpoilerChanged: onChangeSpoiler,
+                    onDeleted: onDeleted,
                     content: widget.post.content != null &&
                             widget.post.content!.isNotEmpty
                         ? widget.post.content![widget.post.content!.length - 1]
-                        : "",
-                    attachments: widget.post.attachments,
-                    link: widget.post.link,
-                    postType: widget.post.type!,
-                    isFullView: widget.isFullView,
-                    pollOption: widget.post.pollOptions,
-                    isPollEnabled: widget.post.isPollEnabled,
-                    pollVotingLength: widget.post.pollVotingLength,
-                    postId: widget.post.postId,
-                    isNsfw: isNsfw,
-                    isSpoiler: isSpoiler,
+                        : widget.post.title,
                   ),
-                ),
-                _PostInteractions(
-                  postId: widget.post.postId,
-                  isUserProfile: widget.isUserProfile,
-                votesCount:
-                    widget.post.votesUpCount! - widget.post.votesDownCount!,
-                  sharesCount: widget.post.sharesCount!,
-                  commentsCount: widget.post.commentsCount!,
-                  isFullView: widget.isFullView,
-                )
-              ],
-            )
-        : Center(
-            child: Text("Post Has Been Deleted"),
-          );
+                  GestureDetector(
+                    onTap: () {
+                      print("tapped");
+                      if (!widget.isFullView) {
+                        navigateToPostCardPage(
+                          context,
+                          widget.post.postId,
+                          widget.isUserProfile,
+                        );
+                      }
+                    },
+                    child: _PostBody(
+                      title: widget.post.title!,
+                      content: widget.post.content != null &&
+                              widget.post.content!.isNotEmpty
+                          ? widget
+                              .post.content![widget.post.content!.length - 1]
+                          : "",
+                      attachments: widget.post.attachments,
+                      link: widget.post.link,
+                      postType: widget.post.type!,
+                      isFullView: widget.isFullView,
+                      pollOption: widget.post.pollOptions,
+                      isPollEnabled: widget.post.isPollEnabled,
+                      pollVotingLength: widget.post.pollVotingLength,
+                      postId: widget.post.postId,
+                      isNsfw: isNsfw,
+                      isSpoiler: isSpoiler,
+                    ),
+                  ),
+                  _PostInteractions(
+                    postId: widget.post.postId,
+                    isUserProfile: widget.isUserProfile,
+                    votesCount:
+                        widget.post.votesUpCount! - widget.post.votesDownCount!,
+                    sharesCount: widget.post.sharesCount!,
+                    commentsCount: widget.post.commentsCount!,
+                    isFullView: widget.isFullView,
+                  )
+                ],
+              )
+            : Center(
+                child: Text("Post Has Been Deleted"),
+              );
   }
 }
