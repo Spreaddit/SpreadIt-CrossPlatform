@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
@@ -24,19 +25,37 @@ class JoinCommunityBtn extends StatefulWidget {
 class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
   late Map<String, dynamic> subscriptionData;
   bool isJoined = false;
+  bool isNotApprovedForJoin = false;
 
   @override
   void initState() {
     super.initState();
+    checkIfCanJoin();
     fetchData();
+  }
+
+  /// [checkIfCanJoin] : a function used to check if users aren't approved for joining the community
+
+  void checkIfCanJoin() async {
+    await checkIfBannedOrPrivate(
+            widget.communityName, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForJoin = value;
+    });
+    if (mounted) {
+      setState(() {
+        //TODO: check if this causes exception
+        isNotApprovedForJoin = isNotApprovedForJoin;
+      });
+    }
   }
 
   /// Fetches the subscription data for the community.
   Future<void> fetchData() async {
     //TODO FIX MODIFICATIONS
-    //subscriptionData = await getCommunitySubStatus(widget.communityName);
-    subscriptionData = {"isSubscribed": true};
-    if (false || subscriptionData["isSubscribed"] == -1) {
+    subscriptionData = await getCommunitySubStatus(widget.communityName);
+    //subscriptionData = {"isSubscribed": true};
+    if (subscriptionData["isSubscribed"] == -1) {
       CustomSnackbar(content: "Failed to retrieve subscription data")
           .show(context);
     } else {
@@ -51,6 +70,11 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
 
   /// Handles the button press event.
   void handleBtnPress() {
+    if (isNotApprovedForJoin && !isJoined) {
+      CustomSnackbar(content: "You are not approved to join this community")
+          .show(context);
+      return;
+    }
     if (!isJoined) {
       subscribe();
     } else {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/user.dart';
 
@@ -25,11 +27,29 @@ class JoinButton extends StatefulWidget {
 class _JoinButtonState extends State<JoinButton> {
   bool isJoined = false;
   bool isLoading = false;
+  bool isNotApprovedForJoin = false;
 
   @override
   void initState() {
     super.initState();
     setupInitialJoinState();
+    checkIfCanJoin();
+  }
+
+  /// [checkIfCanJoin] : a function used to check if users aren't approved for joining the community
+
+  void checkIfCanJoin() async {
+    await checkIfBannedOrPrivate(
+            widget.communityName, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForJoin = value;
+    });
+    if (mounted) {
+      setState(() {
+        //TODO: check if this causes exception
+        isNotApprovedForJoin = isNotApprovedForJoin;
+      });
+    }
   }
 
   @override
@@ -51,10 +71,14 @@ class _JoinButtonState extends State<JoinButton> {
   }
 
   void toggleJoin() async {
+    if (isNotApprovedForJoin && !isJoined) {
+      CustomSnackbar(content: "You are not approved to join this community")
+          .show(context);
+      return;
+    }
     setState(() {
       isLoading = true;
     });
-
     try {
       if (isJoined) {
         // Unjoin the community

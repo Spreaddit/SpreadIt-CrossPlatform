@@ -78,12 +78,17 @@ class _ApprovedUserCardState extends State<ApprovedUserCard> {
                 Navigator.of(context).pop();
                 //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
                 //TODO FIX THE "NULL" ERROR
-                Navigator.of(context).pushNamed(
-                  '/user-profile',
-                  arguments: {
-                    'username': widget.username,
-                  },
-                );
+
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     settings: RouteSettings(
+                //       name: '/user-profile/$username',
+                //     ),
+                //     builder: (context) => UserProfile(
+                //       username: widget.username,
+                //     ),
+                //   ),
+                // );
               },
               child: ListTile(
                 leading: Icon(Icons.account_circle_outlined),
@@ -164,12 +169,17 @@ class _ApprovedUserCardState extends State<ApprovedUserCard> {
         onPressed: () {
           //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
           //TODO FIX THE "NULL" ERROR
-          Navigator.of(context).pushNamed(
-            '/user-profile',
-            arguments: {
-              'username': widget.username,
-            },
-          );
+          
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     settings: RouteSettings(
+          //       name: '/user-profile/$username',
+          //     ),
+          //     builder: (context) => UserProfile(
+          //       username: widget.username,
+          //     ),
+          //   ),
+          // );
         },
         style: TextButton.styleFrom(
           backgroundColor: Colors.white,

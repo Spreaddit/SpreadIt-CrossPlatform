@@ -3,16 +3,21 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/data/update_ed
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_footer.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_header.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/widgets/generic_body.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class EditPost extends StatefulWidget {
   String postId;
   String postContent;
   final void Function(String) onContentChanged;
+  final String communityName;
 
   EditPost({
     required this.postId,
     this.postContent = "",
     required this.onContentChanged,
+    required this.communityName,
   });
 
   @override
@@ -24,6 +29,7 @@ class EditPost extends StatefulWidget {
 class _EditPostState extends State<EditPost> {
   final GlobalKey<FormState> _finalTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalContentForm = GlobalKey<FormState>();
+  bool isNotApprovedForPostEdit = false;
 
   String? content;
   bool isEnabled = true;
@@ -35,6 +41,21 @@ class _EditPostState extends State<EditPost> {
   void initState() {
     setContent(content);
     super.initState();
+    checkIfCanEditPost();
+  }
+
+  /// [checkIfCanEditPost] : a function used to check if users aren't approved for editing post in the community
+
+  void checkIfCanEditPost() async {
+    await checkIfNotApproved(
+            widget.communityName, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForPostEdit = value;
+    });
+    setState(() {
+      //TODO: check if this causes exception
+      isNotApprovedForPostEdit = isNotApprovedForPostEdit;
+    });
   }
 
   bool validateContent(String value) {
@@ -64,6 +85,13 @@ class _EditPostState extends State<EditPost> {
           title: GenericHeader(
             buttonText: "Save",
             onPressed: () async {
+              if (isNotApprovedForPostEdit) {
+                CustomSnackbar(
+                        content:
+                            "You are not approved to edit the post in this community")
+                    .show(context);
+                return;
+              }
               print("pressed");
               widget.postContent = content!;
               widget.onContentChanged(content!);

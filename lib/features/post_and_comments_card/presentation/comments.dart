@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/p
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
@@ -108,6 +109,7 @@ class CommentCard extends StatefulWidget {
 class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
   late bool isUserProfile;
+  bool isNotApprovedForCommentEdit = false;
   var issaved;
 
   /// Fetches replies for the comment asynchronously.
@@ -137,6 +139,20 @@ class _CommentCardState extends State<CommentCard> {
   void initState() {
     super.initState();
     issaved = widget.comment.isSaved!;
+    checkIfCanEditComment();
+  }
+
+  /// [checkIfCanEditComment] : a function used to check if users aren't approved for editing comments in the community
+
+  void checkIfCanEditComment() async {
+    await checkIfNotApproved(widget.community, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForCommentEdit = value;
+    });
+    setState(() {
+      //TODO: check if this causes exception
+      isNotApprovedForCommentEdit = isNotApprovedForCommentEdit;
+    });
   }
 
   @override
@@ -188,7 +204,8 @@ class _CommentCardState extends State<CommentCard> {
                                 Icons.share,
                                 Icons.notifications_on_rounded,
                                 Icons.save,
-                                if (isUserProfile) Icons.edit,
+                                if (isUserProfile && !isNotApprovedForCommentEdit)
+                                  Icons.edit,
                                 Icons.copy,
                                 if (!isUserProfile) Icons.block,
                                 if (!isUserProfile) Icons.flag
@@ -197,7 +214,8 @@ class _CommentCardState extends State<CommentCard> {
                                 "Share",
                                 "Get Reply notifications",
                                 issaved ? "Unsave" : "save",
-                                if (isUserProfile) "Edit Comment",
+                                if (isUserProfile && !isNotApprovedForCommentEdit)
+                                  "Edit Comment",
                                 "Copy text",
                                 if (!isUserProfile) "Block account",
                                 if (!isUserProfile) "Report"
@@ -216,7 +234,7 @@ class _CommentCardState extends State<CommentCard> {
                                         issaved = !issaved;
                                       })
                                     },
-                                if (isUserProfile)
+                                if (isUserProfile && !isNotApprovedForCommentEdit)
                                   () => Navigator.push(
                                         context,
                                         MaterialPageRoute(

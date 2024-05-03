@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
@@ -56,15 +56,13 @@ class _CommunityPageState extends State<CommunityPage> {
         .then((value) => communityData = value);
     isApprovedDataFuture = checkIfApprovedRequest(
       communityName: widget.communityName,
-      username: (UserSingleton().user != null)
-          ? UserSingleton().user!.username
-          : "ss",
+      username:
+          (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => isApprovedData = value);
     isBannedDataFuture = checkIfBannedRequest(
       communityName: widget.communityName,
-      username: (UserSingleton().user != null)
-          ? UserSingleton().user!.username
-          : "ss",
+      username:
+          (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => isBannedData = value);
   }
 
@@ -87,6 +85,10 @@ class _CommunityPageState extends State<CommunityPage> {
             child: Text("Error while fetching data 😔"),
           );
         } else if (snapshot.hasData) {
+          print("Fetching is complete");
+          print("communityData: $communityData");
+          print("isApprovedData: $isApprovedData");
+          print("isBannedData: $isBannedData");
           if (!isInitialized) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               String title = "";
@@ -131,14 +133,14 @@ class _CommunityPageState extends State<CommunityPage> {
               communityName: widget.communityName,
               communityData: communityData,
             ),
-            // PostFeed(
-            //   postCategory: PostCategories.hot,
-            //   subspreaditName: widget.communityName,
-            //   startSortIndex: 1,
-            //   endSortIndex: 3,
-            //   showSortTypeChange: true,
-            //   scrollController: _scrollController,
-            // ),
+            PostFeed(
+              postCategory: PostCategories.hot,
+              subspreaditName: widget.communityName,
+              startSortIndex: 1,
+              endSortIndex: 3,
+              showSortTypeChange: true,
+              scrollController: _scrollController,
+            ),
           ],
         ),
       ),
@@ -152,68 +154,11 @@ class _CommunityPageState extends State<CommunityPage> {
         return NonSkippableAlertDialog(
           title: title,
           content: content,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         );
       },
-    );
-  }
-}
-
-class NonSkippableAlertDialog extends StatelessWidget {
-  final String title;
-  final String content;
-
-  NonSkippableAlertDialog({required this.title, required this.content});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Dialog(
-        // Ensure dialog is not dismissed when tapped outside
-        backgroundColor: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  content,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      int count = 2;
-                      Navigator.of(context).popUntil((route) => count-- <= 0);
-                    },
-                    child: Text('OK'),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

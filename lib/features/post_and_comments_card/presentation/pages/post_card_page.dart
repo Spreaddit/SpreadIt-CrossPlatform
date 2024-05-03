@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
@@ -27,6 +29,7 @@ class PostCardPage extends StatefulWidget {
 class _PostCardPageState extends State<PostCardPage> {
   List<Comment> comments = [];
   Post? post;
+  bool isNotApprovedForPostView = false;
 
   /// Fetches comments associated with the post.
   Future<void> fetchComments() async {
@@ -68,10 +71,43 @@ class _PostCardPageState extends State<PostCardPage> {
   void initState() {
     super.initState();
     fetchPost().then((post) {
+      checkIfCanViewPost();
       fetchComments().then((comments) {
         setState(() {});
       });
     });
+  }
+
+  /// [checkIfCanViewPost] : a function used to check if users aren't approved for viewing the post in the community
+  /// Shows a non-skippable alert dialog if the user is not approved to view the post.
+  void checkIfCanViewPost() async {
+    await checkIfBannedOrPrivate(
+            post!.community, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForPostView = value;
+    });
+    if (isNotApprovedForPostView) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showHaltingAlert(title: "You are not approved to view this post");
+      });
+    }
+  }
+
+  /// Shows a non-skippable alert dialog.
+  void _showHaltingAlert({required String title, String? content}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return NonSkippableAlertDialog(
+          title: title,
+          content: content,
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -107,11 +143,13 @@ class _PostCardPageState extends State<PostCardPage> {
                 ),
               ),
             ),
-            AddCommentWidget(
-              commentsList: comments,
-              postId: widget.postId.toString(),
-              addComment: addComment,
-            ),
+            if (post != null)
+              AddCommentWidget(
+                commentsList: comments,
+                postId: widget.postId.toString(),
+                addComment: addComment,
+                communityName: post!.community,
+              ),
           ],
         ),
       ),

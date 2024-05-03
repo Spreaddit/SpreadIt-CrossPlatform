@@ -17,6 +17,7 @@ void main() {
         body: AddCommentWidget(
           commentsList: commentsList,
           postId: 'post1',
+          communityName: 'community1',
           addComment: (Comment comment) {
             commentsList.add(comment);
           },

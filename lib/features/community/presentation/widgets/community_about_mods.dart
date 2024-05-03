@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
 class CommunityAboutMods extends StatefulWidget {
   CommunityAboutMods({Key? key, required this.communityName}) : super(key: key);
@@ -28,13 +29,18 @@ class _CommunityAboutModsState extends State<CommunityAboutMods> {
   }
 
   void navigateToModeratorProfile(String username) {
-    //TODO implement this W/MARIAM
-    Navigator.of(context).pushNamed(
-      '/user-profile',
-      arguments: {
-        'username': username,
-      },
-    );
+    //TODO implement nav to user W/MARIAM
+
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     settings: RouteSettings(
+    //       name: '/user-profile/$username',
+    //     ),
+    //     builder: (context) => UserProfile(
+    //       username: username,
+    //     ),
+    //   ),
+    // );
   }
 
   @override

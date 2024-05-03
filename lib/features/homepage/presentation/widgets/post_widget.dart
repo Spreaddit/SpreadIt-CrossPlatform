@@ -10,12 +10,14 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_post_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -215,6 +217,7 @@ class _PostHeaderState extends State<_PostHeader> {
                     ? widget.post.content![widget.post.content!.length - 1]
                     : "",
                 onContentChanged: widget.onContentChanged,
+                communityName: widget.post.community,
               ),
             ),
           ),
@@ -726,7 +729,7 @@ class PostWidget extends StatefulWidget {
     required this.post,
     this.isFullView = false,
     required this.isUserProfile,
-    this.isSavedPage=false,
+    this.isSavedPage = false,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -738,10 +741,12 @@ class _PostWidgetState extends State<PostWidget> {
   late bool isSpoiler;
   late bool isDeleted = false;
   late bool isSaved;
+  late Future<bool> isNotApprovedForViewPostFuture;
 
   @override
   void initState() {
     super.initState();
+    checkIfCanViewPost();
     setState(() {
       isNsfw = widget.post.isNsfw!;
       isSpoiler = widget.post.isSpoiler!;
@@ -750,6 +755,13 @@ class _PostWidgetState extends State<PostWidget> {
           ? widget.post.content!
           : [];
     });
+  }
+
+  /// [checkIfCanViewPost] : a function used to check if users aren't approved for viewing post in the community
+
+  void checkIfCanViewPost() async {
+    isNotApprovedForViewPostFuture = checkIfBannedOrPrivate(
+        widget.post.community, UserSingleton().user!.username);
   }
 
   void onDeleted() {
@@ -786,74 +798,104 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   @override
-  @override
-Widget build(BuildContext context) {
-  return (widget.isSavedPage && !isSaved)
-      ? Center(
-            child: Text("Post Has Been Unsaved"),
-          )
-      : (!isDeleted) 
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _PostHeader(
-                  post: widget.post,
-                  onContentChanged: onContentChanged,
-                  isUserProfile: widget.isUserProfile,
-                  isNsfw: isNsfw,
-                  isSpoiler: isSpoiler,
-                  isSaved: isSaved,
-                  onsaved: onSaved,
-                  onNsfwChanged: onChangeNsfw,
-                  onSpoilerChanged: onChangeSpoiler,
-                  onDeleted: onDeleted,
-                  content: widget.post.content != null &&
-                          widget.post.content!.isNotEmpty
-                      ? widget.post.content![widget.post.content!.length - 1]
-                      : widget.post.title,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("tapped");
-                    if (!widget.isFullView) {
-                      navigateToPostCardPage(
-                        context,
-                        widget.post.postId,
-                        widget.isUserProfile,
-                      );
-                    }
-                  },
-                  child: _PostBody(
-                    title: widget.post.title!,
-                    content: widget.post.content != null &&
-                            widget.post.content!.isNotEmpty
-                        ? widget.post.content![widget.post.content!.length - 1]
-                        : "",
-                    attachments: widget.post.attachments,
-                    link: widget.post.link,
-                    postType: widget.post.type!,
-                    isFullView: widget.isFullView,
-                    pollOption: widget.post.pollOptions,
-                    isPollEnabled: widget.post.isPollEnabled,
-                    pollVotingLength: widget.post.pollVotingLength,
-                    postId: widget.post.postId,
-                    isNsfw: isNsfw,
-                    isSpoiler: isSpoiler,
-                  ),
-                ),
-                _PostInteractions(
-                  postId: widget.post.postId,
-                  isUserProfile: widget.isUserProfile,
-                votesCount:
-                    widget.post.votesUpCount! - widget.post.votesDownCount!,
-                  sharesCount: widget.post.sharesCount!,
-                  commentsCount: widget.post.commentsCount!,
-                  isFullView: widget.isFullView,
-                )
-              ],
-            )
-        : Center(
-            child: Text("Post Has Been Deleted"),
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: isNotApprovedForViewPostFuture,
+      builder: ((context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.deepOrangeAccent,
+            ),
           );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text("Error while fetching data 😔"),
+          );
+        } else if (snapshot.hasData) {
+          return (widget.isSavedPage && !isSaved)
+              ? Center(
+                  child: Text("Post Has Been Unsaved"),
+                )
+              : (!isDeleted)
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _PostHeader(
+                          post: widget.post,
+                          onContentChanged: onContentChanged,
+                          isUserProfile: widget.isUserProfile,
+                          isNsfw: isNsfw,
+                          isSpoiler: isSpoiler,
+                          isSaved: isSaved,
+                          onsaved: onSaved,
+                          onNsfwChanged: onChangeNsfw,
+                          onSpoilerChanged: onChangeSpoiler,
+                          onDeleted: onDeleted,
+                          content: widget.post.content != null &&
+                                  widget.post.content!.isNotEmpty
+                              ? widget.post
+                                  .content![widget.post.content!.length - 1]
+                              : widget.post.title,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            print("tapped");
+                            if (snapshot.data == true) {
+                              CustomSnackbar(
+                                      content:
+                                          "You are not approved to view this post")
+                                  .show(context);
+                              return;
+                            }
+                            if (!widget.isFullView) {
+                              navigateToPostCardPage(
+                                context,
+                                widget.post.postId,
+                                widget.isUserProfile,
+                              );
+                            }
+                          },
+                          child: _PostBody(
+                            title: widget.post.title!,
+                            content: widget.post.content != null &&
+                                    widget.post.content!.isNotEmpty
+                                ? widget.post
+                                    .content![widget.post.content!.length - 1]
+                                : "",
+                            attachments: widget.post.attachments,
+                            link: widget.post.link,
+                            postType: widget.post.type!,
+                            isFullView: widget.isFullView,
+                            pollOption: widget.post.pollOptions,
+                            isPollEnabled: widget.post.isPollEnabled,
+                            pollVotingLength: widget.post.pollVotingLength,
+                            postId: widget.post.postId,
+                            isNsfw: isNsfw,
+                            isSpoiler: isSpoiler,
+                          ),
+                        ),
+                        if (snapshot.data == false)
+                          _PostInteractions(
+                            postId: widget.post.postId,
+                            isUserProfile: widget.isUserProfile,
+                            votesCount: widget.post.votesUpCount! -
+                                widget.post.votesDownCount!,
+                            sharesCount: widget.post.sharesCount!,
+                            commentsCount: widget.post.commentsCount!,
+                            isFullView: widget.isFullView,
+                          )
+                      ],
+                    )
+                  : Center(
+                      child: Text("Post Has Been Deleted"),
+                    );
+        } else {
+          return Center(
+            child: Text("Unknown error while fetching data 🤔"),
+          );
+        }
+      }),
+    );
   }
 }

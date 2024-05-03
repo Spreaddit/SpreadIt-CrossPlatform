@@ -27,13 +27,13 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
   String communityDescription = "";
   String communityImageLink = "";
 
-  Future<Map<String, dynamic>>? modData;
+  Future<Map<String, dynamic>>? isModData;
 
   @override
   void initState() {
     super.initState();
-    initValues();
     fetchModData();
+    initValues();
   }
 
   /// Initializes the values of the community information.
@@ -41,7 +41,6 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
     membersCount = formatNumber(widget.communityData["membersCount"] ?? 0);
     communityImageLink = widget.communityData["image"] ?? "";
     communityDescription = widget.communityData["description"] ?? "";
-    // TODO: Check if user is a moderator
   }
 
   /// Formats a number using the NumberFormat class.
@@ -54,17 +53,17 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
 
   /// Fetches the moderator data.
   void fetchModData() async {
-    modData = checkIfModeratorRequest(
+    isModData = checkIfModeratorRequest(
       communityName: widget.communityName,
       username:
-          (UserSingleton().user != null) ? UserSingleton().user!.username : "ss",
+          (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: modData,
+      future: isModData,
       builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -78,7 +77,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
             child: Text("Error while fetching data 😔"),
           );
         } else if (snapshot.hasData && snapshot.data != {}) {
-          print(modData);
+          print(isModData);
           return Container(
             color: Colors.white,
             child: Column(

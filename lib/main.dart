@@ -35,9 +35,9 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      //home: UserSingleton().user != null ? HomePage() : StartUpPage(),
+      home: UserSingleton().user != null ? HomePage() : StartUpPage(),
       //home: ModtoolsPage(communityName: "hardware"),
-      home: CommunityPage(communityName: "hardware"),
+      //home: CommunityPage(communityName: "hardware"),
       onGenerateRoute: (settings) {
         final List<String>? pathSegments = settings.name?.split('/');
         if (pathSegments == null || pathSegments.isEmpty) {
