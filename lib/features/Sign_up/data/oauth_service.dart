@@ -5,7 +5,7 @@ import "package:spreadit_crossplatform/user_info.dart";
 
 
 /// Google sign-in instance.
-final GoogleSignIn _googleSignIn = GoogleSignIn();  
+final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 /// Function to sign in with Google.
@@ -14,7 +14,8 @@ Future<String> signInWithGoogle(BuildContext context) async {
   if (googleUser == null) {
     return "";
   }
-  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+  final GoogleSignInAuthentication? googleAuth =
+      await googleUser?.authentication;
   final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth?.accessToken,
     idToken: googleAuth?.idToken,
@@ -31,7 +32,7 @@ Future<String> signInWithGoogle(BuildContext context) async {
 /// Function to sign out with Google.
 Future<bool> signOutWithGoogle(BuildContext context) async {
   User? currentUser = _auth.currentUser;
-  if (currentUser  != null) {
+  if (currentUser != null) {
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
     await _auth.signOut();

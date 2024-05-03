@@ -77,6 +77,7 @@ class _PostFeedState extends State<PostFeed> {
 
   @override
   void didUpdateWidget(covariant PostFeed oldWidget) {
+    if (!mounted) return;
     if (widget.postCategory != oldWidget.postCategory) {
       setState(() {
         currentPostCategory = widget.postCategory;
@@ -104,8 +105,6 @@ class _PostFeedState extends State<PostFeed> {
       username: widget.username,
     );
 
-    print("Category:$currentPostCategory, Items:$fetchedItems");
-
     setState(() {
       if (fetchedItems.isEmpty) {
         CustomSnackbar(content: "No posts found").show(context);
@@ -125,8 +124,6 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void _onScroll() {
-    print(
-        "pixels:${_scrollController.position.pixels} max: ${_scrollController.position.maxScrollExtent}");
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       _loadMore();
@@ -134,6 +131,8 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void _loadMore() {
+    if (!mounted) return;
+
     if (!_loadingMore) {
       setState(() {
         _loadingMore = true;
@@ -143,6 +142,8 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   void fetchExistingItems() {
+    if (!mounted) return;
+
     if (existingItems.length < newItems.length) {
       Future.delayed(Duration(seconds: 1), () {
         setState(() {
@@ -173,9 +174,11 @@ class _PostFeedState extends State<PostFeed> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () {
-        setState(() {
-          isRefreshing = true;
-        });
+        if (mounted) {
+          setState(() {
+            isRefreshing = true;
+          });
+        }
         return fetchData();
       },
       child: SingleChildScrollView(
@@ -198,6 +201,7 @@ class _PostFeedState extends State<PostFeed> {
                 ),
               ),
             Container(
+              color: Colors.white,
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 0,
@@ -215,6 +219,7 @@ class _PostFeedState extends State<PostFeed> {
                               children: [
                                 PostWidget(
                                     isSavedPage: widget.isSavedPage,
+                                    feedContext: context,
                                     post: existingItems[index],
                                     isUserProfile: currentPostCategory ==
                                             PostCategories.user ||

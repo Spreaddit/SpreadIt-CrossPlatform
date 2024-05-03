@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import '../../../user_info.dart'; // Importing user information.
 
-var apibase= "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
+var apibase = "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 Future<int> HideNotification({
   required String id,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     String requestURL = '$apibase/notifications/hide';
-    
-      var data = {
+
+    var data = {
       "notificationId": id,
     };
 

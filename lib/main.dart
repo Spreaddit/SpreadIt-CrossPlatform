@@ -38,24 +38,7 @@ class SpreadIt extends StatelessWidget {
       home: UserSingleton().user != null ? HomePage() : StartUpPage(),
       //home: ModtoolsPage(communityName: "hardware"),
       //home: CommunityPage(communityName: "hardware"),
-      onGenerateRoute: (settings) {
-        final List<String>? pathSegments = settings.name?.split('/');
-        if (pathSegments == null || pathSegments.isEmpty) {
-          return null;
-        }
-
-        if (pathSegments.contains('post-card-page') &&
-            pathSegments.length >= 3) {
-          final postId = pathSegments[pathSegments.length - 2];
-          final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
-
-          return MaterialPageRoute(
-            builder: (_) =>
-                PostCardPage(postId: postId, isUserProfile: isUserProfile),
-          );
-        }
-        return null;
-      },
+      onGenerateRoute: onGenerateRoute,
       routes: generateRoutes(),
     );
   }
