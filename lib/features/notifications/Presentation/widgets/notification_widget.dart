@@ -48,13 +48,27 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     isRead = widget.isRead;
   }
 
-  void markmessageasRead()  {
+  void markmessageasRead() {
     if (widget.notification!.isRead == false) {
-       MarkAsRead(id: widget.notification!.id!, type: 'one');
+      MarkAsRead(id: widget.notification!.id!, type: 'one');
       setState(() {
         isRead = true;
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    isRead = widget.isRead;
+  }
+
+  @override
+  void didUpdateWidget(covariant NotificationWidget oldWidget) {
+    setState(() {
+      isRead = widget.isRead;
+    });
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -85,8 +99,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               if (widget.notification!.communitypic == null &&
                   widget.notification!.relatedUser == null)
                 CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/LogoSpreadIt.png'),
+                  backgroundImage: AssetImage('assets/images/LogoSpreadIt.png'),
                   radius: 20.0,
                 ),
               if (widget.iconData != null)
@@ -126,8 +139,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: ()  {
-                         markmessageasRead();
+                      onPressed: () {
+                        markmessageasRead();
                         widget.onPressed?.call();
                       },
                       icon: Icon(
@@ -156,7 +169,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 : null,
         trailing: GestureDetector(
           onTap: () async {
-             markmessageasRead();
+            markmessageasRead();
             showModalBottomSheet(
               context: context,
               builder: (context) => ManageNotificationBottomSheet(

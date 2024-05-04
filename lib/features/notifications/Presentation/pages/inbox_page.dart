@@ -29,16 +29,12 @@ class _InboxPageState extends State<InboxPage> {
   List<Notifications> notifications = [];
   bool isLoading = true;
   Notifications? recommendedCommunity;
-  late bool isAllRead;
   int unreadNotifications = -1;
 
   @override
   void initState() {
     super.initState();
     fetchData();
-    setState(() {
-      isAllRead = widget.isAllRead;
-    });
     unreadNotificationsCount();
   }
 
@@ -47,22 +43,6 @@ class _InboxPageState extends State<InboxPage> {
       _selectedIndex = index;
     });
     widget.onChangeHomeSubCategory!(index + 7);
-  }
-
-  @override
-  void didUpdateWidget(covariant InboxPage oldWidget) {
-    setState(() {
-      isAllRead = widget.isAllRead;
-    });
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setState(() {
-      isAllRead = widget.isAllRead;
-    });
   }
 
   Future<void> getSuggestedCommunity() async {
@@ -138,7 +118,7 @@ class _InboxPageState extends State<InboxPage> {
                 todayNotifications: todayNotifications,
                 earlierNotifications: earlierNotifications,
                 notifications: notifications,
-                isAllRead: isAllRead,
+                isAllRead: widget.isAllRead,
               );
 
       case 1:

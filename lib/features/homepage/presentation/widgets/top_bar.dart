@@ -43,6 +43,7 @@ class TopBar extends AppBar {
                 currentPage: currentPage,
                 context: context,
                 onChangeChatFilter: onChangeChatFilter,
+                onReadMessages: onReadMessages!,
                 chatFilterSelectedOption: chatFilterSelectedOption),
             Builder(
               builder: (context) => IconButton(
@@ -148,7 +149,7 @@ Widget chooseTitle(
 Widget chooseActions({
   required CurrentPage currentPage,
   required BuildContext context,
-  final void Function()? onReadMessages,
+  required final void Function() onReadMessages,
   int? chatFilterSelectedOption,
   final void Function(int)? onChangeChatFilter,
 }) {
@@ -318,6 +319,18 @@ class _InboxPageModalState extends State<InboxPageModal> {
     Icons.settings,
   ];
 
+  void onTap(int index) {
+    if (index == 0) {
+      //TODO: navigate to new message
+    } else if (index == 1) {
+      widget.onReadMessages!();
+      Navigator.pop(context);
+    } else {
+      Navigator.of(context)
+          .popAndPushNamed("/settings/account-settings/manage-notifications");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -333,8 +346,7 @@ class _InboxPageModalState extends State<InboxPageModal> {
                 leading: Icon(icons[index]),
                 title: Text(options[index]),
                 onTap: () {
-                  widget.onReadMessages!();
-                  Navigator.pop(context);
+                  onTap(index);
                 },
               );
             },

@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
@@ -15,6 +16,7 @@ class MessageInbox extends StatefulWidget {
 
 class _MessageInboxState extends State<MessageInbox> {
   List<Message> messages = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -24,31 +26,34 @@ class _MessageInboxState extends State<MessageInbox> {
   }
 
   void fetchMessages() async {
+    setState(() {
+      isLoading = true;
+    });
     List<Message> fetchedMessages = await getMessages();
     setState(() {
       messages = fetchedMessages;
+      isLoading = false;
     });
   }
 
   @override
-  void didUpdateWidget(covariant MessageInbox oldWidget) {
-    setState(() {});
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ListView(
+    return SingleChildScrollView(
       physics: AlwaysScrollableScrollPhysics(),
-      shrinkWrap: true,
-      children: messages
-          .mapIndexed<Widget>(
-            (index, message) => _messageTile(
-              message: message,
-              context: context,
+      child: isLoading
+          ? _buildShimmerLoading()
+          : ListView(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: messages
+                  .mapIndexed<Widget>(
+                    (index, message) => _messageTile(
+                      message: message,
+                      context: context,
+                    ),
+                  )
+                  .toList(),
             ),
-          )
-          .toList(),
     );
   }
 }
@@ -102,3 +107,51 @@ navigateToMessage({
   required BuildContext context,
   required messageId,
 }) {}
+
+Widget _buildShimmerLoading() {
+  return Column(
+    children: [
+      Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        period: Duration(milliseconds: 1000),
+        child: Column(
+          children: List.generate(
+            10,
+            (index) => Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Container(
+                      width: double.infinity,
+                      height: 25.0,
+                      color: Colors.white,
+                    ),
+                    subtitle: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 15.0,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          height: 10.0,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
