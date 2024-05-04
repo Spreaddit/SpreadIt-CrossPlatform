@@ -1,5 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/data/accept_invite.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
+import 'package:spreadit_crossplatform/features/community/data/decline_invite.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
@@ -8,6 +11,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_invited.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
@@ -37,7 +41,7 @@ class _CommunityPageState extends State<CommunityPage> {
   int isApprovedDataIdx = 1;
   int isBannedDataIdx = 2;
   Map<String, dynamic> isModData = {};
-  Map<String, dynamic> isInvited = {};
+  Map<String, dynamic> isInvitedData = {};
   Map<String, dynamic> communityData = {};
   Map<String, dynamic> isApprovedData = {};
   Map<String, dynamic> isBannedData = {};
@@ -74,6 +78,11 @@ class _CommunityPageState extends State<CommunityPage> {
       username:
           (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => isModData = value);
+    isInvitedFuture = checkIfInvitedRequest(
+      communityName: widget.communityName,
+      username:
+          (UserSingleton().user != null) ? UserSingleton().user!.username : "",
+    ).then((value) => isInvitedData = value);
   }
 
   @override
@@ -83,7 +92,8 @@ class _CommunityPageState extends State<CommunityPage> {
         communityDataFuture,
         isApprovedDataFuture,
         isBannedDataFuture,
-        isModDataFuture
+        isModDataFuture,
+        isInvitedFuture,
       ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -117,7 +127,11 @@ class _CommunityPageState extends State<CommunityPage> {
                 content = alertTexts[1][1];
                 _showHaltingAlert(title: title, content: content);
               }
+              if (isInvitedData["isInvited"] == true) {
+                _showInvitationDialog();
+              }
             });
+
             isInitialized = true;
           }
           return Scaffold(
@@ -172,6 +186,60 @@ class _CommunityPageState extends State<CommunityPage> {
           onPressed: () {
             Navigator.of(context).pop();
           },
+        );
+      },
+    );
+  }
+
+  void _showInvitationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Invitation to moderate"),
+          content: Text("You've been invited to moderate this community."),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Accept invitation logic
+                    acceptInvite(communityName: widget.communityName);
+                    //Navigate to moderators page
+                    Navigator.pop(context);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                    minimumSize: MaterialStateProperty.all(
+                        Size(150, 50)), // Set minimum size of the button
+                  ),
+                  child: Text(
+                    "Accept",
+                    style: TextStyle(fontSize: 20), // Adjust text size
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Decline invitation logic
+                    declineInvite(
+                        communityName: widget.communityName,
+                        username: UserSingleton().user!.username);
+                    Navigator.pop(context);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.grey),
+                    minimumSize: MaterialStateProperty.all(
+                        Size(150, 50)), // Set minimum size of the button
+                  ),
+                  child: Text(
+                    "Decline",
+                    style: TextStyle(fontSize: 20), // Adjust text size
+                  ),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );
