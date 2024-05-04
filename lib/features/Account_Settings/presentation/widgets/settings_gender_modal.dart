@@ -9,7 +9,10 @@ import '../../../generic_widgets/snackbar.dart';
 /// after a selected value is recorded.
 class SelectGender extends StatefulWidget {
   /// Creates a select gender widget.
-  SelectGender({Key? key}) : super(key: key);
+  SelectGender({Key? key, required this.basicData}) : super(key: key);
+
+  /// User basic settings data
+  final Map<String, dynamic> basicData;
 
   /// List of available genders.
   final List<String> genders = [
@@ -38,18 +41,8 @@ class _SelectGenderState extends State<SelectGender> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
-  }
-
-  /// Fetches data from the API.
-  Future<void> fetchData() async {
-    data = await getBasicData();
-    setState(() {
-      _selectedGender =
-          data["gender"] ?? "";
-    });
+    data = widget.basicData;
+    _selectedGender = data["gender"] ?? "";
   }
 
   /// Displays the Gender bottom sheet.
