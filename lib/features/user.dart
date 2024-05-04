@@ -21,7 +21,7 @@ class User {
   bool? isActive;
   String? displayName;
   String? about;
-  bool? cakeDay;
+  String? cakeDay;
   List<String?>? subscribedCommunities;
   List<String?>? favouriteCommunities;
   final List<SocialMedia?>? socialLinks;
@@ -119,7 +119,7 @@ class User {
       isVerified: json['isVerified'],
       displayName: json['displayName'],
       about: json['about'],
-      cakeDay: json['cakeDay'] as bool?,
+      cakeDay: json['cakeDay'] as String?,
       subscribedCommunities: json['subscribedCommunities'] != null
           ? List<String>.from(json['subscribedCommunities'])
           : [],

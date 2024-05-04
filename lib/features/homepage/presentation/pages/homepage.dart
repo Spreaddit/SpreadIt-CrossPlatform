@@ -8,16 +8,19 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
 
 CurrentPage previousPage = CurrentPage.home;
 
 class HomePage extends StatefulWidget {
   final CurrentPage currentPage;
+  final CurrentPage currentSubPage;
 
   HomePage({
     Key? key,
     this.currentPage = CurrentPage.home,
+    this.currentSubPage = CurrentPage.notifications,
   }) : super(key: key);
 
   @override
@@ -26,6 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late CurrentPage currentPage;
+  late CurrentPage currentSubPage;
   late GlobalKey<_HomePageState> _homePageKey;
   int chatFilterSelectedOption = 3;
 
@@ -35,6 +39,7 @@ class _HomePageState extends State<HomePage> {
     _homePageKey = GlobalKey<_HomePageState>();
     setState(() {
       currentPage = widget.currentPage;
+      currentSubPage = widget.currentSubPage;
     });
   }
 
@@ -70,7 +75,87 @@ class _HomePageState extends State<HomePage> {
       ChatUserPage(
         selectedOption: chatFilterSelectedOption,
       ),
-      NotificationPage(),
+      SingleChildScrollView(
+        physics: const ScrollPhysics(),
+        child: SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: ToggleButtons(
+                  constraints: BoxConstraints.expand(
+                      width: MediaQuery.of(context).size.width / 2),
+                  borderRadius: BorderRadius.zero,
+                  borderWidth: 0,
+                  selectedBorderColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  borderColor: Colors.transparent,
+                  fillColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  onPressed: (index) {
+                    setState(() {
+                      currentSubPage = index == 0
+                          ? CurrentPage.notifications
+                          : CurrentPage.messages;
+                    });
+                  },
+                  isSelected: [
+                    currentSubPage == CurrentPage.notifications,
+                    currentSubPage == CurrentPage.messages,
+                  ],
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: currentSubPage == CurrentPage.notifications
+                                ? Color.fromRGBO(0, 69, 172, 1.0)
+                                : Colors.transparent,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.notifications),
+                          SizedBox(width: 10),
+                          Text("Notifications"),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: currentSubPage == CurrentPage.messages
+                                ? Color.fromRGBO(0, 69, 172, 1.0)
+                                : Colors.transparent,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.message),
+                          SizedBox(width: 10),
+                          Text("Messages"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              currentSubPage == CurrentPage.notifications
+                  ? NotificationPage()
+                  : MessageInbox(),
+            ],
+          ),
+        ),
+      ),
       PostFeed(
         postCategory: PostCategories.hot,
         showSortTypeChange: false,

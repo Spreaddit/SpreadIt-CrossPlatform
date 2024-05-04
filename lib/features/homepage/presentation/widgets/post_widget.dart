@@ -357,6 +357,7 @@ class _PostBody extends StatelessWidget {
         ),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Opacity(
               opacity: 0.6,
@@ -454,6 +455,8 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CarouselSlider(
           options: CarouselOptions(
@@ -844,6 +847,7 @@ class _PostWidgetState extends State<PostWidget> {
           )
         : (!isDeleted)
             ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _PostHeader(
@@ -903,8 +907,8 @@ class _PostWidgetState extends State<PostWidget> {
                     sharesCount: widget.post.sharesCount!,
                     commentsCount: widget.post.commentsCount!,
                     isFullView: widget.isFullView,
-                    hasDownvoted: widget.post.hasDownvoted??false,
-                    hasUpvoted: widget.post.hasUpvoted??false,
+                    hasDownvoted: widget.post.hasDownvoted ?? false,
+                    hasUpvoted: widget.post.hasUpvoted ?? false,
                   )
                 ],
               )

@@ -8,6 +8,8 @@ enum CurrentPage {
   inbox,
   popular,
   all,
+  notifications,
+  messages,
 }
 
 class TopBar extends AppBar {
@@ -28,7 +30,7 @@ class TopBar extends AppBar {
   }) : super(
           key: key,
           toolbarHeight: 60,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           elevation: 0,
           title: chooseTitle(
             currentPage,

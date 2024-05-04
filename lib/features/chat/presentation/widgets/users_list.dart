@@ -32,6 +32,7 @@ Widget usersList({
         );
       }
       return ListView(
+        physics: AlwaysScrollableScrollPhysics(),
         children: snapshot.data!.docs
             .where((element) {
               if (selectedOption == 1) {
