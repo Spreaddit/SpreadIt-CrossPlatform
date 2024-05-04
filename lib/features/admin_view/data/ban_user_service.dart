@@ -7,7 +7,30 @@ class BanUserService {
   final Dio dio = Dio();
   final String accessToken = UserSingleton().accessToken!;
 
-  BanUserService();
+  Future<String> unbanUser({
+    required String username,
+  }) async {
+    try {
+      print(username);
+      Map<String, dynamic> data = {
+        'username': username,
+      };
+
+      final response = await dio.post(
+        '$apiUrl/dashboard/unban',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+        data: jsonEncode(data),
+      );
+      print(response.data['message']);
+      return response.data['message'];
+    } catch (e) {
+      throw Exception('Failed to unban user: $e');
+    }
+  }
 
   Future<String> banUser({
     required String username,
