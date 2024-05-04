@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+
+import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -9,6 +12,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
 /// Widget for adding a comment to a post.
 class AddCommentWidget extends StatefulWidget {
@@ -47,11 +51,33 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
   final TextEditingController _linkController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool isNotApprovedForCommenting = false;
+  File? uploadedImageFile;
+  Uint8List? uploadedImageWeb;
 
   @override
   void initState() {
     super.initState();
     checkIfCanComment();
+  }
+
+  Future<void> pickImage() async {
+    var image;
+    if (!kIsWeb) {
+      image = await pickImageFromFilePicker();
+      setState(() {
+        if (image != null) {
+          uploadedImageFile = image;
+        }
+      });
+    }
+    if (kIsWeb) {
+      image = await pickImageFromFilePickerWeb();
+      setState(() {
+        if (image != null) {
+          uploadedImageWeb = image;
+        }
+      });
+    }
   }
 
   /// [checkIfCanComment] : a function used to check if users aren't approved for commenting in the community
@@ -124,27 +150,50 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Row(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: TextFormField(
+      title: Expanded(
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              if (uploadedImageFile != null || uploadedImageWeb != null)
+                Container(
+                  height: 200, // Adjust the height as needed
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: selectImage(
+                          uploadedImageFile, null, uploadedImageWeb),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              TextFormField(
                 controller: _commentController,
                 maxLines: null,
                 decoration: InputDecoration(
                   labelText: "Add a comment",
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      _showBottomSheet(context);
-                    },
-                    icon: Icon(Icons.link),
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          _showBottomSheet(context);
+                        },
+                        icon: Icon(Icons.link),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        icon: Icon(Icons.image),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
       trailing: OutlinedButton(
         onPressed: isNotApprovedForCommenting

@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
@@ -111,6 +114,8 @@ class _CommentCardState extends State<CommentCard> {
   late bool isUserProfile;
   bool isNotApprovedForCommentEdit = false;
   var issaved;
+  File? uploadedImageFile;
+  Uint8List? uploadedImageWeb;
 
   /// Fetches replies for the comment asynchronously.
   Future<void> fetchReplies() async {
@@ -194,6 +199,17 @@ class _CommentCardState extends State<CommentCard> {
                         ),
                       ),
                     ),
+                    if (comment.media != null && comment.media!.isNotEmpty)
+                      Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(comment.media![0].link),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     CommentFooter(
                       commentId: widget.comment.id,
                       onMorePressed: () {
@@ -330,8 +346,8 @@ class _CommentCardState extends State<CommentCard> {
                         });
                       },
                       number: comment.likesCount,
-                      upvoted: false,
-                      downvoted: false,
+                      upvoted: comment.isUpvoted!,
+                      downvoted: comment.isDownvoted!,
                     ),
                   ],
                 ),

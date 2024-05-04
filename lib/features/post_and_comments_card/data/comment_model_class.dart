@@ -61,6 +61,14 @@ class Comment extends Equatable {
   final String? username;
 
   /// Constructor for creating a Comment object.
+  final String? lastEdit;
+  final bool? isRemoved;
+  final bool? isLocked;
+  final bool? isApproved;
+  final bool? isUpvoted;
+  final bool? isDownvoted;
+  //final bool? isRemoval;
+
   Comment({
     required this.id,
     required this.content,
@@ -81,6 +89,13 @@ class Comment extends Equatable {
     this.isCollapsed = false,
     this.profilePic = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     this.username = "rehab",
+    this.lastEdit,
+    this.isRemoved,
+    this.isApproved,
+    this.isLocked,
+    this.isUpvoted,
+    this.isDownvoted,
+    //this.isRemoval,
   });
 
   /// Factory constructor for creating a Comment object from JSON data.
@@ -102,11 +117,18 @@ class Comment extends Equatable {
       createdAt: DateTime.parse(json['created_at'] as String),
       isHidden: json['is_hidden'] as bool,
       isSaved: json['is_saved'] as bool,
-      postTitle: json['post_title'] ?? "ayhaga",
-      subredditName: json['community_title'] ?? "ayhaga",
+      postTitle: json['post_title'] ?? "",
+      subredditName: json['community_title'] ?? "",
       username: usernameFetched,
       profilePic: avatarFetched,
       postId: json['postId'] ?? '0',
+      lastEdit: json['last_edit'] ?? "",
+      isApproved: json['is_approved'] as bool,
+      isLocked: json['is_locked'] as bool,
+      isRemoved: json['is_removed'] as bool,
+      isUpvoted: json['is_upvoted'] ? json['is_upvoted'] as bool : false,
+      isDownvoted: json['is_downvoted'] ? json['is_downvoted'] as bool : false,
+      //isRemoval: json['is_removal'] ? json['is_removal'] as bool : false,
     );
   }
   @override
@@ -130,6 +152,13 @@ class Comment extends Equatable {
         userId,
         postId,
         username,
+        isRemoved,
+        isLocked,
+        isApproved,
+        lastEdit,
+        isUpvoted,
+        isDownvoted,
+        // isRemoval,
       ];
 }
 

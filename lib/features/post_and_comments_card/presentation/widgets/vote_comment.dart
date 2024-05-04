@@ -26,10 +26,9 @@ class CommentVoteButton extends StatefulWidget {
 }
 
 class _CommentVoteButtonState extends State<CommentVoteButton> {
-  Color upvoteButtonColor = Colors.grey;
-  Color downvoteButtonColor = Colors.grey;
+  late Color upvoteButtonColor = Colors.grey;
+  late Color downvoteButtonColor = Colors.grey;
   late int votesCount;
-  var votes;
 
   @override
   void initState() {
