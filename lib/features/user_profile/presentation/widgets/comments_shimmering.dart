@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 
+
 class CommentShimmerWidget extends StatelessWidget {
   final bool saved;
 
@@ -87,17 +88,7 @@ class ShimmeringCommentFooter extends StatelessWidget {
                 ),
               ),
               SizedBox(width: screenWidth * 0.01),
-              UpVoteButton(
-                color: Colors.grey,
-                width: screenHeight * 0.02,
-                height: screenHeight * 0.02,
-              ),
-              Text('${generateRandomNumber()}'),
-              DownVoteButton(
-                color: Colors.grey,
-                width: screenHeight * 0.02,
-                height: screenHeight * 0.02,
-              ),
+              VoteButton(initialVotesCount: generateRandomNumber(), isUpvoted: false, isDownvoted: false) ,          
             ],
           ),
         ],

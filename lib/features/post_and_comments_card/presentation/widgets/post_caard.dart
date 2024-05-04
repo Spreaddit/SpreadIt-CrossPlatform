@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Widget representing a post card.
@@ -20,7 +21,6 @@ class PostCard extends StatefulWidget {
   PostCard({
     required this.post,
     required this.comments,
-    required this.isUserProfile,
     this.setIsloaded,
     this.oneComment=false,
   });

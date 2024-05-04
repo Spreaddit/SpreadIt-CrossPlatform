@@ -63,7 +63,6 @@ NotificationData processNotification(
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
-              isUserProfile: true,
               commentId: notification.commentId,
               oneComment: true,
             ),
@@ -84,7 +83,6 @@ NotificationData processNotification(
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
-              isUserProfile: true,
             ),
           ),
         );
@@ -105,7 +103,6 @@ NotificationData processNotification(
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
-              isUserProfile: true,
               commentId: notification.commentId,
               oneComment: true,
             ),
@@ -126,7 +123,6 @@ NotificationData processNotification(
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
-              isUserProfile: true,
               commentId: notification.commentId,
               oneComment: true,
             ),
@@ -162,7 +158,6 @@ NotificationData processNotification(
             ),
             builder: (context) => PostCardPage(
               postId: notification.postId!,
-              isUserProfile: true,
               commentId: notification.commentId,
               oneComment: true,
             ),

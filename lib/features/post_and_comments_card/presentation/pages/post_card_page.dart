@@ -15,14 +15,12 @@ class PostCardPage extends StatefulWidget {
   final String postId;
 
   /// Indicates whether the current user is the owner of the profile associated with the post.
-  final bool isUserProfile;
   final String? commentId;
   final bool oneComment;
 
   const PostCardPage(
       {Key? key,
       required this.postId,
-      required this.isUserProfile,
       this.commentId,
       this.oneComment = false})
       : super(key: key);
@@ -145,7 +143,6 @@ class _PostCardPageState extends State<PostCardPage> {
                           ? PostCard(
                               post: post!,
                               comments: comments,
-                              isUserProfile: widget.isUserProfile,
                               setIsloaded : setIsloaded,  
                               oneComment: widget.oneComment, 
                             )
