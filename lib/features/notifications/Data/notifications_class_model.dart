@@ -63,10 +63,8 @@ class Notifications extends Equatable {
       createdAt:
           DateTime.parse(json['created_at'] ?? json['dateCreated'] ?? ''),
       comment: json['comment'] != null
-          ? json.containsKey('comment')
-              ? Comment.fromJson(json['comment'])
-              : null
-          : null,
+          ? Comment.fromJson(json['comment'])
+          : Comment(),
       post: json['post'] != null
           ? json.containsKey('post')
               ? Post.fromJson(json['post'])
@@ -86,8 +84,8 @@ class RelatedUser extends Equatable {
   final String? avatarUrl;
 
   RelatedUser({
-     this.username='',
-     this.avatarUrl='',
+    this.username = '',
+    this.avatarUrl = '',
   });
 
   @override
@@ -106,8 +104,8 @@ class Post extends Equatable {
   final String community;
 
   Post({
-     this.title='',
-     this.community='',
+    this.title = '',
+    this.community = '',
   });
 
   @override
@@ -127,9 +125,9 @@ class Comment extends Equatable {
   final String communityTitle;
 
   Comment({
-    required this.content,
-    required this.postTitle,
-    required this.communityTitle,
+    this.content = '',
+    this.postTitle = '',
+    this.communityTitle = '',
   });
 
   @override

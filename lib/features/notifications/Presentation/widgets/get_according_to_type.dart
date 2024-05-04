@@ -148,18 +148,23 @@ NotificationData processNotification(
         );
       };
       break;
-      case "Mention":
+      case "mention":
       icon = CupertinoIcons.person;
-      content = notification.relatedUser!.username!;
+      content = notification.comment!.content;
       buttonText = null;
       onPress = () {
-       Navigator.of(context).push(
+        Navigator.push(
+          context,
           MaterialPageRoute(
             settings: RouteSettings(
-              name: '/user-profile/${notification.relatedUser!.username!}',
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
             ),
-            builder: (context) => UserProfile(
-              username: notification.relatedUser!.username!,
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
             ),
           ),
         );

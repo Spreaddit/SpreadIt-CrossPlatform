@@ -17,13 +17,3 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((message) => {
   console.log("onBackgroundMessage", message);
 });
-
-messaging.requestPermission().then(() => {
-  console.log('Notification permission granted.');
-}).catch((err) => {
-  console.log('Unable to get permission to notify.', err);
-  if (err.code === 'messaging/permission-blocked') {
-    console.log('User blocked notifications.');
-    // You can provide feedback to the user here, for example, showing a message or UI element.
-  }
-});
