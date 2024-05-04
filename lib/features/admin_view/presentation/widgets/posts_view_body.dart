@@ -62,7 +62,6 @@ class _PostsViewBodyState extends State<PostsViewBody> {
                   PostCard(
                     post: post,
                     comments: [],
-                    isUserProfile: false,
                   ),
                   ...uniqueReportReasons
                       .map((reason) => Text('Report Reason: $reason'))
