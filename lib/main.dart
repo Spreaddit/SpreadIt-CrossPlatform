@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search_results.dart';
 import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -31,7 +33,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: UserSingleton().user != null ? HomePage() : StartUpPage(),
+      home: UserSingleton().user != null ? HomePage() : SearchResult(searchItem: 'hello',),
       onGenerateRoute: onGenerateRoute,
       routes: generateRoutes(),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/follow_unfollow_api.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
 class PeopleElement extends StatefulWidget {
 
@@ -26,6 +27,19 @@ class _PeopleElementState extends State<PeopleElement> {
     setState((){});
   }
 
+  void navigateToUserProfile() {
+    Navigator.of(context).push(
+                MaterialPageRoute(
+                  settings: RouteSettings(
+                    name: '/user-profile/${widget.username}',
+                  ),
+                  builder: (context) => UserProfile(
+                    username: widget.username,
+                  ),
+                ),
+              ),
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +49,7 @@ class _PeopleElementState extends State<PeopleElement> {
           Row(
             children:[
               InkWell(
-                onTap: () {} , // navigate to user profile
+                onTap: navigateToUserProfile , // navigate to user profile
                 child: Wrap(
                   children: [
                     Padding(

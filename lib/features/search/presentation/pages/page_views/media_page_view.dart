@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/media_element.dart';
@@ -210,11 +211,14 @@ class _MediaPageViewState extends State<MediaPageView> {
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: mappedMedia.length ~/ 2,
                       itemBuilder: (context, index) {
-                        return MediaElement(
-                          username: mappedMedia[index]['username'],
-                          userIcon: mappedMedia[index]['userProfilePic'],
-                          postTitle: mappedMedia[index]['title'],
-                          media: mappedMedia[index]['image'] != null ? mappedMedia[index]['image'] : mappedMedia[index]['video'],
+                        return InkWell(
+                          onTap: () => navigateToPostCardPage(context, mappedMedia[index]['postId'] , true),
+                          child: MediaElement(
+                            username: mappedMedia[index]['username'],
+                            userIcon: mappedMedia[index]['userProfilePic'],
+                            postTitle: mappedMedia[index]['title'],
+                            media: mappedMedia[index]['image'] != null ? mappedMedia[index]['image'] : mappedMedia[index]['video'],
+                          ),
                         );
                       }
                     ),

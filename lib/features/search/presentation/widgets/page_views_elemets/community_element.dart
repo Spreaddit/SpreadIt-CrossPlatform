@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 
 class CommunityElement extends StatefulWidget {
 
@@ -33,7 +34,7 @@ class _CommunityElementState extends State<CommunityElement> {
     await postUnsubscribeRequest(postRequestInfo: {'communityName': widget.communityName});
     setState(() {});
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +44,7 @@ class _CommunityElementState extends State<CommunityElement> {
           Row(
             children: [
               InkWell(
-                onTap: () {} , // navigate to community
+                onTap: () {navigateToCommunity(context, widget.communityName);} , // navigate to community
                 child: Wrap(
                   children:[
                     Padding(

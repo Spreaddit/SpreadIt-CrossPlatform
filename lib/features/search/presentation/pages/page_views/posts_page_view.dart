@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/post_element.dart';
@@ -215,22 +216,25 @@ class _PostsPageViewState extends State<PostsPageView> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: mappedPosts.length,
               itemBuilder: (context, index) {
-                return PostElement(
-                  communityIcon: mappedPosts[index]['communityProfilePic'],
-                  communityName: mappedPosts[index]['communityName'],
-                  time : dateToDuration(DateTime.parse(mappedPosts[index]['createdAt'])), 
-                  postTitle: mappedPosts[index]['title'],
-                  upvotes: mappedPosts[index]['votesCount'] < 1000 ?
-                        mappedPosts[index]['votesCount'].toString() 
-                        : '${(mappedPosts[index]['votesCount']/100).truncateToDouble() /10.0}k',
-                  comments: mappedPosts[index]['commentsCount'] < 1000 ?
-                        mappedPosts[index]['commentsCount'].toString() 
-                        : '${(mappedPosts[index]['commentsCount']/100).truncateToDouble() /10.0}k',
-                  isNsfw: mappedPosts[index]['isNsfw'],
-                  isSpoiler: mappedPosts[index]['isSpoiler'],
-                  image: mappedPosts[index]['image'] ,
-                  video: mappedPosts[index]['video'],
-                  );
+                return InkWell(
+                  onTap: () =>  navigateToPostCardPage(context, mappedPosts[index]['postId'] , true),
+                  child: PostElement(
+                    communityIcon: mappedPosts[index]['communityProfilePic'],
+                    communityName: mappedPosts[index]['communityName'],
+                    time : dateToDuration(DateTime.parse(mappedPosts[index]['createdAt'])), 
+                    postTitle: mappedPosts[index]['title'],
+                    upvotes: mappedPosts[index]['votesCount'] < 1000 ?
+                          mappedPosts[index]['votesCount'].toString() 
+                          : '${(mappedPosts[index]['votesCount']/100).truncateToDouble() /10.0}k',
+                    comments: mappedPosts[index]['commentsCount'] < 1000 ?
+                          mappedPosts[index]['commentsCount'].toString() 
+                          : '${(mappedPosts[index]['commentsCount']/100).truncateToDouble() /10.0}k',
+                    isNsfw: mappedPosts[index]['isNsfw'],
+                    isSpoiler: mappedPosts[index]['isSpoiler'],
+                    image: mappedPosts[index]['image'] ,
+                    video: mappedPosts[index]['video'],
+                    ),
+                );
               }
             ),
           ],
