@@ -8,6 +8,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 /// A page that displays the community page, info, and posts.
@@ -30,9 +31,11 @@ class _CommunityPageState extends State<CommunityPage> {
   late Future<Map<String, dynamic>> communityDataFuture;
   late Future<Map<String, dynamic>> isApprovedDataFuture;
   late Future<Map<String, dynamic>> isBannedDataFuture;
+  late Future<Map<String, dynamic>> isModDataFuture;
   int communityDataIdx = 0;
   int isApprovedDataIdx = 1;
   int isBannedDataIdx = 2;
+  Map<String, dynamic> isModData = {};
   Map<String, dynamic> communityData = {};
   Map<String, dynamic> isApprovedData = {};
   Map<String, dynamic> isBannedData = {};
@@ -64,13 +67,22 @@ class _CommunityPageState extends State<CommunityPage> {
       username:
           (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => isBannedData = value);
+    isModDataFuture = checkIfModeratorRequest(
+      communityName: widget.communityName,
+      username:
+          (UserSingleton().user != null) ? UserSingleton().user!.username : "",
+    ).then((value) => isModData = value);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait(
-          [communityDataFuture, isApprovedDataFuture, isBannedDataFuture]),
+      future: Future.wait([
+        communityDataFuture,
+        isApprovedDataFuture,
+        isBannedDataFuture,
+        isModDataFuture
+      ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -134,6 +146,7 @@ class _CommunityPageState extends State<CommunityPage> {
               communityData: communityData,
             ),
             PostFeed(
+              isModeratorView: isModData['isModerator'],
               postCategory: PostCategories.hot,
               subspreaditName: widget.communityName,
               startSortIndex: 1,

@@ -27,7 +27,7 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
   try {
     var response = await Dio().get(
       //TODO: Change the API URL to: '$apiUrl/community/$communityName/get-info'
-      '$apiUrl/community/get-info',
+      '$apiUrl/community/$communityName/get-info',
       queryParameters: {"communityName": communityName},
       options: Options(
         headers: {
@@ -41,10 +41,12 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
         return response.data;
       }
     } else {
+      print("kys");
       print('Failed to fetch data. Status code: ${response.statusCode}');
       return defaultResponse;
     }
   } catch (e) {
+    print("kyss");
     print('Error fetching data: $e');
     return defaultResponse;
   }

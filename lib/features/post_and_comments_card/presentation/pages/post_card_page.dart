@@ -139,7 +139,7 @@ class _PostCardPageState extends State<PostCardPage> {
                 ),
               ),
             ),
-            if (post != null)
+            if (post != null && !post!.isCommentsLocked!)
               AddCommentWidget(
                 commentsList: comments,
                 postId: widget.postId.toString(),

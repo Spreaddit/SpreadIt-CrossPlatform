@@ -13,7 +13,10 @@ import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/lock_comments.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/remove_spam.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/unlock_comments.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
@@ -674,6 +677,7 @@ class _VideoAppState extends State<VideoPlayerScreen> {
 /// This widget is responsible for displaying post interactions bottom bar
 /// count of shares, upvotes and comments is displayed here.
 class _PostInteractions extends StatefulWidget {
+  final String communityName;
   final int votesCount;
   final int sharesCount;
   final int commentsCount;
@@ -682,8 +686,12 @@ class _PostInteractions extends StatefulWidget {
   final bool isFullView;
   final bool hasUpvoted;
   final bool hasDownvoted;
+  final bool isModeratorView;
+  bool isCommentsLocked;
+  final void Function(bool) onLock;
 
   _PostInteractions({
+    required this.communityName,
     required this.votesCount,
     required this.sharesCount,
     required this.commentsCount,
@@ -692,6 +700,9 @@ class _PostInteractions extends StatefulWidget {
     required this.isFullView,
     required this.hasUpvoted,
     required this.hasDownvoted,
+    required this.isModeratorView,
+    required this.isCommentsLocked,
+    required this.onLock,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -730,12 +741,61 @@ class _PostInteractionsState extends State<_PostInteractions> {
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.shield,
+            if (widget.isModeratorView)
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CustomBottomSheet(
+                        icons: [
+                          Icons.lock,
+                          Icons.delete,
+                        ],
+                        text: [
+                          "Lock comments",
+                          "Remove as spam",
+                        ],
+                        onPressedList: [
+                          () {
+                            //Lock comments
+                            setState(() {
+                              widget.isCommentsLocked
+                                  ? unlockComments(postId: widget.postId)
+                                  : lockComments(postId: widget.postId);
+                              widget.isCommentsLocked =
+                                  !widget.isCommentsLocked;
+                              widget.onLock(widget.isCommentsLocked);
+                              Navigator.pop(context);
+                              widget.isCommentsLocked
+                                  ? CustomSnackbar(
+                                      content:
+                                          "Comments on this post are locked successfully!")
+                                  : CustomSnackbar(
+                                      content:
+                                          "Comments on this post are unlocked successfully!");
+                            });
+                          },
+                          () {
+                            setState(() {
+                              removeAsSpam(
+                                  communityName: widget.communityName,
+                                  postId: widget.postId);
+                              Navigator.pop(context);
+                              CustomSnackbar(
+                                  content:
+                                      "Post has been removed as spam successfully!");
+                            });
+                          },
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: Icon(
+                  Icons.shield,
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -762,6 +822,7 @@ class PostWidget extends StatefulWidget {
   final bool isFullView;
   final bool isUserProfile;
   final bool isSavedPage;
+  final bool isModeratorView;
   final BuildContext? feedContext;
 
   PostWidget({
@@ -770,6 +831,7 @@ class PostWidget extends StatefulWidget {
     required this.isUserProfile,
     this.isSavedPage = false,
     this.feedContext,
+    this.isModeratorView = false,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -781,6 +843,7 @@ class _PostWidgetState extends State<PostWidget> {
   late bool isSpoiler;
   late bool isDeleted = false;
   late bool isSaved;
+  late bool isCommentsLocked;
   late Future<bool> isNotApprovedForViewPostFuture;
 
   @override
@@ -791,6 +854,7 @@ class _PostWidgetState extends State<PostWidget> {
       isNsfw = widget.post.isNsfw!;
       isSpoiler = widget.post.isSpoiler!;
       isSaved = widget.post.isSaved!;
+      isCommentsLocked = widget.post.isCommentsLocked!;
       content = widget.post.content != null && widget.post.content!.isNotEmpty
           ? widget.post.content!
           : [];
@@ -820,6 +884,14 @@ class _PostWidgetState extends State<PostWidget> {
 
     setState(() {
       content.add(newContent);
+    });
+  }
+
+  void onLock(bool newIsCommentsLocked) {
+    if (!mounted) return;
+
+    setState(() {
+      isCommentsLocked = newIsCommentsLocked;
     });
   }
 
@@ -929,6 +1001,7 @@ class _PostWidgetState extends State<PostWidget> {
                         if (snapshot.data == false)
                           _PostInteractions(
                             postId: widget.post.postId,
+                            communityName: widget.post.community,
                             isUserProfile: widget.isUserProfile,
                             votesCount: widget.post.votesUpCount! -
                                 widget.post.votesDownCount!,
@@ -937,6 +1010,9 @@ class _PostWidgetState extends State<PostWidget> {
                             isFullView: widget.isFullView,
                             hasDownvoted: widget.post.hasDownvoted ?? false,
                             hasUpvoted: widget.post.hasUpvoted ?? false,
+                            isModeratorView: widget.isModeratorView,
+                            isCommentsLocked: widget.post.isCommentsLocked!,
+                            onLock: onLock,
                           )
                       ],
                     )
