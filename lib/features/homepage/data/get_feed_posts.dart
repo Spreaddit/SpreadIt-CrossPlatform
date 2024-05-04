@@ -73,6 +73,7 @@ Future<List<Post>> getFeedPosts({
   String? subspreaditName,
   String? timeSort = "",
   String? username = "",
+  int page = 1,
 }) async {
   String? requestURL;
   try {
@@ -87,12 +88,17 @@ Future<List<Post>> getFeedPosts({
         );
     final response = await Dio().get(
       requestURL,
+      queryParameters: {
+        'page': page,
+        'count': 10,
+      },
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       ),
     );
+
     if (response.statusCode == 200) {
       print(response.data);
       List<Post> posts = (response.data['posts'] as List)

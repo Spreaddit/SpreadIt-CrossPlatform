@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
@@ -55,6 +54,8 @@ class _PostFeedState extends State<PostFeed> {
   late ScrollController _scrollController;
   bool _loadingMore = false;
   bool isRefreshing = false;
+  int page = 1;
+  bool isLoadingMore = false;
 
   @override
   void initState() {
@@ -84,6 +85,7 @@ class _PostFeedState extends State<PostFeed> {
       setState(() {
         currentPostCategory = widget.postCategory;
         _scrollController = widget.scrollController ?? ScrollController();
+        isLoading = true;
       });
       fetchData();
     }
@@ -96,15 +98,12 @@ class _PostFeedState extends State<PostFeed> {
   Future<void> fetchData() async {
     if (!mounted) return;
 
-    setState(
-      () => isLoading = true,
-    );
-
     List<Post> fetchedItems = await getFeedPosts(
       category: currentPostCategory,
       subspreaditName: widget.subspreaditName,
       timeSort: widget.timeSort,
       username: widget.username,
+      page: page,
     );
 
     setState(() {
@@ -112,16 +111,12 @@ class _PostFeedState extends State<PostFeed> {
         CustomSnackbar(content: "No posts found").show(context);
       }
       newItems.clear();
-      existingItems.clear();
       newItems = fetchedItems;
       isLoading = false;
       _loadingMore = false;
-      existingItems = [
-        ...existingItems,
-        ...newItems.sublist(existingItems.length,
-            min(existingItems.length + 7, newItems.length))
-      ];
+      existingItems = [...existingItems, ...newItems];
       isRefreshing = false;
+      page = page + 1;
     });
   }
 
@@ -139,24 +134,7 @@ class _PostFeedState extends State<PostFeed> {
       setState(() {
         _loadingMore = true;
       });
-      fetchExistingItems();
-    }
-  }
-
-  void fetchExistingItems() {
-    if (!mounted) return;
-
-    if (existingItems.length < newItems.length) {
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          existingItems = [
-            ...existingItems,
-            ...newItems.sublist(existingItems.length,
-                min(existingItems.length + 7, newItems.length))
-          ];
-          _loadingMore = false;
-        });
-      });
+      fetchData();
     }
   }
 
@@ -242,7 +220,8 @@ class _PostFeedState extends State<PostFeed> {
                         if (_loadingMore)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: existingItems.length != newItems.length
+                            child: existingItems.length != newItems.length ||
+                                    _loadingMore
                                 ? CircularProgressIndicator(
                                     color: Colors.grey,
                                   )
