@@ -27,11 +27,17 @@ class GetReportedPostsService {
         List<dynamic> postData = response.data['reportedPosts'];
         List<Post> posts = postData.map((post) => Post.fromJson(post)).toList();
 
-        List<dynamic>? reportData = response.data['reports'];
-        List<Report> reports = reportData != null
-            ? reportData.map((report) => Report.fromJson(report)).toList()
-            : [];
-
+        List<List<Report>> reports = [];
+        for (var post in postData) {
+          List<dynamic>? reportData = post['reports'];
+          if (reportData != null) {
+            reports.add(
+                reportData.map((report) => Report.fromJson(report)).toList());
+          } else {
+            reports.add([]);
+          }
+        }
+        print(reports);
         return {
           'posts': posts,
           'reports': reports,
