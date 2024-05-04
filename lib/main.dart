@@ -44,7 +44,7 @@ class SpreadIt extends StatelessWidget {
           : null,
       title: 'Spread It',
       theme: spreadItTheme,
-      home: UserSingleton().user != null ? HomePage() : SearchResult(searchItem: 'hello',),
+      home: UserSingleton().user != null ? HomePage() : StartUpPage(),
       onGenerateRoute: onGenerateRoute,
       routes: generateRoutes(),
     );

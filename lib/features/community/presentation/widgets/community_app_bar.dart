@@ -29,7 +29,9 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
         Navigator.of(context).pushNamed('/community-or-user-search', 
         arguments: {
           'communityOrUserName': communityName,
-          'communityOrUserIcon': bannerImageLink != '' ? bannerImageLink : 'assets/images/LogoSpreadIt.png' ,
+          'communityOrUserIcon': bannerImageLink != '' ? bannerImageLink : 'assets/images/LogoSpreadIt.png',
+          'fromUserProfile': false,
+          'fromCommunityPage': true,
         });
       }
     return AppBar(

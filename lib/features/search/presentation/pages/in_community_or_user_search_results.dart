@@ -13,6 +13,8 @@ class InCommunityOrUserSearchResults extends StatefulWidget {
   final String communityOrUserIcon;
   final String? sortFilter;
   final String? timeFilter;
+  final bool fromUserProfile;
+  final bool fromCommunityPage;
 
   const InCommunityOrUserSearchResults({
     Key? key,
@@ -21,6 +23,8 @@ class InCommunityOrUserSearchResults extends StatefulWidget {
     required this.communityOrUserIcon,
     this.sortFilter,
     this.timeFilter,
+    required this.fromUserProfile,
+    required this.fromCommunityPage,
   }) : super(key: key);
 
   @override
@@ -35,7 +39,9 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
   List labelsList = ['Posts','Comments', 'Media'];
   int selectedIndex = 0;
   List<Widget> pages = [];
-  PageController _pageController = PageController(initialPage: 0);  
+  PageController _pageController = PageController(initialPage: 0); 
+  bool? fromUserProfile ;
+  bool? fromCommunityPage; 
 
 
   @override
@@ -46,19 +52,30 @@ class _InCommunityOrUserSearchResultsState extends State<InCommunityOrUserSearch
     }
     initalSortFilter = widget.sortFilter;
     initialTimeFilter = widget.timeFilter;
+    fromUserProfile = widget.fromUserProfile;
+    fromCommunityPage = widget.fromCommunityPage;
     pages.add(PostsPageView(
       searchItem: searchItem,
       initialSortFilter: initalSortFilter,
       initialTimeFilter: initialTimeFilter,
+      fromUserProfile: fromUserProfile,
+      fromCommunityPage: widget.fromCommunityPage,
+      communityOrUserName: widget.communityOrUserName,
       ));
     pages.add(CommentsPageView(
       searchItem: searchItem,
       initialSortFilter: initalSortFilter,
+      fromUserProfile: fromUserProfile,
+      fromCommunityPage: widget.fromCommunityPage,
+      communityOrUserName: widget.communityOrUserName,
       ));
     pages.add(MediaPageView(
       searchItem: searchItem,
       initialSortFilter: initalSortFilter,
       initialTimeFilter: initialTimeFilter,
+      fromUserProfile: fromUserProfile,
+      fromCommunityPage: widget.fromCommunityPage,
+      communityOrUserName: widget.communityOrUserName,
       ));
   }
 

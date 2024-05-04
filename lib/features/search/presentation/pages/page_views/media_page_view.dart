@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_in_community_search_result.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_in_user_search_result.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/media_element.dart';
@@ -10,12 +12,18 @@ class MediaPageView extends StatefulWidget {
   final String searchItem;
   final String? initialSortFilter;
   final String? initialTimeFilter;
+  final bool? fromUserProfile;
+  final bool? fromCommunityPage;
+  final String? communityOrUserName;
 
   const MediaPageView({
     Key? key,
     required this.searchItem,
     this.initialSortFilter,
     this.initialTimeFilter,
+    this.fromUserProfile,
+    this.fromCommunityPage,
+    this.communityOrUserName,
     }) : super(key: key);
 
   @override
@@ -33,10 +41,22 @@ class _MediaPageViewState extends State<MediaPageView> {
   List sortList = [ 'Most relevant','Hot', 'Top', 'New', 'Comment count'];
   List timeList = ['All time', 'Past hour', 'Today', 'Past week', 'Past month', 'Past year'];
   bool showTimeFilter = true;
+  bool? fromUserProfile;
+  bool? fromCommunityPage;
+  String communityOrUserName = '';
   
   @override
   void initState() {
     super.initState(); 
+    if (widget.fromUserProfile != null) {
+      fromUserProfile = widget.fromUserProfile!;
+    }
+    if (widget.fromCommunityPage != null) {
+      fromCommunityPage = widget.fromCommunityPage!;
+    }
+    if(widget.communityOrUserName != null) {
+      communityOrUserName = widget.communityOrUserName!;
+    }
     if (widget.initialSortFilter != null) {
       sort = widget.initialSortFilter!.toLowerCase();
       sortText = widget.initialSortFilter!; 
@@ -51,7 +71,15 @@ class _MediaPageViewState extends State<MediaPageView> {
   }
 
   void getPostsResults() async {
-    media = await getSearchResults(widget.searchItem, 'posts', sort);
+    if (fromUserProfile != null && fromUserProfile == true) {
+      media = await getUserSearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+    }
+    else if (fromCommunityPage != null && fromCommunityPage == true) {
+      media = await getCommunitySearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+    }
+    else {
+      media = await getSearchResults(widget.searchItem, 'posts', sort);
+    }
     mappedMedia = extractMediaDetails(media);
     orgMappedMedia = mappedMedia;
     setState(() {});
@@ -218,6 +246,7 @@ class _MediaPageViewState extends State<MediaPageView> {
                             userIcon: mappedMedia[index]['userProfilePic'],
                             postTitle: mappedMedia[index]['title'],
                             media: mappedMedia[index]['image'] != null ? mappedMedia[index]['image'] : mappedMedia[index]['video'],
+                            mediaType: mappedMedia[index]['image'] != null ? 'image': 'video',
                           ),
                         );
                       }
@@ -238,6 +267,7 @@ class _MediaPageViewState extends State<MediaPageView> {
                           media: mappedMedia[index + mappedMedia.length ~/2]['image'] != null ?
                              mappedMedia[index + mappedMedia.length ~/2]['image']
                              :mappedMedia[index + mappedMedia.length ~/2]['video'],
+                          mediaType: mappedMedia[index]['image'] != null ? 'image': 'video',   
                         );
                       }
                     ),

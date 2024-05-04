@@ -6,17 +6,18 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future <Map<String,dynamic>> getSearchResults(String query, String type, String sort) async {
+Future <Map<String,dynamic>> getCommunitySearchResults(String query, String type, String sort,String communityName) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
-      '$apibase/search',
+      '$apibase/search/profile',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       ),
       data: {
+        "communityname": communityName,
         "q": query,
         "type": type,
         "sort": sort,

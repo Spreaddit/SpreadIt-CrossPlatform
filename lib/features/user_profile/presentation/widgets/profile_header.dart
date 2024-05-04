@@ -134,9 +134,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         arguments: {
           'communityOrUserName': widget.username,
           'communityOrUserIcon': widget.profilePicture ,
+          'fromUserProfile': true,
+          'fromCommunityPage': false,
         });
       }
-
 
 
   @override

@@ -193,6 +193,8 @@ Map<String, WidgetBuilder> generateRoutes() {
               communityOrUserIcon: args['communityOrUserIcon'],
               sortFilter: args['sortFilter'],
               timeFilter: args['timeFilter'],
+              fromUserProfile: args['fromUserProfile'],
+              fromCommunityPage: args['fromCommunityPage'],
             );
           },    
         ),
@@ -207,6 +209,8 @@ Map<String, WidgetBuilder> generateRoutes() {
             return SearchInCommunityOrUser(
               communityOrUserName: args['communityOrUserName'],
               communityOrUserIcon: args['communityOrUserIcon'],
+              fromUserProfile: args['fromUserProfile'],
+              fromCommunityPage: args['fromCommunityPage'],
             );
           },    
         ),

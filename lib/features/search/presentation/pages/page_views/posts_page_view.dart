@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_in_community_search_result.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_in_user_search_result.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/post_element.dart';
@@ -12,11 +14,17 @@ class PostsPageView extends StatefulWidget {
   final String searchItem;
   final String? initialSortFilter;
   final String? initialTimeFilter;
+  final bool? fromUserProfile;
+  final bool? fromCommunityPage;
+  final String? communityOrUserName;
 
   const PostsPageView({
     required this.searchItem,
     this.initialSortFilter,
     this.initialTimeFilter,
+    this.communityOrUserName,
+    this.fromUserProfile,
+    this.fromCommunityPage,
   });
 
   @override
@@ -35,10 +43,22 @@ class _PostsPageViewState extends State<PostsPageView> {
   List sortList = [ 'Most relevant','Hot', 'Top', 'New', 'Comment count'];
   List timeList = ['All time', 'Past hour', 'Today', 'Past week', 'Past month', 'Past year'];
   bool showTimeFilter = true;
+  bool? fromUserProfile;
+  bool? fromCommunityPage;
+  String communityOrUserName = '';
   
   @override
   void initState() {
     super.initState(); 
+    if(widget.fromUserProfile != null) {
+      fromUserProfile = widget.fromUserProfile!;
+    }
+    if(widget.fromCommunityPage != null) {
+      fromCommunityPage = widget.fromCommunityPage!;
+    }
+    if(widget.communityOrUserName != null) {
+      communityOrUserName = widget.communityOrUserName!;
+    }
     if (widget.initialSortFilter != null) {
       sort = widget.initialSortFilter!.toLowerCase();
       sortText = widget.initialSortFilter!; 
@@ -53,7 +73,15 @@ class _PostsPageViewState extends State<PostsPageView> {
   }
 
   void getPostsResults() async {
-    posts = await getSearchResults(widget.searchItem, 'posts', sort);
+    if (fromUserProfile != null && fromUserProfile == true) {
+      posts = await getUserSearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+    }
+    else if (fromCommunityPage != null &&  fromCommunityPage == true) {
+      posts = await getCommunitySearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+    }
+    else {
+      posts = await getSearchResults(widget.searchItem, 'posts', sort);
+    }
     mappedPosts = extractPostDetails(posts);
     orgMappedPosts = mappedPosts;
     setState(() {});

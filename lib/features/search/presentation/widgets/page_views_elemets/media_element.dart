@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
+import 'package:video_player/video_player.dart';
 
 class MediaElement extends StatefulWidget {
 
@@ -7,13 +9,14 @@ class MediaElement extends StatefulWidget {
   final String userIcon;
   final String postTitle;
   final String media;
+  final String mediaType;
 
   const MediaElement({
     required this.username,
     required this.userIcon,
     required this.postTitle,
     required this.media,
-
+    required this.mediaType,
   });
 
   @override
@@ -27,15 +30,18 @@ class _MediaElementState extends State<MediaElement> {
       margin: EdgeInsets.all(10),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image(
-              image: NetworkImage(widget.media),
-              height: 200,
-              width: 170,
-              fit: BoxFit.fill,
+          if (widget.mediaType == 'image')
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image(
+                image: NetworkImage(widget.media),
+                height: 200,
+                width: 170,
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
+          if (widget.mediaType == 'video') 
+           VideoPlayerScreen(videoURL: widget.media),
           Row(
             children: [
               Container(

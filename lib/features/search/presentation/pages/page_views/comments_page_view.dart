@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_in_community_search_result.dart';
+import 'package:spreadit_crossplatform/features/search/data/get_in_user_search_result.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/filter_button.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/comment_element.dart';
@@ -7,11 +10,17 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/radi
 class CommentsPageView extends StatefulWidget {
   final String searchItem;
   final String? initialSortFilter;
+  final bool? fromUserProfile;
+  final bool? fromCommunityPage;
+  final String? communityOrUserName;
 
   const CommentsPageView({
     Key? key,
     required this.searchItem,
     this.initialSortFilter,
+    this.fromUserProfile,
+    this.fromCommunityPage,
+    this.communityOrUserName,
     }) : super(key: key);
 
   @override
@@ -25,10 +34,23 @@ class _CommentsPageViewState extends State<CommentsPageView> {
   String sort = 'relevance';
   String sortText = 'Sort';
   List sortList = [ 'Most relevant','Top', 'New'];
+  bool fromCommunityOrUser = false;
+  bool? fromUserProfile;
+  bool? fromCommunityPage;
+  String communityOrUserName = '';
   
   @override
   void initState() {
     super.initState(); 
+    if (widget.fromUserProfile != null) {
+      fromUserProfile = widget.fromUserProfile!;
+    }
+    if (widget.fromCommunityPage != null) {
+      fromCommunityPage = widget.fromCommunityPage!;
+    }
+    if(widget.communityOrUserName != null) {
+      communityOrUserName = widget.communityOrUserName!;
+    }
     if (widget.initialSortFilter != null) {
       sort = widget.initialSortFilter!.toLowerCase();
       sortText = widget.initialSortFilter!; 
@@ -37,7 +59,15 @@ class _CommentsPageViewState extends State<CommentsPageView> {
   }
 
   void getCommentssResults() async {
-    comments = await getSearchResults(widget.searchItem, 'posts', sort);
+    if (fromUserProfile != null && fromUserProfile == true) {
+      comments = await getUserSearchResults(widget.searchItem, 'comments', sort, communityOrUserName);
+    }
+    else if (fromCommunityPage != null && fromCommunityPage == true) {
+      comments = await getCommunitySearchResults(widget.searchItem, 'comments', sort, communityOrUserName);
+    }
+    else {
+      comments = await getSearchResults(widget.searchItem, 'comments', sort);
+    }
     mappedComments = extractCommentDetails(comments);
     setState(() {});
   }
@@ -67,6 +97,7 @@ class _CommentsPageViewState extends State<CommentsPageView> {
           'communityProfilePic': comment['communityProfilePic'] ?? (throw Exception('null')),
           'username': comment['username'] ?? (throw Exception('null')),
           'userProfilePic': comment['userProfilePic'] ?? (throw Exception('null')),
+          'postId': comment['postId'] ?? (throw Exception('null')),
           'postDate': comment['postDate'] ?? (throw Exception('null')),
           'postVotes': comment['postVotes'] ?? (throw Exception('null')),
           'postCommentsCount': comment['postCommentsCount'] ?? (throw Exception('null')),
@@ -101,6 +132,23 @@ class _CommentsPageViewState extends State<CommentsPageView> {
     getCommentssResults();
   }
 
+  void navigateToComment(String postId, String commentId) {
+    Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name:
+                  '/post-card-page/$postId/true/$commentId/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: postId,
+              commentId: commentId,
+              oneComment: true,
+            ),
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (comments.isEmpty) {
@@ -131,22 +179,25 @@ class _CommentsPageViewState extends State<CommentsPageView> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: mappedComments.length,
               itemBuilder: (context, index) {
-                return CommentElement(
-                  communityName: mappedComments[index]['communityName'],
-                  communityIcon: mappedComments[index]['communityProfilePic'],
-                  commentorName: mappedComments[index]['username'],
-                  commentorIcon: mappedComments[index]['userProfilePic'],
-                  postTitle: mappedComments[index]['postTitle'],
-                  comment: mappedComments[index]['commentContent'],
-                  commentUpvotes: mappedComments[index]['commentVotes'] < 1000 ?
-                        mappedComments[index]['commentVotes'].toString() 
-                        : '${(mappedComments[index]['commentVotes']/100).truncateToDouble() /10.0}k',
-                  postUpvotes: mappedComments[index]['postVotes'] < 1000 ?
-                        mappedComments[index]['postVotes'].toString() 
-                        : '${(mappedComments[index]['postVotes']/100).truncateToDouble() /10.0}k',
-                  commentsCount: mappedComments[index]['postCommentsCount'] < 1000 ?
-                        mappedComments[index]['postCommentsCount'].toString() 
-                        : '${(mappedComments[index]['postCommentsCount']/100).truncateToDouble() /10.0}k',
+                return InkWell(
+                  onTap: () => navigateToComment(mappedComments[index]['postId'], mappedComments[index]['commentId']),
+                  child: CommentElement(
+                    communityName: mappedComments[index]['communityName'],
+                    communityIcon: mappedComments[index]['communityProfilePic'],
+                    commentorName: mappedComments[index]['username'],
+                    commentorIcon: mappedComments[index]['userProfilePic'],
+                    postTitle: mappedComments[index]['postTitle'],
+                    comment: mappedComments[index]['commentContent'],
+                    commentUpvotes: mappedComments[index]['commentVotes'] < 1000 ?
+                          mappedComments[index]['commentVotes'].toString() 
+                          : '${(mappedComments[index]['commentVotes']/100).truncateToDouble() /10.0}k',
+                    postUpvotes: mappedComments[index]['postVotes'] < 1000 ?
+                          mappedComments[index]['postVotes'].toString() 
+                          : '${(mappedComments[index]['postVotes']/100).truncateToDouble() /10.0}k',
+                    commentsCount: mappedComments[index]['postCommentsCount'] < 1000 ?
+                          mappedComments[index]['postCommentsCount'].toString() 
+                          : '${(mappedComments[index]['postCommentsCount']/100).truncateToDouble() /10.0}k',
+                  ),
                 );
               }
             ),

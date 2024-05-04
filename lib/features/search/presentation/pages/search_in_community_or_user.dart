@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/best_and_new_widgets.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 
@@ -6,11 +7,15 @@ class SearchInCommunityOrUser extends StatefulWidget {
 
   final String communityOrUserName;
   final String communityOrUserIcon;
+  final bool fromUserProfile;
+  final bool fromCommunityPage;
 
   SearchInCommunityOrUser({
     Key? key,
     required this.communityOrUserName,
     required this.communityOrUserIcon,
+    required this.fromUserProfile,
+    required this.fromCommunityPage,
     }) : super(key: key);
 
   @override
@@ -26,26 +31,42 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   List filteredList = [];
   String communityOrUserName = '';    
   String communityOrUserIcon = '';
+  bool? fromUserProfile;
+  bool? fromCommunityPage;
 
   void navigateFilterTop () {
-    Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
-      'searchItem': searchItem,
-      'communityOrUserName': communityOrUserName,
-      'communityOrUserIcon': communityOrUserIcon,
-      'sortFilter': 'Top',
-      'timeFilter': 'All time',
-      }
-    );
+    if (searchItem == '') {
+      CustomSnackbar(content:'you must enter some text to search for').show(context);
+    }
+    else {
+      Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
+        'searchItem': searchItem,
+        'communityOrUserName': communityOrUserName,
+        'communityOrUserIcon': communityOrUserIcon,
+        'sortFilter': 'Top',
+        'timeFilter': 'All time',
+        'fromUserProfile': fromUserProfile,
+        'fromCommunityPage': fromCommunityPage,
+        }
+      );
+    }
   }
 
   void navigateFilterNew () {
-    Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
-      'searchItem': searchItem,
-      'communityOrUserName': communityOrUserName,
-      'communityOrUserIcon': communityOrUserIcon,
-      'sortFilter': 'New',
-      }
-    );
+    if (searchItem == '') {
+      CustomSnackbar(content:'you must enter some text to search for').show(context);
+    }
+    else {
+      Navigator.of(context).pushNamed('/community-or-user-search-results', arguments: {
+        'searchItem': searchItem,
+        'communityOrUserName': communityOrUserName,
+        'communityOrUserIcon': communityOrUserIcon,
+        'sortFilter': 'New',
+        'fromUserProfile': fromUserProfile,
+        'fromCommunityPage': fromCommunityPage,
+        }
+      );
+    }  
   }
 
   void onSearch(List filteredList) {
@@ -65,6 +86,8 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
       'searchItem' : searchItem,
       'communityOrUserName' : communityOrUserName,
       'communityOrUserIcon': communityOrUserIcon,
+      'fromUserProfile': fromUserProfile,
+      'fromCommunityPage': fromCommunityPage,
     });
   }
 
@@ -72,6 +95,14 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   void initState() {
     communityOrUserName = widget.communityOrUserName;
     communityOrUserIcon = widget.communityOrUserIcon;
+    if (widget.fromUserProfile != null) {
+      fromUserProfile = widget.fromUserProfile;
+      fromCommunityPage = false;
+    }
+    if (widget.fromCommunityPage != null) {
+      fromCommunityPage = widget.fromCommunityPage;
+      fromUserProfile = false;
+    }
     super.initState();
   }
 
@@ -96,7 +127,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
                   isContained: true,
                 ),
                 InkWell(
-                  onTap: () {}, // navigate to home page 
+                  onTap: () => Navigator.pop(context),
                   child: Text(
                     'Cancel',
                     style: TextStyle(
