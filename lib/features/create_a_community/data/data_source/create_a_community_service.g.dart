@@ -13,7 +13,7 @@ class _RestClient implements RestClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://localhost:80/api';
+    baseUrl ??= 'http://10.0.2.2:80/api';
   }
 
   final Dio _dio;

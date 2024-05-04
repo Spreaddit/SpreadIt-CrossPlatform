@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/user_info.dart';
 
 // Fake implementation of getPostById function
 Future<Post?> fakeGetPostById({required String postId}) async {
@@ -38,7 +37,9 @@ void main() {
         (WidgetTester tester) async {
       // Widget setup
       await tester.pumpWidget(MaterialApp(
-        home: PostCardPage(postId: '1', isUserProfile: false),
+        home: PostCardPage(
+          postId: '1',
+        ),
       ));
 
       // Verify widgets

@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "546473234311",
-    "project_id": "spreadit-5a997",
-    "storage_bucket": "spreadit-5a997.appspot.com"
+    "project_number": "932668103377",
+    "project_id": "spreadit-b8b53",
+    "storage_bucket": "spreadit-b8b53.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:546473234311:android:1a6d76a6227de7cfcb4d22",
+        "mobilesdk_app_id": "1:932668103377:android:45b0054065df4718f7c3f0",
         "android_client_info": {
-          "package_name": "com.example.spreadit_crossplatform"
+          "package_name": "com.example.spreadit_cross"
         }
       },
       "oauth_client": [
         {
-          "client_id": "546473234311-h71vre2jmi3d4l2fq6v4eke9mi9bcn40.apps.googleusercontent.com",
+          "client_id": "932668103377-f7vj8mr3rc9cn1rtaifn53qmb14svl3u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.spreadit_cross",
+            "certificate_hash": "04402c0d4ca473c85745cca5a3cfd53935b4b7c0"
+          }
+        },
+        {
+          "client_id": "932668103377-jg0jefrb7iffsmijekj7pj5jbpfr0l42.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCFSCkNMchvrdapkxEjBYzR036laFNW-cI"
+          "current_key": "AIzaSyCMX5Ew7oZKA2Ao4OxsdcyIkJ1LzBxCufo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "546473234311-h71vre2jmi3d4l2fq6v4eke9mi9bcn40.apps.googleusercontent.com",
+              "client_id": "932668103377-3atinmvk83ui1vgdshd42lju6ujhtrel.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

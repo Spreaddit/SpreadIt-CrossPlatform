@@ -6,6 +6,7 @@
 /// This file also imports necessary packages and widgets required for the CreateCommunityPage widget.
 
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/data/data_source/create_a_community_service.dart';
@@ -230,12 +231,7 @@ class _CreateCommunityPageState extends State<CreateCommunityPage> {
         _responseStatus = response.response.statusCode;
       });
       if (response.response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CommunityPage(communityName: _communityName),
-          ),
-        );
+        navigateToCommunity(context, _communityName);
         // Navigate to the community page
         print('Community created successfully!');
       } else {
