@@ -3,24 +3,25 @@ import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_use
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/floating_new_chat_button.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/home_page_drawer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
-import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 CurrentPage previousPage = CurrentPage.home;
 
 class HomePage extends StatefulWidget {
   final CurrentPage currentPage;
-  final CurrentPage currentSubPage;
 
   HomePage({
     Key? key,
     this.currentPage = CurrentPage.home,
-    this.currentSubPage = CurrentPage.notifications,
   }) : super(key: key);
 
   @override
@@ -29,7 +30,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late CurrentPage currentPage;
-  late CurrentPage currentSubPage;
   late GlobalKey<_HomePageState> _homePageKey;
   int chatFilterSelectedOption = 3;
 
@@ -39,9 +39,30 @@ class _HomePageState extends State<HomePage> {
     _homePageKey = GlobalKey<_HomePageState>();
     setState(() {
       currentPage = widget.currentPage;
-      currentSubPage = widget.currentSubPage;
     });
+     _getCurrentUrlAndProcessToken();
   }
+
+  Future<void> _getCurrentUrlAndProcessToken() async {
+  try {
+    String currentUrl = Uri.base.toString();
+    final List<String> parts = currentUrl.split('/');
+    final String token = parts.last;
+    print("token $token");
+    int response =100;
+    if((token!='home' || token=='' )&& UserSingleton().user!.isVerified! == false)
+    {
+        response= await verifyEmail(emailToken: token);
+
+    }
+    if (response ==200)
+    {
+      CustomSnackbar(content: "Email verifed Succesfully").show(context);
+    }
+  } catch (e) {
+    print("Error while getting current URL: $e");
+  }
+}
 
   void changeSelectedIndex(int newIndex) {
     if (newIndex == 2) {
@@ -75,87 +96,7 @@ class _HomePageState extends State<HomePage> {
       ChatUserPage(
         selectedOption: chatFilterSelectedOption,
       ),
-      SingleChildScrollView(
-        physics: const ScrollPhysics(),
-        child: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: [
-              Container(
-                color: Colors.white,
-                child: ToggleButtons(
-                  constraints: BoxConstraints.expand(
-                      width: MediaQuery.of(context).size.width / 2),
-                  borderRadius: BorderRadius.zero,
-                  borderWidth: 0,
-                  selectedBorderColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  borderColor: Colors.transparent,
-                  fillColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  onPressed: (index) {
-                    setState(() {
-                      currentSubPage = index == 0
-                          ? CurrentPage.notifications
-                          : CurrentPage.messages;
-                    });
-                  },
-                  isSelected: [
-                    currentSubPage == CurrentPage.notifications,
-                    currentSubPage == CurrentPage.messages,
-                  ],
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: currentSubPage == CurrentPage.notifications
-                                ? Color.fromRGBO(0, 69, 172, 1.0)
-                                : Colors.transparent,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.notifications),
-                          SizedBox(width: 10),
-                          Text("Notifications"),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: currentSubPage == CurrentPage.messages
-                                ? Color.fromRGBO(0, 69, 172, 1.0)
-                                : Colors.transparent,
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.message),
-                          SizedBox(width: 10),
-                          Text("Messages"),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              currentSubPage == CurrentPage.notifications
-                  ? NotificationPage()
-                  : MessageInbox(),
-            ],
-          ),
-        ),
-      ),
+      InboxPage(),
       PostFeed(
         postCategory: PostCategories.hot,
         showSortTypeChange: false,

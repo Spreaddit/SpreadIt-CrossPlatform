@@ -18,9 +18,23 @@ class UserSingleton {
   String? googleToken;
   String? googleEmail;
   bool? isloggedIn;
+  String? firebaseId;
+
+ void setUserId(String userId) {
+    firebaseId = userId;
+    _saveToPrefs(); 
+  }
 
   void setUser(User newUser) {
     user = newUser;
+    _saveToPrefs(); 
+  }
+
+  void setVerifed()
+  {
+    User newUser = user!;
+    newUser.isVerified=true;  
+    user=newUser;
     _saveToPrefs(); 
   }
 
@@ -59,6 +73,7 @@ class UserSingleton {
       'google_token': googleToken,
       'google_email': googleEmail,
       'isLoggedin' : isloggedIn,
+      'firebaseId' : firebaseId,
     });
     await prefs.setString('userSingleton', jsonString);
   }
@@ -79,7 +94,7 @@ class UserSingleton {
           ? DateTime.parse(jsonMap['token_expiration_date'])
           : null;
       isloggedIn = jsonMap['isLoggedin'];
-
+      firebaseId =jsonMap['firebaseId'];
     }
   }
     // Clear user information from shared preferences
