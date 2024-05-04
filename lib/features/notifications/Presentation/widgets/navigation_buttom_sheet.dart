@@ -9,12 +9,14 @@ class ManageNotificationBottomSheet extends StatelessWidget {
   final bool community;
   final void Function(String, Notifications) onHide;
   final Notifications notification;
+  final VoidCallback markMessageAsRead;
 
   ManageNotificationBottomSheet({
     required this.disable,
     required this.community,
     required this.onHide,
     required this.notification,
+    required this.markMessageAsRead,
   });
 
   @override
@@ -40,17 +42,21 @@ class ManageNotificationBottomSheet extends StatelessWidget {
               ),
             ),
             Divider(),
-            if (notification.notificationType== "Comment Reply" || notification.notificationType== "Comment")
+            if (notification.notificationType == "Comment Reply" ||
+                notification.notificationType == "Comment")
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Don't get updates on this"),
                 onTap: () {
+                  markMessageAsRead();
                   String key = getNotificationType(notification);
                   disable(key);
                   Navigator.pop(context);
                 },
               ),
-            if (notification.notificationType!= "Comment Reply" && notification.notificationType!= "Comment" && !community)
+            if (notification.notificationType != "Comment Reply" &&
+                notification.notificationType != "Comment" &&
+                !community)
               ListTile(
                 leading: Icon(Icons.visibility_off, color: Colors.black),
                 title: Text("Hide this notification"),
@@ -59,11 +65,14 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-            if (notification.notificationType!= "Comment Reply" && notification.notificationType!= "Comment" && !community)
+            if (notification.notificationType != "Comment Reply" &&
+                notification.notificationType != "Comment" &&
+                !community)
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Turn off this notification type"),
                 onTap: () {
+                  markMessageAsRead();
                   String key = getNotificationType(notification);
                   disable(key);
                   Navigator.pop(context);
@@ -74,12 +83,14 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 leading: Icon(Icons.do_not_disturb_on, color: Colors.black),
                 title: Text("Disable updates from this community"),
                 onTap: () async {
+                  markMessageAsRead();
                   await disableCommunitynotifications(id: notification.id!);
                   Navigator.pop(context);
                 },
               ),
             Button(
               onPressed: () {
+                markMessageAsRead();
                 Navigator.pop(context);
               },
               text: 'Close',

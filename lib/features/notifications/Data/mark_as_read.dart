@@ -3,7 +3,7 @@ import 'package:spreadit_crossplatform/api.dart';
 import '../../../user_info.dart'; 
 
 Future<int> MarkAsRead({
-  required String id,
+   String? id,
   required String type,
 }) async {
   try {

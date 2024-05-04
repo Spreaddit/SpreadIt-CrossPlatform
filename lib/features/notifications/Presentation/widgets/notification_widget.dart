@@ -156,7 +156,6 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 : null,
         trailing: GestureDetector(
           onTap: () {
-            markmessageasRead();
             showModalBottomSheet(
               context: context,
               builder: (context) => ManageNotificationBottomSheet(
@@ -164,6 +163,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 onHide: widget.onHide,
                 notification: widget.notification!,
                 disable: widget.disable,
+                markMessageAsRead : markmessageasRead,
               ),
             );
           },
