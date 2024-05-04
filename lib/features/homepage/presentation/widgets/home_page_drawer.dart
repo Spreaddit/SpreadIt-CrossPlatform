@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/oauth_service.dart';
 
 class HomePageDrawer extends StatelessWidget {
   @override
@@ -51,8 +52,9 @@ class HomePageDrawer extends StatelessWidget {
               title: Text(item['text'], style: TextStyle(fontSize: 18.0)),
               onTap: () {
                 if (item['route'] == '/logout') {
-                   UserSingleton().clearUserFromPrefs();
-                  UserSingleton().user = null; // Clear user info
+                  UserSingleton().clearUserFromPrefs();
+                  UserSingleton().user = null; 
+                  signOutWithGoogle(context);
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/start-up-page', (route) => false);
                 } else {

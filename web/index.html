@@ -54,6 +54,14 @@
       });
     });
   </script>
+  <script>
+     if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      });
+      var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+   }
+</script>
   <meta name="google-signin-client_id" content="932668103377-jg0jefrb7iffsmijekj7pj5jbpfr0l42.apps.googleusercontent.com">
   ">
 </body>

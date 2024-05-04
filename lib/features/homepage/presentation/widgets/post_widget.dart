@@ -17,6 +17,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -127,13 +128,16 @@ class _PostHeaderState extends State<_PostHeader> {
           ),
           subtitle: GestureDetector(
             onTap: () => {
-              Navigator.of(context).pushNamed(
-                '/user-profile',
-                arguments: {
-                  'username': widget.post.username,
-                },
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  settings: RouteSettings(
+                    name: '/user-profile/${widget.post.username}',
+                  ),
+                  builder: (context) => UserProfile(
+                    username: widget.post.username,
+                  ),
+                ),
               ),
-              print('username: ${widget.post.username}'),
             },
             child: Text(widget.post.username),
           ),

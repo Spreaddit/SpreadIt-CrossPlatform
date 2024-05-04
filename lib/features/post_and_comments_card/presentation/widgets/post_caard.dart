@@ -13,11 +13,16 @@ class PostCard extends StatefulWidget {
 
   /// List of comments associated with the post.
   List<Comment> comments;
+  VoidCallback? setIsloaded;
+  bool oneComment;
 
   /// Constructs a [PostCard] with the specified [post], [comments], and [isUserProfile] flag.
   PostCard({
     required this.post,
     required this.comments,
+    required this.isUserProfile,
+    this.setIsloaded,
+    this.oneComment=false,
   });
 
   @override
@@ -99,6 +104,32 @@ class _PostCardState extends State<PostCard> {
                       color: Color.fromARGB(255, 216, 213, 213),
                       width: screenHeight * 0.005)),
             ),
+          ),
+          ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: widget.comments.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  CommentCard(
+                    comment: widget.comments[index],
+                    community: widget.post.community,
+                    setIsLoaded : widget.setIsloaded,
+                    onecomment: widget.oneComment,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                            color: Color.fromARGB(255, 216, 213, 213),
+                            width: screenHeight * 0.005),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ]),
       ),

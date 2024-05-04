@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,24 +10,32 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import './user_info.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  );  
   await UserSingleton().loadFromPrefs();
-  runApp(SpreadIt());
+  bool isAndroid;
+  try {
+    isAndroid = Platform.isAndroid;
+  } catch (e) {
+    print('Error detecting platform: $e');
+    isAndroid = false;
+  }
+  runApp(SpreadIt(isAndroid: isAndroid));
 }
 
 class SpreadIt extends StatelessWidget {
-  SpreadIt({Key? key}) : super(key: key);
+  final bool isAndroid;
+
+  SpreadIt({required this.isAndroid, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scrollBehavior: kIsWeb
+      scrollBehavior: !isAndroid
           ? const MaterialScrollBehavior().copyWith(
               dragDevices: {PointerDeviceKind.mouse},
             )

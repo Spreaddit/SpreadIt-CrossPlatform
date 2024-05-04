@@ -1,11 +1,17 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
-class NotificationData {
-  final IconData icon;
-  final String content;
-  final String buttonText;
-  final VoidCallback onPress;
+class NotificationData extends Equatable {
+  final IconData? icon;
+  final String? content;
+  final String? buttonText;
+  final VoidCallback? onPress;
 
   NotificationData({
     required this.icon,
@@ -13,128 +19,166 @@ class NotificationData {
     required this.buttonText,
     required this.onPress,
   });
+
+  @override
+  List<Object?> get props => [icon, content, buttonText, onPress];
 }
 
-NotificationData processNotification(Notifications notification) {
-  IconData icon;
-  String content;
-  String buttonText;
-  VoidCallback onPress = () {};
+NotificationData processNotification(
+    Notifications notification, BuildContext context) {
+  IconData? icon;
+  String? content;
+  String? buttonText;
+  VoidCallback? onPress = () {};
   switch (notification.notificationType) {
-    case "newFollowers":
+    case "Follow":
       icon = Icons.person_add;
       content = "";
       buttonText = "View Profile";
+      String username = notification.relatedUser!.username!;
       onPress = () {
-        // Go to user profile
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/user-profile/$username',
+            ),
+            builder: (context) => UserProfile(
+              username: username,
+            ),
+          ),
+        );
       };
       break;
-    case "mentions":
-      icon = Icons.alternate_email;
-      content = notification.comment!.content;
-      buttonText = "View Mention";
-      onPress = () {
-        // Go to comment that you are mentioned in
-      };
-      break;
-    case "upvotesComments":
-      icon = Icons.thumb_up;
-      content = notification.comment!.content;
-      buttonText = "View Comment";
-      onPress = () {
-      // Set onPress callback to navigate to the commented post
-      };
-      break;
-    case "upvotesPosts":
-      icon = Icons.thumb_up;
+    case "Upvote Comments":
+      icon = Icons.arrow_upward;
       content = notification.post!.title;
-      buttonText = "View Post";
+      buttonText = null;
       onPress = () {
-      // Set onPress callback to navigate to the upvoted post
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
+            ),
+          ),
+        );
       };
       break;
-    case "chatMessages":
-      icon = Icons.message;
-      content = "";
-      buttonText = "Open Chat";
+    case "Upvote Posts":
+      icon = Icons.arrow_upward;
+      content = notification.post!.title;
+      buttonText = null;
       onPress = () {
-         // Set onPress callback to open the chat room
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/post-card-page/${notification.postId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+            ),
+          ),
+        );
       };
       break;
-    case "chatRequests":
-      icon = Icons.message;
-      content = "";
-      buttonText = "Accept Request";
-      onPress = () {
-        // Set onPress callback to accept the chat request
-      };
-      break;
-    case "repliesToComments":
+
+    case "Comment Reply":
       icon = Icons.reply;
       content = notification.comment!.content;
-      buttonText = "View Comment";
+      buttonText = "Reply";
       onPress = () {
-        // Set onPress callback to navigate to the commented post
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
+            ),
+          ),
+        );
       };
       break;
-    case "cakeDay":
-      icon = Icons.cake;
-      content = "Cake Day";
-      buttonText = "Celebrate!";
-      onPress = () {
-        // Go to chat?
-      };
-      break;
-    case "modNotifications":
-      icon = Icons.security;
-      content = "Moderator Notification";
-      buttonText = "View";
-      onPress = () {
-              // Set onPress callback to navigate to the moderator panel
-      };
-      break;
-    case "replies":
-      icon = Icons.reply;
+    case "Comment":
+      icon = Ionicons.chatbubble;
       content = notification.comment!.content;
-      buttonText = "View";
       onPress = () {
-      // Set onPress callback to navigate to the replied comment
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
+            ),
+          ),
+        );
       };
       break;
-    case "invitations":
-      icon = Icons.event;
-      content = "";
-      buttonText = "View";
+    case "community":
+      icon = CupertinoIcons.bell;
+      content = 'Recommended : ${notification.communityname}';
+      buttonText = null;
       onPress = () {
-      // Set onPress callback to view event details
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => CommunityPage(
+              communityName: notification.communityname!,
+            ),
+          ),
+        );
       };
       break;
-    case "posts":
-      icon = Icons.post_add;
-      content = notification.post!.title;
-      buttonText = "View Post";
-      onPress = () {
-      // Set onPress callback to view the new post
-      };
-      break;
-    case "comments":
-      icon = Icons.comment;
+      case "mention":
+      icon = CupertinoIcons.person;
       content = notification.comment!.content;
-      buttonText = "View Comment";
+      buttonText = null;
       onPress = () {
-      // Set onPress callback to navigate to the commented post
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name:
+                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+              isUserProfile: true,
+              commentId: notification.commentId,
+              oneComment: true,
+            ),
+          ),
+        );
       };
       break;
-    case "inboxMessages":
-      icon = Icons.mail;
-      content = "New Inbox Message";
-      buttonText = "Open Inbox";
-      onPress = () {
-      // Set onPress callback to open the inbox
-      };
+      case "Account Update":
+      icon = Ionicons.ban;
+      content = '';
+      buttonText = null;
+      onPress = () {};
       break;
     default:
-      throw ArgumentError('Invalid notification type: ${notification.notificationType}');
+      throw ArgumentError(
+          'Invalid notification type: ${notification.notificationType}');
   }
 
   return NotificationData(
@@ -143,4 +187,21 @@ NotificationData processNotification(Notifications notification) {
     buttonText: buttonText,
     onPress: onPress,
   );
+}
+
+String getNotificationType(Notifications notification) {
+  switch (notification.notificationType) {
+    case "follow":
+      return "newFollowers";
+    case "upvoteComments":
+      return "upvotes";
+    case "upvotePosts":
+      return "upvotes";
+    case "commentReply":
+      return "repliesToComments";
+    case "comment":
+      return "commentsOnYourPost";
+    default:
+      return "other";
+  }
 }
