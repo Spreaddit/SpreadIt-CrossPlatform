@@ -32,10 +32,12 @@ class _CommunityPageState extends State<CommunityPage> {
   late Future<Map<String, dynamic>> isApprovedDataFuture;
   late Future<Map<String, dynamic>> isBannedDataFuture;
   late Future<Map<String, dynamic>> isModDataFuture;
+  late Future<Map<String, dynamic>> isInvitedFuture;
   int communityDataIdx = 0;
   int isApprovedDataIdx = 1;
   int isBannedDataIdx = 2;
   Map<String, dynamic> isModData = {};
+  Map<String, dynamic> isInvited = {};
   Map<String, dynamic> communityData = {};
   Map<String, dynamic> isApprovedData = {};
   Map<String, dynamic> isBannedData = {};

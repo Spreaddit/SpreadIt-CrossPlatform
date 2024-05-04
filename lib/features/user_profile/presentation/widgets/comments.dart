@@ -190,6 +190,7 @@ class CommentWidget extends StatelessWidget {
           ),
           if (saved)
             CommentFooter(
+              commentId: comment.id,
               onMorePressed: () {
                 showModalBottomSheet(
                   context: context,
