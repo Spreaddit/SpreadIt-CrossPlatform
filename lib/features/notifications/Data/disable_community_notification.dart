@@ -2,22 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import '../../../user_info.dart'; // Importing user information.
 
-var apibase= "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
+
 Future<int> disableCommunitynotifications({
   required String id,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String requestURL = '$apibase/community/update/disable';
+    String requestURL = '$apiUrl/community/update/disable/$id';
     
-      var data = {
-      "communityId": id,
-    };
+
 
     /// Send a POST request to the server to save or unsave the post or comment.
     final response = await Dio().post(
       requestURL,
-      queryParameters: data,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

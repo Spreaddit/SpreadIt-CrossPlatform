@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import 'package:dio/dio.dart'; // Importing the Dio package.
 import 'package:spreadit_crossplatform/user_info.dart'; // Importing user information.
+import 'package:http_parser/http_parser.dart';
 
 /// Updates user information via API request.
 ///
@@ -46,48 +46,72 @@ Future<int> updateUserApi({
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/profile-info';
     String? username = UserSingleton().user!.username;
-    
+
     /// Prepare the data to be sent in the request for backend.
-    var data = {
-      "username": username,
-      "name": displayName,
-      "avatar": profilePicImageUrl,
-      "banner": backgroundImageUrl,
-      "about": aboutUs,
-      "socialLinks": socialMedia,
-      "isVisible": contentVisibility,
-      "isActive": showActiveComments,
-    };
-    
-    /// Convert image files to base64 strings if available.
-    if (backgroundImage != null) {
-      List<int> bytes = await backgroundImage.readAsBytes();
-      String base64Image = base64Encode(bytes);
-      data['banner'] = base64Image;
-    }
+    var formData = FormData.fromMap({
+      'username': username,
+      'name': displayName,
+      'about': aboutUs,
+      'isVisible': contentVisibility,
+      'isActive': showActiveComments,
+    });
 
     if (profilePicImage != null) {
-      List<int> bytes = await profilePicImage.readAsBytes();
-      String base64Image = base64Encode(bytes);
-      data['avatar'] = base64Image;
+      formData.files.add(MapEntry(
+        'avatar',
+        await MultipartFile.fromFile(
+          profilePicImage.path,
+          filename: 'avatar',
+          contentType: MediaType('image', 'jpg'),
+        ),
+      ));
+    }
+
+    if (backgroundImage != null) {
+      formData.files.add(MapEntry(
+        'banner',
+        await MultipartFile.fromFile(
+          backgroundImage.path,
+          filename: 'banner',
+          contentType: MediaType('image', 'jpg'),
+        ),
+      ));
     }
 
     if (profileImageWeb != null) {
-      List<int> bytes = profileImageWeb.cast<int>();
-      String base64Image = base64Encode(bytes);
-      data['avatar'] = base64Image;
+      formData.files.add(MapEntry(
+        'avatar',
+        MultipartFile.fromBytes(profileImageWeb,
+            contentType: MediaType('image', 'jpg')),
+      ));
     }
 
     if (backgroundImageWeb != null) {
-      List<int> bytes = backgroundImageWeb.cast<int>();
-      String base64Image = base64Encode(bytes);
-      data['banner'] = base64Image;
+      formData.files.add(MapEntry(
+        'banner',
+        MultipartFile.fromBytes(backgroundImageWeb,
+            contentType: MediaType('image', 'jpg')),
+      ));
+    }
+
+    if (profileImageWeb == null && profilePicImage == null) {
+      formData.fields.add(MapEntry(
+        'avatar',
+        profilePicImageUrl!,
+      ));
+    }
+
+   if (backgroundImage == null && backgroundImageWeb == null) {
+      formData.fields.add(MapEntry(
+        'banner',
+        backgroundImageUrl!,
+      ));
     }
 
     /// Send a PUT request to the server to update user information.
     final response = await Dio().put(
       apiRoute,
-      data: data,
+      data: formData,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

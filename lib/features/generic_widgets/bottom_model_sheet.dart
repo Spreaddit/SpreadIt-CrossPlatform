@@ -4,8 +4,18 @@ class CustomBottomSheet extends StatelessWidget {
   final List<IconData> icons;
   final List<String> text;
   final List<VoidCallback> onPressedList;
-  CustomBottomSheet(
-      {required this.icons, required this.text, required this.onPressedList});
+  final List<IconData?>? trailingIcons;
+  final List<VoidCallback?>? onTrailingPressedList;
+  final List<Color?>? colors;
+
+  CustomBottomSheet({
+    required this.icons,
+    required this.text,
+    required this.onPressedList,
+    this.trailingIcons,
+    this.onTrailingPressedList,
+    this.colors,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +34,33 @@ class CustomBottomSheet extends StatelessWidget {
           itemCount: icons.length,
           itemBuilder: (context, index) {
             return ListTile(
-              leading: Icon(icons[index]),
-              title: Text(text[index]),
-              onTap: () {
-                onPressedList[index].call();
-              },
+              leading: Icon(
+                icons[index],
+                color: colors != null && index < colors!.length
+                    ? colors![index]
+                    : null,
+              ),
+              title: Text(
+                text[index],
+                style: TextStyle(color: colors != null && index < colors!.length
+                    ? colors![index]
+                    : null),
+              ),
+              onTap: onPressedList[index],
+              trailing: trailingIcons != null &&
+                      index < trailingIcons!.length &&
+                      onTrailingPressedList != null &&
+                      index < onTrailingPressedList!.length
+                  ? GestureDetector(
+                      onTap: onTrailingPressedList![index],
+                      child: Icon(
+                        trailingIcons![index],
+                        color: colors != null && index < colors!.length
+                            ? colors![index]
+                            : null,
+                      ),
+                    )
+                  : null,
             );
           },
         ),

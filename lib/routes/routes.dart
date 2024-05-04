@@ -18,6 +18,8 @@ import 'package:spreadit_crossplatform/features/forget_username/presentation/pag
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/add_muted_user_page.dart';
+import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
@@ -26,12 +28,15 @@ import 'package:spreadit_crossplatform/features/search/presentation/pages/genera
 import 'package:spreadit_crossplatform/features/search/presentation/pages/in_community_or_user_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/search_in_community_or_user.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/createusername.dart';
+import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/email_screen.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/log_in_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/sign_up_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/start_up_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/edit_profile.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/follower_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:spreadit_crossplatform/features/moderation/muted_communities/presentation/pages/muted_communities_page.dart';
 
 import '../features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 
@@ -77,6 +82,7 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/create-username-page': (context) => CreateUsername(),
     '/forget-password': (context) => ForgetPassword(),
     '/forget-username': (context) => ForgetUsername(),
+    '/email-verification': (context) => EmailSentPage(),
     '/home': (context) => ProtectedRoute(child: HomePage()),
     '/popular': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.popular)),
@@ -126,6 +132,10 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
     '/settings/account-settings/add-password': (context) =>
         ProtectedRoute(child: AddPasswordPage()),
+    '/muted-commuinties': (context) =>  ProtectedRoute(child: MutedCommunityPage()),
+    '/muted-users': (context) =>  ProtectedRoute(child: MutedUsersPage()),
+    '/edit-muted-user': (context) =>  ProtectedRoute(child: EditMutedUserPage()),
+    '/followers-page': (context) =>  ProtectedRoute(child:FollowUsersPage()),
     '/final-content-page': (context) => ProtectedRoute(
           child: Builder(
             builder: (context) {

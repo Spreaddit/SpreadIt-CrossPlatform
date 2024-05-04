@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
+import 'package:spreadit_crossplatform/features/user_profile/data/get_moderator_community.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/comments_shimmering.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../discover_communities/data/community.dart';
 import '../../../generic_widgets/snackbar.dart';
@@ -27,7 +29,9 @@ import '../../data/get_follow_status.dart';
 /// This widget fetches user data asynchronously and updates its state accordingly. It provides
 /// functionality to toggle follow status, view user comments, and navigate to edit profile.
 class UserProfile extends StatefulWidget {
-  const UserProfile({Key? key}) : super(key: key);
+  final String? username;
+
+  const UserProfile({Key? key, this.username}) : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -58,34 +62,25 @@ class _UserProfileState extends State<UserProfile> {
   ScrollController _scrollController = ScrollController();
   Uint8List? imageProfileWeb;
   late String username;
+  List<Community> moderatorCommunities = [];
+  bool isCommentsLoaded = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final Map<String, dynamic>? args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    username = args?['username'] ?? '';
+    username = args?['username'] ?? widget.username ?? '';
     username = username == '' ? UserSingleton().user!.username : username;
     myProfile = username == UserSingleton().user!.username;
     fetchUserInfoAsync();
     fetchComments();
-    loadCommunities();
     checkFollowStatus();
   }
 
   @override
   void initState() {
     super.initState();
-  }
-
-  /// Loads communities that the user is active in.
-  void loadCommunities() async {
-    GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
-    List<Community> loadedCommunities =
-        await getSpecificCommunity.getCommunities('🔥 Trending globally');
-    setState(() {
-      communitiesList = loadedCommunities;
-    });
   }
 
   /// Checks the follow status of the current user.
@@ -101,7 +96,8 @@ class _UserProfileState extends State<UserProfile> {
   void fetchUserInfoAsync() async {
     try {
       userInfoFuture = await fetchUserInfo(username);
-
+      List<Community> moderatorCommunitiess =
+          await GetUserModeratorCommunity().getCommunities();
       setState(() {
         formattedDate = formatDate(userInfoFuture!.dateOfJoining);
         userinfo =
@@ -113,6 +109,7 @@ class _UserProfileState extends State<UserProfile> {
         profilePicture = userInfoFuture!.avatar;
         displayName = userInfoFuture!.displayname;
         isActive = userInfoFuture!.isActive;
+        moderatorCommunities = moderatorCommunitiess;
         socialMediaLinks = userInfoFuture!.socialMedia
             .map((socialMedia) => {
                   'platform': socialMedia.platform,
@@ -120,6 +117,7 @@ class _UserProfileState extends State<UserProfile> {
                   'displayName': socialMedia.displayname,
                 })
             .toList();
+        communitiesList = userInfoFuture!.subscribedCommunities;
       });
     } catch (e) {
       print('Error fetching user info: $e');
@@ -153,6 +151,7 @@ class _UserProfileState extends State<UserProfile> {
       var data = await fetchCommentsData(username, 'user', '1');
       setState(() {
         commentsList = data;
+        isCommentsLoaded = true;
       });
     } catch (e) {
       print('Error fetching comments: $e');
@@ -201,8 +200,6 @@ class _UserProfileState extends State<UserProfile> {
 
   /// Builds the selected page based on the current index.
   Widget _buildSelectedPage() {
-    print(
-        "isActive $isActive communitiesList.isNotEmpty ${communitiesList.isNotEmpty}");
     switch (_selectedIndex) {
       case 0:
         return SliverToBoxAdapter(
@@ -257,15 +254,27 @@ class _UserProfileState extends State<UserProfile> {
         );
 
       case 1:
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final comment = commentsList[index];
-              return CommentWidget(comment: comment);
-            },
-            childCount: commentsList.length,
-          ),
-        );
+        return isCommentsLoaded
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final comment = commentsList[index];
+                    return CommentWidget(comment: comment);
+                  },
+                  childCount: commentsList.length,
+                ),
+              )
+            : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return CommentShimmerWidget(
+                      saved: false,
+                    );
+                  },
+                  childCount: 10,
+                ),
+              );
+
       case 2:
         return SliverToBoxAdapter(
           child: AboutWidget(
@@ -301,20 +310,9 @@ class _UserProfileState extends State<UserProfile> {
                         maxWidth: 50.0,
                         maxHeight: 200.0,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.blue),
-                            backgroundColor: Colors.grey,
-                            strokeWidth: 3,
-                          ),
-                          SizedBox(height: 8),
-                          Text('Loading'),
-                        ],
-                      ),
-                    )
+                      child: Center(
+                        child: LoaderWidget(dotSize: 10, logoSize: 0.0),
+                      ))
                   : ProfileHeader(
                       backgroundImage: background,
                       profilePicture: profilePicture,
@@ -322,7 +320,8 @@ class _UserProfileState extends State<UserProfile> {
                       profileImageWeb: imageProfileWeb,
                       backgroundImageWeb: imageBackgroundWeb,
                       profileImageFile: profileImageFile,
-                      username: displayName,
+                      username: username,
+                      displayName: displayName,
                       userinfo: userinfo,
                       about: about,
                       myProfile: myProfile,
@@ -331,6 +330,7 @@ class _UserProfileState extends State<UserProfile> {
                       onStartChatPressed: () => {},
                       editprofile: () => navigateToEditProfile(context),
                       socialMediaLinks: socialMediaLinks,
+                      moderatorCommunities: moderatorCommunities,
                     ),
             ),
             SliverToBoxAdapter(

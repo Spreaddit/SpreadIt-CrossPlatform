@@ -3,12 +3,15 @@ import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_use
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/floating_new_chat_button.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/presentation/pages/discover_communities.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/home_page_drawer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
-import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 CurrentPage previousPage = CurrentPage.home;
 
@@ -36,7 +39,29 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       currentPage = widget.currentPage;
     });
+     _getCurrentUrlAndProcessToken();
   }
+
+  Future<void> _getCurrentUrlAndProcessToken() async {
+  try {
+    String currentUrl = Uri.base.toString();
+    final List<String> parts = currentUrl.split('/');
+    final String token = parts.last;
+    print("token $token");
+    int response =100;
+    if((token!='home' || token=='' )&& UserSingleton().user!.isVerified! == false)
+    {
+        response= await verifyEmail(emailToken: token);
+
+    }
+    if (response ==200)
+    {
+      CustomSnackbar(content: "Email verifed Succesfully").show(context);
+    }
+  } catch (e) {
+    print("Error while getting current URL: $e");
+  }
+}
 
   void changeSelectedIndex(int newIndex) {
     if (newIndex == 2) {
@@ -70,7 +95,7 @@ class _HomePageState extends State<HomePage> {
       ChatUserPage(
         selectedOption: chatFilterSelectedOption,
       ),
-      NotificationPage(),
+      InboxPage(),
       PostFeed(
         postCategory: PostCategories.hot,
         showSortTypeChange: false,

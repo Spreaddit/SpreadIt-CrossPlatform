@@ -33,6 +33,8 @@ class StartUpPage extends StatelessWidget {
       CustomSnackbar(content: "User already exists").show(context);
     } else if (responseCode == 500) {
       CustomSnackbar(content: "Internal server error").show(context);
+    } else if (responseCode==402){
+      CustomSnackbar(content: "You have been banned from Spreddit").show(context);
     }
   }
 

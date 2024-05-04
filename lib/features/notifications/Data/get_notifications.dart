@@ -3,7 +3,6 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-String baseUrl = "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
 
 /// Base URL for API requests.
 
@@ -11,10 +10,10 @@ Future<List<Notifications>> fetchNotifications() async {
   try {
     String? accessToken = UserSingleton().accessToken;
     const apiroute = "/notifications";
-    String apiUrl = "$baseUrl$apiroute";
+    String requestURL = "$apiUrl$apiroute";
 
     final response = await Dio().get(
-      apiUrl,
+      requestURL,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
