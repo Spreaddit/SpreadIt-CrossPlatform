@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/community/data/api_community_inf
 import 'package:spreadit_crossplatform/features/community/data/decline_invite.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
@@ -141,6 +142,17 @@ class _CommunityPageState extends State<CommunityPage> {
               communityName: widget.communityName,
             ),
             body: _buildNormalBody(),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.create),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed('/final-content-page', arguments: {
+                  'title': "",
+                  'content': "",
+                  'community': [Community.fromJson(communityData)],
+                });
+              },
+            ),
           );
         } else {
           return Center(child: Text("Unknown error fetching data 🤔"));

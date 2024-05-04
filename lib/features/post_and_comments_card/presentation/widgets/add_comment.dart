@@ -124,23 +124,27 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Expanded(
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: TextFormField(
-            controller: _commentController,
-            maxLines: null,
-            decoration: InputDecoration(
-              labelText: "Add a comment",
-              suffixIcon: IconButton(
-                onPressed: () {
-                  _showBottomSheet(context);
-                },
-                icon: Icon(Icons.link),
+      title: Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: TextFormField(
+                controller: _commentController,
+                maxLines: null,
+                decoration: InputDecoration(
+                  labelText: "Add a comment",
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      _showBottomSheet(context);
+                    },
+                    icon: Icon(Icons.link),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
       trailing: OutlinedButton(
         onPressed: isNotApprovedForCommenting

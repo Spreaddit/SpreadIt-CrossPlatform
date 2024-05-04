@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/add_data_appbar.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class AddOrEditBannedPage extends StatefulWidget {
   AddOrEditBannedPage({
@@ -63,6 +64,10 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
   }
 
   void addBannedUser() async {
+    if (_usernameController.text == UserSingleton().user!.name) {
+      CustomSnackbar(content: "You can't ban yourself 😐").show(context);
+      return;
+    }
     int response = await banUserRequest(
         communityName: widget.communityName,
         username: _usernameController.text,
