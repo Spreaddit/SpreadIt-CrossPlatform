@@ -762,20 +762,22 @@ class _PostInteractionsState extends State<_PostInteractions> {
                           () {
                             //Lock comments
                             setState(() {
-                              //widget.isCommentsLocked
-                              //  ? unlockComments(postId: widget.postId)
-                              // : lockComments(postId: widget.postId);
+                              widget.isCommentsLocked
+                                  ? unlockComments(postId: widget.postId)
+                                  : lockComments(postId: widget.postId);
                               widget.isCommentsLocked =
                                   !widget.isCommentsLocked;
                               widget.onLock(widget.isCommentsLocked);
                               Navigator.pop(context);
                               widget.isCommentsLocked
                                   ? CustomSnackbar(
-                                      content:
-                                          "Comments on this post are locked successfully!")
+                                          content:
+                                              "Comments on this post are locked successfully!")
+                                      .show(context)
                                   : CustomSnackbar(
-                                      content:
-                                          "Comments on this post are unlocked successfully!");
+                                          content:
+                                              "Comments on this post are unlocked successfully!")
+                                      .show(context);
                             });
                           },
                           () {
@@ -785,8 +787,9 @@ class _PostInteractionsState extends State<_PostInteractions> {
                                   postId: widget.postId);
                               Navigator.pop(context);
                               CustomSnackbar(
-                                  content:
-                                      "Post has been removed as spam successfully!");
+                                      content:
+                                          "Post has been removed as spam successfully!")
+                                  .show(context);
                             });
                           },
                         ],
@@ -1013,7 +1016,7 @@ class _PostWidgetState extends State<PostWidget> {
                             hasDownvoted: widget.post.hasDownvoted ?? false,
                             hasUpvoted: widget.post.hasUpvoted ?? false,
                             isModeratorView: widget.isModeratorView,
-                            isCommentsLocked: widget.post.isCommentsLocked!,
+                            isCommentsLocked: isCommentsLocked,
                             onLock: onLock,
                           )
                       ],
