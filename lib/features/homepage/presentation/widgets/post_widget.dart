@@ -753,16 +753,18 @@ class _PostInteractionsState extends State<_PostInteractions> {
                           Icons.delete,
                         ],
                         text: [
-                          "Lock comments",
+                          widget.isCommentsLocked
+                              ? "unlock comments"
+                              : "Lock comments",
                           "Remove as spam",
                         ],
                         onPressedList: [
                           () {
                             //Lock comments
                             setState(() {
-                              widget.isCommentsLocked
-                                  ? unlockComments(postId: widget.postId)
-                                  : lockComments(postId: widget.postId);
+                              //widget.isCommentsLocked
+                              //  ? unlockComments(postId: widget.postId)
+                              // : lockComments(postId: widget.postId);
                               widget.isCommentsLocked =
                                   !widget.isCommentsLocked;
                               widget.onLock(widget.isCommentsLocked);
@@ -889,7 +891,7 @@ class _PostWidgetState extends State<PostWidget> {
 
   void onLock(bool newIsCommentsLocked) {
     if (!mounted) return;
-
+    print(newIsCommentsLocked);
     setState(() {
       isCommentsLocked = newIsCommentsLocked;
     });

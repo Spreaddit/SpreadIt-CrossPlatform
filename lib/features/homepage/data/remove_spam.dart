@@ -9,7 +9,7 @@ Future<void> removeAsSpam(
   try {
     String? accessToken = UserSingleton().accessToken;
     String reason = 'spam';
-    var apiRoute = "/community/moderation/$communityName/$postId/remove";
+    var apiRoute = "/community/moderation/$communityName/$postId/remove-post";
     String apiUrl = apibase + apiRoute;
 
     final response = await Dio().post(
@@ -18,7 +18,7 @@ Future<void> removeAsSpam(
         'Authorization': 'Bearer $accessToken',
       }),
       data: {
-        "reason": reason,
+        "removalReason": reason,
       },
     );
 
