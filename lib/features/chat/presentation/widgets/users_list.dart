@@ -34,9 +34,9 @@ Widget usersList({
         children: snapshot.data!.docs
             .where((element) {
               if (selectedOption == 1) {
-                return element['groupName'] == '';
+                return element['groupname'] == '';
               } else if (selectedOption == 2) {
-                return element['groupName'] != '';
+                return element['groupname'] != '';
               }
               return true;
             })
@@ -85,8 +85,8 @@ Widget _userItem({
 
   String title;
 
-  if (data.groupName != "") {
-    title = data.groupName;
+  if (data.groupname != "") {
+    title = data.groupname;
     avatar = CircleAvatar(
       child: Text(
         title[0].toUpperCase(),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_total_notifications.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
 import '../../../generic_widgets/custom_bar.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_notifications.dart';
@@ -16,7 +15,7 @@ class InboxPage extends StatefulWidget {
   const InboxPage({
     Key? key,
     this.onChangeHomeSubCategory,
-    this.isAllRead = false,
+    required this.isAllRead,
   }) : super(key: key);
 
   @override
@@ -30,7 +29,7 @@ class _InboxPageState extends State<InboxPage> {
   List<Notifications> notifications = [];
   bool isLoading = true;
   Notifications? recommendedCommunity;
-  bool isAllRead = false;
+  late bool isAllRead;
   int unreadNotifications = -1;
 
   @override
@@ -48,6 +47,22 @@ class _InboxPageState extends State<InboxPage> {
       _selectedIndex = index;
     });
     widget.onChangeHomeSubCategory!(index + 7);
+  }
+
+  @override
+  void didUpdateWidget(covariant InboxPage oldWidget) {
+    setState(() {
+      isAllRead = widget.isAllRead;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      isAllRead = widget.isAllRead;
+    });
   }
 
   Future<void> getSuggestedCommunity() async {
@@ -104,13 +119,6 @@ class _InboxPageState extends State<InboxPage> {
       });
       print(isLoading);
     }
-  }
-
-  Future<void> markallnotificationsasRead() async {
-    await MarkAsRead(type: 'all');
-    setState(() {
-      isAllRead = true;
-    });
   }
 
   Future<void> unreadNotificationsCount() async {

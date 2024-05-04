@@ -20,7 +20,7 @@ class _NewChatPageState extends State<NewChatPage> {
   late double _distanceToField;
   late _UsernameTagController usernameController;
   TextEditingController _controller = TextEditingController();
-  String groupName = '';
+  String groupname = '';
   List<UserData> tags = [];
 
   void startNewChat() async {
@@ -36,11 +36,11 @@ class _NewChatPageState extends State<NewChatPage> {
     if (tags.length == 1) {
       QuerySnapshot querySnapshot = await chatrooms
           .where('users', arrayContains: tags[0].id)
-          .where('groupName', isEqualTo: "")
+          .where('groupname', isEqualTo: "")
           .get();
 
-      bool containsUser = querySnapshot.docs
-          .any((element) => element['users'].contains(UserSingleton().firebaseId!));
+      bool containsUser = querySnapshot.docs.any(
+          (element) => element['users'].contains(UserSingleton().firebaseId!));
 
       if (querySnapshot.docs.isNotEmpty && containsUser) {
         Navigator.pop(context);
@@ -53,7 +53,7 @@ class _NewChatPageState extends State<NewChatPage> {
       }
     }
 
-    if (tags.length > 1 && groupName == '') {
+    if (tags.length > 1 && groupname == '') {
       CustomSnackbar(content: "Please choose a group name to start chatting ")
           .show(context);
       return;
@@ -85,7 +85,7 @@ class _NewChatPageState extends State<NewChatPage> {
     }
 
     Map<String, dynamic> chatroomMap = {
-      "groupName": groupName,
+      "groupname": groupname,
       "lastMessage": null,
       "timestamp": Timestamp.fromDate(
         DateTime.now(),
@@ -99,7 +99,7 @@ class _NewChatPageState extends State<NewChatPage> {
       navigateToChat(
         context: context,
         docId: value.id,
-        chatroomName: groupName,
+        chatroomName: groupname,
       );
     }).catchError((error) {
       CustomSnackbar(content: "Failed to start a new chatroom").show(context);
@@ -306,10 +306,10 @@ class _NewChatPageState extends State<NewChatPage> {
                     return null;
                   },
                   onFieldSubmitted: (value) => setState(() {
-                    groupName = value;
+                    groupname = value;
                   }),
                   onTapOutside: (event) => setState(() {
-                    groupName = _controller.text;
+                    groupname = _controller.text;
                   }),
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(
