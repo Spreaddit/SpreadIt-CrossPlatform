@@ -7,9 +7,6 @@ import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
-// String userId = UserSingleton().user!.firebaseId;
-String userId = 'KMmoAXLiVc9UBl0rNqTO';
-
 class NewChatPage extends StatefulWidget {
   const NewChatPage({
     Key? key,
@@ -43,7 +40,7 @@ class _NewChatPageState extends State<NewChatPage> {
           .get();
 
       bool containsUser = querySnapshot.docs
-          .any((element) => element['users'].contains(userId));
+          .any((element) => element['users'].contains(UserSingleton().firebaseId!));
 
       if (querySnapshot.docs.isNotEmpty && containsUser) {
         Navigator.pop(context);
@@ -62,16 +59,16 @@ class _NewChatPageState extends State<NewChatPage> {
       return;
     }
 
-    List<String> users = [userId];
+    List<String> users = [UserSingleton().firebaseId!];
 
     Map<String, dynamic> usersData = {};
     Map<String, dynamic> subMap = {
       'avatarUrl': UserSingleton().user!.avatarUrl,
       'email': UserSingleton().user!.email,
-      'id': userId,
+      'id': UserSingleton().firebaseId!,
       'name': UserSingleton().user!.username,
     };
-    usersData[userId] = subMap;
+    usersData[UserSingleton().firebaseId!] = subMap;
 
     print("tags${tags.toString()}");
     for (int i = 0; i < tags.length; i++) {

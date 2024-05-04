@@ -9,6 +9,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   late CurrentPage currentPage;
   late GlobalKey<_HomePageState> _homePageKey;
   int chatFilterSelectedOption = 3;
+  bool isAllRead = false;
 
   @override
   void initState() {
@@ -59,6 +61,13 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print("Error while getting current URL: $e");
     }
+  }
+
+  Future<void> markallnotificationsasRead() async {
+    await MarkAsRead(type: 'all');
+    setState(() {
+      isAllRead = true;
+    });
   }
 
   void changeSelectedIndex(int newIndex) {
@@ -93,7 +102,9 @@ class _HomePageState extends State<HomePage> {
       ChatUserPage(
         selectedOption: chatFilterSelectedOption,
       ),
-      InboxPage(),
+      InboxPage(
+        isAllRead: isAllRead,
+      ),
       PostFeed(
         postCategory: PostCategories.hot,
         showSortTypeChange: false,
@@ -137,6 +148,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: TopBar(
           key: _homePageKey,
+          onReadMessages: markallnotificationsasRead,
           context: context,
           currentPage: currentPage,
           onChangeHomeCategory: changeSelectedIndex,

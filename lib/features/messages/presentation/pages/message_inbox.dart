@@ -39,7 +39,7 @@ class _MessageInboxState extends State<MessageInbox> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      physics: NeverScrollableScrollPhysics(),
+      physics: AlwaysScrollableScrollPhysics(),
       shrinkWrap: true,
       children: messages
           .mapIndexed<Widget>(
