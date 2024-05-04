@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
+import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import '../../data/data_source/api_user_info_data.dart';
 import '../widgets/sort_home.dart';
 
@@ -20,86 +21,80 @@ class _SettingsPageState extends State<SettingsPage> {
   /// Holds user data fetched.
   late Map<String, dynamic> data;
 
-  /// Represents the username associated with the fetched data.
-  String username = "";
+  /// Future that holds the user data fetched.
+  late Future<Map<String, dynamic>> futureData;
+
+  /// A list of widgets representing the general settings section in the settings page.
+  List<Widget> generalSectionChildren = [];
+
+  /// A list of widgets representing the feed options section in the settings page.
+  List<Widget> feedOptionsSectionChildren = [];
 
   /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
+    fetchData();
   }
 
   /// Fetches user information.
   Future<void> fetchData() async {
-    data = await getUserInfo(); // Await the result of getData()
-    setState(() {
-      username = data["username"];
+    futureData = getUserInfo().then((value) {
+      data = value;
+      generalSectionChildren.addAll([
+        ToPageBtn(
+          iconData: Icons.person_outline,
+          mainText: "Account Settings for u/${data["username"]}",
+          onPressed: () =>
+              Navigator.of(context).pushNamed('/settings/account-settings'),
+        ),
+      ]);
+      return value;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    /// A list of widgets representing the general settings section in the settings page.
-    List<Widget> generalSectionChildren = [];
-
-    /// A list of widgets representing the feed options section in the settings page.
-    List<Widget> feedOptionsSectionChildren = [];
-
-    /// Navigates between pages with animation.
-    void navigateToPage(Widget route) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 200),
-          reverseTransitionDuration: Duration(milliseconds: 100),
-          pageBuilder: (_, __, ___) => route,
-          transitionsBuilder: (_, animation, __, child) {
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.fastOutSlowIn,
-                ),
-              ),
-              child: child,
-            );
-          },
-        ),
-      );
-    }
-
-    generalSectionChildren.addAll([
-      ToPageBtn(
-        iconData: Icons.person_outline,
-        mainText: "Account Settings for u/$username",
-        onPressed: () =>
-            Navigator.of(context).pushNamed('/settings/account-settings'),
-      ),
-    ]);
-
     feedOptionsSectionChildren.addAll([
       SortHome(),
     ]);
 
     return Scaffold(
       appBar: SettingsAppBar(title: "Settings"),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Color.fromARGB(255, 228, 227, 227),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SettingsSectionTitle(title: "General"),
-              SettingsSectionBody(sectionChildren: generalSectionChildren),
-              SettingsSectionTitle(title: "Feed Options"),
-              SettingsSectionBody(sectionChildren: feedOptionsSectionChildren),
-              SettingsSectionTitle(title: ""),
-            ],
-          ),
-        ),
+      body: FutureBuilder(
+        future: futureData,
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: LoaderWidget(
+                dotSize: 10.0,
+                logoSize: 100.0,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error occurred while fetching data 😢');
+          } else if (snapshot.hasData) {
+            return SingleChildScrollView(
+              child: Container(
+                color: Color.fromARGB(255, 228, 227, 227),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SettingsSectionTitle(title: "General"),
+                    SettingsSectionBody(
+                        sectionChildren: generalSectionChildren),
+                    SettingsSectionTitle(title: "Feed Options"),
+                    SettingsSectionBody(
+                        sectionChildren: feedOptionsSectionChildren),
+                    SettingsSectionTitle(title: ""),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Text('Uknown error occurred while fetching data 🤔');
+          }
+        }),
       ),
     );
   }

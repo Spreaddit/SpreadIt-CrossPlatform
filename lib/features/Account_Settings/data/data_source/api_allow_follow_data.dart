@@ -9,7 +9,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// Returns an empty value for 'blockedAccounts', false for 'allowFollow' if the operation fails.
 ///
 /// Throws an error if fetching data fails.
-Future<Map<String, dynamic>> getData() async {
+Future<Map<String, dynamic>> getFollowersSettingsData() async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     
@@ -23,17 +23,16 @@ Future<Map<String, dynamic>> getData() async {
     );
     if (response.statusCode == 200) {
       {
-        print("ALLOW FOADOSKADOS${response.data}");
         print(response.statusMessage);
         return response.data;
       }
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');
-      return {"blockedAccounts": [], "allowFollow": false};
+      return {"allowFollow": false};
     }
   } catch (e) {
     print('Error fetching data: $e');
-    return {"blockedAccounts": [], "allowFollow": false};
+    return {"allowFollow": false};
   }
 }
 
@@ -48,12 +47,11 @@ Future<Map<String, dynamic>> getData() async {
 ///
 /// Throws an error if updating data fails.
 Future<int> updateData({
-  required List<dynamic>? blkedList,
   required bool updatedVal,
 }) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
-    var data = {"blockedAccounts": blkedList, "allowFollow": updatedVal};
+    var data = {"allowFollow": updatedVal};
     final response = await Dio().put(
       '$apiUrl/mobile/settings/blocking-permissions',
       data: data,

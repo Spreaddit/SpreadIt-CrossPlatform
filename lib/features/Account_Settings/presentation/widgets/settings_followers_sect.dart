@@ -6,53 +6,42 @@ import '../../data/data_source/api_allow_follow_data.dart';
 /// A widget representing a section with two switches of type [SwitchBtn1].
 ///
 /// The first switch controls the visibility of the second switch.
-class SwitchSection extends StatefulWidget {
+class FollowersSwitchSection extends StatefulWidget {
   /// Creates a switch section widget.
-  const SwitchSection({
+  const FollowersSwitchSection({
     Key? key,
+    required this.allowFollow,
   }) : super(key: key);
 
+  /// Represents whether following is allowed.
+  final bool allowFollow;
+
   @override
-  State<SwitchSection> createState() => _SwitchSectionState();
+  State<FollowersSwitchSection> createState() => _FollowersSwitchSectionState();
 }
 
-/// [SwitchSection] state.
-class _SwitchSectionState extends State<SwitchSection> {
+/// [FollowersSwitchSection] state.
+class _FollowersSwitchSectionState extends State<FollowersSwitchSection> {
   /// Represents whether following is allowed.
-  late bool allowFollow = false;
+  late bool allowFollow;
 
-  /// Holds data fetched for user information.
-  late Map<String, dynamic> jsonData;
-
-  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
-  }
-
-  /// Fetches data from the API.
-  Future<void> fetchData() async {
-    var data = await getData(); // Await the result of getData()
-    setState(() {
-      jsonData = data; // Update blockedAccountsList with fetched data
-      allowFollow = jsonData['allowFollow'];
-    });
+    allowFollow = widget.allowFollow;
   }
 
   /// Updates the state of the first switch.
   Future<void> stateSetter() async {
-    jsonData['allowFollow'] = !allowFollow;
-    var result = await updateData(
-        blkedList: jsonData['blockedAccounts'],
-        updatedVal: jsonData['allowFollow']);
+    setState(() {
+      allowFollow = !allowFollow;
+    });
+    var result = await updateData(updatedVal: !allowFollow);
     if (result == 200) {
+    } else {
       setState(() {
         allowFollow = !allowFollow;
       });
-    } else {
       CustomSnackbar(content: "Failed to update").show(context);
     }
   }

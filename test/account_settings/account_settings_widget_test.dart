@@ -39,7 +39,7 @@ void main() {
     expect(find.byType(ConnectAccBtn), findsOneWidget);
 
     // Verify if SwitchSection widget exists
-    expect(find.byType(SwitchSection), findsOneWidget);
+    expect(find.byType(FollowersSwitchSection), findsOneWidget);
   });
 
   testWidgets('AccountSettingsPage Simple UI and NAV Test',
