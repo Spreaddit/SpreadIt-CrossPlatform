@@ -34,6 +34,9 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
   /// Data fetched from user information API.
   late Map<String, dynamic> data;
 
+  /// Future that holds the user data fetched.
+  late Future<Map<String, dynamic>> futureData;
+
   /// Current email associated with the user's account.
   String currentEmail = "";
 
@@ -53,17 +56,19 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
+    fetchData();
   }
 
   /// Fetches user information.
   Future<void> fetchData() async {
-    data = await getUserInfo();
-    setState(() {
+    futureData = getUserInfo().then((value) {
+      data = value;
       currentEmail = data["email"];
       username = data["username"];
+      if (mounted) {
+        setState(() {});
+      }
+      return value;
     });
   }
 
@@ -107,8 +112,8 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
     }
     _emailForm.currentState!.save();
     _passwordForm.currentState!.save();
-    var responseCode =
-        await verfiyPasswordData(enteredPassowrd: {"enteredPassword": _userPassword});
+    var responseCode = await verfiyPasswordData(
+        enteredPassowrd: {"enteredPassword": _userPassword});
     if (responseCode == 0) {
       CustomSnackbar(content: "Error").show(context);
     } else if (responseCode == 401) {
@@ -125,111 +130,132 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: SettingsAppBar(
-        title: "Update email address",
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
+        resizeToAvoidBottomInset: true,
+        appBar: SettingsAppBar(
+          title: "Update email address",
+        ),
+        body: FutureBuilder(
+          future: futureData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.deepOrangeAccent,
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error occurred while fetching data 😢');
+            } else if (snapshot.hasData) {
+              return Padding(
+                padding: EdgeInsets.all(16),
                 child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 16, left: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          CircleAvatar(
-                            foregroundImage: NetworkImage(
-                              "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-                            ),
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "u/${username.toUpperCase()}",
-                                softWrap: true,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 17),
+                  children: <Widget>[
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 16, left: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  CircleAvatar(
+                                    foregroundImage: NetworkImage(
+                                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "u/${username.toUpperCase()}",
+                                        softWrap: true,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 17),
+                                      ),
+                                      Text(
+                                        currentEmail,
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              255, 25, 25, 25),
+                                          fontSize: 17,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
-                              Text(
-                                currentEmail,
-                                style: TextStyle(
-                                  color: const Color.fromARGB(255, 25, 25, 25),
-                                  fontSize: 17,
+                            ),
+                            CustomInput(
+                              formKey: _emailForm,
+                              onChanged: updateEmail,
+                              label: 'New email address',
+                              placeholder: 'New email address',
+                              validateField: validateEmail,
+                              validate: true,
+                            ),
+                            CustomInput(
+                              formKey: _passwordForm,
+                              onChanged: updatePassword,
+                              label: 'Reddit Password',
+                              placeholder: 'Reddit Password',
+                              obscureText: true,
+                              validateField: validatePassword,
+                              validate: true,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.all(20),
+                              alignment: Alignment.topLeft,
+                              child: TextButton(
+                                onPressed: () =>
+                                    navigateToForgetPassword(context),
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Color(0xFFFF4500),
+                                  ),
                                 ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    CustomInput(
-                      formKey: _emailForm,
-                      onChanged: updateEmail,
-                      label: 'New email address',
-                      placeholder: 'New email address',
-                      validateField: validateEmail,
-                      validate: true,
-                    ),
-                    CustomInput(
-                      formKey: _passwordForm,
-                      onChanged: updatePassword,
-                      label: 'Reddit Password',
-                      placeholder: 'Reddit Password',
-                      obscureText: true,
-                      validateField: validatePassword,
-                      validate: true,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(20),
-                      alignment: Alignment.topLeft,
-                      child: TextButton(
-                        onPressed: () => navigateToForgetPassword(context),
-                        child: Text(
-                          'Forgot Password?',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFFFF4500),
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Button(
+                            onPressed: () => Navigator.pop(context),
+                            text: 'Cancel',
+                            backgroundColor:
+                                const Color.fromARGB(255, 214, 214, 215),
+                            foregroundColor: Colors.grey,
+                          ),
+                        ),
+                        Expanded(
+                          child: Button(
+                            onPressed: () => verifyEmailUpdate(context),
+                            text: 'Save',
+                            backgroundColor: Colors.blueAccent,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Button(
-                    onPressed: () => Navigator.pop(context),
-                    text: 'Cancel',
-                    backgroundColor: const Color.fromARGB(255, 214, 214, 215),
-                    foregroundColor: Colors.grey,
-                  ),
-                ),
-                Expanded(
-                  child: Button(
-                    onPressed: () => verifyEmailUpdate(context),
-                    text: 'Save',
-                    backgroundColor: Colors.blueAccent,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+              );
+            } else {
+              return Text('Uknown error occurred while fetching data 🤔');
+            }
+          },
+        ));
   }
 }

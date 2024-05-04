@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/location_select_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/update_email_page.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
@@ -95,6 +97,10 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: NotificationsPageUI()),
     '/settings/account-settings/change-password': (context) =>
         ProtectedRoute(child: ResetPassword()),
+    '/settings/account-settings/update-email': (context) =>
+        ProtectedRoute(child: UpdateEmailPage()),
+    '/settings/account-settings/location-select': (context) =>
+        ProtectedRoute(child: SelectLocationPage()),
     '/post-to-community': (context) => ProtectedRoute(
           child: Builder(
             builder: (context) {
@@ -120,8 +126,6 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/user-profile': (context) => ProtectedRoute(child: UserProfile()),
     '/edit-profile': (context) => ProtectedRoute(child: EditProfilePage()),
     '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
-    '/settings/account-settings/add-password': (context) =>
-        ProtectedRoute(child: AddPasswordPage()),
     '/final-content-page': (context) => ProtectedRoute(
           child: Builder(
             builder: (context) {

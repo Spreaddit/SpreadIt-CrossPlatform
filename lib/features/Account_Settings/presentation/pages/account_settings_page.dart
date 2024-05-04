@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_allow_follow_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/connected_acc_only_dialog.dart';
-import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
-import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import '../widgets/connected_acc_btn.dart';
 import '../widgets/settings_followers_sect.dart';
 import '../widgets/settings_gender_modal.dart';
@@ -9,9 +8,6 @@ import '../widgets/settings_app_bar.dart';
 import '../widgets/settings_btn_to_page.dart';
 import '../widgets/settings_section_body.dart';
 import '../widgets/settings_section_title.dart';
-import 'update_email_page.dart';
-import 'location_select_page.dart';
-import '../pages/manage_notifications_page.dart';
 import '../../data/data_source/api_basic_settings_data.dart';
 
 /// The page for managing account settings.
@@ -29,7 +25,23 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   final String title = "Account Settings";
 
   /// Variables to store user data.
-  late Map<String, dynamic> data;
+  late Map<String, dynamic> basicData;
+
+  /// Future that holds the user data fetched.
+  late Future<Map<String, dynamic>> futureBasicData;
+
+  /// Variables to store user follower settings data.
+  late Map<String, dynamic> followSettingsData;
+
+  /// Future that holds the user follower settings data fetched.
+  late Future<Map<String, dynamic>> futureFollowSettingsData;
+
+  /// Lists to hold widgets for different sections of the settings page.
+  List<Widget> basicSectionChildren = [];
+  List<Widget> connectedSectionChildren = [];
+  List<Widget> notificationsSectionChildren = [];
+  List<Widget> safetySectionChildren = [];
+
   String currentEmail = "";
   String currentLocation = "";
   bool connectedAccOnly = false;
@@ -38,22 +50,29 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
+    fetchData();
   }
+
+  bool isInit = false;
 
   /// Fetches user data.
   Future<void> fetchData() async {
     // Call the function to retrieve basic user data.
-    data = await getBasicData();
-    // Update the state with the fetched data.
-    setState(() {
-      currentEmail = data["email"];
+    futureBasicData = getBasicData().then((value) {
+      basicData = value;
+      currentEmail = basicData["email"];
       connectedAccMode();
-      currentLocation = (data["country"] == "IP")
+      currentLocation = (basicData["country"] == "IP")
           ? "Use approximate location (based on IP)"
-          : data["country"];
+          : basicData["country"];
+      if (mounted) {
+        setState(() {});
+      }
+      return value;
+    });
+    futureFollowSettingsData = getFollowersSettingsData().then((value) {
+      followSettingsData = value;
+      return value;
     });
   }
 
@@ -61,55 +80,15 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   void connectedAccMode() {
     if (currentEmail == "") {
       connectedAccOnly = true;
-      currentEmail = data["connectedAccounts"][0];
+      currentEmail = basicData["connectedAccounts"][0];
     } else {
       connectedAccOnly = false;
     }
   }
 
-  /// List of routes to navigate to different settings pages.
-  final List<Widget> routes = [
-    UpdateEmailPage(),
-    ResetPassword(),
-    SelectLocationPage(),
-    NotificationsPageUI(),
-    BlockedAccountsPage(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    /// Lists to hold widgets for different sections of the settings page.
-    List<Widget> basicSectionChildren = [];
-    List<Widget> connectedSectionChildren = [];
-    List<Widget> notificationsSectionChildren = [];
-    List<Widget> safetySectionChildren = [];
-
-    /// Function to navigate to a different page using a custom route transition.
-    void navigateToPage(Widget route) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 200),
-          reverseTransitionDuration: Duration(milliseconds: 100),
-          pageBuilder: (_, __, ___) => route,
-          transitionsBuilder: (_, animation, __, child) {
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.fastOutSlowIn,
-                ),
-              ),
-              child: child,
-            );
-          },
-        ),
-      ).then(
-        (_) => fetchData(),
-      );
-    }
-
-    basicSectionChildren.addAll([
+  /// Setup widgets for all sections of the settings page.
+  void setupPageSections() {
+    basicSectionChildren = [
       ToPageBtn(
         iconData: Icons.settings_outlined,
         mainText: "Update email address",
@@ -117,9 +96,10 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         onPressed: () {
           if (connectedAccOnly) {
             ConnectedAccountOnlyDialog(context, 0, currentEmail);
-            fetchData();
           } else {
-            navigateToPage(routes[0]);
+            Navigator.of(context)
+                .pushNamed('/settings/account-settings/update-email')
+                .then((_) => fetchData());
           }
         },
       ),
@@ -129,11 +109,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         onPressed: () {
           if (connectedAccOnly) {
             ConnectedAccountOnlyDialog(context, 1, currentEmail);
-            fetchData().then((_) => print("Fetched the data"));
           } else {
             Navigator.of(context)
-                .pushNamed('/settings/account-settings/change-password')
-                .then((_) => fetchData());
+                .pushNamed('/settings/account-settings/change-password');
           }
         },
       ),
@@ -144,29 +122,32 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         tertiaryText:
             "Specify a location to customize your recommendations and feed. Reddit does not track your precise geolocation data. Learn more",
         onPressed: () {
-          navigateToPage(routes[2]);
+          Navigator.of(context)
+              .pushNamed('/settings/account-settings/location-select')
+              .then((_) => fetchData());
         },
       ),
       SelectGender(),
-    ]);
+    ];
 
-    connectedSectionChildren.addAll([
+    connectedSectionChildren = [
       ConnectAccBtn(
         iconData: Icons.account_circle_outlined,
         accountName: "Google",
+        basicData: basicData,
       )
-    ]);
+    ];
 
-    notificationsSectionChildren.addAll([
+    notificationsSectionChildren = [
       ToPageBtn(
         iconData: Icons.notifications_outlined,
         mainText: "Manage notifications",
         onPressed: () => Navigator.of(context)
             .pushNamed('/settings/account-settings/manage-notifications'),
       ),
-    ]);
+    ];
 
-    safetySectionChildren.addAll([
+    safetySectionChildren = [
       ToPageBtn(
         iconData: Icons.block_outlined,
         mainText: "Manage blocked accounts",
@@ -178,40 +159,62 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         mainText: "Manage muted communities",
         onPressed: () {},
       ),
-      SwitchSection(),
-    ]);
+      FollowersSwitchSection(allowFollow: followSettingsData["allowFollow"]),
+    ];
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(237, 236, 236, 234),
       appBar: SettingsAppBar(
         title: title,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Color.fromARGB(255, 228, 227, 227),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SettingsSectionTitle(
-                title: "BASIC SETTINGS",
+      body: FutureBuilder(
+        future: Future.wait([futureBasicData, futureFollowSettingsData]),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.deepOrangeAccent,
               ),
-              SettingsSectionBody(
-                sectionChildren: basicSectionChildren,
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error occurred while fetching data 😢');
+          } else if (snapshot.hasData) {
+            setupPageSections();
+            return SingleChildScrollView(
+              child: Container(
+                color: Color.fromARGB(255, 228, 227, 227),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SettingsSectionTitle(
+                      title: "BASIC SETTINGS",
+                    ),
+                    SettingsSectionBody(
+                      sectionChildren: basicSectionChildren,
+                    ),
+                    SettingsSectionTitle(title: "Connected Accounts"),
+                    SettingsSectionBody(
+                        sectionChildren: connectedSectionChildren),
+                    SettingsSectionTitle(title: "Contact Settings"),
+                    SettingsSectionBody(
+                      sectionChildren: notificationsSectionChildren,
+                    ),
+                    SettingsSectionTitle(title: "Safety"),
+                    SettingsSectionBody(
+                      sectionChildren: safetySectionChildren,
+                    ),
+                    SettingsSectionTitle(title: ""),
+                  ],
+                ),
               ),
-              SettingsSectionTitle(title: "Connected Accounts"),
-              SettingsSectionBody(sectionChildren: connectedSectionChildren),
-              SettingsSectionTitle(title: "Contact Settings"),
-              SettingsSectionBody(
-                sectionChildren: notificationsSectionChildren,
-              ),
-              SettingsSectionTitle(title: "Safety"),
-              SettingsSectionBody(
-                sectionChildren: safetySectionChildren,
-              ),
-              SettingsSectionTitle(title: ""),
-            ],
-          ),
-        ),
+            );
+          } else {
+            return Text('Uknown error occurred while fetching data 🤔');
+          }
+        }),
       ),
     );
   }
