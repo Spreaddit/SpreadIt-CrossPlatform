@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/admin_view/presentation/pages/admin_view_page.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
@@ -68,6 +69,7 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
 Map<String, WidgetBuilder> generateRoutes() {
   return {
     '/start-up-page': (context) => StartUpPage(),
+    '/admin-view': (context) => AdminViewPage(),
     '/log-in-page': (context) => LogInScreen(),
     '/sign-up-page': (context) => SignUpScreen(),
     '/create-username-page': (context) => CreateUsername(),
