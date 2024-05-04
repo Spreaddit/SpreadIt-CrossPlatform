@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/user_profile/data/follow_unfollow_api.dart';
 
 class PeopleElement extends StatefulWidget {
 
@@ -19,6 +20,12 @@ class PeopleElement extends StatefulWidget {
 }
 
 class _PeopleElementState extends State<PeopleElement> {
+
+  void followUser() async {
+    await toggleFollow(username: widget.username, isFollowing: widget.isFollowing);
+    setState((){});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,25 +67,25 @@ class _PeopleElementState extends State<PeopleElement> {
                 ),
               ),
               Spacer(), 
-              if (!widget.isFollowing)
                 Container(
                   margin: EdgeInsets.only(left: 7),
                   child: ElevatedButton(
-                    onPressed: () {},   // follow user
+                    onPressed: followUser,  
                     style: ElevatedButton.styleFrom(
+                      side: BorderSide(color: Colors.blue[900]!),
                       padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                      backgroundColor: Colors.blue[900],
+                      backgroundColor:widget.isFollowing? Colors.white : Colors.blue[900],
                       fixedSize: Size(15,7),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ), 
                     ), 
                     child: Text(
-                      'Follow',
+                      widget.isFollowing ? 'Unfollow' : 'Follow',
                       style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color:widget.isFollowing ? Colors.blue[900] : Colors.white,
                       ),
                     ),
                   ),

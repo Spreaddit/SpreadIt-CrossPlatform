@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 
 class CommunityElement extends StatefulWidget {
 
@@ -22,6 +23,17 @@ class CommunityElement extends StatefulWidget {
 }
 
 class _CommunityElementState extends State<CommunityElement> {
+
+  void joincommunity () async {
+    await postSubscribeRequest(postRequestInfo: {'communityName': widget.communityName});
+    setState(() {});
+  }
+
+  void unjoinCommunity () async {
+    await postUnsubscribeRequest(postRequestInfo: {'communityName': widget.communityName});
+    setState(() {});
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,29 +87,29 @@ class _CommunityElementState extends State<CommunityElement> {
                   ],
                 ),
               ),
-              if(!widget.isFollowing)
-                Container(
-                  margin: EdgeInsets.only(left: 7),
-                  child: ElevatedButton(
-                    onPressed: () {},   // join the community
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                      backgroundColor: Colors.blue[900],
-                      fixedSize: Size(15,7),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ), 
-                    ), 
-                    child: Text(
-                      'Join',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+              Container(
+                margin: EdgeInsets.only(left: 7),
+                child: ElevatedButton(
+                  onPressed: widget.isFollowing ? unjoinCommunity : joincommunity ,  
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(color: Colors.blue[900]!),
+                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+                    backgroundColor: widget.isFollowing? Colors.white : Colors.blue[900],
+                    fixedSize: Size(15,7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),         
+                  ), 
+                  child: Text(
+                    widget.isFollowing ? 'Unjoin' :'Join',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color:  widget.isFollowing ? Colors.blue[900] : Colors.white,
                     ),
                   ),
                 ),
+              ),
             ],
           ),
           Divider(
