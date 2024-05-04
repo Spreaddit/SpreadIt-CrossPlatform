@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/admin_view/data/ban_user_service.dart';
 import 'package:spreadit_crossplatform/features/admin_view/data/get_reported_posts_service.dart';
 import 'package:spreadit_crossplatform/features/admin_view/data/report_data_model.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
 
@@ -43,12 +44,19 @@ class _PostsViewBodyState extends State<PostsViewBody> {
           return Text('Error: ${snapshot.error}');
         } else {
           List<Post> posts = snapshot.data!['posts'];
+          List<List<Report>> reports = snapshot.data!['reports'];
 
           return ListView.builder(
             itemCount: posts.length,
             itemBuilder: (context, index) {
               Post post = posts[index];
+              List<Report> postReports = reports[index];
 
+              // Create a Set of unique report reasons
+              Set<String> uniqueReportReasons = postReports
+                  .map((report) => report.reason)
+                  .whereType<String>()
+                  .toSet();
               return Column(
                 children: [
                   PostCard(
@@ -56,10 +64,12 @@ class _PostsViewBodyState extends State<PostsViewBody> {
                     comments: [],
                     isUserProfile: false,
                   ),
-                  Text('Report Reason: '),
+                  ...uniqueReportReasons
+                      .map((reason) => Text('Report Reason: $reason'))
+                      .toList(),
                   ElevatedButton(
                     onPressed: () {
-                      _banUserDialog();
+                      _banUserDialog(post.username);
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.red, // This makes the button red
@@ -76,7 +86,7 @@ class _PostsViewBodyState extends State<PostsViewBody> {
     );
   }
 
-  void _banUserDialog() {
+  void _banUserDialog(String username) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -86,7 +96,7 @@ class _PostsViewBodyState extends State<PostsViewBody> {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           return AlertDialog(
-            title: Text('Ban User'),
+            title: Text('Ban  u/$username'),
             content: Column(
               children: [
                 TextField(
@@ -98,6 +108,7 @@ class _PostsViewBodyState extends State<PostsViewBody> {
                   ),
                 ),
                 DropdownButton<String>(
+                  hint: Text('Select Ban Duration'),
                   value: _banDuration,
                   onChanged: (String? newValue) {
                     setState(() {
@@ -129,20 +140,22 @@ class _PostsViewBodyState extends State<PostsViewBody> {
               ),
               TextButton(
                 child: Text('Ban'),
-                onPressed: () {
+                onPressed: () async {
                   if (_banDuration == 'Permanent') {
-                    BanUserService().banUser(
-                      username: "username",
+                    String message = await BanUserService().banUser(
+                      username: username,
                       reason: _banReason!,
                       isPermanent: true,
                     );
+                    CustomSnackbar(content: message).show(context);
                   } else {
-                    BanUserService().banUser(
-                      username: "username",
+                    String message = await BanUserService().banUser(
+                      username: username,
                       reason: _banReason!,
                       banDuration: getBanDuration(_banDuration!),
                       isPermanent: false,
                     );
+                    CustomSnackbar(content: message).show(context);
                   }
                   Navigator.of(context).pop();
                 },
