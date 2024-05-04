@@ -9,7 +9,6 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
-import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
 import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
@@ -40,29 +39,27 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       currentPage = widget.currentPage;
     });
-     _getCurrentUrlAndProcessToken();
+    _getCurrentUrlAndProcessToken();
   }
 
   Future<void> _getCurrentUrlAndProcessToken() async {
-  try {
-    String currentUrl = Uri.base.toString();
-    final List<String> parts = currentUrl.split('/');
-    final String token = parts.last;
-    print("token $token");
-    int response =100;
-    if((token!='home' || token=='' )&& UserSingleton().user!.isVerified! == false)
-    {
-        response= await verifyEmail(emailToken: token);
-
+    try {
+      String currentUrl = Uri.base.toString();
+      final List<String> parts = currentUrl.split('/');
+      final String token = parts.last;
+      print("token $token");
+      int response = 100;
+      if ((token != 'home' || token == '') &&
+          UserSingleton().user!.isVerified! == false) {
+        response = await verifyEmail(emailToken: token);
+      }
+      if (response == 200) {
+        CustomSnackbar(content: "Email verifed Succesfully").show(context);
+      }
+    } catch (e) {
+      print("Error while getting current URL: $e");
     }
-    if (response ==200)
-    {
-      CustomSnackbar(content: "Email verifed Succesfully").show(context);
-    }
-  } catch (e) {
-    print("Error while getting current URL: $e");
   }
-}
 
   void changeSelectedIndex(int newIndex) {
     if (newIndex == 2) {
