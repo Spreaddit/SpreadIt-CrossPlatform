@@ -73,12 +73,13 @@ Future<List<Post>> getFeedPosts({
   String? subspreaditName,
   String? timeSort = "",
   String? username = "",
+  int page = 1,
 }) async {
   String? requestURL;
   try {
     String? accessToken = UserSingleton().getAccessToken();
 
-     requestURL = apiUrl +
+    requestURL = apiUrl +
         postCategoryEndpoint(
           action: category,
           subspreaditName: subspreaditName,
@@ -87,15 +88,22 @@ Future<List<Post>> getFeedPosts({
         );
     final response = await Dio().get(
       requestURL,
+      queryParameters: {
+        'page': page,
+        'count': 10,
+      },
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       ),
     );
+
     if (response.statusCode == 200) {
-      List<Post> posts =
-          (response.data as List).map((x) => Post.fromJson(x)).toList();
+      print(response.data);
+      List<Post> posts = (response.data['posts'] as List)
+          .map((x) => Post.fromJson(x))
+          .toList();
       return (posts);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
@@ -106,7 +114,7 @@ Future<List<Post>> getFeedPosts({
     }
     return [];
   } on DioException catch (e) {
-          print("URL: $requestURL");
+    print("URL: $requestURL");
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         print("Bad request: ${e.response!.statusMessage}");
