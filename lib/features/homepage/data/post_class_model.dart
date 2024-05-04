@@ -29,8 +29,14 @@ class Post extends Equatable {
   final bool? isNsfw;
   final bool? sendPostReplyNotification;
   final bool? isSaved;
+  final bool? hasVotedOnPoll;
+  final String? selectedPollOption;
+  final bool? hasUpvoted;
+  final bool? hasDownvoted;
 
   Post({
+    this.hasUpvoted,
+    this.hasDownvoted,
     required this.postId,
     required this.userId,
     required this.username,
@@ -59,6 +65,8 @@ class Post extends Equatable {
     this.isNsfw,
     this.sendPostReplyNotification,
     this.isSaved = true,
+    this.hasVotedOnPoll,
+    this.selectedPollOption,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -87,7 +95,7 @@ class Post extends Equatable {
       pollExpiration: json['pollExpiration'] != null
           ? DateTime.parse(json['pollExpiration'])
           : null,
-      isPollEnabled: json['isPollEnabled'],
+      isPollEnabled: json['isPollEnabled'] ?? true,
       link: json['link'],
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((attachment) => Attachment.fromJson(attachment))
@@ -103,7 +111,11 @@ class Post extends Equatable {
       isCommentsLocked: json['isCommentsLocked'],
       isNsfw: json['isNsfw'],
       sendPostReplyNotification: json['sendPostReplyNotification'],
-      isSaved: json['isSaved'],
+      isSaved: json['isSaved'] ?? false,
+      hasVotedOnPoll: json['hasVotedOnPoll'] == true,
+      selectedPollOption: json['selectedPollOption'],
+      hasDownvoted: json['hasDownvoted'],
+      hasUpvoted: json['hasUpvoted'],
     );
   }
 
@@ -137,6 +149,8 @@ class Post extends Equatable {
         isNsfw,
         sendPostReplyNotification,
         isSaved,
+        hasVotedOnPoll,
+        selectedPollOption,
       ];
 }
 

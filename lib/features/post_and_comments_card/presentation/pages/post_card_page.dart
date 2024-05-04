@@ -16,7 +16,6 @@ class PostCardPage extends StatefulWidget {
 
   /// Indicates whether the current user is the owner of the profile associated with the post.
   final bool isUserProfile;
-  //Mimo
   final String? commentId;
   final bool oneComment;
 
@@ -24,7 +23,6 @@ class PostCardPage extends StatefulWidget {
       {Key? key,
       required this.postId,
       required this.isUserProfile,
-      //Mimo
       this.commentId,
       this.oneComment = false})
       : super(key: key);
@@ -36,7 +34,6 @@ class PostCardPage extends StatefulWidget {
 class _PostCardPageState extends State<PostCardPage> {
   List<Comment> comments = [];
   Post? post;
-  //MIMO
   List<Comment> allComments = []; 
   bool oneComment = false;
   bool isLoaded = false;
@@ -70,7 +67,6 @@ class _PostCardPageState extends State<PostCardPage> {
     var data = await fetchCommentsData('user', 'post', "${widget.postId}");
     setState(() {
       comments = data;
-      //Mimo
       allComments = data;
       if (widget.oneComment == true) {
         try {
@@ -114,7 +110,6 @@ class _PostCardPageState extends State<PostCardPage> {
   @override
   void initState() {
     super.initState();
-    //MIMO
     _scrollController = ScrollController();
     oneComment = widget.oneComment; 
     fetchPost().then((post) {
@@ -135,7 +130,7 @@ class _PostCardPageState extends State<PostCardPage> {
             Expanded(
               child: SingleChildScrollView(
                 physics: ScrollPhysics(),
-                controller: _scrollController, // Mimo
+                controller: _scrollController, 
                 child: Container(
                   color: Colors.white,
                   child: Column(
@@ -151,8 +146,8 @@ class _PostCardPageState extends State<PostCardPage> {
                               post: post!,
                               comments: comments,
                               isUserProfile: widget.isUserProfile,
-                              setIsloaded : setIsloaded,  //Mimo
-                              oneComment: widget.oneComment, //Mimo
+                              setIsloaded : setIsloaded,  
+                              oneComment: widget.oneComment, 
                             )
                           : Text(""),
                     ],
@@ -160,7 +155,6 @@ class _PostCardPageState extends State<PostCardPage> {
                 ),
               ),
             ),
-            //Mimo
             if (oneComment && isLoaded) 
               Button(
                 onPressed: () {

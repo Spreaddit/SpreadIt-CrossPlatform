@@ -4,6 +4,8 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
+import 'package:spreadit_crossplatform/features/chat/presentation/pages/new_chat_page.dart';
 import 'package:spreadit_crossplatform/features/create_a_community/presentation/pages/create_a_community_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/final_content_page.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/post_to_community_page.dart';
@@ -18,6 +20,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/add_muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/muted_user_page.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/createusername.dart';
@@ -33,6 +36,40 @@ import 'package:spreadit_crossplatform/features/moderation/muted_communities/pre
 
 import '../features/Account_Settings/presentation/pages/manage_notifications_page.dart';
 
+Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
+  final List<String>? pathSegments = settings.name?.split('/');
+  if (pathSegments == null || pathSegments.isEmpty) {
+    return null;
+  }
+
+  if (pathSegments.contains('post-card-page') && pathSegments.length >= 3) {
+    final postId = pathSegments[pathSegments.length - 1];
+
+    return MaterialPageRoute(
+      builder: (_) => PostCardPage(postId: postId),
+    );
+  } else if (pathSegments.contains('chatroom')) {
+    final chatId = pathSegments[pathSegments.length - 2];
+    final chatroomName = pathSegments[pathSegments.length - 1];
+    return MaterialPageRoute(
+      builder: (_) => ChatPage(
+        id: chatId,
+        chatroomName: chatroomName,
+      ),
+    );
+  } else if (pathSegments.contains('moderators') &&
+      pathSegments.contains('community')) {
+    final communityName = pathSegments[pathSegments.length - 1];
+    // return MaterialPageRoute(
+    //   builder: (_) => ModeratorsPage(
+    //     communityName: communityName,
+    //   ),
+    // );
+  }
+
+  return null;
+};
+
 Map<String, WidgetBuilder> generateRoutes() {
   return {
     '/start-up-page': (context) => StartUpPage(),
@@ -47,6 +84,9 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.popular)),
     '/discover': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.discover)),
+    '/chat-rooms': (context) =>
+        ProtectedRoute(child: HomePage(currentPage: CurrentPage.chat)),
+    '/new-chat': (context) => ProtectedRoute(child: NewChatPage()),
     '/all': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.all)),
     '/create_a_community': (context) =>

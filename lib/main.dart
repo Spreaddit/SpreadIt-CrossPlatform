@@ -4,8 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
-import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -45,39 +43,7 @@ class SpreadIt extends StatelessWidget {
       title: 'Spread It',
       theme: spreadItTheme,
       home: UserSingleton().user != null ? HomePage() : StartUpPage(),
-      onGenerateRoute: (settings) {
-        final List<String>? pathSegments = settings.name?.split('/');
-        if (pathSegments == null || pathSegments.isEmpty) {
-          return null;
-        }
-
-        if (pathSegments.contains('post-card-page') &&
-            pathSegments.length >= 5) {
-          final postId = pathSegments[pathSegments.length - 4];
-          final isUserProfile = pathSegments[pathSegments.length - 3] == 'true';
-          final commentId = pathSegments[pathSegments.length - 2];
-          final oneComment = pathSegments[pathSegments.length - 1] == 'fa;se';
-
-          return MaterialPageRoute(
-            builder: (_) => PostCardPage(
-              postId: postId,
-              isUserProfile: isUserProfile,
-              commentId: commentId,
-              oneComment: oneComment,
-            ),
-          );
-        } else if (pathSegments.contains('user-profile-page') &&
-            pathSegments.length == 2) {
-          final username = pathSegments[pathSegments.length - 1];
-
-          return MaterialPageRoute(
-            builder: (_) => UserProfile(
-              username: username,
-            ),
-          );
-        }
-        return null;
-      },
+      onGenerateRoute: onGenerateRoute,
       routes: generateRoutes(),
     );
   }
