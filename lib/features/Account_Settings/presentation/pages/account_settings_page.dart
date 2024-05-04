@@ -127,7 +127,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               .then((_) => fetchData());
         },
       ),
-      SelectGender(),
+      SelectGender(
+        basicData: basicData,
+      ),
     ];
 
     connectedSectionChildren = [

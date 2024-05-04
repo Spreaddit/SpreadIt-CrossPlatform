@@ -36,7 +36,7 @@ class _FollowersSwitchSectionState extends State<FollowersSwitchSection> {
     setState(() {
       allowFollow = !allowFollow;
     });
-    var result = await updateData(updatedVal: !allowFollow);
+    var result = await updateData(updatedVal: allowFollow);
     if (result == 200) {
     } else {
       setState(() {
