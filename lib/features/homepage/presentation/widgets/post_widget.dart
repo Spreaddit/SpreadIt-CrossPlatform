@@ -17,6 +17,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -78,6 +79,9 @@ class _PostHeaderState extends State<_PostHeader> {
   late String dateFormatted;
   late Timer timer;
   bool shouldRenderJoin = false;
+
+  //bool isAdmin = UserSingleton().user?.role == "Admin";
+  bool isAdmin = true;
 
   @override
   void initState() {
@@ -296,9 +300,10 @@ class _PostHeaderState extends State<_PostHeader> {
       context: context,
       builder: (BuildContext context) {
         return CustomBottomSheet(
-          icons: widget.isUserProfile ? writerIcons : viewerIcons,
-          text: widget.isUserProfile ? writerOptions : viewerOptions,
-          onPressedList: widget.isUserProfile ? writerActions : viewerActions,
+          icons: widget.isUserProfile || isAdmin ? writerIcons : viewerIcons,
+          text: widget.isUserProfile || isAdmin ? writerOptions : viewerOptions,
+          onPressedList:
+              widget.isUserProfile || isAdmin ? writerActions : viewerActions,
         );
       },
     );
@@ -767,6 +772,7 @@ class PostWidget extends StatefulWidget {
     required this.isUserProfile,
     this.isSavedPage = false,
     this.feedContext,
+
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -858,6 +864,7 @@ class _PostWidgetState extends State<PostWidget> {
                     onSpoilerChanged: onChangeSpoiler,
                     onDeleted: onDeleted,
                     feedContext: widget.feedContext,
+
                     content: widget.post.content != null &&
                             widget.post.content!.isNotEmpty
                         ? widget.post.content![widget.post.content!.length - 1]
@@ -893,6 +900,7 @@ class _PostWidgetState extends State<PostWidget> {
                       isSpoiler: isSpoiler,
                       selectedPollOption: widget.post.selectedPollOption,
                       hasVotedOnPoll: widget.post.hasVotedOnPoll,
+
                     ),
                   ),
                   _PostInteractions(
@@ -905,6 +913,7 @@ class _PostWidgetState extends State<PostWidget> {
                     isFullView: widget.isFullView,
                     hasDownvoted: widget.post.hasDownvoted??false,
                     hasUpvoted: widget.post.hasUpvoted??false,
+
                   )
                 ],
               )
