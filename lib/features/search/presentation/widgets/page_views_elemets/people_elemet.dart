@@ -37,7 +37,7 @@ class _PeopleElementState extends State<PeopleElement> {
                     username: widget.username,
                   ),
                 ),
-              ),
+              );
   }
 
   @override
