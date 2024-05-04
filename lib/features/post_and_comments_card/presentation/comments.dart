@@ -195,6 +195,7 @@ class _CommentCardState extends State<CommentCard> {
                       ),
                     ),
                     CommentFooter(
+                      commentId: widget.comment.id,
                       onMorePressed: () {
                         showModalBottomSheet(
                           context: context,
@@ -204,7 +205,8 @@ class _CommentCardState extends State<CommentCard> {
                                 Icons.share,
                                 Icons.notifications_on_rounded,
                                 Icons.save,
-                                if (isUserProfile && !isNotApprovedForCommentEdit)
+                                if (isUserProfile &&
+                                    !isNotApprovedForCommentEdit)
                                   Icons.edit,
                                 Icons.copy,
                                 if (!isUserProfile) Icons.block,
@@ -214,7 +216,8 @@ class _CommentCardState extends State<CommentCard> {
                                 "Share",
                                 "Get Reply notifications",
                                 issaved ? "Unsave" : "save",
-                                if (isUserProfile && !isNotApprovedForCommentEdit)
+                                if (isUserProfile &&
+                                    !isNotApprovedForCommentEdit)
                                   "Edit Comment",
                                 "Copy text",
                                 if (!isUserProfile) "Block account",
@@ -234,7 +237,8 @@ class _CommentCardState extends State<CommentCard> {
                                         issaved = !issaved;
                                       })
                                     },
-                                if (isUserProfile && !isNotApprovedForCommentEdit)
+                                if (isUserProfile &&
+                                    !isNotApprovedForCommentEdit)
                                   () => Navigator.push(
                                         context,
                                         MaterialPageRoute(

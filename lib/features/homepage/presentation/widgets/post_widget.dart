@@ -723,6 +723,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
               initialVotesCount: widget.votesCount,
               isUpvoted: widget.hasUpvoted,
               isDownvoted: widget.hasDownvoted,
+              postId: widget.postId,
             ),
             TextButton.icon(
               onPressed: () => navigateToPostCardPage(

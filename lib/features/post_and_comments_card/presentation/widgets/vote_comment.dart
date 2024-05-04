@@ -4,27 +4,28 @@ import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/downvote.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/upvote.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/downvote_comment.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/upvote_comment.dart';
 
 /// This widget is responsible for the display
 /// of [VoteCount]
-/// and the total vote count (upvotes - down votes)
-class VoteButton extends StatefulWidget {
+class CommentVoteButton extends StatefulWidget {
   final int initialVotesCount;
   bool isUpvoted;
   bool isDownvoted;
-  final String postId;
+  final String commentId;
 
-  VoteButton({
+  CommentVoteButton({
     required this.initialVotesCount,
     required this.isUpvoted,
     required this.isDownvoted,
-    required this.postId,
+    required this.commentId,
   });
 
-  State<VoteButton> createState() => _VoteButtonState();
+  State<CommentVoteButton> createState() => _CommentVoteButtonState();
 }
 
-class _VoteButtonState extends State<VoteButton> {
+class _CommentVoteButtonState extends State<CommentVoteButton> {
   Color upvoteButtonColor = Colors.grey;
   Color downvoteButtonColor = Colors.grey;
   late int votesCount;
@@ -45,30 +46,6 @@ class _VoteButtonState extends State<VoteButton> {
     });
   }
 
-  Future<void> upVote() async {
-    {
-      try {
-        votes = await upvote(postId: widget.postId);
-
-        setState(() {});
-      } catch (e) {
-        print('Error fetching comments: $e');
-      }
-    }
-  }
-
-  Future<void> downVote() async {
-    {
-      try {
-        votes = await downvote(postId: widget.postId);
-
-        setState(() {});
-      } catch (e) {
-        print('Error fetching comments: $e');
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return FittedBox(
@@ -83,15 +60,11 @@ class _VoteButtonState extends State<VoteButton> {
                   // If already upvoted, cancel the upvote
                   upvoteButtonColor = Colors.grey;
                   votesCount--;
-                  //upVote();
-                  //votesCount = votes;
                   widget.isUpvoted = !widget.isUpvoted;
                 } else if (!widget.isDownvoted && !widget.isUpvoted) {
                   // If not upvoted, upvote
                   upvoteButtonColor = Colors.orange;
                   votesCount++;
-                  //upVote();
-                  //votesCount = votes;
                   widget.isUpvoted = !widget.isUpvoted;
                 }
                 // If previously downvoted, cancel the downvote
@@ -99,17 +72,14 @@ class _VoteButtonState extends State<VoteButton> {
                   downvoteButtonColor = Colors.grey;
                   upvoteButtonColor = Colors.orange;
                   votesCount += 2;
-                  // upVote();
-                  // votesCount = votes;
                   widget.isUpvoted = !widget.isUpvoted;
                   widget.isDownvoted = !widget.isDownvoted;
                 }
 
                 print("before upvote api: ${widget.isUpvoted}");
-                upvote(postId: widget.postId);
+                upvoteComment(commentId: widget.commentId);
                 print("after upvote api: ${widget.isUpvoted}");
               });
-              // Call upvote API
             },
             icon: Icon(
               Icons.arrow_upward,
@@ -127,15 +97,11 @@ class _VoteButtonState extends State<VoteButton> {
                 if (widget.isDownvoted) {
                   downvoteButtonColor = Colors.grey;
                   votesCount++;
-                  //downVote();
-                  // votesCount = votes;
                   widget.isDownvoted = !widget.isDownvoted;
                 } // If not downvoted, downvote
                 else if (!widget.isDownvoted && !widget.isUpvoted) {
                   downvoteButtonColor = Colors.purple;
                   votesCount--;
-                  // downVote();
-                  // votesCount = votes;
                   widget.isDownvoted = !widget.isDownvoted;
                 }
                 // If previously upvoted, cancel the upvote
@@ -143,14 +109,12 @@ class _VoteButtonState extends State<VoteButton> {
                   upvoteButtonColor = Colors.grey;
                   downvoteButtonColor = Colors.purple;
                   votesCount -= 2;
-                  //downVote();
-                  // votesCount = votes;
                   widget.isDownvoted = !widget.isDownvoted;
                   widget.isUpvoted = !widget.isUpvoted;
                 }
 
                 print("before dowvote api: ${widget.isDownvoted}");
-                downvote(postId: widget.postId);
+                downvoteComment(commentId: widget.commentId);
                 print("after dowvote api: ${widget.isDownvoted}");
               });
             },

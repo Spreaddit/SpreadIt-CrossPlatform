@@ -31,6 +31,10 @@ Future<void> lockComments({required String postId}) async {
       print(response.statusMessage);
       print(response.statusCode);
       return;
+    } else if (response.statusCode == 402) {
+      print(response.statusMessage);
+      print(response.statusCode);
+      return;
     } else if (response.statusCode == 500) {
       print(response.statusMessage);
       print(response.statusCode);
