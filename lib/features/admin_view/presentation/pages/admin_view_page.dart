@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/admin_view/data/ban_user_service.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import '../widgets/comments_view_body.dart';
 import '../widgets/posts_view_body.dart';
 
@@ -27,15 +29,22 @@ class _AdminViewPageState extends State<AdminViewPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin View'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: 'Posts'),
-            Tab(text: 'Comments'),
-          ],
-        ),
-      ),
+          title: Text('Admin View'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: 'Posts'),
+              Tab(text: 'Comments'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Unban', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                _unbanUser();
+              },
+            ),
+          ]),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -43,6 +52,57 @@ class _AdminViewPageState extends State<AdminViewPage>
           CommentsViewBody(),
         ],
       ),
+    );
+  }
+
+  void _unbanUser() {
+    final _formKey = GlobalKey<FormState>();
+    final _usernameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Unban User'),
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _usernameController,
+              decoration: InputDecoration(hintText: 'Enter username'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a username';
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Unban'),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  String username = _usernameController.text;
+                  try {
+                    String message =
+                        await BanUserService().unbanUser(username: username);
+                    CustomSnackbar(content: message).show(context);
+                  } catch (e) {
+                    CustomSnackbar(content: e.toString()).show(context);
+                  }
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
