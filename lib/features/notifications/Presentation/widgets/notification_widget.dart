@@ -48,9 +48,9 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     isRead = widget.isRead;
   }
 
-  Future<void> markmessageasRead() async {
+  void markmessageasRead()  {
     if (widget.notification!.isRead == false) {
-      await MarkAsRead(id: widget.notification!.id!, type: 'one');
+       MarkAsRead(id: widget.notification!.id!, type: 'one');
       setState(() {
         isRead = true;
       });
@@ -126,8 +126,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () async {
-                        await markmessageasRead();
+                      onPressed: ()  {
+                         markmessageasRead();
                         widget.onPressed?.call();
                       },
                       icon: Icon(
@@ -156,7 +156,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 : null,
         trailing: GestureDetector(
           onTap: () async {
-            await markmessageasRead();
+             markmessageasRead();
             showModalBottomSheet(
               context: context,
               builder: (context) => ManageNotificationBottomSheet(

@@ -10,18 +10,30 @@ import 'package:spreadit_crossplatform/features/notifications/Presentation/widge
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/notification_widget.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({Key? key}) : super(key: key);
+
+  List<Notifications> todayNotifications;
+  List<Notifications> earlierNotifications;
+  List<Notifications> notifications;
+  final bool isAllRead;
+  
+   NotificationPage({
+    Key? key,
+    required this.todayNotifications,
+    required this.earlierNotifications,
+    required this.notifications,
+    this.isAllRead=false,
+  }) : super(key: key);
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
+
 class _NotificationPageState extends State<NotificationPage> {
   List<Notifications> todayNotifications = [];
   List<Notifications> earlierNotifications = [];
   List<Notifications> notifications = [];
-  bool isLoading = true;
-  Notifications? recommendedCommunity;
+
 
   Map<String, dynamic> notificationsSettingsValues = {
     "newFollowers": false,
@@ -40,58 +52,19 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  Future<void> getSuggestedCommunity() async {
-    recommendedCommunity = await getRecommendedCommunity();
-    DateTime now = DateTime.now();
-    DateTime date = recommendedCommunity!.createdAt;
-    bool isToday = (now.year == date.year &&
-        now.month == date.month &&
-        now.day == date.day);
-    setState(() {
-      if (isToday) {
-        todayNotifications.add(recommendedCommunity!);
-      } else {
-        earlierNotifications.add(recommendedCommunity!);
-      }
-    });
-  }
-
-  Future<void> fetchData() async {
-    try {
-      notifications = await fetchNotifications();
-      if (notifications.isEmpty) {
-        await getSuggestedCommunity();
-      } else {
-        final today = DateTime.now().toLocal();
-        setState(() {
-          todayNotifications = notifications.where((n) {
-            final notificationDate = n.createdAt.toLocal();
-            return notificationDate.year == today.year &&
-                notificationDate.month == today.month &&
-                notificationDate.day == today.day;
-          }).toList();
-
-          earlierNotifications = notifications.where((n) {
-            final notificationDate = n.createdAt.toLocal();
-            return !todayNotifications.contains(n) &&
-                notificationDate.isBefore(today);
-          }).toList();
-        });
-      }
-    } catch (e) {
-      print(e);
-      if (notifications.isEmpty) {
-        await getSuggestedCommunity();
-      }
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+    notifications = widget.notifications;
+    earlierNotifications= widget.earlierNotifications;
+    todayNotifications = widget.todayNotifications;
+    if(notifications.isNotEmpty)
+    {
+      print('notifications loaded sa7');
+    }
+    else 
+    {
+      print('notifications not loaded sa7');
     }
   }
+
 
   Future<void> turnOffNotification(String key) async {
     try {
@@ -131,12 +104,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoading
-          ? LoaderWidget(
-              dotSize: 10,
-              logoSize: 100,
-            )
-          : ListView.builder(
+      body: ListView.builder(
               itemCount:
                   todayNotifications.length + earlierNotifications.length + 2,
               itemBuilder: (context, index) {
@@ -183,7 +151,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     buttonIcon: data.icon,
                     buttonText: data.buttonText,
                     onPressed: data.onPress,
-                    isRead: notification.isRead,
+                    isRead: widget.isAllRead || notification.isRead,
                     onHide: onHide,
                     community: community(notification.notificationType),
                     disable: turnOffNotification,
@@ -200,7 +168,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     buttonIcon: data.icon,
                     buttonText: data.buttonText,
                     onPressed: data.onPress,
-                    isRead: notification.isRead,
+                    isRead: widget.isAllRead || notification.isRead,
                     onHide: onHide,
                     community: community(notification.notificationType),
                     disable: turnOffNotification,
