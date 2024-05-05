@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
       currentPage = CurrentPage.values[newIndex];
     });
     if (currentPage.index <= 5) {
-      previousPage = currentPage;
+      previousPage = CurrentPage.values[currentPage.index % 5];
     }
   }
 

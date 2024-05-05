@@ -124,7 +124,9 @@ class _InboxPageState extends State<InboxPage> {
       case 1:
         return isLoading
             ? LoaderWidget(dotSize: 10, logoSize: 100)
-            : MessageInbox();
+            : MessageInbox(
+                isAllRead: widget.isAllRead,
+              );
       default:
         return LoaderWidget(
           dotSize: 10,
