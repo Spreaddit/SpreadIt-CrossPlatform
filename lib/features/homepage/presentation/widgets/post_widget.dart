@@ -173,7 +173,6 @@ class _PostHeaderState extends State<_PostHeader> {
 
   void onShowMenu() {
     List<String> viewerOptions = [
-      "Subscribe to post",
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
       "Report",
@@ -181,7 +180,6 @@ class _PostHeaderState extends State<_PostHeader> {
       "Hide",
     ];
     List<String> writerOptions = [
-      "Subscribe to post",
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
       "Hide",
@@ -192,7 +190,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<void Function()> writerActions = [
-      subscribeToPost,
       widget.isSaved
           ? () => {
                 unsavePost(
@@ -249,7 +246,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<void Function()> viewerActions = [
-      subscribeToPost,
       widget.isSaved
           ? () => {
                 unsavePost(
@@ -279,7 +275,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<IconData> writerIcons = [
-      Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
       Icons.hide_source_rounded,
@@ -289,7 +284,6 @@ class _PostHeaderState extends State<_PostHeader> {
       Icons.delete,
     ];
     List<IconData> viewerIcons = [
-      Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
       Icons.flag,

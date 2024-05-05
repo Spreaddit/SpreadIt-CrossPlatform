@@ -5,6 +5,9 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 
+// TODO: https://pub.dev/packages/badges (unread messages)
+
+
 class MessageInbox extends StatefulWidget {
   const MessageInbox({
     Key? key,

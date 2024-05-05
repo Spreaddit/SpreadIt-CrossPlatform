@@ -23,6 +23,11 @@ class _SortTypeMenuState extends State<SortTypeMenu> {
     Icons.local_fire_department,
     Icons.new_label_outlined,
     Icons.trending_up_outlined,
+    Icons.grade_outlined,
+    Icons.new_label_outlined,
+    Icons.hide_image,
+    Icons.arrow_downward_outlined,
+    Icons.arrow_upward_outlined,
   ];
 
   @override
