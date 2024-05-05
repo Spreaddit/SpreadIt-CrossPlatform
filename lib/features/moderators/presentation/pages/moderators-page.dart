@@ -143,23 +143,48 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
                               e.manageSettings &&
                               e.manageUsers
                           ? Text(
-                              '   .Manage posts and comments, Manage settings, Manage users')
+                              '   .Manage posts and comments, Manage settings, Manage users',
+                              maxLines: 10,
+                              overflow: TextOverflow.ellipsis,
+                            )
                           : e.managePostsAndComments && e.manageSettings
                               ? Text(
-                                  '   .Manage posts and comments, Manage settings')
+                                  '   .Manage posts and comments, Manage settings',
+                                  maxLines: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                )
                               : e.managePostsAndComments && e.manageUsers
                                   ? Text(
-                                      '   .Manage posts and comments, Manage users')
+                                      '   .Manage posts and comments, Manage users',
+                                      maxLines: 10,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
                                   : e.manageSettings && e.manageUsers
                                       ? Text(
-                                          '   .Manage settings, Manage users')
+                                          '   .Manage settings, Manage users',
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
                                       : e.managePostsAndComments
                                           ? Text(
-                                              '   .Manage posts and comments')
+                                              '   .Manage posts and comments',
+                                              maxLines: 10,
+                                              overflow: TextOverflow.ellipsis,
+                                            )
                                           : e.manageSettings
-                                              ? Text('   .Manage settings')
+                                              ? Text(
+                                                  '   .Manage settings',
+                                                  maxLines: 10,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
                                               : e.manageUsers
-                                                  ? Text('   .Manage users')
+                                                  ? Text(
+                                                      '   .Manage users',
+                                                      maxLines: 10,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    )
                                                   : Text(""),
                     ]),
                     onTap: () {
@@ -191,114 +216,143 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
                 }
 
                 return ListTile(
-                  leading:
-                      CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
-                  title: Text(e.username,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold)),
-                  subtitle: Row(children: [
-                    Text(dateToDuration(e.moderationDate)),
-                    e.managePostsAndComments &&
-                            e.manageSettings &&
-                            e.manageUsers
-                        ? Text(
-                            '   .Manage posts and comments, Manage settings, Manage users')
-                        : e.managePostsAndComments && e.manageSettings
-                            ? Text(
-                                '   .Manage posts and comments, Manage settings')
-                            : e.managePostsAndComments && e.manageUsers
-                                ? Text(
-                                    '   .Manage posts and comments, Manage users')
-                                : e.manageSettings && e.manageUsers
-                                    ? Text('   .Manage settings, Manage users')
-                                    : e.managePostsAndComments
-                                        ? Text('   .Manage posts and comments')
-                                        : e.manageSettings
-                                            ? Text('   .Manage settings')
-                                            : e.manageUsers
-                                                ? Text('   .Manage users')
-                                                : Text(""),
-                  ]),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        settings: RouteSettings(
-                          name: '/user-profile/${e.username}',
+                    leading:
+                        CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
+                    title: Text(e.username,
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold)),
+                    subtitle: Row(children: [
+                      Text(dateToDuration(e.moderationDate)),
+                      e.managePostsAndComments &&
+                              e.manageSettings &&
+                              e.manageUsers
+                          ? Text(
+                              '   .Manage posts and comments,    \n    Manage settings,  Manage users',
+                              maxLines: 10,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : e.managePostsAndComments && e.manageSettings
+                              ? Text(
+                                  '   .Manage posts and comments, Manage settings',
+                                  maxLines: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : e.managePostsAndComments && e.manageUsers
+                                  ? Text(
+                                      '   .Manage posts and comments, Manage users',
+                                      maxLines: 10,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : e.manageSettings && e.manageUsers
+                                      ? Text(
+                                          '   .Manage settings, Manage users',
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      : e.managePostsAndComments
+                                          ? Text(
+                                              '   .Manage posts and comments',
+                                              maxLines: 10,
+                                              overflow: TextOverflow.ellipsis,
+                                            )
+                                          : e.manageSettings
+                                              ? Text(
+                                                  '   .Manage settings',
+                                                  maxLines: 10,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
+                                              : e.manageUsers
+                                                  ? Text(
+                                                      '   .Manage users',
+                                                      maxLines: 10,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    )
+                                                  : Text(""),
+                    ]),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          settings: RouteSettings(
+                            name: '/user-profile/${e.username}',
+                          ),
+                          builder: (context) => UserProfile(
+                            username: e.username,
+                          ),
                         ),
-                        builder: (context) => UserProfile(
-                          username: e.username,
-                        ),
-                      ),
-                    );
-                  },
-                  trailing: IconButton(
-                    icon: Icon(Icons.more_vert_rounded),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CustomBottomSheet(
-                            icons: [
-                              if (e.username != UserSingleton().user!.username)
-                                Icons.edit,
-                              // if (e.username != "rehab") Icons.edit,
-                              Icons.person,
-                              Icons.block
-                            ],
-                            text: [
-                              if (e.username != UserSingleton().user!.username)
-                                "Edit Permissions",
-                              //if (e.username != "rehab") "Edit Permissions",
-                              "View profile",
-                              "Remove"
-                            ],
-                            onPressedList: [
-                              if (e.username != UserSingleton().user!.username)
-                                //if (e.username != "rehab")
-                                () {
-                                  //navigate to edit permissions page
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditPermissionsPage(
-                                        communityName: widget.communityName,
-                                        username: e.username,
-                                        managePostsAndComments:
-                                            e.managePostsAndComments,
-                                        manageUsers: e.manageUsers,
-                                        manageSettings: e.manageSettings,
-                                        onPermissionsChanged:
-                                            onPermissionsChanged,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    settings: RouteSettings(
-                                      name: '/user-profile/${e.username}',
-                                    ),
-                                    builder: (context) => UserProfile(
-                                      username: e.username,
-                                    ),
-                                  ),
-                                );
-                              },
-                              () {
-                                removeModeratorFromList(e);
-                                Navigator.pop(context);
-                              }
-                            ],
-                          );
-                        },
                       );
                     },
-                  ),
-                );
+                    trailing: Flexible(
+                      child: IconButton(
+                        icon: Icon(Icons.more_vert_rounded),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomBottomSheet(
+                                icons: [
+                                  if (e.username !=
+                                      UserSingleton().user!.username)
+                                    Icons.edit,
+                                  Icons.person,
+                                  Icons.block
+                                ],
+                                text: [
+                                  if (e.username !=
+                                      UserSingleton().user!.username)
+                                    "Edit Permissions",
+                                  "View profile",
+                                  "Remove"
+                                ],
+                                onPressedList: [
+                                  if (e.username !=
+                                      UserSingleton().user!.username)
+                                    () {
+                                      //navigate to edit permissions page
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditPermissionsPage(
+                                            communityName: widget.communityName,
+                                            username: e.username,
+                                            managePostsAndComments:
+                                                e.managePostsAndComments,
+                                            manageUsers: e.manageUsers,
+                                            manageSettings: e.manageSettings,
+                                            onPermissionsChanged:
+                                                onPermissionsChanged,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        settings: RouteSettings(
+                                          name: '/user-profile/${e.username}',
+                                        ),
+                                        builder: (context) => UserProfile(
+                                          username: e.username,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  () {
+                                    removeModeratorFromList(e);
+                                    Navigator.pop(context);
+                                  }
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ));
               }).toList()),
         );
       default:
@@ -320,21 +374,47 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
                             e.manageSettings &&
                             e.manageUsers
                         ? Text(
-                            '   .Manage posts and comments, Manage settings, Manage users')
+                            '   .Manage posts and comments, Manage settings, Manage users',
+                            maxLines: 10,
+                            overflow: TextOverflow.ellipsis,
+                          )
                         : e.managePostsAndComments && e.manageSettings
                             ? Text(
-                                '   .Manage posts and comments, Manage settings')
+                                '   .Manage posts and comments, Manage settings',
+                                maxLines: 10,
+                                overflow: TextOverflow.ellipsis,
+                              )
                             : e.managePostsAndComments && e.manageUsers
                                 ? Text(
-                                    '   .Manage posts and comments, Manage users')
+                                    '   .Manage posts and comments, Manage users',
+                                    maxLines: 10,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
                                 : e.manageSettings && e.manageUsers
-                                    ? Text('   .Manage settings, Manage users')
+                                    ? Text(
+                                        '   .Manage settings, Manage users',
+                                        maxLines: 10,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
                                     : e.managePostsAndComments
-                                        ? Text('   .Manage posts and comments')
+                                        ? Text(
+                                            '   .Manage posts and comments',
+                                            maxLines: 10,
+                                            overflow: TextOverflow.ellipsis,
+                                          )
                                         : e.manageSettings
-                                            ? Text('   .Manage settings')
+                                            ? Text(
+                                                '   .Manage settings',
+                                                maxLines: 10,
+                                                overflow: TextOverflow.ellipsis,
+                                              )
                                             : e.manageUsers
-                                                ? Text('   .Manage users')
+                                                ? Text(
+                                                    '   .Manage users',
+                                                    maxLines: 10,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  )
                                                 : Text(""),
                   ]),
                   onTap: () {
@@ -386,7 +466,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
         ],
       ),
       body: Container(
-        color: _selectedIndex == 1 ? Colors.grey[200] : Colors.grey[200],
+        color: _selectedIndex == 1 ? Colors.transparent : Colors.transparent,
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
