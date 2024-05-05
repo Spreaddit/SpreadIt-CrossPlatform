@@ -30,6 +30,7 @@ void navigateToPostCardPage(
   BuildContext context,
   String postId,
   bool isUserProfile,
+  bool isModeratorView,
 ) {
   Navigator.push(
     context,
@@ -39,6 +40,7 @@ void navigateToPostCardPage(
       ),
       builder: (context) => PostCardPage(
         postId: postId,
+        isModeratorView: isModeratorView,
       ),
     ),
   );
@@ -54,6 +56,7 @@ class _PostHeader extends StatefulWidget {
   final bool isNsfw;
   final bool isSpoiler;
   final bool isSaved;
+  final bool isLocked;
   final void Function(bool) onNsfwChanged;
   final void Function(bool) onSpoilerChanged;
   final void Function() onDeleted;
@@ -67,6 +70,7 @@ class _PostHeader extends StatefulWidget {
     required this.isNsfw,
     required this.isSpoiler,
     required this.isSaved,
+    required this.isLocked,
     required this.onsaved,
     required this.onSpoilerChanged,
     required this.onNsfwChanged,
@@ -161,6 +165,7 @@ class _PostHeaderState extends State<_PostHeader> {
                   communityName: widget.post.community,
                 ),
               ),
+              if (widget.isLocked) Icon(Icons.lock),
               IconButton(
                 icon: Icon(Icons.more_vert),
                 onPressed: onShowMenu,
@@ -730,6 +735,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                 context,
                 widget.postId,
                 widget.isUserProfile,
+                widget.isModeratorView,
               ),
               icon: Icon(
                 Icons.comment,
@@ -788,8 +794,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                                   postId: widget.postId);
                               Navigator.pop(context);
                               CustomSnackbar(
-                                      content:
-                                          "Post has been removed as spam successfully!")
+                                      content: "Post will be removed as spam!")
                                   .show(context);
                             });
                           },
@@ -956,6 +961,7 @@ class _PostWidgetState extends State<PostWidget> {
                           isNsfw: isNsfw,
                           isSpoiler: isSpoiler,
                           isSaved: isSaved,
+                          isLocked: isCommentsLocked,
                           onsaved: onSaved,
                           onNsfwChanged: onChangeNsfw,
                           onSpoilerChanged: onChangeSpoiler,
@@ -979,10 +985,10 @@ class _PostWidgetState extends State<PostWidget> {
                             }
                             if (!widget.isFullView) {
                               navigateToPostCardPage(
-                                context,
-                                widget.post.postId,
-                                widget.isUserProfile,
-                              );
+                                  context,
+                                  widget.post.postId,
+                                  widget.isUserProfile,
+                                  widget.isModeratorView);
                             }
                           },
                           child: _PostBody(

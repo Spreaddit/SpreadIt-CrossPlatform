@@ -39,6 +39,7 @@ class _CommentHeader extends HookWidget {
   final String postId;
   final DateTime date;
   final String profilePic;
+  final bool isLocked;
 
   /// Constructs a [_CommentHeader] widget with the given parameters.
   _CommentHeader({
@@ -46,6 +47,7 @@ class _CommentHeader extends HookWidget {
     required this.userId,
     required this.postId,
     required this.date,
+    required this.isLocked,
     required this.profilePic,
   });
 
@@ -88,6 +90,7 @@ class _CommentHeader extends HookWidget {
           leading: CircleAvatar(
             backgroundImage: NetworkImage(profilePic),
           ),
+          trailing: isLocked ? Icon(Icons.lock) : null,
         ),
       ),
     );
@@ -98,12 +101,15 @@ class _CommentHeader extends HookWidget {
 class CommentCard extends StatefulWidget {
   final Comment comment;
   final String community;
-  // bool collapseThreadFlag = false;
+  final bool isPostLocked;
+  final bool isModeratorView;
 
   /// Constructs a [CommentCard] widget with the given parameters.
   CommentCard({
     required this.comment,
     required this.community,
+    this.isPostLocked = false,
+    this.isModeratorView = false,
   });
 
   @override
@@ -114,7 +120,8 @@ class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
   late bool isUserProfile;
   bool isNotApprovedForEditOrReply = false;
-  var issaved;
+  late bool isLocked;
+  var isSaved;
   File? uploadedImageFile;
   Uint8List? uploadedImageWeb;
 
@@ -133,6 +140,14 @@ class _CommentCardState extends State<CommentCard> {
     }
   }
 
+  void onLock(bool newIsLocked) {
+    //if (!mounted) return;
+    print("lock comment: $newIsLocked");
+    setState(() {
+      isLocked = newIsLocked;
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -144,7 +159,8 @@ class _CommentCardState extends State<CommentCard> {
   @override
   void initState() {
     super.initState();
-    issaved = widget.comment.isSaved!;
+    isSaved = widget.comment.isSaved!;
+    isLocked = widget.comment.isLocked!;
     checkIfCanEditOrReply();
   }
 
@@ -185,6 +201,7 @@ class _CommentCardState extends State<CommentCard> {
                       postId: comment.postId!,
                       date: comment.createdAt,
                       profilePic: comment.profilePic!,
+                      isLocked: isLocked,
                     ),
                     TextButton(
                       onPressed: () {
@@ -212,7 +229,12 @@ class _CommentCardState extends State<CommentCard> {
                         ),
                       ),
                     CommentFooter(
+                      onLock: onLock,
+                      communityName: comment.subredditName,
+                      isPostLocked: widget.isPostLocked,
+                      isCommentLocked: isLocked,
                       commentId: widget.comment.id,
+                      isModeratorView: widget.isModeratorView,
                       onMorePressed: () {
                         showModalBottomSheet(
                           context: context,
@@ -232,7 +254,7 @@ class _CommentCardState extends State<CommentCard> {
                               text: [
                                 "Share",
                                 "Get Reply notifications",
-                                issaved ? "Unsave" : "save",
+                                isSaved ? "Unsave" : "save",
                                 if (isUserProfile &&
                                     !isNotApprovedForEditOrReply)
                                   "Edit Comment",
@@ -251,7 +273,7 @@ class _CommentCardState extends State<CommentCard> {
                                         comment.id,
                                       ),
                                       setState(() {
-                                        issaved = !issaved;
+                                        isSaved = !isSaved;
                                       })
                                     },
                                 if (isUserProfile &&
@@ -379,6 +401,8 @@ class _CommentCardState extends State<CommentCard> {
                       child: CommentCard(
                         comment: reply,
                         community: widget.community,
+                        isModeratorView: widget.isModeratorView,
+                        isPostLocked: widget.isPostLocked,
                       ),
                     ),
                   ],

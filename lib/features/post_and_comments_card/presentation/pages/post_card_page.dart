@@ -14,10 +14,15 @@ import 'package:spreadit_crossplatform/user_info.dart';
 class PostCardPage extends StatefulWidget {
   /// The ID of the post.
   final String postId;
+  bool isModeratorView;
 
   /// Indicates whether the current user is the owner of the profile associated with the post.
 
-  const PostCardPage({Key? key, required this.postId}) : super(key: key);
+  PostCardPage({
+    Key? key,
+    required this.postId,
+    this.isModeratorView = false,
+  }) : super(key: key);
 
   @override
   State<PostCardPage> createState() => _PostCardPageState();
@@ -131,6 +136,7 @@ class _PostCardPageState extends State<PostCardPage> {
                           ? PostCard(
                               post: post!,
                               comments: comments,
+                              isModeratorView: widget.isModeratorView,
                             )
                           : Text(""),
                     ],
@@ -138,7 +144,9 @@ class _PostCardPageState extends State<PostCardPage> {
                 ),
               ),
             ),
-            if (post != null && !post!.isCommentsLocked!)
+            if (post != null &&
+                !post!.isCommentsLocked! &&
+                !widget.isModeratorView!)
               AddCommentWidget(
                 commentsList: comments,
                 postId: widget.postId.toString(),
