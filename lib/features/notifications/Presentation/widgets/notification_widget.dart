@@ -50,7 +50,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
 
   void markmessageasRead() {
     if (widget.notification!.isRead == false) {
-      MarkAsRead(id: widget.notification!.id!, type: 'one');
+      markAsRead(id: widget.notification!.id!, type: 'one');
       setState(() {
         isRead = true;
       });

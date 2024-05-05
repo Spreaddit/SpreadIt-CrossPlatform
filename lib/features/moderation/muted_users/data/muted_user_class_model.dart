@@ -1,24 +1,43 @@
 import 'package:equatable/equatable.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 
+/// Represents a user who has been muted in a community.
+///
+/// Each [MutedUser] object contains information about the muted user, including their profile picture, username,
+/// the date when they were muted, and an optional note explaining the reason for muting.
 class MutedUser extends Equatable {
+  /// The URL of the user's profile picture.
   final String userProfilePic;
+
+  /// The username of the muted user.
   final String username;
+
+  /// The duration since the user was muted.
   final String date;
+
+  /// An optional note explaining the reason for muting the user.
   String note;
 
-  MutedUser({
+  /// Creates a [MutedUser] object.
+  ///
+  /// The [userProfilePic], [username], and [date] parameters are required,
+  /// while the [note] parameter is optional.
+   MutedUser({
     required this.userProfilePic,
     required this.username,
     required this.date,
-    this.note='',
+    this.note = '',
   });
 
+  /// Creates a [MutedUser] object from JSON data.
+  ///
+  /// This factory constructor is used to create a [MutedUser] object from JSON data.
+  /// The [json] parameter should contain keys 'avatar', 'username', 'muteDate', and 'muteReason'.
   factory MutedUser.fromJson(Map<String, dynamic> json) {
     return MutedUser(
       userProfilePic: json['avatar'],
       username: json['username'],
-      date: dateToDuration( DateTime.parse(json['muteDate'])),
+      date: dateToDuration(DateTime.parse(json['muteDate'])),
       note: json['muteReason'],
     );
   }
@@ -26,25 +45,3 @@ class MutedUser extends Equatable {
   @override
   List<Object> get props => [userProfilePic, username, date, note];
 }
-
-List<MutedUser> mutedUsers = [
-  MutedUser(
-    userProfilePic:"https://i.redd.it/88qjrepdhng61.jpg",
-    username: 'John Doe',
-    date: '1h',
-    note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  ),
-  MutedUser(
-    userProfilePic: 'https://i.redd.it/88qjrepdhng61.jpg',
-    username: 'Jane Smith',
-    date: '2h',
-    note: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  ),
-  MutedUser(
-    userProfilePic: 'https://i.redd.it/88qjrepdhng61.jpg',
-    username: 'Alice Johnson',
-    date: '4h',
-    note: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  ),
-];
-

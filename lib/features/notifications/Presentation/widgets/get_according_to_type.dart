@@ -7,6 +7,7 @@ import 'package:spreadit_crossplatform/features/notifications/Data/notifications
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
+/// Data class representing a notification with its icon, content, button text, and onPress callback.
 class NotificationData extends Equatable {
   final IconData? icon;
   final String? content;
@@ -24,6 +25,7 @@ class NotificationData extends Equatable {
   List<Object?> get props => [icon, content, buttonText, onPress];
 }
 
+/// Processes a notification and returns corresponding NotificationData.
 NotificationData processNotification(
     Notifications notification, BuildContext context) {
   IconData? icon;
@@ -171,6 +173,12 @@ NotificationData processNotification(
       buttonText = null;
       onPress = () {};
       break;
+      case "Invitation":
+      icon = Ionicons.person;
+      content = '';
+      buttonText = null;
+      onPress = () {};
+      break;
     default:
       throw ArgumentError(
           'Invalid notification type: ${notification.notificationType}');
@@ -183,18 +191,19 @@ NotificationData processNotification(
     onPress: onPress,
   );
 }
+/// Gets the notification type as a string based on the notification.
 
 String getNotificationType(Notifications notification) {
   switch (notification.notificationType) {
-    case "follow":
+    case "Follow":
       return "newFollowers";
-    case "upvoteComments":
+    case "Upvote Comments":
       return "upvotes";
-    case "upvotePosts":
+    case "Upvote Posts":
       return "upvotes";
-    case "commentReply":
+    case "Comment Reply":
       return "repliesToComments";
-    case "comment":
+    case "Comment":
       return "commentsOnYourPost";
     default:
       return "other";

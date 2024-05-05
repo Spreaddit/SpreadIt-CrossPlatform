@@ -3,27 +3,30 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/data/muted_user_class_model.dart'; 
 import 'package:spreadit_crossplatform/user_info.dart';
 
-
-/// Fetches muted users for a community.
+/// Retrieves a list of muted users in a community.
 ///
-/// This function sends a GET request to the server to fetch muted users for a community.
+/// This function sends a request to the server to fetch a list of users who have been muted in a specified community.
 ///
-/// Parameters:
-///   - communityName: The name of the community to fetch muted users from.
+/// The [communityName] parameter is the name of the community for which to retrieve muted users.
 ///
-/// Returns:
-///   - A Future<List<MutedUser>> representing the list of muted users fetched from the server.
-
+/// Returns a Future<List<MutedUser>> representing the list of muted users.
+/// If successful, the list will contain instances of [MutedUser] class.
+/// If the community is not found or there are no muted users, an empty list is returned.
+///
+/// Example usage:
+/// ```dart
+/// List<MutedUser> mutedUsers = await getMutedUsers('communityName');
+/// mutedUsers.forEach((user) {
+///   print('Muted user: ${user.username}');
+/// });
+/// ```
 Future<List<MutedUser>> getMutedUsers(String communityName) async {
   try {
-    /// Retrieve the access token from the user singleton instance.
     String? accessToken = UserSingleton().accessToken;
 
-    /// Construct the complete API URL.
     String apiroute = "/community/moderation/$communityName/muted-users";
     String route = "$apiUrl$apiroute";
 
-    /// Send a GET request to the server to fetch muted users.
     final response = await Dio().get(
       route,
       options: Options(
@@ -33,7 +36,6 @@ Future<List<MutedUser>> getMutedUsers(String communityName) async {
       ),
     );
 
-    /// Process the response based on the status code.
     if (response.statusCode == 200) {
       List<dynamic> json = response.data;
       List<MutedUser> mutedUsers = json.map((json) => MutedUser.fromJson(json)).toList();

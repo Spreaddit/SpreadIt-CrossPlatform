@@ -78,7 +78,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   void onHide(String id, Notifications removedNotification) async {
     try {
-      final status = await HideNotification(id: id);
+      final status = await hideNotification(id: id);
       if (status == 200) {
         setState(() {
           earlierNotifications.removeWhere((n) => n.id == id);

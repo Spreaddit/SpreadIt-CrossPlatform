@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> markallnotificationsasRead() async {
-    await MarkAsRead(type: 'all');
+    await markAsRead(type: 'all');
     setState(() {
       isAllRead = true;
     });
