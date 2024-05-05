@@ -1,4 +1,45 @@
-class Message {
+class MessageModel {
+  MessageRepliesModel primaryMessage;
+  List<MessageRepliesModel>? replies;
+
+  MessageModel({
+    required this.primaryMessage,
+    required this.replies,
+  });
+
+  factory MessageModel.fromJson(Map<String, dynamic> json) {
+    return MessageModel(
+      primaryMessage: MessageRepliesModel.fromJson(json),
+      replies: [],
+    );
+  }
+
+  addReplies(Map<String, dynamic> replyJson) {
+    replies!.add(
+      MessageRepliesModel.fromJson(
+        replyJson,
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': primaryMessage.id,
+      'conversationId': primaryMessage.conversationId,
+      'senderType': primaryMessage.senderType,
+      'relatedUserOrCommunity': primaryMessage.relatedUserOrCommunity,
+      'type': primaryMessage.type,
+      'content': primaryMessage.content,
+      'time': primaryMessage.time.toIso8601String(),
+      'direction': primaryMessage.direction,
+      'isRead': primaryMessage.isRead,
+      'isDeleted': primaryMessage.isDeleted,
+      'subject': primaryMessage.subject,
+    };
+  }
+}
+
+class MessageRepliesModel {
   String id;
   String conversationId;
   String senderType;
@@ -11,7 +52,7 @@ class Message {
   bool isDeleted;
   String subject;
 
-  Message({
+  MessageRepliesModel({
     required this.id,
     required this.conversationId,
     required this.senderType,
@@ -25,8 +66,8 @@ class Message {
     required this.subject,
   });
 
-  factory Message.fromJson(Map<String, dynamic> json) {
-    return Message(
+  factory MessageRepliesModel.fromJson(Map<String, dynamic> json) {
+    return MessageRepliesModel(
       id: json['_id'],
       conversationId: json['conversationId'],
       senderType: json['senderType'],

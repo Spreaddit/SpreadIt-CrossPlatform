@@ -4,13 +4,16 @@ import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_page.dart';
 
 // TODO: https://pub.dev/packages/badges (unread messages)
 
-
 class MessageInbox extends StatefulWidget {
+  final bool isAllRead;
+
   const MessageInbox({
     Key? key,
+    this.isAllRead = false,
   }) : super(key: key);
 
   @override
@@ -18,7 +21,7 @@ class MessageInbox extends StatefulWidget {
 }
 
 class _MessageInboxState extends State<MessageInbox> {
-  List<Message> messages = [];
+  List<MessageModel> messages = [];
   bool isLoading = true;
 
   @override
@@ -32,7 +35,7 @@ class _MessageInboxState extends State<MessageInbox> {
     setState(() {
       isLoading = true;
     });
-    List<Message> fetchedMessages = await getMessages();
+    List<MessageModel> fetchedMessages = await getMessages();
     setState(() {
       messages = fetchedMessages;
       isLoading = false;
@@ -50,9 +53,9 @@ class _MessageInboxState extends State<MessageInbox> {
               shrinkWrap: true,
               children: messages
                   .mapIndexed<Widget>(
-                    (index, message) => _messageTile(
+                    (index, message) => MessageTile(
                       message: message,
-                      context: context,
+                      isAllRead: widget.isAllRead,
                     ),
                   )
                   .toList(),
@@ -61,55 +64,94 @@ class _MessageInboxState extends State<MessageInbox> {
   }
 }
 
-Widget _messageTile({
-  required Message message,
-  required BuildContext context,
-}) {
-  return Opacity(
-    opacity: message.isRead ? 1 : 0.7,
-    child: ListTile(
-      title: Text(
-        message.relatedUserOrCommunity,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
+class MessageTile extends StatefulWidget {
+  final MessageModel message;
+  final bool isAllRead;
+
+  const MessageTile({
+    required this.message,
+    required this.isAllRead,
+  });
+
+  @override
+  State<MessageTile> createState() => _MessageTileState();
+}
+
+class _MessageTileState extends State<MessageTile> {
+  bool isRead = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isRead = widget.message.primaryMessage.isRead;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: isRead || widget.isAllRead ? 1 : 0.7,
+      child: ListTile(
+        title: Text(
+          widget.message.primaryMessage.relatedUserOrCommunity,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        subtitle: Align(
+          alignment: Alignment.topLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.message.primaryMessage.subject,
+                maxLines: 3,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                widget.message.primaryMessage.content,
+                maxLines: 3,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+        trailing: Text(
+          dateToDuration(
+            widget.message.primaryMessage.time,
+          ),
+        ),
+        onTap: () => {
+          navigateToMessage(
+            context: context,
+            message: widget.message,
+          ),
+        },
       ),
-      subtitle: Align(
-        alignment: Alignment.topLeft,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              message.subject,
-              maxLines: 3,
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              message.content,
-              maxLines: 3,
-              textAlign: TextAlign.left,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-      trailing: Text(dateToDuration(message.time)),
-      onTap: () => {
-        navigateToMessage(
-          context: context,
-          messageId: message.id,
-        ),
-      },
-    ),
-  );
+    );
+  }
 }
 
 navigateToMessage({
   required BuildContext context,
-  required messageId,
-}) {}
+  required MessageModel message,
+}) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      settings: RouteSettings(
+        name: '/message/${message.primaryMessage.id}',
+      ),
+      builder: (context) => MessagePage(
+        message: message,
+      ),
+    ),
+  );
+}
 
 Widget _buildShimmerLoading() {
   return Column(

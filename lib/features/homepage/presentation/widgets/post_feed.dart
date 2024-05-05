@@ -55,7 +55,6 @@ class _PostFeedState extends State<PostFeed> {
   bool _loadingMore = false;
   bool isRefreshing = false;
   int page = 1;
-  bool isLoadingMore = false;
 
   @override
   void initState() {
@@ -86,6 +85,8 @@ class _PostFeedState extends State<PostFeed> {
         currentPostCategory = widget.postCategory;
         _scrollController = widget.scrollController ?? ScrollController();
         isLoading = true;
+        page = 1;
+        existingItems = [];
       });
       fetchData();
     }
@@ -96,6 +97,7 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   Future<void> fetchData() async {
+    print("fetching catrgory de ${widget.postCategory}");
     if (!mounted) return;
 
     List<Post> fetchedItems;

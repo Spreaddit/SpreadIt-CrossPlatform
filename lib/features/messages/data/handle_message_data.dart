@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 /// and fetches its respective [Message] List
-Future<List<Message>> getMessages() async {
+Future<List<MessageModel>> getMessages() async {
   try {
     String? accessToken = UserSingleton().getAccessToken();
 
@@ -19,11 +21,24 @@ Future<List<Message>> getMessages() async {
     );
     if (response.statusCode == 200) {
       print(response.data);
-      
-      List<Message> messages =
-          (response.data as List).map((x) => Message.fromJson(x)).toList();
 
-      return (messages);
+      String conversationId = "";
+
+      List<MessageModel> messageList = [];
+
+      for (var data in (response.data as List)) {
+        if (conversationId == data['conversationId']) {
+          messageList[messageList.length - 1].replies!.add(
+                MessageRepliesModel.fromJson(
+                  data,
+                ),
+              );
+        } else {
+          conversationId = data['conversationId'];
+          messageList.add(MessageModel.fromJson(data));
+        }
+      }
+      return messageList;
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
     } else if (response.statusCode == 400) {
