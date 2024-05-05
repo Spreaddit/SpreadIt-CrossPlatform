@@ -98,25 +98,28 @@ class _PostFeedState extends State<PostFeed> {
   Future<void> fetchData() async {
     if (!mounted) return;
 
-    List<Post> fetchedItems = await getFeedPosts(
+    List<Post> fetchedItems;
+
+    getFeedPosts(
       category: currentPostCategory,
       subspreaditName: widget.subspreaditName,
       timeSort: widget.timeSort,
       username: widget.username,
       page: page,
-    );
-
-    setState(() {
-      if (fetchedItems.isEmpty) {
-        CustomSnackbar(content: "No posts found").show(context);
-      }
-      newItems.clear();
-      newItems = fetchedItems;
-      isLoading = false;
-      _loadingMore = false;
-      existingItems = [...existingItems, ...newItems];
-      isRefreshing = false;
-      page = page + 1;
+    ).then((value) {
+      fetchedItems = value;
+      setState(() {
+        if (fetchedItems.isEmpty) {
+          CustomSnackbar(content: "No posts found").show(context);
+        }
+        newItems.clear();
+        newItems = fetchedItems;
+        isLoading = false;
+        _loadingMore = false;
+        existingItems = [...existingItems, ...newItems];
+        isRefreshing = false;
+        page = page + 1;
+      });
     });
   }
 
