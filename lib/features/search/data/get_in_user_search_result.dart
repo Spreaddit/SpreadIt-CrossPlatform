@@ -16,11 +16,11 @@ Future <Map<String,dynamic>> getUserSearchResults(String query, String type, Str
           'Authorization': 'Bearer $accessToken',
         },
       ),
-      data: {
-        "username": username,
-        "q": query,
-        "type": type,
-        "sort": sort,
+      queryParameters: {
+        'username': username,
+        'q': query,
+        'type': type,
+        'sort': sort,
       },
     );
     if (response.statusCode == 200) {

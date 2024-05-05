@@ -23,7 +23,7 @@ class _PeoplePageViewState extends State<PeoplePageView> {
   }
 
   void getUsersResults() async {
-    users = await getSearchResults(widget.searchItem, 'users','relevance');
+    users = await getSearchResults(widget.searchItem, 'people','relevance');
     mappedUsers = extractUsersDetails(users);
     setState(() {});
   }
@@ -37,7 +37,6 @@ class _PeoplePageViewState extends State<PeoplePageView> {
           'userId': user['userId'] ?? (throw Exception('null')),
           'username': user['username'] ?? (throw Exception('null')),
           'userProfilePic': user['userProfilePic'] ?? (throw Exception('null')),
-          'userInfo': user['userinfo'] ?? (throw Exception('null')),
           'followersCount': user['followersCount'] ?? (throw Exception('null')),
           'isFollowing': user['isFollowing'] ?? (throw Exception('null')),
         });

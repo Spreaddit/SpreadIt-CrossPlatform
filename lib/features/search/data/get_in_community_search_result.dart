@@ -16,11 +16,11 @@ Future <Map<String,dynamic>> getCommunitySearchResults(String query, String type
           'Authorization': 'Bearer $accessToken',
         },
       ),
-      data: {
-        "communityname": communityName,
-        "q": query,
-        "type": type,
-        "sort": sort,
+      queryParameters: {
+        'communityname': communityName,
+        'q': query,
+        'type': type,
+        'sort': sort,
       },
     );
     if (response.statusCode == 200) {

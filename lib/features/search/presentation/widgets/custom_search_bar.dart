@@ -42,31 +42,20 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   void debounce(String text, Duration duration, void Function(String) callback) {
-  // Stores the latest value
-  String? latestValue;
-
-  // Timer to delay the callback execution
-  Timer? timer;
-
-  // Function to be called after the debounce period
-  void handleUpdate() {
-    if (latestValue != null) {
-      callback(latestValue!);
-      timer = null; // Cleanup timer after execution
+    String? latestValue;
+    Timer? timer;
+    void handleUpdate() {
+      if (latestValue != null) {
+        callback(latestValue!);
+        timer = null; 
+      }
     }
+    timer?.cancel();
+    latestValue = text;
+    timer = Timer(duration, handleUpdate);
   }
 
-  // Cancel any existing timer if a new event occurs
-  timer?.cancel();
-
-  // Update latest value and set a new timer
-  latestValue = text;
-  timer = Timer(duration, handleUpdate);
-}
-
-
-// Map to store timers for each stream (optional for multiple debounced streams)
-final Map<Stream, Timer?> _timers = {};
+  final Map<Stream, Timer?> _timers = {};
 
   @override
   void dispose() {

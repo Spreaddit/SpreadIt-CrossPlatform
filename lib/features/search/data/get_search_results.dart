@@ -8,6 +8,7 @@ String apibase = apiUrl;
 
 Future <Map<String,dynamic>> getSearchResults(String query, String type, String sort) async {
   try {
+    print('query: $query, type: $type, sort: $sort');
     String? accessToken = UserSingleton().accessToken;
     var response = await Dio().get(
       '$apibase/search',
@@ -16,15 +17,16 @@ Future <Map<String,dynamic>> getSearchResults(String query, String type, String 
           'Authorization': 'Bearer $accessToken',
         },
       ),
-      data: {
-        "q": query,
-        "type": type,
-        "sort": sort,
+      queryParameters: {
+        'q': query,
+        'type': type,
+        'sort': sort,
       },
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
+      print(response.data);
       return (response.data);
     } else {
       print(response.statusMessage);

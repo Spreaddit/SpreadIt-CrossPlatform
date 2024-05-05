@@ -106,14 +106,14 @@ class _PostsPageViewState extends State<PostsPageView> {
         mappedPosts.add({
           'postId': post['postId'] ?? (throw Exception('null')),
           'title': post['title'] ?? (throw Exception('null')),
-          'isNsfw': post['isNsfw'] ?? (throw Exception('null')),
+          'isNsfw': post['isnsfw'] ?? (throw Exception('null')),
           'isSpoiler': post['isSpoiler'] ?? (throw Exception('null')),
           'votesCount': post['votesCount'] ?? (throw Exception('null')),
           'commentsCount': post['commentsCount'] ?? (throw Exception('null')),
           'createdAt': post['date'] ?? (throw Exception('null')),
           'username': post['username'] ?? (throw Exception('null')),
           'userProfilePic': post['userProfilePic'] ?? (throw Exception('null')),
-          'communityName': post['communityName'] ?? (throw Exception('null')),
+          'communityName': post['communityname'] ?? (throw Exception('null')),
           'communityProfilePic': post['communityProfilePic'] ?? (throw Exception('null')),
           'image':  imageLink,
           'video': videoLink,
@@ -129,7 +129,7 @@ class _PostsPageViewState extends State<PostsPageView> {
   void removeFilter() {
     setState(() {
       sortText = 'Sort';
-      showTimeFilter;
+      showTimeFilter = true;
       timeText = 'Time';
     });
   }
@@ -181,7 +181,10 @@ class _PostsPageViewState extends State<PostsPageView> {
         break;
       case(4):
         timeText = timeList[4];
-        break;     
+        break;   
+      case(5):
+        timeText = timeList[5];
+        break;    
     }
     final filteredPosts = sortByTime(orgMappedPosts, timeText);
     mappedPosts = filteredPosts;
