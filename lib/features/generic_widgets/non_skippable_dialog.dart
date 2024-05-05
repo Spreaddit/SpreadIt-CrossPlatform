@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class NonSkippableAlertDialog extends StatelessWidget {
   final String title;
@@ -38,18 +36,22 @@ class NonSkippableAlertDialog extends StatelessWidget {
               ),
         actionsAlignment: MainAxisAlignment.center,
         actions: <Widget>[
-          Expanded(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.deepOrangeAccent,
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.deepOrangeAccent,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onPressed();
+                  },
+                  child: Text('OK'),
+                ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                onPressed();
-              },
-              child: Text('OK'),
-            ),
+            ],
           ),
         ],
       ),

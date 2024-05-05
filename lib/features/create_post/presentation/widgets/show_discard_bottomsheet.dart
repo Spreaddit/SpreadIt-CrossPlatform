@@ -3,8 +3,10 @@ import '../../../generic_widgets/small_custom_button.dart';
 
 /// [showDiscardButtomSheet] : a function which displays the buttom sheet which appears upon canceling the creation of a post
 /// it give the user the option to choose between discarding the post or saving th draft
+/// [isFromCommunityPage] : a boolean value which indicates whether the user is creating a post from the community page
+/// or is creating a post from the home page
 
-void showDiscardButtomSheet(BuildContext context) {
+void showDiscardButtomSheet(BuildContext context, {bool? isFromCommunityPage}) {
   showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -35,6 +37,13 @@ void showDiscardButtomSheet(BuildContext context) {
                     SmallButton(
                       buttonText: 'Discard',
                       onPressed: () {
+                        // if the user is creating a post from the community page
+                        // then we need to pop twice to return to the community
+                        if (isFromCommunityPage == true) {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          return;
+                        }
                         returnToHomePage(context);
                       },
                       isEnabled: true,

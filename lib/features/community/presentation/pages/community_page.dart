@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/accept_invite.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
@@ -128,7 +127,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 content = alertTexts[1][1];
                 _showHaltingAlert(title: title, content: content);
               }
-              if (isInvitedData["isInvited"] == true) {
+              else if (isInvitedData["isInvited"] == true) {
                 _showInvitationDialog();
               }
             });
@@ -150,6 +149,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   'title': "",
                   'content': "",
                   'community': [Community.fromJson(communityData)],
+                  'isFromCommunityPage': true,
                 });
               },
             ),

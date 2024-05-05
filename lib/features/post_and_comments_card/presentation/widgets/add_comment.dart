@@ -150,50 +150,54 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Expanded(
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            children: [
-              if (uploadedImageFile != null || uploadedImageWeb != null)
-                Container(
-                  height: 200, // Adjust the height as needed
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: selectImage(
-                          uploadedImageFile, null, uploadedImageWeb),
-                      fit: BoxFit.cover,
+      title: Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  if (uploadedImageFile != null || uploadedImageWeb != null)
+                    Container(
+                      height: 200, // Adjust the height as needed
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: selectImage(
+                              uploadedImageFile, null, uploadedImageWeb),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  TextFormField(
+                    controller: _commentController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      labelText: "Add a comment",
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _showBottomSheet(context);
+                            },
+                            icon: Icon(Icons.link),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              pickImage();
+                            },
+                            icon: Icon(Icons.image),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              TextFormField(
-                controller: _commentController,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: "Add a comment",
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          _showBottomSheet(context);
-                        },
-                        icon: Icon(Icons.link),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          pickImage();
-                        },
-                        icon: Icon(Icons.image),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
       trailing: OutlinedButton(
         onPressed: isNotApprovedForCommenting

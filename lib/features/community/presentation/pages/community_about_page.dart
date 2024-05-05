@@ -4,6 +4,7 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_about_mods.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_about_rules.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 
 /// A page that displays community info.
@@ -50,7 +51,8 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// community image link, community description, and community rules from the fetched data.
   /// If the community banner or image link is not available, empty strings are assigned.
   Future<Map<String, dynamic>> fetchData() async {
-    return getCommunityInfo(widget.communityName);
+    return getCommunityInfo(widget.communityName)
+        .then((value) => communityData = value);
   }
 
   @override
@@ -101,6 +103,18 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
                   ],
                 ),
               ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.create),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed('/final-content-page', arguments: {
+                  'title': "",
+                  'content': "",
+                  'community': [Community.fromJson(communityData)],
+                  'isFromCommunityPage': true,
+                });
+              },
             ),
           );
         } else {

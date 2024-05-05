@@ -100,7 +100,6 @@ class _PostCardPageState extends State<PostCardPage> {
           content: content,
           onPressed: () {
             Navigator.of(context).pop();
-            Navigator.of(context).pop();
           },
         );
       },

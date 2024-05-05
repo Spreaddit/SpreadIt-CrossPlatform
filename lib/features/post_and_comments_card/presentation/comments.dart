@@ -8,6 +8,7 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/p
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
@@ -112,7 +113,7 @@ class CommentCard extends StatefulWidget {
 class _CommentCardState extends State<CommentCard> {
   bool _repliesFetched = false;
   late bool isUserProfile;
-  bool isNotApprovedForCommentEdit = false;
+  bool isNotApprovedForEditOrReply = false;
   var issaved;
   File? uploadedImageFile;
   Uint8List? uploadedImageWeb;
@@ -144,19 +145,19 @@ class _CommentCardState extends State<CommentCard> {
   void initState() {
     super.initState();
     issaved = widget.comment.isSaved!;
-    checkIfCanEditComment();
+    checkIfCanEditOrReply();
   }
 
-  /// [checkIfCanEditComment] : a function used to check if users aren't approved for editing comments in the community
+  /// [checkIfCanEditOrReply] : a function used to check if users aren't approved for editing comments in the community
 
-  void checkIfCanEditComment() async {
+  void checkIfCanEditOrReply() async {
     await checkIfNotApproved(widget.community, UserSingleton().user!.username)
         .then((value) {
-      isNotApprovedForCommentEdit = value;
+      isNotApprovedForEditOrReply = value;
     });
     setState(() {
       //TODO: check if this causes exception
-      isNotApprovedForCommentEdit = isNotApprovedForCommentEdit;
+      isNotApprovedForEditOrReply = isNotApprovedForEditOrReply;
     });
   }
 
@@ -222,7 +223,7 @@ class _CommentCardState extends State<CommentCard> {
                                 Icons.notifications_on_rounded,
                                 Icons.save,
                                 if (isUserProfile &&
-                                    !isNotApprovedForCommentEdit)
+                                    !isNotApprovedForEditOrReply)
                                   Icons.edit,
                                 Icons.copy,
                                 if (!isUserProfile) Icons.block,
@@ -233,7 +234,7 @@ class _CommentCardState extends State<CommentCard> {
                                 "Get Reply notifications",
                                 issaved ? "Unsave" : "save",
                                 if (isUserProfile &&
-                                    !isNotApprovedForCommentEdit)
+                                    !isNotApprovedForEditOrReply)
                                   "Edit Comment",
                                 "Copy text",
                                 if (!isUserProfile) "Block account",
@@ -254,7 +255,7 @@ class _CommentCardState extends State<CommentCard> {
                                       })
                                     },
                                 if (isUserProfile &&
-                                    !isNotApprovedForCommentEdit)
+                                    !isNotApprovedForEditOrReply)
                                   () => Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -286,6 +287,13 @@ class _CommentCardState extends State<CommentCard> {
                         );
                       },
                       onReplyPressed: () {
+                        if (isNotApprovedForEditOrReply) {
+                          CustomSnackbar(
+                                  content:
+                                      "You are not approved to reply in this community")
+                              .show(context);
+                          return;
+                        }
                         TextEditingController replyController =
                             TextEditingController();
 

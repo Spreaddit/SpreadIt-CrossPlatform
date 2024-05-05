@@ -143,6 +143,7 @@ Map<String, WidgetBuilder> generateRoutes() {
                 selectedDay: args['selectedDay'],
                 isLinkAdded: args['isLinkAdded'],
                 community: args['community'],
+                isFromCommunityPage: args['isFromCommunityPage'],
               );
             },
           ),

@@ -48,6 +48,8 @@ class FinalCreatePost extends StatefulWidget {
   final bool? createPoll;
   final bool? isLinkAdded;
   final List<Community> community;
+  /// [isFromCommunityPage] : a boolean value which indicates if the user is posting from a community or not
+  final bool? isFromCommunityPage;
 
   const FinalCreatePost({
     Key? key,
@@ -63,6 +65,7 @@ class FinalCreatePost extends StatefulWidget {
     this.createPoll,
     this.isLinkAdded,
     required this.community,
+    this.isFromCommunityPage,
   }) : super(key: key);
 
   @override
@@ -163,10 +166,13 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         .then((value) {
       isNotApprovedForPosting = value;
     });
-    setState(() {
-      //TODO: check if this causes exception
-      isButtonEnabled = !isNotApprovedForPosting;
-    });
+    if (mounted) {
+      setState(() {
+        //TODO: check if this causes exception
+        isButtonEnabled =
+            !isNotApprovedForPosting && validatePostTitle(finalTitle);
+      });
+    }
   }
 
   void updateTitle(String value) {
@@ -328,6 +334,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         isNSFW);
     if (response == 201) {
       CustomSnackbar(content: 'Posted successfully !').show(context);
+      if (widget.isFromCommunityPage == true) {
+        // if the user is posting from a community page, 
+        // we need to pop once to return to the community page
+        Navigator.of(context).pop();
+        return;
+      }
       returnToHomePage(context);
     } else if (response == 400) {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
@@ -350,7 +362,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     onPressed: submit,
                     isEnabled: isButtonEnabled,
                     onIconPress: () {
-                      showDiscardButtomSheet(context);
+                      showDiscardButtomSheet(context,
+                          isFromCommunityPage: widget.isFromCommunityPage);
                     },
                   ),
                 ),
