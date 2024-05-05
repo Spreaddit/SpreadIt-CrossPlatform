@@ -66,6 +66,77 @@ Future<List<MessageModel>> getMessages() async {
   }
 }
 
+Future<List<MessageModel>> handleReadMessages({
+  required bool shouldRead,
+  String? messageId,
+}) async {
+  try {
+    String? accessToken = UserSingleton().getAccessToken();
+    String requestURL = '';
+    if (shouldRead) {
+      if (messageId == null) {
+        requestURL = '$apiUrl/message/readallmessages/';
+      } else {
+        requestURL = '$apiUrl/message/readmsg/$messageId';
+      }
+    } else {
+      requestURL = '$apiUrl/message/unreadmsg/$messageId';
+    }
+    final response = await Dio().post(
+      requestURL,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      print(response.data);
+
+      String conversationId = "";
+
+      List<MessageModel> messageList = [];
+
+      for (var data in (response.data as List)) {
+        if (conversationId == data['conversationId']) {
+          messageList[messageList.length - 1].replies!.add(
+                MessageRepliesModel.fromJson(
+                  data,
+                ),
+              );
+        } else {
+          conversationId = data['conversationId'];
+          messageList.add(MessageModel.fromJson(data));
+        }
+      }
+      return messageList;
+    } else if (response.statusCode == 409) {
+      print("Conflict: ${response.statusMessage}");
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
+    } else {
+      print("Internal Server Error: ${response.statusCode}");
+    }
+    return [];
+  } on DioException catch (e) {
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+      } else if (e.response!.statusCode == 409) {
+        print("Conflict: ${e.response!.statusMessage}");
+      } else {
+        print("Internal Server Error: ${e.response!.statusMessage}");
+      }
+      return [];
+    }
+    rethrow;
+  } catch (e) {
+    //TO DO: show error message to user
+    print("Error occurred: $e");
+    return [];
+  }
+}
+
 // /// Takes [messageId] as a paremeter
 // /// and fetches its respective [Post] List
 // Future<Post?> getPostById({

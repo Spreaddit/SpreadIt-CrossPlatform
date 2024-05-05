@@ -90,47 +90,59 @@ class _MessageTileState extends State<MessageTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: isRead || widget.isAllRead ? 1 : 0.7,
-      child: ListTile(
-        title: Text(
-          widget.message.primaryMessage.relatedUserOrCommunity,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Align(
-          alignment: Alignment.topLeft,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.message.primaryMessage.subject,
-                maxLines: 3,
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                widget.message.primaryMessage.content,
-                maxLines: 3,
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-        trailing: Text(
-          dateToDuration(
-            widget.message.primaryMessage.time,
-          ),
-        ),
-        onTap: () => {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isRead = true;
           navigateToMessage(
             context: context,
             message: widget.message,
+          );
+          //TODO: call read message api
+        });
+      },
+      child: Opacity(
+        opacity: isRead || widget.isAllRead ? 0.7 : 1,
+        child: ListTile(
+          title: Text(
+            widget.message.primaryMessage.relatedUserOrCommunity,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        },
+          subtitle: Align(
+            alignment: Alignment.topLeft,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.message.primaryMessage.subject,
+                  maxLines: 3,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  widget.message.primaryMessage.content,
+                  maxLines: 3,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          trailing: Text(
+            dateToDuration(
+              widget.message.primaryMessage.time,
+            ),
+          ),
+          onTap: () => {
+            navigateToMessage(
+              context: context,
+              message: widget.message,
+            ),
+          },
+        ),
       ),
     );
   }
