@@ -42,10 +42,12 @@ dependencies:
 
   cached_network_image: ^3.2.0
   network_image_mock: ^2.1.1
+  http: ^1.2.1
 
   image_picker: ^0.8.4+2
   share_plus: ^6.3.4
   url_launcher: ^6.2.5
+  http_parser: ^4.0.2
 
   dio: ^5.4.1
   flutter_dotenv: ^5.1.0

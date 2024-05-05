@@ -1,3 +1,6 @@
+
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+
 /// This file defines the SocialMedia and UserInfo classes used to represent social media profiles and user information.
 
 /// A class representing a social media platform.
@@ -69,6 +72,9 @@ class UserInfo {
   /// List of social media profiles associated with the user.
   final List<SocialMedia> socialMedia;
 
+  /// List of Subscribed community
+  final List<Community> subscribedCommunities;
+
   /// Constructor for creating a UserInfo object.
   UserInfo({
     required this.avatar,
@@ -84,6 +90,7 @@ class UserInfo {
     required this.socialMedia,
     required this.isVisible,
     required this.isActive,
+    required this.subscribedCommunities,
   });
 
   /// Factory constructor for creating a UserInfo object from JSON data.
@@ -92,17 +99,23 @@ class UserInfo {
     List<SocialMedia> socialMedia = socialMediaJson
         .map((socialMediaJson) => SocialMedia.fromJson(socialMediaJson))
         .toList();
+    var subscribedCommunitiesJson = json['subscribedCommunities'] as List;
+    List<Community> subscribedCommunities = subscribedCommunitiesJson
+        .map((subscribedCommunitiesJson) =>
+            Community.fromJson(subscribedCommunitiesJson))
+        .toList();
 
     return UserInfo(
       username: json['username'],
       displayname: json['name'],
       avatar: json['avatar'],
       background: json['banner'],
-      about: json['about'],
+      about: json['about'] ?? '',
       dateOfJoining: json['createdAt'],
       isVisible: json['isVisible'],
       isActive: json['isActive'],
       socialMedia: socialMedia,
+      subscribedCommunities :subscribedCommunities,
     );
   }
 }

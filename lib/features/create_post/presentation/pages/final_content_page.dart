@@ -307,7 +307,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
    int response = await submitPost(
       finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalImageWeb, finalVideo, finalVideoWeb, isSpoiler, isNSFW);
     if ( response == 201 ) {
-      CustomSnackbar(content: 'Posted successfully !').show(context);
+      //CustomSnackbar(content: 'Posted successfully !').show(context);
       returnToHomePage(context);
     }
     else if (response == 400) {
