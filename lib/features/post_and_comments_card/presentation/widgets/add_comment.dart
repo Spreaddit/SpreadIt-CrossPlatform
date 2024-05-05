@@ -209,7 +209,7 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
               }
             : () async {
                 print("commenting: $isNotApprovedForCommenting");
-                if (_commentController.text != "") {
+                if (_commentController.text.isNotEmpty) {
                   print('add comment');
                   FocusScope.of(context).unfocus();
                   String newComment = _commentController.text;
@@ -218,11 +218,28 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                     id: widget.postId,
                     content: newComment,
                     type: 'comment',
+                    imageFile: uploadedImageFile,
+                    imageWeb: uploadedImageWeb,
                   );
                   setState(() {
                     widget.addComment(nComment!);
                     print('nComment${nComment.content}');
+                    uploadedImageFile = null;
+                    uploadedImageWeb = null;
                   });
+                } else if (uploadedImageFile != null ||
+                    uploadedImageWeb != null) {
+                  setState(() {
+                    uploadedImageFile = null;
+                    uploadedImageWeb = null;
+                    CustomSnackbar(
+                            content: "Sorry you can't post an image only :(")
+                        .show(context);
+                  });
+                } else {
+                  CustomSnackbar(
+                          content: "Sorry you can't post an empty comment :(")
+                      .show(context);
                 }
               },
         child: Text("Post"),

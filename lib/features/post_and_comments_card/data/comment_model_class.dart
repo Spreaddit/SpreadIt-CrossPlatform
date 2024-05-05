@@ -61,7 +61,7 @@ class Comment extends Equatable {
   final String? username;
 
   /// Constructor for creating a Comment object.
-  final String? lastEdit;
+  final bool? lastEdit;
   final bool? isRemoved;
   final bool? isLocked;
   final bool? isApproved;
@@ -122,7 +122,7 @@ class Comment extends Equatable {
       username: usernameFetched,
       profilePic: avatarFetched,
       postId: json['postId'] ?? '0',
-      lastEdit: json['last_edit'] ?? "",
+      lastEdit: json['last_edit'] as bool,
       isApproved: json['is_approved'] as bool,
       isLocked: json['is_locked'] as bool,
       isRemoved: json['is_removed'] as bool,
