@@ -114,7 +114,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
      {
       url= '$url/${widget.username}';
      }
-    // Set _headerHeight when the widget is first inserted into the tree
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _headerHeight = context.size!.height + 50.0;
