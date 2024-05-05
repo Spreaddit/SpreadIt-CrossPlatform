@@ -25,7 +25,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
   void getTrending() async {
     trending = await getTrendingPosts();
     mappedTrending = extractTrendingData(trending);
-    setState(() {}); 
+    print(mappedTrending);
   }
 
   List<Map<String, dynamic>> extractTrendingData(Map<String, dynamic> data) {
@@ -48,14 +48,14 @@ class _TrendingMenuState extends State<TrendingMenu> {
           'postId': trending['postId'] ?? (throw Exception('null')),
           'title': trending['title'] ?? (throw Exception('null')),
           'content': trending['content'] ?? (throw Exception('null')),
-          'isNsfw': trending['isNsfw'] ?? (throw Exception('null')),
+          'isNsfw': trending['isnsfw'] ?? (throw Exception('null')),
           'isSpoiler': trending['isSpoiler'] ?? (throw Exception('null')),
           'votesCount': trending['votesCount'] ?? (throw Exception('null')),
           'commentsCount': trending['commentsCount'] ?? (throw Exception('null')),
           'createdAt': trending['date'] ?? (throw Exception('null')),
           'username': trending['username'] ?? (throw Exception('null')),
           'userProfilePic': trending['userProfilePic'] ?? (throw Exception('null')),
-          'communityName': trending['communityName'] ?? (throw Exception('null')),
+          'communityName': trending['communityname'] ?? (throw Exception('null')),
           'communityProfilePic': trending['communityProfilePic'] ?? (throw Exception('null')),
           'image':  imageLink,
           'video': videoLink,
@@ -116,4 +116,3 @@ class _TrendingMenuState extends State<TrendingMenu> {
     }
   }
 
-/* lamma adous 3aleiha t-redirect me lel topic da */

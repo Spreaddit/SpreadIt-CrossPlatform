@@ -48,6 +48,10 @@ class _PeoplePageViewState extends State<PeoplePageView> {
     }
   }
 
+  void toggleIsFollowing (bool isFollowing) {
+    setState(() => isFollowing = !isFollowing);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (users.isEmpty) {
@@ -78,6 +82,7 @@ class _PeoplePageViewState extends State<PeoplePageView> {
                         mappedUsers[index]['followersCount'].toString() 
                         : '${(mappedUsers[index]['followersCount']/100).truncateToDouble() /10.0}k',
                   isFollowing: mappedUsers[index]['isFollowing'],
+                  toggleIsFollowing: () => toggleIsFollowing(mappedUsers[index]['isFollowing']),
                 );
               }
             ),

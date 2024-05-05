@@ -26,6 +26,7 @@ Future <Map<String,dynamic>> getCommunitySearchResults(String query, String type
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
+      print(response.data);
       return (response.data);
     } else {
       print(response.statusMessage);

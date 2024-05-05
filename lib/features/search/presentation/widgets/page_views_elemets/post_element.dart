@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/rendered_tag.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 class PostElement extends StatefulWidget {
 
@@ -157,13 +158,14 @@ class _PostElementState extends State<PostElement> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image(
-                          image: NetworkImage(widget.video!),
+                        child: SizedBox(
                           height: 70,
                           width: 80,
-                          fit: BoxFit.fill,
+                          child: VideoPlayerScreen(
+                            videoURL: widget.video!,
+                            ),
+                          ),
                         ),
-                      ),
                       Positioned(
                         bottom: 5.0, 
                         left: 5.0, 

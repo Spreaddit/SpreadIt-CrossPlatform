@@ -95,16 +95,16 @@ class _MediaPageViewState extends State<MediaPageView> {
           mappedMedia.add({
           'postId': post['postId'] ?? (throw Exception('null')),
           'title': post['title'] ?? (throw Exception('null')),
-          'isNsfw': post['isNsfw'] ?? (throw Exception('null')),
+          'isNsfw': post['isnsfw'] ?? (throw Exception('null')),
           'isSpoiler': post['isSpoiler'] ?? (throw Exception('null')),
           'votesCount': post['votesCount'] ?? (throw Exception('null')),
           'commentCount': post['commentsCount'] ?? (throw Exception('null')),
           'createdAt': post['date'] ?? (throw Exception('null')),
           'username': post['username'] ?? (throw Exception('null')),
           'userProfilePic': post['userProfilePic'] ?? (throw Exception('null')),
-          'communityName': post['communityName'] ?? (throw Exception('null')),
+          'communityName': post['communityname'] ?? (throw Exception('null')),
           'communityProfilePic': post['communityProfilePic'] ?? (throw Exception('null')),
-          'image': post['attachments'][0],
+          'image': post['attachments'][0]['link'],
           });
         }
       }
