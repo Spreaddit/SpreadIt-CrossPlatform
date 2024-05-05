@@ -15,8 +15,6 @@ void getReplyNotifications() {
   //TODO: get reply notifications logic
 }
 
-void subscribeToPost() {}
-
 void hide() {}
 
 void copyText(BuildContext context, String text) {
@@ -103,6 +101,7 @@ void deletePost(
     BuildContext context, String postId, void Function() onDeleted) {
   deletePostButtomSheet(context, postId, onDeleted);
 }
+
 ///function to fetch save post
 void savePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
@@ -114,6 +113,7 @@ void savePost(BuildContext context, String postId) async {
         .show(context);
   }
 }
+
 ///function to fetch unsave post
 void unsavePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');

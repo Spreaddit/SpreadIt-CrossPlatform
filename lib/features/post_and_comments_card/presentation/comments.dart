@@ -98,12 +98,16 @@ class _CommentHeader extends HookWidget {
 class CommentCard extends StatefulWidget {
   final Comment comment;
   final String community;
+  final VoidCallback? setIsLoaded;
+  final bool onecomment;
   // bool collapseThreadFlag = false;
 
   /// Constructs a [CommentCard] widget with the given parameters.
   CommentCard({
     required this.comment,
     required this.community,
+    this.setIsLoaded,
+    this.onecomment=false,
   });
 
   @override
@@ -126,6 +130,10 @@ class _CommentCardState extends State<CommentCard> {
         setState(() {
           widget.comment.replies = data;
           _repliesFetched = true;
+          if(widget.onecomment)
+          {
+            widget.setIsLoaded!();
+          }
         });
       } catch (e) {
         print('Error fetching comments: $e');

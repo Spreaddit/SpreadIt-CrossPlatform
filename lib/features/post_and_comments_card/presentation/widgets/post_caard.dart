@@ -115,6 +115,8 @@ class _PostCardState extends State<PostCard> {
                   CommentCard(
                     comment: widget.comments[index],
                     community: widget.post.community,
+                    setIsLoaded: widget.setIsloaded,
+                    onecomment: widget.oneComment,
                   ),
                   Container(
                     decoration: BoxDecoration(

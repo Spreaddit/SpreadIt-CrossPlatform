@@ -40,6 +40,9 @@ Future<int> googleOAuthApi({
     } else if (response.statusCode == 400) {
       print("Bad request: ${response.statusMessage}");
       return 400;
+    } else if (response.statusCode == 402) {
+      print("User banned  ${response.statusMessage}");
+      return 402;
     } else if (response.statusCode == 500) {
       print("Server error: ${response.statusMessage}");
       return 500;
@@ -55,6 +58,9 @@ Future<int> googleOAuthApi({
       } else if (e.response!.statusCode == 409) {
         print("Conflict: ${e.response!.statusMessage}");
         return 409;
+      } else if (e.response!.statusCode == 402) {
+        print("User banned  ${e.response!.statusMessage}");
+        return 402;
       } else if (e.response!.statusCode == 500) {
         print("Conflict: ${e.response!.statusMessage}");
         return 500;

@@ -36,7 +36,7 @@ bool validateusername(String value) {
   if (!regExp.hasMatch(value) && value.isNotEmpty) {
     return false;
   }
-  if (value.length >= 3 && value.length <= 20) {
+  if (value.length >= 7 && value.length <= 20) {
     return false;
   }
   return true;
@@ -62,8 +62,8 @@ String validateusernametext(String value) {
   RegExp regExp = RegExp(r'^[a-zA-Z0-9_-]+$');
   if (!regExp.hasMatch(value) && value.isNotEmpty) {
     return "Username can only contain letters, numbers, dashes, and underscores.";
-  } else if (value.length < 3 || value.length > 20) {
-    return "Username must be between 3 and 20 characters.";
+  } else if (value.length < 7 || value.length > 20) {
+    return "Username must be between 7 and 20 characters.";
   }
   return "Great name! it's not taken, so it's all yours.";
 }

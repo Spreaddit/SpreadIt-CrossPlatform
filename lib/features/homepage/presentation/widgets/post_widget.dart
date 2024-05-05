@@ -21,6 +21,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
@@ -132,13 +133,16 @@ class _PostHeaderState extends State<_PostHeader> {
           ),
           subtitle: GestureDetector(
             onTap: () => {
-              Navigator.of(context).pushNamed(
-                '/user-profile',
-                arguments: {
-                  'username': widget.post.username,
-                },
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  settings: RouteSettings(
+                    name: '/user-profile/${widget.post.username}',
+                  ),
+                  builder: (context) => UserProfile(
+                    username: widget.post.username,
+                  ),
+                ),
               ),
-              print('username: ${widget.post.username}'),
             },
             child: Text(widget.post.username),
           ),
@@ -174,7 +178,6 @@ class _PostHeaderState extends State<_PostHeader> {
 
   void onShowMenu() {
     List<String> viewerOptions = [
-      "Subscribe to post",
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
       "Report",
@@ -182,7 +185,6 @@ class _PostHeaderState extends State<_PostHeader> {
       "Hide",
     ];
     List<String> writerOptions = [
-      "Subscribe to post",
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
       "Hide",
@@ -193,7 +195,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<void Function()> writerActions = [
-      subscribeToPost,
       widget.isSaved
           ? () => {
                 unsavePost(
@@ -251,7 +252,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<void Function()> viewerActions = [
-      subscribeToPost,
       widget.isSaved
           ? () => {
                 unsavePost(
@@ -281,7 +281,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<IconData> writerIcons = [
-      Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
       Icons.hide_source_rounded,
@@ -291,7 +290,6 @@ class _PostHeaderState extends State<_PostHeader> {
       Icons.delete,
     ];
     List<IconData> viewerIcons = [
-      Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
       Icons.flag,
@@ -363,6 +361,7 @@ class _PostBody extends StatelessWidget {
         ),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Opacity(
               opacity: 0.6,
@@ -460,6 +459,8 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CarouselSlider(
           options: CarouselOptions(

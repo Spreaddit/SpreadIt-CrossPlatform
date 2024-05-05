@@ -159,7 +159,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
       ToPageBtn(
         iconData: Icons.volume_mute_outlined,
         mainText: "Manage muted communities",
-        onPressed: () {},
+        onPressed:  () => Navigator.of(context)
+            .pushNamed('/muted-commuinties'),
       ),
       FollowersSwitchSection(allowFollow: followSettingsData["allowFollow"]),
     ];

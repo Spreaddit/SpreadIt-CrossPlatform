@@ -32,6 +32,7 @@ class _CreateUsernameState extends State<CreateUsername> {
     _userName = username;
       var responseCode = await checkUsernameAvailability(
       username: _userName,
+      checkIfAvaliable: true,
     );
     setState(() {
       invalidText = validateusernametext(_userName);
@@ -48,13 +49,18 @@ class _CreateUsernameState extends State<CreateUsername> {
 void navigateToHomePage(BuildContext context) async {
   if (validUserName) {
     _usernameform.currentState!.save();
+     Navigator.of(context).pushNamed('/email-verification',  arguments: {
+          'email': _userEmail,
+        },); 
     var responseCode = await signUpApi(
       username: _userName,
       email: _userEmail,
       password: _userPassword,
     );
     if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/home'); // SHOULD BE HOME
+      Navigator.of(context).pushNamed('/email-verification',  arguments: {
+          'email': _userEmail,
+        },); 
     } 
     else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input" ).show(context); 
@@ -70,7 +76,6 @@ void navigateToHomePage(BuildContext context) async {
   Widget build(BuildContext context) {
   final Map<String, dynamic> args =
   ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
 
     _userEmail = args['email'];
     _userPassword = args['password'];
