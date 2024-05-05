@@ -15,13 +15,18 @@ import 'package:spreadit_crossplatform/user_info.dart';
 class PostCardPage extends StatefulWidget {
   /// The ID of the post.
   final String postId;
-
-  /// Indicates whether the current user is the owner of the profile associated with the post.
+  bool isModeratorView;
   final String? commentId;
   final bool oneComment;
 
-  const PostCardPage(
-      {Key? key, required this.postId, this.commentId, this.oneComment = false})
+  /// Indicates whether the current user is the owner of the profile associated with the post.
+
+  PostCardPage(
+      {Key? key,
+      required this.postId,
+      this.isModeratorView = false,
+      this.commentId,
+      this.oneComment = false})
       : super(key: key);
 
   @override
@@ -176,6 +181,7 @@ class _PostCardPageState extends State<PostCardPage> {
                           ? PostCard(
                               post: post!,
                               comments: comments,
+                              isModeratorView: widget.isModeratorView,
                               setIsloaded: setIsloaded,
                               oneComment: widget.oneComment,
                             )
@@ -197,7 +203,8 @@ class _PostCardPageState extends State<PostCardPage> {
                 backgroundColor: Theme.of(context).colorScheme.tertiary,
                 foregroundColor: Colors.white,
               ),
-            if (post != null && !post!.isCommentsLocked!)
+            if (post != null && !post!.isCommentsLocked! ||
+                widget!.isModeratorView!)
               AddCommentWidget(
                 commentsList: comments,
                 postId: widget.postId.toString(),
