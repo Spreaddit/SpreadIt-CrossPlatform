@@ -4,7 +4,14 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import '../widgets/comments_view_body.dart';
 import '../widgets/posts_view_body.dart';
 
+/// `AdminViewPage` is a Flutter widget that represents the admin view page.
+///
+/// It extends the `StatefulWidget` class, which means it can maintain state that can change over time.
 class AdminViewPage extends StatefulWidget {
+  /// Constructs an `AdminViewPage` widget.
+  AdminViewPage({Key? key}) : super(key: key);
+
+  /// Creates the mutable state for this widget.
   @override
   _AdminViewPageState createState() => _AdminViewPageState();
 }

@@ -3,10 +3,23 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/api.dart';
 
+/// `BanUserService` is a class that provides methods to manage user bans.
+///
+/// It uses the Dio package to make HTTP requests.
 class BanUserService {
+  /// Dio instance for making HTTP requests.
   final Dio dio = Dio();
+
+  /// Access token for authentication. Retrieved from the UserSingleton.
   final String accessToken = UserSingleton().accessToken!;
 
+  /// Unbans a user.
+  ///
+  /// Takes a `username` as a required parameter and sends a POST request to unban the user.
+  ///
+  /// Returns a `Future<String>` which completes with a response from the server.
+  ///
+  /// Throws an exception if the request fails.
   Future<String> unbanUser({
     required String username,
   }) async {
@@ -32,6 +45,13 @@ class BanUserService {
     }
   }
 
+  /// Unbans a user.
+  ///
+  /// Takes a `username` as a required parameter and sends a POST request to unban the user.
+  ///
+  /// Returns a `Future<String>` which completes with a response from the server.
+  ///
+  /// Throws an exception if the request fails.
   Future<String> banUser({
     required String username,
     required String reason,

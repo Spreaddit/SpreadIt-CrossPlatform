@@ -4,12 +4,26 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../data/report_data_model.dart';
 
+/// `GetReportedCommentsService` is a class that provides methods to fetch reported comments.
+///
+/// It uses the Dio package to make HTTP requests.
 class GetReportedCommentsService {
-  final String url =
-      '$apiUrl/dashboard/comments'; // Change this to the correct endpoint
-  final String token =
-      UserSingleton().accessToken!; // replace with actual token
+  /// The URL for the API endpoint.
+  final String url = '$apiUrl/dashboard/comments';
+
+  /// Access token for authentication. Retrieved from the UserSingleton.
+  final String token = UserSingleton().accessToken!;
+
+  /// Dio instance for making HTTP requests.
   final Dio _dio = Dio();
+
+  /// Fetches reported comments.
+  ///
+  /// Sends a GET request to the specified URL.
+  ///
+  /// Returns a `Future<Map<String, dynamic>>` which completes with a map containing the reported comments.
+  ///
+  /// Throws an exception if the request fails.
 
   Future<Map<String, dynamic>> getReportedComments() async {
     try {

@@ -4,11 +4,26 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../data/report_data_model.dart';
 
+/// `GetReportedPostsService` is a class that provides methods to fetch reported posts.
+///
+/// It uses the Dio package to make HTTP requests.
 class GetReportedPostsService {
+  /// The URL for the API endpoint.
   final String url = '$apiUrl/dashboard/posts';
-  final String token =
-      UserSingleton().accessToken!; // replace with actual token
+
+  /// Access token for authentication. Retrieved from the UserSingleton.
+  final String token = UserSingleton().accessToken!;
+
+  /// Dio instance for making HTTP requests.
   final Dio _dio = Dio();
+
+  /// Fetches reported posts.
+  ///
+  /// Sends a GET request to the specified URL.
+  ///
+  /// Returns a `Future<Map<String, dynamic>>` which completes with a map containing the reported posts.
+  ///
+  /// Throws an exception if the request fails.
 
   Future<Map<String, dynamic>> getReportedPosts() async {
     try {

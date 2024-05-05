@@ -6,7 +6,14 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
 
+/// `PostsViewBody` is a Flutter widget that represents the body of the posts view.
+///
+/// It extends the `StatefulWidget` class, which means it can maintain state that can change over time.
 class PostsViewBody extends StatefulWidget {
+  /// Constructs a `PostsViewBody` widget.
+  PostsViewBody({Key? key}) : super(key: key);
+
+  /// Creates the mutable state for this widget.
   @override
   _PostsViewBodyState createState() => _PostsViewBodyState();
 }

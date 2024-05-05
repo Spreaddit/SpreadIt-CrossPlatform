@@ -6,7 +6,14 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/comments.dart';
 
+/// `CommentsViewBody` is a Flutter widget that represents the body of the comments view.
+///
+/// It extends the `StatefulWidget` class, which means it can maintain state that can change over time.
 class CommentsViewBody extends StatefulWidget {
+  /// Constructs a `CommentsViewBody` widget.
+  CommentsViewBody({Key? key}) : super(key: key);
+
+  /// Creates the mutable state for this widget.
   @override
   _CommentsViewBodyState createState() => _CommentsViewBodyState();
 }
