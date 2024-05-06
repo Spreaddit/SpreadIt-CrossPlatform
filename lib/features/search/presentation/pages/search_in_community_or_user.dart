@@ -119,6 +119,8 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
                   communityOrUserName: communityOrUserName,
                   communityOrUserIcon: communityOrUserIcon,
                   isContained: true,
+                  inCommunityPage: fromCommunityPage,
+                  inUserProfile: fromUserProfile,
                 ),
                 InkWell(
                   onTap: () => Navigator.pop(context),

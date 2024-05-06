@@ -20,7 +20,6 @@ Future<List> getSeacrhHistory() async {
     if (response.statusCode == 200) {
       print(response.statusMessage);
       print(response.statusCode);
-      print(response.data);
       return (response.data);
     } else {
       print(response.statusMessage);

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/search/data/post_search_log.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -12,6 +13,8 @@ class CustomSearchBar extends StatefulWidget {
   final String? communityOrUserName;
   final String? communityOrUserIcon;
   final bool? isContained;
+  final bool? inCommunityPage;
+  final bool? inUserProfile;
 
   const CustomSearchBar({
     required this.formKey,
@@ -23,6 +26,8 @@ class CustomSearchBar extends StatefulWidget {
     this.communityOrUserName,
     this.communityOrUserIcon,
     this.isContained,
+    this.inCommunityPage,
+    this.inUserProfile,
   });
 
   @override
@@ -47,6 +52,21 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     _controller.dispose();
     super.dispose();
   }
+
+  void saveSearchLog (String query) async {
+    if (widget.inCommunityPage != null && widget.inCommunityPage == true) {
+      await postSearchLog(query,'community', widget.communityOrUserName!, null,false);
+      print('community query log submitted');
+    }
+    else if (widget.inUserProfile != null && widget.inUserProfile == true) {
+      await postSearchLog(query,'user', null, widget.communityOrUserName!,true);
+      print('user query log submitted');
+    }
+    else {
+      int response =await postSearchLog(query,'normal', null, null , false);
+    }
+
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +115,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                       onFieldSubmitted: (text) {
                         if (text.trim().isNotEmpty) {
                           widget.navigateToSearchResult(text);
+                          saveSearchLog(text);
                         } else {
                           FocusScope.of(context).unfocus();
                         }
