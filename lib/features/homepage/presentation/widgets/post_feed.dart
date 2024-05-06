@@ -206,13 +206,10 @@ class _PostFeedState extends State<PostFeed> {
                                     isSavedPage: widget.isSavedPage,
                                     feedContext: context,
                                     post: existingItems[index],
-                                    isUserProfile: currentPostCategory ==
-                                            PostCategories.user ||
-                                        (UserSingleton().user != null &&
+                                    isUserProfile:
+                                        UserSingleton().user != null &&
                                             existingItems[index].username ==
-                                                UserSingleton()
-                                                    .user!
-                                                    .username)),
+                                                UserSingleton().user!.username),
                                 Divider(
                                   height: 20,
                                   thickness: 0.2,

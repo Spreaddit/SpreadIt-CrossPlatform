@@ -33,29 +33,27 @@ class _MessagePageState extends State<MessagePage> {
       ),
       body: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
-          child: Column(
-            children: [
-              MessageReplyTile(
-                message: widget.message.primaryMessage,
-              ),
-              ListView(
-                padding: EdgeInsets.zero,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: widget.message.replies != null &&
-                        widget.message.replies!.isNotEmpty
-                    ? widget.message.replies!
-                        .map<Widget>(
-                          (message) => MessageReplyTile(
-                            message: message,
-                          ),
-                        )
-                        .toList()
-                    : [],
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            MessageReplyTile(
+              message: widget.message.primaryMessage,
+            ),
+            ListView(
+              padding: EdgeInsets.zero,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: widget.message.replies != null &&
+                      widget.message.replies!.isNotEmpty
+                  ? widget.message.replies!
+                      .map<Widget>(
+                        (message) => MessageReplyTile(
+                          message: message,
+                        ),
+                      )
+                      .toList()
+                  : [],
+            ),
+          ],
         ),
       ),
     );
