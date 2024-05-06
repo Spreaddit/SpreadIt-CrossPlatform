@@ -122,7 +122,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   }
 
   Future<void> getFollowers() async {
-    List<FollowUser> users = await getFollwersusers();
+    List<FollowUser> users = await getFollowersUsers();
     setState(() {
       followerslist = users;
     });

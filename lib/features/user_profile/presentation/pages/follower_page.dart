@@ -2,6 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/class_models/followers_class_model.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/followers_tile.dart';
 
+/// A page widget to display a list of followers.
+///
+/// This widget displays a list of followers with their usernames and avatars.
+/// It provides a search functionality to filter followers.
+///
+/// Example usage:
+/// ```dart
+/// Navigator.of(context)
+///     .pushNamed('/followers-page', arguments: {
+///      'followers': followerslist,
+/// });
+/// ```
+/// 
 class FollowUsersPage extends StatefulWidget {
   @override
   _FollowUsersPageState createState() => _FollowUsersPageState();
