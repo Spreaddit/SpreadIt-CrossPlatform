@@ -82,6 +82,8 @@ class MessageRepliesModel {
     );
   }
 
+  get primaryMessage => null;
+
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
