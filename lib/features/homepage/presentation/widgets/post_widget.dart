@@ -26,6 +26,7 @@ void navigateToPostCardPage(
   BuildContext context,
   String postId,
   bool isUserProfile,
+  Post post,
 ) {
   Navigator.push(
     context,
@@ -35,6 +36,7 @@ void navigateToPostCardPage(
       ),
       builder: (context) => PostCardPage(
         postId: postId,
+        post: post,
       ),
     ),
   );
@@ -680,6 +682,7 @@ class _PostInteractions extends StatefulWidget {
   final bool isFullView;
   final bool hasUpvoted;
   final bool hasDownvoted;
+  final Post post;
 
   _PostInteractions({
     required this.votesCount,
@@ -690,6 +693,7 @@ class _PostInteractions extends StatefulWidget {
     required this.isFullView,
     required this.hasUpvoted,
     required this.hasDownvoted,
+    required this.post,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -716,6 +720,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                 context,
                 widget.postId,
                 widget.isUserProfile,
+                widget.post,
               ),
               icon: Icon(
                 Icons.comment,
@@ -873,6 +878,7 @@ class _PostWidgetState extends State<PostWidget> {
                           context,
                           widget.post.postId,
                           widget.isUserProfile,
+                          widget.post,
                         );
                       }
                     },
@@ -907,6 +913,7 @@ class _PostWidgetState extends State<PostWidget> {
                     isFullView: widget.isFullView,
                     hasDownvoted: widget.post.hasDownvoted ?? false,
                     hasUpvoted: widget.post.hasUpvoted ?? false,
+                    post: widget.post,
                   )
                 ],
               )
