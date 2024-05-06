@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
+import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 
 class MessagePage extends StatefulWidget {
@@ -75,9 +76,20 @@ class _MessageReplyTileState extends State<MessageReplyTile> {
   bool isExpanded = true;
 
   @override
+  void initState() {
+    if (!widget.message.isRead) {
+      handleReadMessages(
+        shouldRead: true,
+        messageId: widget.message.primaryMessage.id,
+      );
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: widget.message.isRead ? 1 : 0.7,
+      opacity: widget.message.isRead ? 0.7 : 1,
       child: ListTile(
         leading: IconButton(
           alignment: Alignment.topLeft,

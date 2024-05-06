@@ -62,14 +62,14 @@ class _MessageInboxState extends State<MessageInbox> {
                           SlidableAction(
                             flex: 1,
                             onPressed: (context) {
-                              setState(() {
-                                messages[index].primaryMessage.isRead =
-                                    !message.primaryMessage.isRead;
-                              });
                               handleReadMessages(
                                 shouldRead: !message.primaryMessage.isRead,
                                 messageId: message.primaryMessage.id,
                               );
+                              setState(() {
+                                messages[index].primaryMessage.isRead =
+                                    !message.primaryMessage.isRead;
+                              });
                             },
                             backgroundColor: Color.fromARGB(255, 179, 179, 179),
                             foregroundColor: Colors.white,
@@ -119,16 +119,37 @@ class _MessageTileState extends State<MessageTile> {
   }
 
   @override
+  void didUpdateWidget(covariant MessageTile oldWidget) {
+    setState(() {
+      isRead = widget.message.primaryMessage.isRead;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      isRead = widget.message.primaryMessage.isRead;
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        navigateToMessage(
+          context: context,
+          message: widget.message,
+        );
+        if (!isRead) {
+          handleReadMessages(
+            shouldRead: true,
+            messageId: widget.message.primaryMessage.id,
+          );
+        }
         setState(() {
           isRead = true;
-          navigateToMessage(
-            context: context,
-            message: widget.message,
-          );
-          //TODO: call read message api
         });
       },
       child: Opacity(
