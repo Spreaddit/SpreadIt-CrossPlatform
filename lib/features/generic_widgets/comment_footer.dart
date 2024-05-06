@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 
 /// A widget representing the footer section of a comment.
 ///
@@ -36,6 +37,15 @@ class CommentFooter extends StatelessWidget {
   /// Whether the comment is downvoted by the current user.
   final bool downvoted;
 
+  /// the postId 
+  String? postId;
+
+  /// the Comment Id for the comment
+  String? commentId;
+
+  ///boolen to know if i am coming from saved page
+  bool isSaved;
+
   /// Creates a comment footer.
   ///
   /// The [onMorePressed], [onReplyPressed], and [number] parameters are required.
@@ -44,8 +54,11 @@ class CommentFooter extends StatelessWidget {
     required this.onMorePressed,
     required this.onReplyPressed,
     required this.number,
+    this.postId,
+    this.commentId,
     this.upvoted = false,
     this.downvoted = false,
+    this.isSaved = false,
   });
 
   @override
@@ -66,7 +79,24 @@ class CommentFooter extends StatelessWidget {
               ),
               SizedBox(width: screenWidth * 0.01),
               TextButton(
-                onPressed: onReplyPressed,
+                onPressed: isSaved
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            settings: RouteSettings(
+                              name:
+                                  '/post-card-page/$postId/true/$commentId/true',
+                            ),
+                            builder: (context) => PostCardPage(
+                              postId: postId!,
+                              commentId: commentId!,
+                              oneComment: true,
+                            ),
+                          ),
+                        );
+                      }
+                    : onReplyPressed,
                 child: Row(
                   children: [
                     Icon(Icons.reply, color: Colors.grey),
