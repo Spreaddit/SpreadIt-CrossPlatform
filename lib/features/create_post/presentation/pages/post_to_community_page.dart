@@ -148,25 +148,6 @@ class _PostToCommunityState extends State<PostToCommunity> {
               ],
             ),
           ),
-          Container(
-            width: 370,
-            height: 50,
-            child: OutlinedButton(
-              onPressed: toggleShowMorePressed,
-              style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                color: Colors.blue,
-              )),
-              child: Text(
-                !isShowMorePressed ? "See more" : "See less",
-                style: TextStyle(
-                  color: Colors.blue[900],
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
