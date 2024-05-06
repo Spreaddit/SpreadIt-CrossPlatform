@@ -8,7 +8,7 @@ Future<List<dynamic>> getModeratorsRequest(String communityName) async {
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl2/community/moderation/$communityName/moderators',
+      '$apiUrl/community/moderation/$communityName/moderators',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -16,18 +16,19 @@ Future<List<dynamic>> getModeratorsRequest(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
+      print("getModeratorsRequest data: ${response.data}");
       print("getModeratorsRequest Response: ${response.statusMessage}");
       return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print("getModeratorsRequest Error: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print("getModeratorsRequest Error: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;
     }
     return defaultResponse;
   } catch (e) {
-    print("Error occurred: $e");
+    print("getModeratorsRequest Error occurred: $e");
     return defaultResponse;
   }
 }
@@ -38,7 +39,7 @@ Future<Map<String, dynamic>> checkIfModeratorRequest(
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl2/community/moderation/$communityName/$username/is-moderator',
+      '$apiUrl/community/moderation/$communityName/$username/is-moderator',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -46,6 +47,7 @@ Future<Map<String, dynamic>> checkIfModeratorRequest(
       ),
     );
     if (response.statusCode == 200) {
+      print("checkIfModeratorRequest data: ${response.data}");
       print("checkIfModeratorRequest Response: ${response.statusMessage}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {

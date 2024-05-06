@@ -209,7 +209,7 @@ class _PostCardPageState extends State<PostCardPage> {
                 commentsList: comments,
                 postId: widget.postId.toString(),
                 addComment: addComment,
-                communityName: post!.community,
+                communityName: post?.community ?? "",
               ),
           ],
         ),

@@ -122,7 +122,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 content = alertTexts[0][1];
                 _showHaltingAlert(title: title, content: content);
               } else if (communityData["communityType"] == "Private" &&
-                  isApprovedData["isContributor"] == false) {
+                  isApprovedData["isContributor"] == false && communityData["isModerator"] == false) {
                 title = alertTexts[1][0];
                 content = alertTexts[1][1];
                 _showHaltingAlert(title: title, content: content);
@@ -150,7 +150,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   'content': "",
                   'community': [Community.fromJson(communityData)],
                   'isFromCommunityPage': true,
-                });
+                }).then((value) => setState(() {}));
               },
             ),
           );
@@ -172,6 +172,9 @@ class _CommunityPageState extends State<CommunityPage> {
             CommunityInfoSection(
               communityName: widget.communityName,
               communityData: communityData,
+              onReturnToCommunityPage: () {
+                fetchData().then((value) => setState(() {}));
+              },
             ),
             PostFeed(
               isModeratorView: isModData['isModerator'],

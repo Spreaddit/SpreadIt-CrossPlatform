@@ -3,25 +3,28 @@ import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_dat
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
 class CommunityAboutMods extends StatefulWidget {
-  CommunityAboutMods({Key? key, required this.communityName}) : super(key: key);
+  CommunityAboutMods({Key? key, required this.communityName, required this.modData}) : super(key: key);
 
   final String communityName;
+  final List<dynamic> modData;
 
   @override
   State<CommunityAboutMods> createState() => _CommunityAboutModsState();
 }
 
 class _CommunityAboutModsState extends State<CommunityAboutMods> {
-  Future<List<dynamic>>? modData;
+  Future<List<dynamic>>? modDataFuture;
+  List<dynamic> modData = [];
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    modData = widget.modData;
+    //fetchData();
   }
 
   void fetchData() async {
-    modData = getModeratorsRequest(widget.communityName);
+    modDataFuture = getModeratorsRequest(widget.communityName);
   }
 
   void navigateToMessagingPage() {
@@ -31,33 +34,21 @@ class _CommunityAboutModsState extends State<CommunityAboutMods> {
   void navigateToModeratorProfile(String username) {
     //TODO implement nav to user W/MARIAM
 
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     settings: RouteSettings(
-    //       name: '/user-profile/$username',
-    //     ),
-    //     builder: (context) => UserProfile(
-    //       username: username,
-    //     ),
-    //   ),
-    // );
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        settings: RouteSettings(
+          name: '/user-profile/$username',
+        ),
+        builder: (context) => UserProfile(
+          username: username,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: modData,
-      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Colors.deepOrangeAccent,
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(child: Text("Error fetching data 😔"));
-        } else if (snapshot.hasData) {
-          return Container(
+    return Container(
             color: Colors.white,
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -76,7 +67,7 @@ class _CommunityAboutModsState extends State<CommunityAboutMods> {
                 Divider(),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
+                  itemCount: modData.length,
                   itemBuilder: (context, index) {
                     return TextButton(
                       style: ButtonStyle(
@@ -87,9 +78,9 @@ class _CommunityAboutModsState extends State<CommunityAboutMods> {
                         ),
                       ),
                       onPressed: () => navigateToModeratorProfile(
-                          snapshot.data![index]['username']),
+                          modData[index]['username']),
                       child: ListTile(
-                        title: Text("u/${snapshot.data![index]['username']}"),
+                        title: Text("u/${modData[index]['username']}"),
                       ),
                     );
                   },
@@ -97,10 +88,5 @@ class _CommunityAboutModsState extends State<CommunityAboutMods> {
               ],
             ),
           );
-        } else {
-          return Center(child: Text("Unknown error fetching data 🤔"));
-        }
-      },
-    );
   }
 }

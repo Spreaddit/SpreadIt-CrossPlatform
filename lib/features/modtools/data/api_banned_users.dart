@@ -7,19 +7,22 @@ Future<int> banUserRequest(
     required String username,
     required String violation,
     required int days,
-    required String banReason,
-    required String messageToUser}) async {
+    required String messageToUser,
+    required String modNote}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
+    print("IsofDays: ${DateTime.now().add(Duration(days: days >= 0 ? days : 1)).toUtc().toIso8601String()}");
+    print("Normal days: ${DateTime.now().add(Duration(days: days >= 0 ? days : 1)).toString()}");
     var data = {
-      "violation": violation,
-      "days": days,
-      "banReason": banReason,
-      "messageToUser": messageToUser
+      "reason": violation,
+      "isPermanent": days < 0 ? true : false,
+      "banDuration": DateTime.now().add(Duration(days: days >= 0 ? days : 1)).toUtc().toIso8601String(),
+      "banMessage": messageToUser,
+      "modNote": modNote == "" ? null : modNote,
     };
     final response = await Dio().post(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/$username/ban',
+      '$apiUrl/community/moderation/$communityName/$username/ban',
       data: data,
       options: Options(
         headers: {
@@ -31,15 +34,17 @@ Future<int> banUserRequest(
       print("banUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error banUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error banUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     }
     return 0;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred banUserRequest: $e");
     return 0;
   }
 }
@@ -50,7 +55,7 @@ Future<int> unbanUserRequest(
   try {
     final response = await Dio().post(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/$username/unban',
+      '$apiUrl/community/moderation/$communityName/$username/unban',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -61,37 +66,39 @@ Future<int> unbanUserRequest(
       print("unbanUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error unbanUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error unbanUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     }
     return 0;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred unbanUserRequest: $e");
     return 0;
   }
 }
 
-Future<int> editBannedUserRequest(
-    {required String communityName,
-    required String username,
-    required String violation,
-    required int days,
-    required String banReason,
-    required String messageToUser}) async {
+Future<int> editBannedUserRequest({
+  required String communityName,
+  required String username,
+  required String violation,
+  required int days,
+  required String messageToUser,
+}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
     var data = {
-      "violation": violation,
-      "days": days,
-      "banReason": banReason,
-      "messageToUser": messageToUser
+      "reason": violation,
+      "isPermanent": days < 0 ? true : false,
+      "banDuration": DateTime.now().add(Duration(days: days >= 0 ? days : 1)).toUtc().toIso8601String(),
+      "banMessage": messageToUser,
     };
-    final response = await Dio().put(
+    final response = await Dio().patch(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/$username/ban',
+      '$apiUrl/community/moderation/$communityName/$username/ban',
       data: data,
       options: Options(
         headers: {
@@ -103,15 +110,17 @@ Future<int> editBannedUserRequest(
       print("editBannedUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error editBannedUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error editBannedUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     }
     return 0;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred editBannedUserRequest: $e");
     return 0;
   }
 }
@@ -122,7 +131,7 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/banned-users',
+      '$apiUrl/community/moderation/$communityName/banned-users',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -130,18 +139,21 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
+      print("getBannedUsersRequest data: ${response.data}");
       print("getBannedUsersRequest Response: ${response.statusMessage}");
       return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error getBannedUsersRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error getBannedUsersRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;
     }
     return defaultResponse;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred getBannedUsersRequest: $e");
     return defaultResponse;
   }
 }
@@ -152,7 +164,7 @@ Future<Map<String, dynamic>> checkIfBannedRequest(
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl2/community/moderation/$communityName/$username/is-banned',
+      '$apiUrl/community/moderation/$communityName/$username/is-banned',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -164,15 +176,17 @@ Future<Map<String, dynamic>> checkIfBannedRequest(
           "checkIfBannedRequest Response: ${response.statusMessage} ${response.data}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error checkIfBannedRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return {};
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error checkIfBannedRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return {};
     }
     return {};
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred checkIfBannedRequest: $e");
     return {};
   }
 }

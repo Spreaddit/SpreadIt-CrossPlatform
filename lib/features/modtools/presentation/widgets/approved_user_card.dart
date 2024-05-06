@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
 class ApprovedUserCard extends StatefulWidget {
   ApprovedUserCard({
@@ -79,16 +80,16 @@ class _ApprovedUserCardState extends State<ApprovedUserCard> {
                 //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
                 //TODO FIX THE "NULL" ERROR
 
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     settings: RouteSettings(
-                //       name: '/user-profile/$username',
-                //     ),
-                //     builder: (context) => UserProfile(
-                //       username: widget.username,
-                //     ),
-                //   ),
-                // );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    settings: RouteSettings(
+                      name: '/user-profile/$widget.username',
+                    ),
+                    builder: (context) => UserProfile(
+                      username: widget.username,
+                    ),
+                  ),
+                );
               },
               child: ListTile(
                 leading: Icon(Icons.account_circle_outlined),
@@ -169,17 +170,17 @@ class _ApprovedUserCardState extends State<ApprovedUserCard> {
         onPressed: () {
           //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
           //TODO FIX THE "NULL" ERROR
-          
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     settings: RouteSettings(
-          //       name: '/user-profile/$username',
-          //     ),
-          //     builder: (context) => UserProfile(
-          //       username: widget.username,
-          //     ),
-          //   ),
-          // );
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              settings: RouteSettings(
+                name: '/user-profile/$widget.username',
+              ),
+              builder: (context) => UserProfile(
+                username: widget.username,
+              ),
+            ),
+          );
         },
         style: TextButton.styleFrom(
           backgroundColor: Colors.white,

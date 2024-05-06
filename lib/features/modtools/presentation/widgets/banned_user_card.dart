@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_edit_banned_page.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
 class BannedUserCard extends StatefulWidget {
   BannedUserCard({
@@ -39,8 +40,7 @@ class _BannedUserCardState extends State<BannedUserCard> {
   @override
   void initState() {
     super.initState();
-    String banLength = widget.bannedDate.replaceAll('T', ' ');
-    banLength = widget.bannedDate.replaceAll('Z', '');
+    String banLength = widget.bannedDate.replaceAll('Z', '');
     Duration banDuration = DateTime.parse(DateTime.now().toString())
         .difference(DateTime.parse(banLength));
 
@@ -118,17 +118,17 @@ class _BannedUserCardState extends State<BannedUserCard> {
                 Navigator.of(context).pop();
                 //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
                 //TODO FIX THE "NULL" ERROR
-                
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     settings: RouteSettings(
-                //       name: '/user-profile/$username',
-                //     ),
-                //     builder: (context) => UserProfile(
-                //       username: widget.username,
-                //     ),
-                //   ),
-                // );
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    settings: RouteSettings(
+                      name: '/user-profile/$widget.username',
+                    ),
+                    builder: (context) => UserProfile(
+                      username: widget.username,
+                    ),
+                  ),
+                );
               },
               child: ListTile(
                 leading: Icon(Icons.account_circle_outlined),
@@ -206,17 +206,17 @@ class _BannedUserCardState extends State<BannedUserCard> {
         onPressed: () {
           //TODO INTEGRATE NAVIGATION TO USER PROFILE W/ MARIAM
           //TODO FIX THE "NULL" ERROR
-          
-          // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     settings: RouteSettings(
-                //       name: '/user-profile/$username',
-                //     ),
-                //     builder: (context) => UserProfile(
-                //       username: widget.username,
-                //     ),
-                //   ),
-                // );
+
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              settings: RouteSettings(
+                name: '/user-profile/$widget.username',
+              ),
+              builder: (context) => UserProfile(
+                username: widget.username,
+              ),
+            ),
+          );
         },
         style: TextButton.styleFrom(
           backgroundColor: Colors.white,
