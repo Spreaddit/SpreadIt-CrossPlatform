@@ -26,7 +26,7 @@ class FollowerListTile extends StatefulWidget {
   final bool isFollowed;
 
   /// Constructs a [FollowerListTile] with the given parameters.
-   FollowerListTile({
+  FollowerListTile({
     required this.username,
     required this.avatarUrl,
     required this.isFollowed,
@@ -62,7 +62,8 @@ class _FollowerListTileState extends State<FollowerListTile> {
       } else if (response == 404) {
         CustomSnackbar(content: 'User not found').show(context);
       } else if (response == 500) {
-        CustomSnackbar(content: 'Internal server error').show(context);
+        CustomSnackbar(content: "An error ocuured please try again later")
+            .show(context);
       }
     } catch (e) {
       print('Error toggling follow status: $e');

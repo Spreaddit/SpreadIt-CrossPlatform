@@ -82,6 +82,11 @@ class Notifications extends Equatable {
 
   /// Factory method to create a Notifications object from a JSON map.
   factory Notifications.fromJson(Map<String, dynamic> json) {
+    DateTime? parsedDateTime;
+    final createdString = json['created_at'] ?? json['dateCreated'];
+    if (createdString != null) {
+      parsedDateTime = DateTime.tryParse(createdString);
+    }
     return Notifications(
       id: json['_id'] ?? 'id',
       content: json['content'] ?? 'content',
@@ -91,8 +96,7 @@ class Notifications extends Equatable {
           : null,
       isRead: json['is_read'] ?? false,
       isHidden: json['is_hidden'] ?? false,
-      createdAt:
-          DateTime.parse(json['created_at'] ?? json['dateCreated'] ?? ''),
+      createdAt: parsedDateTime ?? DateTime.now(),
       comment: json['comment'] != null
           ? CommentNotification.fromJson(json['comment'])
           : CommentNotification(),
@@ -104,8 +108,8 @@ class Notifications extends Equatable {
       userId: json['userId'] ?? "-1",
       postId: json['postId'] ?? "-1",
       commentId: json['commentId'] ?? "-1",
-      communityname: json['name'] ?? '',
-      communitypic: json['image'] ?? '',
+      communityname: json['communityname'] ?? '',
+      communitypic: json['communitybanner'] ?? '',
     );
   }
 }

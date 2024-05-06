@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 FirebaseMessaging messaging = FirebaseMessaging.instance;
-
 
 /// Subscribes the user to receive push notifications.
 ///
@@ -35,12 +35,12 @@ FirebaseMessaging messaging = FirebaseMessaging.instance;
 ///   print('Error occurred: $e');
 /// }
 /// ```
-/// 
+///
 Future<int> subscribeToNotifications() async {
   try {
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/notifications/subscribe';
-    
+
     // Request notification permission
     await messaging.requestPermission(
       alert: true,
@@ -51,19 +51,22 @@ Future<int> subscribeToNotifications() async {
       provisional: false,
       sound: true,
     );
-    
-    // Get FCM token
-    String? token = await messaging.getToken(
-      vapidKey:
-          'BDdxkpSfsZfMF7ZyPklut-xQVgp6HH8GkJnTRHXGlsGv6u3oDujnIiqPF9_iqq_POtjU8tLuEISutYyAiyZC7dw',
-    );
+    String? token;
+    if (kIsWeb) {
+      token = await messaging.getToken(
+        vapidKey:
+            'BDdxkpSfsZfMF7ZyPklut-xQVgp6HH8GkJnTRHXGlsGv6u3oDujnIiqPF9_iqq_POtjU8tLuEISutYyAiyZC7dw',
+      );
+    } else {
+      token = await messaging.getToken();
+    }
     print('FCM Token: $token');
-    
+
     var data = {
       "fcmToken": token,
     };
 
-    final response = await Dio().post(
+    final response = await Dio().put(
       apiRoute,
       data: data,
       options: Options(
@@ -103,7 +106,7 @@ Future<int> subscribeToNotifications() async {
       }
     }
     rethrow;
-  }  catch (e) {
+  } catch (e) {
     print("Error occurred: $e");
     return 404;
   }

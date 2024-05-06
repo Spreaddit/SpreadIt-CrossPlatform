@@ -49,11 +49,6 @@ class _NotificationPageState extends State<NotificationPage> {
     notifications = widget.notifications;
     earlierNotifications = widget.earlierNotifications;
     todayNotifications = widget.todayNotifications;
-    if (notifications.isNotEmpty) {
-      print('notifications loaded sa7');
-    } else {
-      print('notifications not loaded sa7');
-    }
   }
 
   Future<void> turnOffNotification(String key) async {
