@@ -8,7 +8,7 @@ Future<Map<String, dynamic>> checkIfInvitedRequest(
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl2/community/moderation/$communityName/$username/is-invited',
+      '$apiUrl/community/moderation/$communityName/$username/is-invited',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

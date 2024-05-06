@@ -169,7 +169,7 @@ class _PostHeaderState extends State<_PostHeader> {
                   communityName: widget.post.community,
                 ),
               ),
-              if (widget.isLocked) Icon(Icons.lock),
+              if (widget.isLocked) Icon(Icons.lock, color: Colors.orange),
               IconButton(
                 icon: Icon(Icons.more_vert),
                 onPressed: onShowMenu,
@@ -731,20 +731,36 @@ class _PostInteractionsState extends State<_PostInteractions> {
               isDownvoted: widget.hasDownvoted,
               postId: widget.postId,
             ),
-            TextButton.icon(
-              onPressed: () => navigateToPostCardPage(
-                context,
-                widget.postId,
-                widget.isUserProfile,
-                widget.isModeratorView,
-              ),
-              icon: Icon(
-                Icons.comment,
-              ),
-              label: Text(
-                widget.commentsCount.toString(),
-              ),
-            ),
+            widget.isCommentsLocked
+                ? TextButton.icon(
+                    onPressed: () => navigateToPostCardPage(
+                      context,
+                      widget.postId,
+                      widget.isUserProfile,
+                      widget.isModeratorView,
+                    ),
+                    icon: Icon(
+                      Icons.comment,
+                      color: Colors.grey,
+                    ),
+                    label: Text(
+                      widget.commentsCount.toString(),
+                    ),
+                  )
+                : TextButton.icon(
+                    onPressed: () => navigateToPostCardPage(
+                      context,
+                      widget.postId,
+                      widget.isUserProfile,
+                      widget.isModeratorView,
+                    ),
+                    icon: Icon(
+                      Icons.comment,
+                    ),
+                    label: Text(
+                      widget.commentsCount.toString(),
+                    ),
+                  ),
             IconButton(
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),

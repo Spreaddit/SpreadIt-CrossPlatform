@@ -8,7 +8,8 @@ Future<List<dynamic>> getModeratorsRequest(String communityName) async {
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl2/community/moderation/$communityName/moderators',
+      // '$galalModUrl2/community/moderation/$communityName/moderators',
+      '$apiUrl/community/moderation/$communityName/moderators',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -38,7 +39,7 @@ Future<Map<String, dynamic>> checkIfModeratorRequest(
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl2/community/moderation/$communityName/$username/is-moderator',
+      '$apiUrl/community/moderation/$communityName/$username/is-moderator',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

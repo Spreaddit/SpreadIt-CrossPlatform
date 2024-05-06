@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import '../../data/data_source/api_user_info_data.dart';
 import '../widgets/sort_home.dart';
@@ -47,6 +48,11 @@ class _SettingsPageState extends State<SettingsPage> {
           mainText: "Account Settings for u/${data["username"]}",
           onPressed: () =>
               Navigator.of(context).pushNamed('/settings/account-settings'),
+        ),
+        ToPageBtn(
+          iconData: Icons.shield_rounded,
+          mainText: "RehabCom",
+          onPressed: () => navigateToCommunity(context, "RehabCom"),
         ),
       ]);
       return value;

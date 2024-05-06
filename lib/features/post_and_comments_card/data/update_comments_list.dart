@@ -93,7 +93,7 @@ Future<Comment?> updateComments({
           print(response.statusCode);
           return null;
         }
-      } on DioError catch (e) {
+      } on DioException catch (e) {
         if (e.response != null) {
           if (e.response!.statusCode == 400) {
             print(e.response!.statusMessage);

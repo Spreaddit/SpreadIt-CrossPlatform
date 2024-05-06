@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
@@ -41,6 +42,8 @@ class _CommentHeader extends HookWidget {
   final DateTime date;
   final String profilePic;
   final bool isLocked;
+  final bool isRemoved;
+  final bool isRemoval;
 
   /// Constructs a [_CommentHeader] widget with the given parameters.
   _CommentHeader({
@@ -49,6 +52,8 @@ class _CommentHeader extends HookWidget {
     required this.postId,
     required this.date,
     required this.isLocked,
+    required this.isRemoval,
+    required this.isRemoved,
     required this.profilePic,
   });
 
@@ -78,12 +83,23 @@ class _CommentHeader extends HookWidget {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ListTile(
           contentPadding: EdgeInsets.only(top: 20),
-          title: Wrap(
-            alignment: WrapAlignment.spaceBetween,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                username,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Text(
+                    username,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+
+                  SizedBox(width: 4), // Adjust the spacing as needed
+                  if (isRemoval)
+                    Icon(
+                      Icons.shield,
+                      color: const Color.fromARGB(255, 255, 89, 0),
+                    ),
+                ],
               ),
               Text(dateFormatted.value),
             ],
@@ -91,7 +107,13 @@ class _CommentHeader extends HookWidget {
           leading: CircleAvatar(
             backgroundImage: NetworkImage(profilePic),
           ),
-          trailing: isLocked ? Icon(Icons.lock) : null,
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isLocked) Icon(Icons.lock, color: Colors.orange),
+              if (isRemoved) Icon(Icons.delete, color: Colors.orange),
+            ],
+          ),
         ),
       ),
     );
@@ -126,6 +148,7 @@ class _CommentCardState extends State<CommentCard> {
   late bool isUserProfile;
   bool isNotApprovedForEditOrReply = false;
   late bool isLocked;
+  late bool isRemoved;
   var isSaved;
   File? uploadedImageFile;
   Uint8List? uploadedImageWeb;
@@ -175,10 +198,15 @@ class _CommentCardState extends State<CommentCard> {
   }
 
   void onLock(bool newIsLocked) {
-    //if (!mounted) return;
     print("lock comment: $newIsLocked");
     setState(() {
       isLocked = newIsLocked;
+    });
+  }
+
+  void onSpam(bool newIsRemoved) {
+    setState(() {
+      isRemoved = newIsRemoved;
     });
   }
 
@@ -195,6 +223,7 @@ class _CommentCardState extends State<CommentCard> {
     super.initState();
     isSaved = widget.comment.isSaved!;
     isLocked = widget.comment.isLocked!;
+    isRemoved = widget.comment.isRemoved!;
     checkIfCanEditOrReply();
   }
 
@@ -213,7 +242,9 @@ class _CommentCardState extends State<CommentCard> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildCommentWidget(widget.comment);
+    return _repliesFetched
+        ? _buildCommentWidget(widget.comment)
+        : _buildShimmeringComment();
   }
 
   Widget _buildCommentWidget(Comment comment) {
@@ -236,6 +267,8 @@ class _CommentCardState extends State<CommentCard> {
                       date: comment.createdAt,
                       profilePic: comment.profilePic!,
                       isLocked: isLocked,
+                      isRemoved: isRemoved,
+                      isRemoval: widget.comment.isRemoval!,
                     ),
                     TextButton(
                       onPressed: () {
@@ -264,6 +297,9 @@ class _CommentCardState extends State<CommentCard> {
                       ),
                     CommentFooter(
                       onLock: onLock,
+                      onRemove: onSpam,
+                      isRemoval: widget.comment.isRemoval!,
+                      isRemoved: isRemoved,
                       communityName: comment.subredditName,
                       isPostLocked: widget.isPostLocked,
                       isCommentLocked: isLocked,
@@ -473,9 +509,9 @@ class _CommentCardState extends State<CommentCard> {
                                                   "Sorry you can't post an empty comment :(")
                                           .show(context);
                                     }
-                                    if (replyController.text.isNotEmpty) {
-                                      replyController.dispose();
-                                    }
+                                    //  if (replyController.text.isNotEmpty) {
+                                    replyController.clear();
+                                    // }
                                   },
                                   child: Text('Reply'),
                                 ),
@@ -516,6 +552,50 @@ class _CommentCardState extends State<CommentCard> {
                 );
               }).toList(),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildShimmeringComment() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.grey[300],
+                radius: 16.0,
+              ),
+              SizedBox(width: 8.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 16.0,
+                    width: 100.0,
+                    child: Container(color: Colors.white),
+                  ),
+                  SizedBox(height: 8.0),
+                  SizedBox(
+                    height: 12.0,
+                    width: 200.0,
+                    child: Container(color: Colors.white),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 8.0),
+          SizedBox(
+            height: 100.0,
+            width: double.infinity,
+            child: Container(color: Colors.white),
+          ),
+          SizedBox(height: 8.0),
         ],
       ),
     );

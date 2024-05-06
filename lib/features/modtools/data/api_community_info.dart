@@ -8,7 +8,7 @@ Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
   try {
     var response = await Dio().get(
       //TODO: Change the API URL to: '$apiUrl/community/$communityName/get-info'
-      '$galalModUrl/community/get-info',
+      '$apiUrl/community/get-info',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',

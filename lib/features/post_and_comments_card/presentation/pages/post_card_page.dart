@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
@@ -8,6 +9,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_shimmer.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
@@ -185,7 +187,7 @@ class _PostCardPageState extends State<PostCardPage> {
                               setIsloaded: setIsloaded,
                               oneComment: widget.oneComment,
                             )
-                          : Text(""),
+                          : PostCardShimmer(), // Placeholder post card
                     ],
                   ),
                 ),
@@ -209,7 +211,7 @@ class _PostCardPageState extends State<PostCardPage> {
                 commentsList: comments,
                 postId: widget.postId.toString(),
                 addComment: addComment,
-                communityName: post!.community,
+                communityName: post?.community ?? "",
               ),
           ],
         ),

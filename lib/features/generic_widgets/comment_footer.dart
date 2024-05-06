@@ -12,12 +12,15 @@ class CommentFooter extends StatefulWidget {
   final Function()? onMorePressed;
   final Function()? onReplyPressed;
   final void Function(bool)? onLock;
+  final void Function(bool)? onRemove;
   final int number;
   final bool upvoted;
   final bool downvoted;
   final String? commentId;
   final bool isPostLocked;
   bool isCommentLocked;
+  bool isRemoved;
+  bool isRemoval;
   final bool isModeratorView;
   String? communityName;
   CommentFooter({
@@ -28,9 +31,12 @@ class CommentFooter extends StatefulWidget {
     this.downvoted = false,
     this.isPostLocked = false,
     this.isCommentLocked = false,
+    this.isRemoved = false,
+    this.isRemoval = false,
     this.commentId,
     this.isModeratorView = false,
     this.onLock,
+    this.onRemove,
     this.communityName,
   });
   @override
@@ -50,28 +56,72 @@ class CommentFooterState extends State<CommentFooter> {
         children: [
           Row(
             children: [
-              IconButton(
-                onPressed: widget.onMorePressed,
-                icon: Icon(Icons.more_vert),
-              ),
+              if (!widget.isRemoval && !widget.isRemoved)
+                IconButton(
+                  onPressed: widget.onMorePressed,
+                  icon: Icon(Icons.more_vert),
+                )
+              else
+                IconButton(
+                    onPressed: () {
+                      widget.isRemoval
+                          ? CustomSnackbar(
+                                  content: "This is the removal reason!")
+                              .show(context)
+                          : CustomSnackbar(
+                                  content:
+                                      "This comment has been removed as spam!")
+                              .show(context);
+                    },
+                    icon: Icon(Icons.more_vert, color: Colors.grey)),
               SizedBox(width: screenWidth * 0.01),
               if (!widget.isCommentLocked && !widget.isPostLocked ||
                   widget.isModeratorView)
-                TextButton(
-                  onPressed: widget.onReplyPressed,
-                  child: Row(
-                    children: [
-                      Icon(Icons.reply, color: Colors.grey),
-                      Text(
-                        'Reply',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                )
+
+                //(widget.isModeratorView &&
+                //   (!widget.isRemoved || !widget.isRemoval)))
+                if (!widget.isRemoved && !widget.isRemoval)
+                  TextButton(
+                    onPressed: widget.onReplyPressed,
+                    child: Row(
+                      children: [
+                        Icon(Icons.reply, color: Colors.grey),
+                        Text(
+                          'Reply',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  TextButton(
+                    onPressed: () {
+                      widget.isRemoval
+                          ? CustomSnackbar(
+                                  content: "This is the removal reason!")
+                              .show(context)
+                          : CustomSnackbar(
+                                  content:
+                                      "This comment has been removed as spam!")
+                              .show(context);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.reply,
+                            color: Color.fromARGB(255, 255, 254, 254)),
+                        Text(
+                          'Reply',
+                          style: TextStyle(
+                              color: const Color.fromARGB(137, 219, 212, 212)),
+                        ),
+                      ],
+                    ),
+                  )
               else
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    CustomSnackbar(content: "Locked :(").show(context);
+                  },
                   child: Row(
                     children: [
                       Icon(Icons.reply,
@@ -86,12 +136,16 @@ class CommentFooterState extends State<CommentFooter> {
                 ),
               SizedBox(width: screenWidth * 0.01),
               CommentVoteButton(
+                  isRemoved: widget.isRemoved,
+                  isRemoval: widget.isRemoval,
                   initialVotesCount: widget.number,
                   isUpvoted: widget.upvoted,
                   isDownvoted: widget.downvoted,
                   commentId: widget.commentId!),
               // SizedBox(width: screenWidth * 0.01),
-              if (widget.isModeratorView)
+              if (widget.isModeratorView &&
+                  !widget.isRemoved &&
+                  !widget.isRemoval)
                 IconButton(
                   onPressed: () {
                     showModalBottomSheet(
@@ -140,6 +194,7 @@ class CommentFooterState extends State<CommentFooter> {
                                 removeCommentAsSpam(
                                     communityName: widget.communityName!,
                                     commentId: widget.commentId!);
+                                widget.onRemove!(true);
                                 Navigator.pop(context);
                                 CustomSnackbar(
                                         content:
@@ -154,6 +209,22 @@ class CommentFooterState extends State<CommentFooter> {
                   },
                   icon: Icon(
                     Icons.shield,
+                  ),
+                )
+              else if (widget.isModeratorView)
+                IconButton(
+                  onPressed: () {
+                    widget.isRemoval
+                        ? CustomSnackbar(content: "This is the removal reason!")
+                            .show(context)
+                        : CustomSnackbar(
+                                content:
+                                    "This comment has been removed as spam!")
+                            .show(context);
+                  },
+                  icon: Icon(
+                    Icons.shield,
+                    color: Colors.grey,
                   ),
                 ),
             ],

@@ -67,7 +67,7 @@ class Comment extends Equatable {
   final bool? isApproved;
   final bool? isUpvoted;
   final bool? isDownvoted;
-  //final bool? isRemoval;
+  final bool? isRemoval;
 
   Comment({
     required this.id,
@@ -95,7 +95,7 @@ class Comment extends Equatable {
     this.isLocked,
     this.isUpvoted,
     this.isDownvoted,
-    //this.isRemoval,
+    this.isRemoval,
   });
 
   /// Factory constructor for creating a Comment object from JSON data.
@@ -128,7 +128,7 @@ class Comment extends Equatable {
       isRemoved: json['is_removed'] as bool,
       isUpvoted: json['is_upvoted'] ? json['is_upvoted'] as bool : false,
       isDownvoted: json['is_downvoted'] ? json['is_downvoted'] as bool : false,
-      //isRemoval: json['is_removal'] ? json['is_removal'] as bool : false,
+      isRemoval: json['is_removal'] ? json['is_removal'] as bool : false,
     );
   }
   @override
@@ -158,7 +158,7 @@ class Comment extends Equatable {
         //lastEdit,
         isUpvoted,
         isDownvoted,
-        // isRemoval,
+        isRemoval,
       ];
 }
 
