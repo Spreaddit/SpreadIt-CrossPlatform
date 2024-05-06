@@ -24,6 +24,7 @@ class _RecentSearchesState extends State<RecentSearches> {
 
   void getRecentSearches () async {
     recentSearches = await getSeacrhHistory();
+    print(recentSearches);
     setRecentVector();
   }
 
@@ -33,7 +34,8 @@ class _RecentSearchesState extends State<RecentSearches> {
 
   void deleteRecentSearch (String query) async{
     int response = await deleteSearchHistory(query);
-    getSeacrhHistory();
+    print(response);
+    getRecentSearches();
   }
 
   void navigateToSearchResults (String searchItem) async {

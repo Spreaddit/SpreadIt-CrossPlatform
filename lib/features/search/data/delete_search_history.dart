@@ -16,12 +16,13 @@ Future<int> deleteSearchHistory(String query) async {
           'Authorization': 'Bearer $accessToken',
         },
       ),
-      data : {
-        "query": query,
-      },
+      queryParameters: {
+        'query': query,
+      }
     );
     if (response.statusCode == 200) {
       print(response.statusMessage);
+      print('search history deleted');
       print(response.statusCode);
       return 200;
     } else {

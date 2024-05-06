@@ -24,14 +24,20 @@ class _FilterButtonState extends State<FilterButton> {
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.all(3),
           backgroundColor: Colors.grey[200],
-          fixedSize: Size(15, 7)
         ),
-        child: Text(
-          widget.text,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-          ),
+        child: Row(
+          mainAxisSize : MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                widget.text,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
         )
       ),
     );
