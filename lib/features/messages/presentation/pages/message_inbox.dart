@@ -19,10 +19,12 @@ MessageRepliesModel getLastMessage(MessageModel message) {
 
 class MessageInbox extends StatefulWidget {
   final bool isAllRead;
+  final MessageModel? newMessage;
 
   const MessageInbox({
     Key? key,
     this.isAllRead = false,
+    this.newMessage,
   }) : super(key: key);
 
   @override
@@ -54,13 +56,19 @@ class _MessageInboxState extends State<MessageInbox> {
 
   @override
   void didUpdateWidget(covariant MessageInbox oldWidget) {
-    if (widget.isAllRead == true) {
-      for (var message in messages) {
-        setState(() {
-          message.primaryMessage.isRead = true;
-        });
+    if (widget.newMessage != null &&
+        (oldWidget.newMessage == null &&
+            widget.newMessage?.primaryMessage.id !=
+                oldWidget.newMessage?.primaryMessage.id)) {
+      setState(() {
+        messages = [...messages, widget.newMessage!];
+      });
+    } else if (widget.isAllRead == true) {
+      for (int i = 0; i < messages.length; i++) {
+        handleReadConversation(messages[i], i, true);
       }
     }
+
     super.didUpdateWidget(oldWidget);
   }
 
@@ -72,15 +80,16 @@ class _MessageInboxState extends State<MessageInbox> {
   void handleReadConversation(
     MessageModel message,
     int index,
+    bool shouldRead,
   ) {
-    if (message.primaryMessage.direction == "incoming") {
+    if (message.primaryMessage.direction == "incoming" &&
+        message.primaryMessage.isRead != shouldRead) {
       handleReadMessages(
         shouldRead: !message.primaryMessage.isRead,
         messageId: message.primaryMessage.id,
       );
       setState(() {
-        messages[index].primaryMessage.isRead =
-            !messages[index].primaryMessage.isRead;
+        messages[index].primaryMessage.isRead = shouldRead;
       });
     }
 
@@ -88,15 +97,15 @@ class _MessageInboxState extends State<MessageInbox> {
 
     for (int i = 0; i < message.replies!.length; i++) {
       var messageReply = message.replies![i];
-      if (messageReply.direction == "incoming") {
+      if (messageReply.direction == "incoming" &&
+          messageReply.isRead != shouldRead) {
         handleReadMessages(
-          shouldRead: !message.primaryMessage.isRead,
+          shouldRead: shouldRead,
           messageId: messageReply.id,
         );
 
         setState(() {
-          messages[index].replies![i].isRead =
-              !messages[index].primaryMessage.isRead;
+          messages[index].replies![i].isRead = shouldRead;
         });
       }
     }
@@ -113,7 +122,7 @@ class _MessageInboxState extends State<MessageInbox> {
               shrinkWrap: true,
               children: messages.mapIndexed<Widget>((index, message) {
                 MessageRepliesModel lastMessage = getLastMessage(message);
-                if (lastMessage.direction == "incoming") {
+                if (lastMessage.direction == "outgoing") {
                   return MessageTile(
                     message: message,
                     isRead: isReadHandling(message),
@@ -129,7 +138,11 @@ class _MessageInboxState extends State<MessageInbox> {
                       SlidableAction(
                         flex: 1,
                         onPressed: (context) {
-                          handleReadConversation(message, index);
+                          handleReadConversation(
+                            message,
+                            index,
+                            !lastMessage.isRead,
+                          );
                         },
                         backgroundColor: Color.fromARGB(255, 179, 179, 179),
                         foregroundColor: Colors.white,
@@ -157,7 +170,12 @@ class MessageTile extends StatefulWidget {
   final MessageModel message;
   final bool isRead;
   final int index;
-  final void Function(MessageModel message, int index) handleReadConversation;
+
+  final void Function(
+    MessageModel message,
+    int index,
+    bool shouldRead,
+  ) handleReadConversation;
 
   const MessageTile({
     required this.message,
@@ -179,59 +197,53 @@ class _MessageTileState extends State<MessageTile> {
   @override
   Widget build(BuildContext context) {
     MessageRepliesModel lastMessage = getLastMessage(widget.message);
-    return GestureDetector(
-      onTap: () {
-        widget.handleReadConversation(
-          widget.message,
-          widget.index,
-        );
-        navigateToMessage(
-          context: context,
-          message: widget.message,
-        );
-      },
-      child: Opacity(
-        opacity: widget.isRead ? 0.7 : 1,
-        child: ListTile(
-          title: Text(
-            lastMessage.relatedUserOrCommunity,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+    return Opacity(
+      opacity: widget.isRead ? 0.7 : 1,
+      child: ListTile(
+        title: Text(
+          lastMessage.relatedUserOrCommunity,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
           ),
-          subtitle: Align(
-            alignment: Alignment.topLeft,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.message.primaryMessage.subject,
-                  maxLines: 3,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  widget.message.primaryMessage.content,
-                  maxLines: 3,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          trailing: Text(
-            "${lastMessage.direction} • ${dateToDuration(
-              lastMessage.time,
-            )}",
-          ),
-          onTap: () => {
-            navigateToMessage(
-              context: context,
-              message: widget.message,
-            ),
-          },
         ),
+        subtitle: Align(
+          alignment: Alignment.topLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.message.primaryMessage.subject,
+                maxLines: 3,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                widget.message.primaryMessage.content,
+                maxLines: 3,
+                textAlign: TextAlign.left,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+        trailing: Text(
+          "${lastMessage.direction} • ${dateToDuration(
+            lastMessage.time,
+          )}",
+        ),
+        onTap: () {
+          widget.handleReadConversation(
+            widget.message,
+            widget.index,
+            true,
+          );
+
+          navigateToMessage(
+            context: context,
+            message: widget.message,
+          );
+        },
       ),
     );
   }

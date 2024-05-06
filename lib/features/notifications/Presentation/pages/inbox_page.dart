@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_total_notifications.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
@@ -11,10 +12,12 @@ import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 /// A StatefulWidget representing the Saved page where users can view their saved posts and comments.
 class InboxPage extends StatefulWidget {
   final void Function(int)? onChangeHomeSubCategory;
+  final MessageModel? newMessage;
   final bool isAllRead;
   const InboxPage({
     Key? key,
     this.onChangeHomeSubCategory,
+    this.newMessage,
     required this.isAllRead,
   }) : super(key: key);
 
@@ -126,6 +129,7 @@ class _InboxPageState extends State<InboxPage> {
             ? LoaderWidget(dotSize: 10, logoSize: 100)
             : MessageInbox(
                 isAllRead: widget.isAllRead,
+                newMessage: widget.newMessage,
               );
       default:
         return LoaderWidget(

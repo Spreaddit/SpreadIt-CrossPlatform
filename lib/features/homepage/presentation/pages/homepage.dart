@@ -9,6 +9,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   late GlobalKey<_HomePageState> _homePageKey;
   int chatFilterSelectedOption = 3;
   bool isAllRead = false;
+  MessageModel? newMessage;
 
   @override
   void initState() {
@@ -42,6 +44,12 @@ class _HomePageState extends State<HomePage> {
       currentPage = widget.currentPage;
     });
     _getCurrentUrlAndProcessToken();
+  }
+
+  void setNewMessage(MessageModel message) {
+    setState(() {
+      newMessage = message;
+    });
   }
 
   Future<void> _getCurrentUrlAndProcessToken() async {
@@ -105,6 +113,7 @@ class _HomePageState extends State<HomePage> {
       ),
       InboxPage(
         isAllRead: isAllRead,
+        newMessage: newMessage,
       ),
       PostFeed(
         postCategory: PostCategories.hot,
@@ -148,13 +157,15 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: TopBar(
-          key: _homePageKey,
-          onReadMessages: markallnotificationsasRead,
-          context: context,
-          currentPage: currentPage,
-          onChangeHomeCategory: changeSelectedIndex,
-          onChangeChatFilter: onChangeChatFilter,
-          chatFilterSelectedOption: chatFilterSelectedOption),
+        key: _homePageKey,
+        onReadMessages: markallnotificationsasRead,
+        context: context,
+        currentPage: currentPage,
+        onChangeHomeCategory: changeSelectedIndex,
+        onChangeChatFilter: onChangeChatFilter,
+        chatFilterSelectedOption: chatFilterSelectedOption,
+        setNewMessage: setNewMessage,
+      ),
       body: screens[currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),

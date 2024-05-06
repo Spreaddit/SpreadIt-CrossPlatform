@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/widgets/new_message.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 class MessagePage extends StatefulWidget {
@@ -19,6 +20,35 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
+  late MessageModel message;
+  @override
+  void initState() {
+    setState(() {
+      message = widget.message;
+    });
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant MessagePage oldWidget) {
+    if (!mounted) return;
+
+    setState(() {
+      message = widget.message;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void setNewMessage(MessageModel newMessage) {
+    MessageRepliesModel newMessageReply = newMessage.primaryMessage;
+    setState(() {
+      message.replies = [
+        ...message.replies!,
+        newMessageReply,
+      ];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,27 +61,67 @@ class _MessagePageState extends State<MessagePage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            MessageReplyTile(
-              message: widget.message.primaryMessage,
+      body: Container(
+          constraints:
+              BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+          color: const Color.fromARGB(255, 218, 218, 218),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  MessageReplyTile(
+                    message: widget.message.primaryMessage,
+                  ),
+                  ListView(
+                    padding: EdgeInsets.zero,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: widget.message.replies != null &&
+                            widget.message.replies!.isNotEmpty
+                        ? widget.message.replies!
+                            .map<Widget>(
+                              (message) => MessageReplyTile(
+                                message: message,
+                              ),
+                            )
+                            .toList()
+                        : [],
+                  ),
+                ],
+              ),
             ),
-            ListView(
-              padding: EdgeInsets.zero,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: widget.message.replies != null &&
-                      widget.message.replies!.isNotEmpty
-                  ? widget.message.replies!
-                      .map<Widget>(
-                        (message) => MessageReplyTile(
-                          message: message,
-                        ),
-                      )
-                      .toList()
-                  : [],
+          )),
+      bottomSheet: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  showSendMessage(
+                      context: context,
+                      messageId: getLastMessage(widget.message).id,
+                      setNewMessage: setNewMessage);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.grey,
+                  padding: EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Text(
+                  "Reply To Message",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
           ],
         ),
@@ -73,17 +143,6 @@ class MessageReplyTile extends StatefulWidget {
 
 class _MessageReplyTileState extends State<MessageReplyTile> {
   bool isExpanded = true;
-
-  @override
-  void initState() {
-    if (!widget.message.isRead) {
-      handleReadMessages(
-        shouldRead: true,
-        messageId: widget.message.id,
-      );
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
