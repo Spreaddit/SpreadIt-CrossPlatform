@@ -7,10 +7,10 @@ class PeopleElement extends StatefulWidget {
   final String username;
   final String userIcon;
   final String followersCount;
-  final bool isFollowing;
+  bool isFollowing;
   final VoidCallback toggleIsFollowing;
 
-  const PeopleElement({
+   PeopleElement({
     required this.username,
     required this.userIcon,
     required this.followersCount,
@@ -27,6 +27,7 @@ class _PeopleElementState extends State<PeopleElement> {
   void followUser() async {
     await toggleFollow(username: widget.username, isFollowing: widget.isFollowing);
     widget.toggleIsFollowing;
+    setState(() {widget.isFollowing = !widget.isFollowing;});
   }
 
   void navigateToUserProfile() {

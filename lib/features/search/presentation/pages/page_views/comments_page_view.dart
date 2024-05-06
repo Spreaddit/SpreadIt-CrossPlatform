@@ -60,6 +60,7 @@ class _CommentsPageViewState extends State<CommentsPageView> {
 
   void getCommentssResults() async {
     if (fromUserProfile != null && fromUserProfile == true) {
+      print('dakhalt men hena');
       comments = await getUserSearchResults(widget.searchItem, 'comments', sort, communityOrUserName);
     }
     else if (fromCommunityPage != null && fromCommunityPage == true) {

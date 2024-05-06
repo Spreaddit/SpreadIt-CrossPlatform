@@ -95,14 +95,8 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
   void initState() {
     communityOrUserName = widget.communityOrUserName;
     communityOrUserIcon = widget.communityOrUserIcon;
-    if (widget.fromUserProfile != null) {
-      fromUserProfile = widget.fromUserProfile;
-      fromCommunityPage = false;
-    }
-    if (widget.fromCommunityPage != null) {
-      fromCommunityPage = widget.fromCommunityPage;
-      fromUserProfile = false;
-    }
+    fromUserProfile = widget.fromUserProfile;
+    fromCommunityPage = widget.fromCommunityPage;
     super.initState();
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
+import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
 import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 
 class CommunityElement extends StatefulWidget {
@@ -72,7 +73,7 @@ class _CommunityElementState extends State<CommunityElement> {
                           ),                          
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width - 130, 
+                          width: MediaQuery.of(context).size.width - 135, 
                           child: Text(
                             widget.communityDescription,
                             softWrap: true,
@@ -90,26 +91,7 @@ class _CommunityElementState extends State<CommunityElement> {
               ),
               Container(
                 margin: EdgeInsets.only(left: 7),
-                child: ElevatedButton(
-                  onPressed: widget.isFollowing ? unjoinCommunity : joincommunity ,  
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(color: Colors.blue[900]!),
-                    padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                    backgroundColor: widget.isFollowing? Colors.white : Colors.blue[900],
-                    fixedSize: Size(15,7),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),         
-                  ), 
-                  child: Text(
-                    widget.isFollowing ? 'Unjoin' :'Join',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color:  widget.isFollowing ? Colors.blue[900] : Colors.white,
-                    ),
-                  ),
-                ),
+                child: JoinCommunityBtn(communityName: widget.communityName)
               ),
             ],
           ),

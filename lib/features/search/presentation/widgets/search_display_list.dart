@@ -55,7 +55,7 @@ class _SearchDisplayListState extends State<SearchDisplayList> {
                   widget.displayList[index]['username'] 
                   : widget.displayList[index]['communityName'],
               communityIcon: widget.type == 'user'? 
-                  widget.displayList[index]['avatar'] 
+                  widget.displayList[index]['userProfilePic'] 
                   : widget.displayList[index]['communityProfilePic'],
               boxSize: 7,
               iconRadius: 13, 
