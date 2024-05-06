@@ -23,6 +23,7 @@ class JoinCommunityBtn extends StatefulWidget {
 }
 
 class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
+  late Future<Map<String, dynamic>> subscriptionDataFuture;
   late Map<String, dynamic> subscriptionData;
   bool isJoined = false;
   bool isNotApprovedForJoin = false;
@@ -52,20 +53,21 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
 
   /// Fetches the subscription data for the community.
   Future<void> fetchData() async {
-    //TODO FIX MODIFICATIONS
-    subscriptionData = await getCommunitySubStatus(widget.communityName);
-    //subscriptionData = {"isSubscribed": true};
-    if (subscriptionData["isSubscribed"] == -1) {
-      CustomSnackbar(content: "Failed to retrieve subscription data")
-          .show(context);
-    } else {
-      setState(() {
+    subscriptionDataFuture =
+        getCommunitySubStatus(widget.communityName).then((value) {
+      subscriptionData = value;
+      if (subscriptionData["isSubscribed"] == -1) {
+        CustomSnackbar(content: "Failed to retrieve subscription data")
+            .show(context);
+      } else {
         isJoined = subscriptionData["isSubscribed"];
-      });
-      if (widget.shouldJoinButtonRender != null) {
-        widget.shouldJoinButtonRender!();
+
+        if (widget.shouldJoinButtonRender != null) {
+          widget.shouldJoinButtonRender!();
+        }
       }
-    }
+      return value;
+    });
   }
 
   /// Handles the button press event.
@@ -156,6 +158,27 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: subscriptionDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.deepOrangeAccent,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error fetching data 😔');
+        } else if (snapshot.hasData) {
+          return _buildJoinButton();
+        } else {
+          return Text('Unknown Error 🤔');
+        }
+      },
+    );
+  }
+
+  Widget _buildJoinButton() {
     return TextButton(
       onPressed: () {
         handleBtnPress();

@@ -110,12 +110,12 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
                         return BannedUserCard(
                           username: _filteredData[index]['username'],
                           communityName: widget.communityName,
-                          violation: _filteredData[index]['violation'],
-                          banReason: _filteredData[index]['banReason'],
-                          days: _filteredData[index]['days'],
-                          messageToUser: _filteredData[index]['messageToUser'],
-                          bannedDate: _filteredData[index]['bannedDate'],
-                          avatarUrl: _filteredData[index]['avatar'],
+                          violation: _filteredData[index]['reasonForBan'],
+                          banReason: _filteredData[index]['modNote'],
+                          days: _filteredData[index]['days'] ?? 0,
+                          messageToUser: "",
+                          bannedDate: "2024-05-07T15:03:37.757Z",
+                          avatarUrl: _filteredData[index]['userProfilePic'],
                           onRequestCompleted: () => setState(() {
                             fetchData();
                           }),

@@ -6,6 +6,7 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 
 /// A page that displays community info.
 class CommunityAboutPage extends StatefulWidget {
@@ -41,7 +42,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   @override
   void initState() {
     super.initState();
-    fetchData();
+    fetchCommunityData();
   }
 
   /// Fetches data for the community.
@@ -50,16 +51,23 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// and updates the state with the fetched data. It retrieves the community banner link,
   /// community image link, community description, and community rules from the fetched data.
   /// If the community banner or image link is not available, empty strings are assigned.
-  Future<Map<String, dynamic>> fetchData() async {
+  Future<Map<String, dynamic>> fetchCommunityData() async {
     return getCommunityInfo(widget.communityName)
         .then((value) => communityData = value);
+  }
+
+  /// Fetches the moderator data.
+  Future<List<dynamic>> fetchModData() async {
+    return getModeratorsRequest(
+      widget.communityName,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: fetchData(),
-      builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+      future: Future.wait([fetchCommunityData(), fetchModData()]),
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: LoaderWidget(
@@ -76,7 +84,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
           return Scaffold(
             backgroundColor: Color.fromARGB(237, 236, 236, 234),
             appBar: CommunityAppBar(
-              bannerImageLink: snapshot.data!["communityBanner"] ?? "",
+              bannerImageLink: snapshot.data![0]["communityBanner"] ?? "",
               communityName: widget.communityName,
               blurImage: true,
             ),
@@ -89,17 +97,17 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
                   children: <Widget>[
                     CommunityAboutDesc(
                       communityName: widget.communityName,
-                      communityDesc: snapshot.data!["description"] ?? "",
+                      communityDesc: snapshot.data![0]["description"] ?? "",
                     ),
                     CommunityAboutRules(
                       communityName: widget.communityName,
-                      communityRules: snapshot.data!["rules"] ?? [],
+                      communityRules: snapshot.data![0]["rules"] ?? [],
                     ),
                     SizedBox(height: 15),
                     CommunityAboutMods(
                       communityName: widget.communityName,
+                      modData: snapshot.data![1],
                     ),
-                    SizedBox(height: 15),
                   ],
                 ),
               ),

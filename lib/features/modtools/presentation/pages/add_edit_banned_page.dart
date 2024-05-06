@@ -64,7 +64,7 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
   }
 
   void addBannedUser() async {
-    if (_usernameController.text == UserSingleton().user!.name) {
+    if (_usernameController.text == UserSingleton().user!.username) {
       CustomSnackbar(content: "You can't ban yourself 😐").show(context);
       return;
     }
@@ -73,8 +73,8 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         username: _usernameController.text,
         violation: _violationController.text,
         days: days ?? 0,
-        banReason: _banReasonController.text,
-        messageToUser: _messageToUserController.text);
+        modNote: _banReasonController.text,
+        messageToUser: _messageToUserController.text,);
     if (response == 200) {
       Navigator.pop(context);
       widget.onRequestCompleted();
@@ -90,7 +90,6 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         username: _usernameController.text,
         violation: _violationController.text,
         days: days ?? 0,
-        banReason: _banReasonController.text,
         messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);
@@ -257,6 +256,7 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
                   child: TextField(
                     controller: _banReasonController,
                     maxLength: 300,
+                    readOnly: !isAdding,
                     decoration:
                         getTextFieldDecoration("Will be seen by mods only"),
                   ),

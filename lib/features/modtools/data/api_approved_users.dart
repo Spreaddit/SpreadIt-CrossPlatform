@@ -10,7 +10,7 @@ Future<int> approveUserRequest({
   try {
     final response = await Dio().post(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/$username/add-contributor',
+      '$apiUrl/community/moderation/$communityName/$username/add-contributor',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -21,15 +21,17 @@ Future<int> approveUserRequest({
       print("approveUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error approveUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error approveUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     }
     return 0;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred approveUserRequest: $e");
     return 0;
   }
 }
@@ -42,7 +44,7 @@ Future<int> removeApprovedUserRequest({
   try {
     final response = await Dio().delete(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/$username/remove-contributor',
+      '$apiUrl/community/moderation/$communityName/$username/remove-contributor',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -53,15 +55,17 @@ Future<int> removeApprovedUserRequest({
       print("removeApprovedUserRequest Response: ${response.statusMessage}");
       return response.statusCode ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error removeApprovedUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error removeApprovedUserRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return response.statusCode ?? 0;
     }
     return 0;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred removeApprovedUserRequest: $e");
     return 0;
   }
 }
@@ -72,7 +76,7 @@ Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/contributors',
+      '$apiUrl/community/moderation/$communityName/contributors',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -80,18 +84,21 @@ Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
       ),
     );
     if (response.statusCode == 200) {
+      print("getApprovedUsersRequest data: ${response.data}");
       print("getApprovedUsersRequest Response: ${response.statusMessage}");
       return response.data ?? 0;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error getApprovedUsersRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;
     } else if (response.statusCode == 500) {
-      print("Error: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error getApprovedUsersRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return defaultResponse;
     }
     return defaultResponse;
   } catch (e) {
-    print("Error occurred: $e");
+    print("Error occurred getApprovedUsersRequest: $e");
     return defaultResponse;
   }
 }
@@ -102,7 +109,7 @@ Future<Map<String, dynamic>> checkIfApprovedRequest(
   try {
     final response = await Dio().get(
       //TODO USE REAL API URL
-      '$galalModUrl/community/moderation/$communityName/$username/is-contributor',
+      '$apiUrl/community/moderation/$communityName/$username/is-contributor',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -110,18 +117,22 @@ Future<Map<String, dynamic>> checkIfApprovedRequest(
       ),
     );
     if (response.statusCode == 200) {
-      print("checkIfApprovedRequest Response: ${response.statusMessage} ${response.data}");
+      print(
+          "checkIfApprovedRequest Response: ${response.statusMessage} ${response.data}");
       return response.data;
     } else if (response.statusCode! >= 400 && response.statusCode! < 500) {
-      print("Error checkIfApprovedRequest: ${response.statusMessage}, code: ${response.statusCode}");
-      return {};
+      print("checkIfApprovedRequest: ${response.data}");
+      print(
+          "Error checkIfApprovedRequest: ${response.statusMessage}, code: ${response.statusCode}");
+      return {"isContributor": false};
     } else if (response.statusCode == 500) {
-      print("Error checkIfApprovedRequest: ${response.statusMessage}, code: ${response.statusCode}");
+      print(
+          "Error checkIfApprovedRequest: ${response.statusMessage}, code: ${response.statusCode}");
       return {};
     }
     return {};
   } catch (e) {
     print("Error checkIfApprovedRequest occurred: $e");
-    return {};
+    return {"isContributor": false};
   }
 }

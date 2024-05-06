@@ -9,7 +9,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// A widget that displays information about a community.
 class CommunityInfoSection extends StatefulWidget {
   const CommunityInfoSection(
-      {Key? key, required this.communityName, required this.communityData})
+      {Key? key, required this.communityName, required this.communityData, required this.onReturnToCommunityPage})
       : super(key: key);
 
   /// The name of the community.
@@ -17,6 +17,9 @@ class CommunityInfoSection extends StatefulWidget {
 
   /// The information about the community.
   final Map<String, dynamic> communityData;
+
+  /// A function that runs when we return to main community page.
+  final Function onReturnToCommunityPage;
 
   @override
   State<CommunityInfoSection> createState() => _CommunityInfoSectionState();
@@ -123,6 +126,7 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
                       if (snapshot.data!["isModerator"] ?? false)
                         ModtoolsPageBtn(
                           communityName: widget.communityName,
+                          onReturnToCommunityPage: widget.onReturnToCommunityPage,
                         ),
                       if (!(snapshot.data!["isModerator"] ?? false))
                         JoinCommunityBtn(

@@ -8,7 +8,7 @@ Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
   try {
     var response = await Dio().get(
       //TODO: Change the API URL to: '$apiUrl/community/$communityName/get-info'
-      '$apiUrl/community/get-info',
+      '$apiUrl/community/$communityName/get-info',
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -20,11 +20,11 @@ Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
       return response.data;
     } else {
       print(
-          'Failed to fetch MOD COMMUNITY data. Status code: ${response.statusCode}');
+          'Failed to fetch getModCommunityInfo data. Status code: ${response.statusCode}');
       return null;
     }
   } catch (e) {
-    print('Error fetching MOD COMMUNITY data: $e');
+    print('Error fetching getModCommunityInfo data: $e');
     return null;
   }
 }
@@ -45,9 +45,9 @@ Future<int> updateModCommunityInfo(
     if (communityType != null) data["communityType"] = communityType;
     if (description != null) data["description"] = description;
 
-    var response = await Dio().put(
+    var response = await Dio().post(
       //TODO: Change the API URL to: '$apiUrl/community/$communityName/edit-info'
-      '$galalModUrl/community/$communityName/edit-info',
+      '$apiUrl/community/$communityName/edit-info',
       data: data,
       options: Options(
         headers: {
@@ -60,11 +60,11 @@ Future<int> updateModCommunityInfo(
       return response.statusCode ?? 0;
     } else {
       print(
-          'Failed to update MOD COMMUNITY data. Status code: ${response.statusCode}');
+          'Failed to updateModCommunityInfo data. Status code: ${response.statusCode}');
       return response.statusCode ?? 0;
     }
   } catch (e) {
-    print('Error updating MOD COMMUNITY data: $e');
+    print('Error updateModCommunityInfo data: $e');
     return 0;
   }
 }
