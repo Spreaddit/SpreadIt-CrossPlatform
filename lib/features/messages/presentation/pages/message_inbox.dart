@@ -9,6 +9,14 @@ import 'package:spreadit_crossplatform/features/messages/presentation/pages/mess
 
 // TODO: https://pub.dev/packages/badges (unread messages)
 
+MessageRepliesModel getLastMessage(MessageModel message) {
+  if (message.replies!.isEmpty) {
+    return message.primaryMessage;
+  } else {
+    return message.replies![message.replies!.length - 1];
+  }
+}
+
 class MessageInbox extends StatefulWidget {
   final bool isAllRead;
 
@@ -56,6 +64,44 @@ class _MessageInboxState extends State<MessageInbox> {
     super.didUpdateWidget(oldWidget);
   }
 
+  bool isReadHandling(MessageModel message) {
+    MessageRepliesModel lastMessage = getLastMessage(message);
+    return lastMessage.isRead || lastMessage.direction == "outgoing";
+  }
+
+  void handleReadConversation(
+    MessageModel message,
+    int index,
+  ) {
+    if (message.primaryMessage.direction == "incoming") {
+      handleReadMessages(
+        shouldRead: !message.primaryMessage.isRead,
+        messageId: message.primaryMessage.id,
+      );
+      setState(() {
+        messages[index].primaryMessage.isRead =
+            !messages[index].primaryMessage.isRead;
+      });
+    }
+
+    if (message.replies!.isEmpty) return;
+
+    for (int i = 0; i < message.replies!.length; i++) {
+      var messageReply = message.replies![i];
+      if (messageReply.direction == "incoming") {
+        handleReadMessages(
+          shouldRead: !message.primaryMessage.isRead,
+          messageId: messageReply.id,
+        );
+
+        setState(() {
+          messages[index].replies![i].isRead =
+              !messages[index].primaryMessage.isRead;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -65,41 +111,43 @@ class _MessageInboxState extends State<MessageInbox> {
           : ListView(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              children: messages.mapIndexed<Widget>(
-                (index, message) {
-                  return Slidable(
-                    key: ValueKey(index),
-                    endActionPane: ActionPane(
-                      motion: ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          flex: 1,
-                          onPressed: (context) {
-                            handleReadMessages(
-                              shouldRead: !message.primaryMessage.isRead,
-                              messageId: message.primaryMessage.id,
-                            );
-                            setState(() {
-                              messages[index].primaryMessage.isRead =
-                                  !messages[index].primaryMessage.isRead;
-                            });
-                          },
-                          backgroundColor: Color.fromARGB(255, 179, 179, 179),
-                          foregroundColor: Colors.white,
-                          icon: message.primaryMessage.isRead
-                              ? Icons.mark_chat_unread_outlined
-                              : Icons.mark_chat_read_outlined,
-                          label:
-                              message.primaryMessage.isRead ? "Unread" : "Read",
-                        ),
-                      ],
-                    ),
-                    child: MessageTile(
-                      message: message,
-                    ),
+              children: messages.mapIndexed<Widget>((index, message) {
+                MessageRepliesModel lastMessage = getLastMessage(message);
+                if (lastMessage.direction == "incoming") {
+                  return MessageTile(
+                    message: message,
+                    isRead: isReadHandling(message),
+                    handleReadConversation: handleReadConversation,
+                    index: index,
                   );
-                },
-              ).toList(),
+                }
+                return Slidable(
+                  key: ValueKey(index),
+                  endActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    children: [
+                      SlidableAction(
+                        flex: 1,
+                        onPressed: (context) {
+                          handleReadConversation(message, index);
+                        },
+                        backgroundColor: Color.fromARGB(255, 179, 179, 179),
+                        foregroundColor: Colors.white,
+                        icon: message.primaryMessage.isRead
+                            ? Icons.mark_chat_unread_outlined
+                            : Icons.mark_chat_read_outlined,
+                        label: isReadHandling(message) ? "Unread" : "Read",
+                      ),
+                    ],
+                  ),
+                  child: MessageTile(
+                    message: message,
+                    isRead: isReadHandling(message),
+                    handleReadConversation: handleReadConversation,
+                    index: index,
+                  ),
+                );
+              }).toList(),
             ),
     );
   }
@@ -107,9 +155,15 @@ class _MessageInboxState extends State<MessageInbox> {
 
 class MessageTile extends StatefulWidget {
   final MessageModel message;
+  final bool isRead;
+  final int index;
+  final void Function(MessageModel message, int index) handleReadConversation;
 
   const MessageTile({
     required this.message,
+    required this.isRead,
+    required this.handleReadConversation,
+    required this.index,
   });
 
   @override
@@ -117,36 +171,30 @@ class MessageTile extends StatefulWidget {
 }
 
 class _MessageTileState extends State<MessageTile> {
-  late MessageModel message;
   @override
   void initState() {
-    message = widget.message;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    MessageRepliesModel lastMessage = getLastMessage(widget.message);
     return GestureDetector(
       onTap: () {
+        widget.handleReadConversation(
+          widget.message,
+          widget.index,
+        );
         navigateToMessage(
           context: context,
           message: widget.message,
         );
-        if (!widget.message.primaryMessage.isRead) {
-          handleReadMessages(
-            shouldRead: true,
-            messageId: widget.message.primaryMessage.id,
-          );
-        }
-        setState(() {
-          widget.message.primaryMessage.isRead = true;
-        });
       },
       child: Opacity(
-        opacity: widget.message.primaryMessage.isRead ? 0.7 : 1,
+        opacity: widget.isRead ? 0.7 : 1,
         child: ListTile(
           title: Text(
-            widget.message.primaryMessage.relatedUserOrCommunity,
+            lastMessage.relatedUserOrCommunity,
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -173,9 +221,9 @@ class _MessageTileState extends State<MessageTile> {
             ),
           ),
           trailing: Text(
-            dateToDuration(
-              widget.message.primaryMessage.time,
-            ),
+            "${lastMessage.direction} • ${dateToDuration(
+              lastMessage.time,
+            )}",
           ),
           onTap: () => {
             navigateToMessage(
