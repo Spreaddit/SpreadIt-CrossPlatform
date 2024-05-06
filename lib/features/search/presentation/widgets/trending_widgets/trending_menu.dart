@@ -25,7 +25,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
   void getTrending() async {
     trending = await getTrendingPosts();
     mappedTrending = extractTrendingData(trending);
-    print(mappedTrending);
+    //print(mappedTrending);
   }
 
   List<Map<String, dynamic>> extractTrendingData(Map<String, dynamic> data) {

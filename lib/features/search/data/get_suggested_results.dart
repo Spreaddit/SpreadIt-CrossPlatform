@@ -16,8 +16,8 @@ Future <Map<String,dynamic>> getSuggestedResults(String query) async {
           'Authorization': 'Bearer $accessToken',
         },
       ),
-      data: {
-        "q": query,
+      queryParameters: {
+        'q': query,
       }
     );
     if (response.statusCode == 200) {

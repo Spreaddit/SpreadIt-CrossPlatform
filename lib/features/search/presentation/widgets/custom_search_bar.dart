@@ -36,26 +36,11 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialBody);
-    _controller.addListener(() {
-      debounce(_controller.text, Duration(milliseconds: 500), (text) => widget.updateSearchItem(text));
+     _controller.addListener(() {
+      widget.updateSearchItem(_controller.text); 
     });
   }
 
-  void debounce(String text, Duration duration, void Function(String) callback) {
-    String? latestValue;
-    Timer? timer;
-    void handleUpdate() {
-      if (latestValue != null) {
-        callback(latestValue!);
-        timer = null; 
-      }
-    }
-    timer?.cancel();
-    latestValue = text;
-    timer = Timer(duration, handleUpdate);
-  }
-
-  final Map<Stream, Timer?> _timers = {};
 
   @override
   void dispose() {

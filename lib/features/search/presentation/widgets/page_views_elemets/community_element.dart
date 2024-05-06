@@ -44,7 +44,7 @@ class _CommunityElementState extends State<CommunityElement> {
           Row(
             children: [
               InkWell(
-                onTap: () {navigateToCommunity(context, widget.communityName);} , // navigate to community
+                onTap: () {navigateToCommunity(context, widget.communityName);} , 
                 child: Wrap(
                   children:[
                     Padding(

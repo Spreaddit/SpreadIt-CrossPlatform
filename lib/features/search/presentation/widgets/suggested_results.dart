@@ -4,8 +4,15 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/sear
 
 class SuggestedResults extends StatefulWidget {
   final String searchItem;
+  final List<Map<String,dynamic>> communities;
+  final List<Map<String,dynamic>> users;
 
-  const SuggestedResults({Key? key, required this.searchItem}) : super(key: key);
+  const SuggestedResults({
+    Key? key,
+    required this.searchItem,
+    required this.communities,
+    required this.users,
+    }) : super(key: key);
 
   @override
   State<SuggestedResults> createState() => _SuggestedResultsState();
@@ -13,53 +20,14 @@ class SuggestedResults extends StatefulWidget {
 
 class _SuggestedResultsState extends State<SuggestedResults> {
 
-  List<Map<String, dynamic>> communities = [];
-  List<Map<String, dynamic>> users = [];
   String searchItem = '';
-
-
-  @override
-  void initState() {
-    searchItem = widget.searchItem;
-    updateSuggestedResults();
-    super.initState();
-  }
-
-  void updateSuggestedResults() async {
-    Map<String,dynamic> response  = await getSuggestedResults(searchItem);
-    Map<String, List<Map<String, dynamic>>> data = await separateCommunitiesAndUsers(response);
-    communities = data['communities']!;
-    users = data['users']!;
-    setState((){});
-  }
-
-  Future<Map<String, List<Map<String, dynamic>>>> separateCommunitiesAndUsers(Map<String, dynamic> response) async {
-    List<Map<String, dynamic>> communities = [];
-    List<Map<String, dynamic>> users = [];
-    if (response.containsKey('communities')) {
-      for (var element in response['communities']) {
-        if (element is Map<String, dynamic>) {
-          communities.add(element);
-        }
-      }
-    }
-    if (response.containsKey('users')) {
-      for (var element in response['users']) {
-        if (element is Map<String, dynamic>) {
-          users.add(element);
-        }
-      }
-    }
-    return {'communities': communities, 'users': users};
-  }
 
   void navigateToGeneralSearchResults() {
     Navigator.of(context).pushNamed('/general-search-results', arguments : {
-      'searchItem': searchItem,
+      'searchItem': widget.searchItem,
     }); 
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -68,32 +36,44 @@ class _SuggestedResultsState extends State<SuggestedResults> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Communities',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
+            if (widget.communities.isNotEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Communities',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SearchDisplayList(
+                  displayList: widget.communities,
+                  type: 'community',
+                ),
+              ],
             ),
-            SearchDisplayList(
-              displayList: communities,
-              type: 'community',
-            ),
-            Text(
-              'People',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SearchDisplayList(
-              displayList: users,
-              type: 'user',
+            if (widget.users.isNotEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'People',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SearchDisplayList(
+                  displayList: widget.users,
+                  type: 'user',
+                ),
+              ],
             ),
             InkWell(
               onTap: navigateToGeneralSearchResults,  
               child: Text(
-                'Search for $searchItem',
+                'Search for ${widget.searchItem}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
