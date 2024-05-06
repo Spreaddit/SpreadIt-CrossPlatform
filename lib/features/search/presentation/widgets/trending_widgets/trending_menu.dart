@@ -25,7 +25,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
   void getTrending() async {
     trending = await getTrendingPosts();
     mappedTrending = extractTrendingData(trending);
-    //print(mappedTrending);
+    setState((){});
   }
 
   List<Map<String, dynamic>> extractTrendingData(Map<String, dynamic> data) {
@@ -35,6 +35,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
       for (var trending in results) {
         String? imageLink; 
         String? videoLink;
+        String? content;
         if (trending['attachments'].isNotEmpty) {
           Map<String, dynamic> firstAttachment = trending['attachments'][0];
           if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
@@ -44,19 +45,13 @@ class _TrendingMenuState extends State<TrendingMenu> {
             videoLink = firstAttachment['link'];
           }
         }
+        if (trending['content'] == []) {
+           content = '';
+        }
         mappedTrending.add({
-          'postId': trending['postId'] ?? (throw Exception('null')),
-          'title': trending['title'] ?? (throw Exception('null')),
-          'content': trending['content'] ?? (throw Exception('null')),
-          'isNsfw': trending['isnsfw'] ?? (throw Exception('null')),
-          'isSpoiler': trending['isSpoiler'] ?? (throw Exception('null')),
-          'votesCount': trending['votesCount'] ?? (throw Exception('null')),
-          'commentsCount': trending['commentsCount'] ?? (throw Exception('null')),
-          'createdAt': trending['date'] ?? (throw Exception('null')),
-          'username': trending['username'] ?? (throw Exception('null')),
-          'userProfilePic': trending['userProfilePic'] ?? (throw Exception('null')),
-          'communityName': trending['communityname'] ?? (throw Exception('null')),
-          'communityProfilePic': trending['communityProfilePic'] ?? (throw Exception('null')),
+          'postId': trending['postId'] ?? (throw Exception('postId')),
+          'title': trending['title'] ?? (throw Exception('title')),
+          'content': content,
           'image':  imageLink,
           'video': videoLink,
         });
@@ -64,11 +59,10 @@ class _TrendingMenuState extends State<TrendingMenu> {
       return mappedTrending;
     }
     catch(e) {
+      print('mapping error $e');
       return [];
     }
   }
-
-  
 
   void navigateToSearchResult (String searchItem) {
     Navigator.of(context).pushNamed('/general-search-results', arguments : {

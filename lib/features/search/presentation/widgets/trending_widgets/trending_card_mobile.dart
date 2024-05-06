@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
 class TrendingCardMobile extends StatefulWidget {
 
   final String title;
-  final String content;
+  final String? content;
   final String? image;
   final String? video;
 
   const TrendingCardMobile({
     required this.title,
-    required this.content,
+    this.content,
     this.image,
     this.video,
   });
@@ -39,10 +40,11 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                         color: Colors.blue[900],
                       ),
                     ),
+                    if (widget.content != null && widget.content != '')
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 90, 
                       child: Text(
-                        widget.content,
+                        widget.content!,
                         softWrap: true, 
                         style: TextStyle(
                           fontSize: 15,
@@ -82,13 +84,10 @@ class _TrendingCardMobileState extends State<TrendingCardMobile> {
                             child: SizedBox(
                               height: 50,
                               width: 100,
-                              child: Image(
-                                height: 50,
-                                width: 100,
-                                image: NetworkImage(widget.video!),
-                                fit: BoxFit.cover,
+                              child: VideoPlayerScreen(
+                                videoURL: widget.video!,
+                                ),
                               ),
-                            ),
                           ),
                           Positioned(
                             bottom: 5.0, 

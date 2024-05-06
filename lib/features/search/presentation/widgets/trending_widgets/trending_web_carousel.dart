@@ -42,6 +42,7 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
       for (var trending in results) {
         String? imageLink; 
         String? videoLink;
+        String? content;
         if (trending['attachments'].isNotEmpty) {
           Map<String, dynamic> firstAttachment = trending['attachments'][0];
           if (firstAttachment['type'] == 'image' && firstAttachment['link'] != null) {
@@ -51,18 +52,21 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
             videoLink = firstAttachment['link'];
           }
         }
+        if (trending['content'] == []) {
+          content = '';
+        }
         mappedTrending.add({
           'postId': trending['postId'] ?? (throw Exception('null')),
           'title': trending['title'] ?? (throw Exception('null')),
-          'content': trending['content'] ?? (throw Exception('null')),
-          'isNsfw': trending['isNsfw'] ?? (throw Exception('null')),
+          'content': content,
+          'isNsfw': trending['isnsfw'] ?? (throw Exception('null')),
           'isSpoiler': trending['isSpoiler'] ?? (throw Exception('null')),
           'votesCount': trending['votesCount'] ?? (throw Exception('null')),
           'commentsCount': trending['commentsCount'] ?? (throw Exception('null')),
           'createdAt': trending['date'] ?? (throw Exception('null')),
           'username': trending['username'] ?? (throw Exception('null')),
           'userProfilePic': trending['userProfilePic'] ?? (throw Exception('null')),
-          'communityName': trending['communityName'] ?? (throw Exception('null')),
+          'communityName': trending['communityname'] ?? (throw Exception('null')),
           'communityProfilePic': trending['communityProfilePic'] ?? (throw Exception('null')),
           'image':  imageLink,
           'video': videoLink,

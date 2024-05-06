@@ -181,6 +181,9 @@ class _MediaPageViewState extends State<MediaPageView> {
 
   @override
   Widget build(BuildContext context) {
+    int totalItemCount = mappedMedia.length;
+    int firstColumnCount = totalItemCount % 2 == 0 ? totalItemCount ~/ 2 : (totalItemCount ~/ 2) + 1;
+    int secondColumnCount = totalItemCount - firstColumnCount;
     if (media.isEmpty) {
       return Center(
         child: CircularProgressIndicator(
@@ -237,16 +240,19 @@ class _MediaPageViewState extends State<MediaPageView> {
                       padding: EdgeInsets.only(top:3),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: mappedMedia.length ~/ 2,
+                      itemCount: firstColumnCount,
                       itemBuilder: (context, index) {
+                        int actualIndex = index * 2 ;
                         return InkWell(
-                          onTap: () => navigateToPostCardPage(context, mappedMedia[index]['postId'] , true),
+                          onTap: () => navigateToPostCardPage(context, mappedMedia[actualIndex]['postId'] , true),
                           child: MediaElement(
-                            username: mappedMedia[index]['username'],
-                            userIcon: mappedMedia[index]['userProfilePic'],
-                            postTitle: mappedMedia[index]['title'],
-                            media: mappedMedia[index]['image'] != null ? mappedMedia[index]['image'] : mappedMedia[index]['video'],
-                            mediaType: mappedMedia[index]['image'] != null ? 'image': 'video',
+                            username: mappedMedia[actualIndex]['username'],
+                            userIcon: mappedMedia[actualIndex]['userProfilePic'],
+                            postTitle: mappedMedia[actualIndex]['title'],
+                            media: mappedMedia[actualIndex]['image'] != null ?
+                                mappedMedia[actualIndex]['image'] 
+                                : mappedMedia[actualIndex]['video'],
+                            mediaType: mappedMedia[actualIndex]['image'] != null ? 'image': 'video',
                           ),
                         );
                       }
@@ -258,16 +264,20 @@ class _MediaPageViewState extends State<MediaPageView> {
                       padding: EdgeInsets.only(top:3),
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: mappedMedia.length ~/ 2,
+                      itemCount: secondColumnCount,
                       itemBuilder: (context, index) {
-                        return MediaElement(
-                          username: mappedMedia[index + mappedMedia.length ~/2]['username'],
-                          userIcon: mappedMedia[index + mappedMedia.length ~/2]['userProfilePic'],
-                          postTitle: mappedMedia[index + mappedMedia.length ~/2]['title'],
-                          media: mappedMedia[index + mappedMedia.length ~/2]['image'] != null ?
-                             mappedMedia[index + mappedMedia.length ~/2]['image']
-                             :mappedMedia[index + mappedMedia.length ~/2]['video'],
-                          mediaType: mappedMedia[index]['image'] != null ? 'image': 'video',   
+                        int actualIndex = index * 2 + 1;
+                        return InkWell(
+                          onTap: () => navigateToPostCardPage(context, mappedMedia[actualIndex]['postId'] , true),
+                          child: MediaElement(
+                            username: mappedMedia[actualIndex]['username'],
+                            userIcon: mappedMedia[actualIndex]['userProfilePic'],
+                            postTitle: mappedMedia[actualIndex]['title'],
+                            media: mappedMedia[actualIndex]['image'] != null ?
+                               mappedMedia[actualIndex]['image']
+                               :mappedMedia[actualIndex]['video'],
+                            mediaType: mappedMedia[actualIndex]['image'] != null ? 'image': 'video',   
+                          ),
                         );
                       }
                     ),
@@ -281,8 +291,3 @@ class _MediaPageViewState extends State<MediaPageView> {
   }
 }
 
-/* TO DOS :
-1) azabat na2l el photos sa7
-2) a7ot videos (ask farida)
-
-*/

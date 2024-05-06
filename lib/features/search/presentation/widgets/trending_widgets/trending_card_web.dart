@@ -6,14 +6,14 @@ class TrendingCardWeb extends StatefulWidget {
 
   final String image ;
   final String title;
-  final String content;
+  final String? content;
   final String communityIcon;
   final String communityName;
 
   const TrendingCardWeb({
     required this.image,
     required this.title,
-    required this.content,
+    this.content,
     required this.communityIcon,
     required this.communityName,
   });
@@ -72,8 +72,9 @@ class _TrendingCardWebState extends State<TrendingCardWeb> {
                           color: Colors.white,
                         ),
                       ),
+                      if(widget.content != null && widget.content != '')
                       Text(
-                        widget.content,
+                        widget.content!,
                         softWrap: true,
                         maxLines: 1, 
                         overflow: TextOverflow.ellipsis,
