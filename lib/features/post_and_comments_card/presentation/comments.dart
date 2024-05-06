@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
@@ -128,6 +129,7 @@ class _CommentCardState extends State<CommentCard> {
   var isSaved;
   File? uploadedImageFile;
   Uint8List? uploadedImageWeb;
+  bool isImage = false;
 
   /// Fetches replies for the comment asynchronously.
   Future<void> fetchReplies() async {
@@ -145,6 +147,31 @@ class _CommentCardState extends State<CommentCard> {
         print('Error fetching comments: $e');
       }
     }
+  }
+
+  Future<void> pickImage() async {
+    dynamic image;
+    if (!kIsWeb) {
+      image = await pickImageFromFilePicker();
+    } else {
+      image = await pickImageFromFilePickerWeb();
+    }
+
+    if (image != null) {
+      setState(() {
+        if (image is File) {
+          uploadedImageFile = image;
+          uploadedImageWeb = null;
+        } else if (image is Uint8List) {
+          uploadedImageFile = null;
+          uploadedImageWeb = image;
+        }
+        isImage = true;
+      });
+    }
+    print("image slected is $image");
+    print("image file is $uploadedImageFile");
+    print("image web is $uploadedImageWeb");
   }
 
   void onLock(bool newIsLocked) {
@@ -327,60 +354,133 @@ class _CommentCardState extends State<CommentCard> {
                             TextEditingController();
 
                         showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            return SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                  top: 20,
-                                  right: 20,
-                                  left: 20,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (BuildContext context) {
+                              return ListTile(
+                                title: Row(
                                   children: [
-                                    TextField(
-                                      controller: replyController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Your reply...',
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom,
+                                            top: 20,
+                                            right: 20,
+                                            left: 20,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              if (uploadedImageFile != null ||
+                                                  uploadedImageWeb != null)
+                                                // if (isImage)
+
+                                                Container(
+                                                    height:
+                                                        200, // Adjust the height as needed
+                                                    width:
+                                                        200, // double.infinity,
+
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: selectImage(
+                                                            uploadedImageFile,
+                                                            null,
+                                                            uploadedImageWeb),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )),
+                                              /*Image(
+                                                  image: selectImage(
+                                                      uploadedImageFile,
+                                                      null,
+                                                      uploadedImageWeb),
+                                                  height: 200,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                ),*/
+                                              //   ),
+                                              //  ),
+                                              // ),
+                                              TextFormField(
+                                                controller: replyController,
+                                                maxLines: null,
+                                                decoration: InputDecoration(
+                                                  labelText: 'Your reply...',
+                                                  suffixIcon: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          //_showBottomSheet(context);
+                                                        },
+                                                        icon: Icon(Icons.link),
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          pickImage();
+                                                        },
+                                                        icon: Icon(Icons.image),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        if (replyController.text != "") {
-                                          print('add reply');
-                                          Navigator.pop(context);
-                                          String newReply =
-                                              replyController.text;
-                                          print(newReply);
-                                          Comment? nReply =
-                                              await updateComments(
-                                            id: widget.comment.id,
-                                            content: newReply,
-                                            type: 'reply',
-                                          );
-                                          setState(() {
-                                            widget.comment.replies!
-                                                .add(nReply!);
-                                            print(
-                                                'newComment${nReply!.content}');
-                                          });
-                                        }
-                                      },
-                                      child: Text('Reply'),
                                     ),
                                   ],
                                 ),
-                              ),
-                            );
-                          },
-                        ).whenComplete(() {
-                          replyController.dispose();
-                        });
+                                trailing: ElevatedButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    if (replyController.text.isNotEmpty) {
+                                      print('add reply');
+                                      String newReply = replyController.text;
+                                      print(newReply);
+                                      Comment? nReply = await updateComments(
+                                        id: widget.comment.id,
+                                        content: newReply,
+                                        type: 'reply',
+                                        imageFile: uploadedImageFile,
+                                        imageWeb: uploadedImageWeb,
+                                      );
+                                      setState(() {
+                                        widget.comment.replies!.add(nReply!);
+                                        print('newComment${nReply!.content}');
+                                        uploadedImageFile = null;
+                                        uploadedImageWeb = null;
+                                      });
+                                    } else if (uploadedImageFile != null ||
+                                        uploadedImageWeb != null) {
+                                      setState(() {
+                                        uploadedImageFile = null;
+                                        uploadedImageWeb = null;
+                                        CustomSnackbar(
+                                                content:
+                                                    "Sorry you can't post an image only :(")
+                                            .show(context);
+                                      });
+                                    } else {
+                                      CustomSnackbar(
+                                              content:
+                                                  "Sorry you can't post an empty comment :(")
+                                          .show(context);
+                                    }
+                                    if (replyController.text.isNotEmpty) {
+                                      replyController.dispose();
+                                    }
+                                  },
+                                  child: Text('Reply'),
+                                ),
+                              );
+                            });
                       },
                       number: comment.likesCount,
                       upvoted: comment.isUpvoted!,
