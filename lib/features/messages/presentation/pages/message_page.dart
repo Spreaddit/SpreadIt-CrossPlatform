@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class MessagePage extends StatefulWidget {
   final MessageModel message;
@@ -32,29 +33,27 @@ class _MessagePageState extends State<MessagePage> {
       ),
       body: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
-          child: Column(
-            children: [
-              MessageReplyTile(
-                message: widget.message.primaryMessage,
-              ),
-              ListView(
-                padding: EdgeInsets.zero,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                children: widget.message.replies != null &&
-                        widget.message.replies!.isNotEmpty
-                    ? widget.message.replies!
-                        .map<Widget>(
-                          (message) => MessageReplyTile(
-                            message: message,
-                          ),
-                        )
-                        .toList()
-                    : [],
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            MessageReplyTile(
+              message: widget.message.primaryMessage,
+            ),
+            ListView(
+              padding: EdgeInsets.zero,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              children: widget.message.replies != null &&
+                      widget.message.replies!.isNotEmpty
+                  ? widget.message.replies!
+                      .map<Widget>(
+                        (message) => MessageReplyTile(
+                          message: message,
+                        ),
+                      )
+                      .toList()
+                  : [],
+            ),
+          ],
         ),
       ),
     );
@@ -109,7 +108,7 @@ class _MessageReplyTileState extends State<MessageReplyTile> {
       contentPadding: EdgeInsets.all(0),
       titleAlignment: ListTileTitleAlignment.top,
       title: Text(
-        "${widget.message.relatedUserOrCommunity} • ${dateToDuration(widget.message.time)}",
+        "${widget.message.direction == "outgoing" ? UserSingleton().user!.username : widget.message.relatedUserOrCommunity} • ${dateToDuration(widget.message.time)}",
         style: TextStyle(
           fontSize: 12,
           color: Colors.grey,

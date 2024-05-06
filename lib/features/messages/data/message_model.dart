@@ -33,7 +33,7 @@ class MessageModel {
       'time': primaryMessage.time.toIso8601String(),
       'direction': primaryMessage.direction,
       'isRead': primaryMessage.isRead,
-      'isDeleted': primaryMessage.isDeleted,
+      'isDeleted': false,
       'subject': primaryMessage.subject,
     };
   }
@@ -49,7 +49,6 @@ class MessageRepliesModel {
   DateTime time;
   String direction;
   bool isRead;
-  bool isDeleted;
   String subject;
 
   MessageRepliesModel({
@@ -62,7 +61,6 @@ class MessageRepliesModel {
     required this.time,
     required this.direction,
     required this.isRead,
-    required this.isDeleted,
     required this.subject,
   });
 
@@ -71,13 +69,12 @@ class MessageRepliesModel {
       id: json['_id'],
       conversationId: json['conversationId'],
       senderType: json['senderType'],
-      relatedUserOrCommunity: json['relatedUserOrCommunity'],
+      relatedUserOrCommunity: json['relatedUserOrCommunity'] ?? "",
       type: json['type'],
       content: json['content'],
       time: DateTime.parse(json['time']),
       direction: json['direction'],
       isRead: json['isRead'],
-      isDeleted: json['isDeleted'],
       subject: json['subject'],
     );
   }
@@ -95,7 +92,6 @@ class MessageRepliesModel {
       'time': time.toIso8601String(),
       'direction': direction,
       'isRead': isRead,
-      'isDeleted': isDeleted,
       'subject': subject,
     };
   }
