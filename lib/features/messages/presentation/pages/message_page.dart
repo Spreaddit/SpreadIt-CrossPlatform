@@ -80,7 +80,7 @@ class _MessageReplyTileState extends State<MessageReplyTile> {
     if (!widget.message.isRead) {
       handleReadMessages(
         shouldRead: true,
-        messageId: widget.message.primaryMessage.id,
+        messageId: widget.message.id,
       );
     }
     super.initState();
@@ -88,45 +88,42 @@ class _MessageReplyTileState extends State<MessageReplyTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: widget.message.isRead ? 0.7 : 1,
-      child: ListTile(
-        leading: IconButton(
-          alignment: Alignment.topLeft,
-          color: Colors.grey,
-          hoverColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          iconSize: 20,
-          icon: Icon(
-            isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
-          ),
-          onPressed: () {
-            setState(() {
-              isExpanded = !isExpanded;
-            });
-          },
+    return ListTile(
+      leading: IconButton(
+        alignment: Alignment.topLeft,
+        color: Colors.grey,
+        hoverColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        iconSize: 20,
+        icon: Icon(
+          isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
         ),
-        contentPadding: EdgeInsets.all(0),
-        titleAlignment: ListTileTitleAlignment.top,
-        title: Text(
-          "${widget.message.relatedUserOrCommunity} • ${dateToDuration(widget.message.time)}",
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
-        subtitle: isExpanded
-            ? Container(
-                color: Colors.white,
-                child: Text(
-                  widget.message.content,
-                  textAlign: TextAlign.left,
-                ),
-              )
-            : null,
+        onPressed: () {
+          setState(() {
+            isExpanded = !isExpanded;
+          });
+        },
       ),
+      contentPadding: EdgeInsets.all(0),
+      titleAlignment: ListTileTitleAlignment.top,
+      title: Text(
+        "${widget.message.relatedUserOrCommunity} • ${dateToDuration(widget.message.time)}",
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.grey,
+        ),
+      ),
+      subtitle: isExpanded
+          ? Container(
+              color: Colors.white,
+              child: Text(
+                widget.message.content,
+                textAlign: TextAlign.left,
+              ),
+            )
+          : null,
     );
   }
 }
