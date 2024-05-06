@@ -29,14 +29,10 @@ class CommunityBottomSheet extends StatelessWidget {
         joined ? Icons.remove : Icons.add,
       ],
       text: [
-        "Learn more about this community",
         muted ? "Unmute r/$communityName" : "Mute r/$communityName",
         joined ? "Leave r/$communityName" : "Join",
       ],
       onPressedList: [
-        () {
-          learnMore();
-        },
         () {
           mute(communityName, muted, context);
         },
@@ -47,8 +43,6 @@ class CommunityBottomSheet extends StatelessWidget {
     );
   }
 
-  /// Opens a page to learn more about the community.
-  void learnMore() {}
 
   /// Mutes or unmutes the community based on the [muted] flag.
   ///
