@@ -36,7 +36,6 @@ class _FollowUsersPageState extends State<FollowUsersPage> {
     followerslist = args?['followers'] ?? [];
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(

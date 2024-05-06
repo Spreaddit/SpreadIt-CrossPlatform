@@ -101,19 +101,20 @@ class ProfileHeader extends StatefulWidget {
 class _ProfileHeaderState extends State<ProfileHeader> {
   double _headerHeight = 0;
   List<FollowUser> followerslist = [];
-  String url ='';
+  String url = '';
 
   @override
   void initState() {
     super.initState();
-    getFollowers();
-    url =Uri.base.toString();
+    if (widget.myProfile) {
+      getFollowers();
+    }
+    url = Uri.base.toString();
     List<String> parts = url.split('/');
     String username = parts.last;
-     if(username=='user-profile')
-     {
-      url= '$url/${widget.username}';
-     }
+    if (username == 'user-profile') {
+      url = '$url/${widget.username}';
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _headerHeight = context.size!.height + 50.0;
@@ -197,7 +198,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           ),
                           IconButton(
                             icon: Icon(Icons.share),
-                             onPressed: () {
+                            onPressed: () {
                               sharePressed(url);
                             },
                             color: Colors.white,
@@ -347,7 +348,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             color: Colors.white,
                           ),
                         ),
-                        if (followerslist.isNotEmpty)
+                        if (followerslist.isNotEmpty && widget.myProfile)
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
@@ -374,10 +375,11 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                               ],
                             ),
                           ),
-                        SizedBox(
-                            height: kIsWeb
-                                ? screenHeight * 0.015
-                                : screenHeight * 0.02),
+                        if (followerslist.isNotEmpty && widget.myProfile)
+                          SizedBox(
+                              height: kIsWeb
+                                  ? screenHeight * 0.015
+                                  : screenHeight * 0.02),
                         Text(
                           widget.userinfo,
                           style: TextStyle(
@@ -391,16 +393,16 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             height: kIsWeb
                                 ? screenHeight * 0.015
                                 : screenHeight * 0.02),
-                        if(widget.about!='')
-                        Text(
-                          widget.about,
-                          style: TextStyle(
-                            fontSize: 14,
-                            decoration: TextDecoration.none,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
+                        if (widget.about != '')
+                          Text(
+                            widget.about,
+                            style: TextStyle(
+                              fontSize: 14,
+                              decoration: TextDecoration.none,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
                         SizedBox(
                             height: kIsWeb
                                 ? screenHeight * 0.015

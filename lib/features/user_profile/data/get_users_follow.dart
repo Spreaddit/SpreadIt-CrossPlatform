@@ -36,7 +36,7 @@ Future<List<FollowUser>> getFollowersUsers() async {
 
     // Process the response based on the status code.
     if (response.statusCode == 200) {
-      List<dynamic> json = response.data;
+      List<dynamic> json = response.data['followers'];
       List<FollowUser> followersUsers =
           json.map((json) => FollowUser.fromJson(json)).toList();
       return followersUsers;
