@@ -109,18 +109,20 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
           children: [
             Row(
               children: [
-                CustomSearchBar(
-                  formKey: searchForm,
-                  hintText: 'Search',
-                  updateSearchItem: updateSearchItem,
-                  navigateToSearchResult: navigateToCommunityOrUserSearch,
-                  navigateToSuggestedResults: () {},
-                  initialBody: '',
-                  communityOrUserName: communityOrUserName,
-                  communityOrUserIcon: communityOrUserIcon,
-                  isContained: true,
-                  inCommunityPage: fromCommunityPage,
-                  inUserProfile: fromUserProfile,
+                Expanded(
+                  child: CustomSearchBar(
+                    formKey: searchForm,
+                    hintText: 'Search',
+                    updateSearchItem: updateSearchItem,
+                    navigateToSearchResult: navigateToCommunityOrUserSearch,
+                    navigateToSuggestedResults: () {},
+                    initialBody: '',
+                    communityOrUserName: communityOrUserName,
+                    communityOrUserIcon: communityOrUserIcon,
+                    isContained: true,
+                    inCommunityPage: fromCommunityPage,
+                    inUserProfile: fromUserProfile,
+                  ),
                 ),
                 InkWell(
                   onTap: () => Navigator.pop(context),

@@ -76,23 +76,28 @@ class _GeneralSearchState extends State<GeneralSearch> {
             children: [
               Row(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: CustomSearchBar(
-                      formKey: searchForm,
-                      hintText: 'Search',
-                      navigateToSearchResult: navigateToGeneralSearchResults,
-                      updateSearchItem: updateSearchItem,
-                      navigateToSuggestedResults: navigateToSuggestedResults,
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10, right:5),
+                      child: CustomSearchBar(
+                        formKey: searchForm,
+                        hintText: 'Search',
+                        navigateToSearchResult: navigateToGeneralSearchResults,
+                        updateSearchItem: updateSearchItem,
+                        navigateToSuggestedResults: navigateToSuggestedResults,
+                      ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () => Navigator.pop(context), 
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                  Padding(
+                    padding: EdgeInsets.only(right:5),
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context), 
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                   ),

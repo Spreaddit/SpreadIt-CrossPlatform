@@ -83,13 +83,15 @@ class _SearchResultState extends State<SearchResult> {
                   size: 40,
                 ),
               ),
-              CustomSearchBar(
-                formKey: searchForm,
-                hintText: '',
-                updateSearchItem: updateSearchItem,
-                navigateToSearchResult: navigateToGeneralSearchParam,
-                navigateToSuggestedResults: navigateToGeneralSearch,
-                initialBody: searchItem,
+              Expanded(
+                child: CustomSearchBar(
+                  formKey: searchForm,
+                  hintText: '',
+                  updateSearchItem: updateSearchItem,
+                  navigateToSearchResult: navigateToGeneralSearchParam,
+                  navigateToSuggestedResults: navigateToGeneralSearch,
+                  initialBody: searchItem,
+                ),
               ),
             ],
           ),
