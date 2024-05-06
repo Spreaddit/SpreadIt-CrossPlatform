@@ -63,6 +63,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
         }
       }
     }
+
     return {'communities': communities, 'users': users};
   }
 

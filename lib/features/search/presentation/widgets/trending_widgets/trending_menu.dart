@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:spreadit_crossplatform/features/search/data/get_trending_posts.dart';
+import 'package:spreadit_crossplatform/features/search/data/post_search_log.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_card_mobile.dart';
 
 class TrendingMenu extends StatefulWidget {
@@ -64,17 +65,26 @@ class _TrendingMenuState extends State<TrendingMenu> {
     }
   }
 
+  void handleTap(String query) {
+    saveSearchLog(query);
+    navigateToSearchResult(query);                  
+  }
+
   void navigateToSearchResult (String searchItem) {
     Navigator.of(context).pushNamed('/general-search-results', arguments : {
       'searchItem': searchItem,
     }); 
   }
 
+  void saveSearchLog (String query) async {
+      await postSearchLog(query,'normal', null, null , false);
+    }
+
   @override
   Widget build(BuildContext context) {
       return Container(
         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        height: MediaQuery.of(context).size.height * 0.5,
+        height: MediaQuery.of(context).size.height * 0.7,
         child: Column(
           children: [
             Align(
@@ -93,7 +103,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
                   itemCount: mappedTrending.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () => navigateToSearchResult(mappedTrending[index]['title']) ,
+                      onTap:() => handleTap(mappedTrending[index]['title']),
                       child: TrendingCardMobile(
                         title: mappedTrending[index]['title'],
                         content: mappedTrending[index]['content'],
@@ -108,5 +118,5 @@ class _TrendingMenuState extends State<TrendingMenu> {
         ),
       );
     }
-  }
+  }  
 
