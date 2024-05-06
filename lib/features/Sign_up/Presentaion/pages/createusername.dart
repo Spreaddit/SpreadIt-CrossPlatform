@@ -47,9 +47,6 @@ class _CreateUsernameState extends State<CreateUsername> {
   void navigateToHomePage(BuildContext context) async {
     if (validUserName) {
       _usernameform.currentState!.save();
-     Navigator.of(context).pushNamed('/email-verification',  arguments: {
-        'email': _userEmail,
-        },); 
     var responseCode = await signUpApi(
         username: _userName,
         email: _userEmail,
