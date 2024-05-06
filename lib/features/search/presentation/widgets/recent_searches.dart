@@ -35,7 +35,9 @@ class _RecentSearchesState extends State<RecentSearches> {
   void deleteRecentSearch (String query) async{
     int response = await deleteSearchHistory(query);
     print(response);
-    getRecentSearches();
+    setState(() {
+      recents.remove(query); 
+    });
   }
 
   void navigateToSearchResults (String searchItem) async {
