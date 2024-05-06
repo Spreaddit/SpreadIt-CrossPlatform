@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/messages/data/handle_message_data.dart';
@@ -53,9 +54,38 @@ class _MessageInboxState extends State<MessageInbox> {
               shrinkWrap: true,
               children: messages
                   .mapIndexed<Widget>(
-                    (index, message) => MessageTile(
-                      message: message,
-                      isAllRead: widget.isAllRead,
+                    (index, message) => Slidable(
+                      key: ValueKey(index),
+                      endActionPane: ActionPane(
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            flex: 1,
+                            onPressed: (context) {
+                              setState(() {
+                                messages[index].primaryMessage.isRead =
+                                    !message.primaryMessage.isRead;
+                              });
+                              handleReadMessages(
+                                shouldRead: !message.primaryMessage.isRead,
+                                messageId: message.primaryMessage.id,
+                              );
+                            },
+                            backgroundColor: Color.fromARGB(255, 179, 179, 179),
+                            foregroundColor: Colors.white,
+                            icon: message.primaryMessage.isRead
+                                ? Icons.mark_chat_unread_outlined
+                                : Icons.mark_chat_read_outlined,
+                            label: message.primaryMessage.isRead
+                                ? "Unread"
+                                : "Read",
+                          ),
+                        ],
+                      ),
+                      child: MessageTile(
+                        message: message,
+                        isAllRead: widget.isAllRead,
+                      ),
                     ),
                   )
                   .toList(),
