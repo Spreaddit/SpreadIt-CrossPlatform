@@ -107,6 +107,7 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
                     return CommunityBottomSheet(
                       communityName: communityName,
                       muted: isMuted,
+                      joined : joined,
                     );
                   },
                 );

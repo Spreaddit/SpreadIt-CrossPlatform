@@ -16,7 +16,7 @@ class CommunityBottomSheet extends StatelessWidget {
   /// The [muted] flag indicates whether the community is muted.
   CommunityBottomSheet({
     required this.communityName,
-    this.joined = false,
+    required this.joined,
     this.muted = false,
   });
 
@@ -24,7 +24,6 @@ class CommunityBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomBottomSheet(
       icons: [
-        Icons.info,
         Icons.speaker_notes_off,
         joined ? Icons.remove : Icons.add,
       ],
