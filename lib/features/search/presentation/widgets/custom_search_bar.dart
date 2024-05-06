@@ -56,14 +56,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   void saveSearchLog (String query) async {
     if (widget.inCommunityPage != null && widget.inCommunityPage == true) {
       await postSearchLog(query,'community', widget.communityOrUserName!, null,false);
-      print('community query log submitted');
     }
     else if (widget.inUserProfile != null && widget.inUserProfile == true) {
       await postSearchLog(query,'user', null, widget.communityOrUserName!,true);
       print('user query log submitted');
     }
     else {
-      int response =await postSearchLog(query,'normal', null, null , false);
+      await postSearchLog(query,'normal', null, null , false);
     }
 
   } 

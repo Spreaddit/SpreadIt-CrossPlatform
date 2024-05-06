@@ -21,15 +21,13 @@ Future<int> postSearchLog(String query,String type, String? communityName, Strin
      data: {
       "query": query,
       "type": type,
-      "communityname": communityName,
+      "communityName": communityName,
       "username": username,
       "isInProfile": isInProfile,
      },
     );
     if (response.statusCode == 200) {
-      print('log: ${response.statusCode}');
       print(response.statusMessage);
-      print('log submitted to be successfully');
       return 200;
     } else if (response.statusCode == 400) {
       print(response.statusMessage);
