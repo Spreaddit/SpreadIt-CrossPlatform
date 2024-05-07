@@ -33,10 +33,13 @@ class _SchedulePostsPageState extends State<SchedulePostsPage> {
 
   void fetchCommunityInfo() async {
     communityData = await getCommunityInfo(widget.communityName);
-
+    print(communityData);
+/*
+{name: iamtryinggg, rules: [], removalReasons: [], dateCreated: 2024-05-07T00:45:49.938Z, communityBanner: https://res.cloudinary.com/dkkhtb4za/image/upload/v1713046574/uploads/WhatsApp_Image_2024-04-13_at_5.22.35_PM_f0yaln.jpg, image: https://res.cloudinary.com/dkkhtb4za/image/upload/v1713044122/uploads/voAwqXNBDO4JwIODmO4HXXkUJbnVo_mL_bENHeagDNo_knalps.png, description: , is18plus: true, allowNfsw: true, allowSpoile: true, communityType: Public, creator: {_id: 624a6a677c8d9c9f5fd5eb0d, username: basemelgalfy, avatar: https://res.cloudinary.com/dkkhtb4za/image/upload/v1714947771/uploads/avatar-1714947729634.jpg.jpg, banner: }, members: [{_id: 624a6a677c8d9c9f5fd5eb0d, username: basemelgalfy, avatar: https://res.cloudinary.com/dkkhtb4za/image/upload/v1714947771/uploads/avatar-1714947729634.jpg.jpg, banner: }], moderators: [{_id: 624a6a677c8d9c9f5fd5eb0d, username: basemelgalfy, avatar: https://res.cloudinary.com/dkkhtb4za/image/upload/v1714947771/uploads/avatar-1714947729634.jpg.jpg, banner: }], membersCount
+*/
     setState(() {
       community = Community(
-        name: widget.communityName,
+        name: communityData["name"],
         description: communityData["description"],
         rules: (communityData["rules"] as List<dynamic>)
             .map((item) => Rule.fromJson(item))
