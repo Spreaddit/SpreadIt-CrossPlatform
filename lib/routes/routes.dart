@@ -60,7 +60,15 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
         chatroomName: chatroomName,
       ),
     );
-  } else if (pathSegments.contains('moderators') &&
+  } else if (pathSegments.contains('home') &&
+      pathSegments.length == 3) {
+    // Handle navigation for /#/home/ayhaga
+    print("ana tany haga");
+    return MaterialPageRoute(
+      builder: (_) => HomePage(),
+    );
+  }
+  else if (pathSegments.contains('moderators') &&
       pathSegments.contains('community')) {
     final communityName = pathSegments[pathSegments.length - 1];
     // return MaterialPageRoute(
@@ -68,6 +76,14 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
     //     communityName: communityName,
     //   ),
     // );
+  } else if (pathSegments.contains('user-profile') &&
+      pathSegments.length >= 3) {
+    final username = pathSegments[pathSegments.length - 1];
+    return MaterialPageRoute(
+      builder: (_) => UserProfile(
+        username: username,
+      ),
+    );
   }
 
   return null;
@@ -134,7 +150,8 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
     '/settings/account-settings/add-password': (context) =>
         ProtectedRoute(child: AddPasswordPage()),
-    '/muted-communities': (context) => ProtectedRoute(child: MutedCommunityPage()),
+    '/muted-communities': (context) =>
+        ProtectedRoute(child: MutedCommunityPage()),
     '/muted-users': (context) => ProtectedRoute(child: MutedUsersPage()),
     '/edit-muted-user': (context) => ProtectedRoute(child: EditMutedUserPage()),
     '/followers-page': (context) => ProtectedRoute(child: FollowUsersPage()),
@@ -174,8 +191,6 @@ Map<String, WidgetBuilder> generateRoutes() {
         ),
   };
 }
-
-
 
 /// A widget for protected routes.
 ///

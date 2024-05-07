@@ -18,11 +18,18 @@ class UserSingleton {
   String? googleEmail;
   bool? isloggedIn;
   String? firebaseId;
+  bool? verifyEmailCalledForSignup;
 
   void setUserId(String userId) {
     firebaseId = userId;
     _saveToPrefs();
   }
+
+   void setVerify() {
+    verifyEmailCalledForSignup = true;
+    _saveToPrefs();
+  }
+
 
   void setUser(User newUser) {
     user = newUser;
@@ -99,6 +106,7 @@ class UserSingleton {
   Future<void> clearUserFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isloggedIn = false;
+    verifyEmailCalledForSignup=false;
     await prefs.remove('userSingleton');
   }
 }
