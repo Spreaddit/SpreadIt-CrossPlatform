@@ -21,7 +21,8 @@ Future<int> sendEmail(String email) async {
       ),
       data: {
         "email": email,
-        },
+        "is_cross": true,
+      },
     );
     if (response.statusCode == 200) {
       print(response.statusCode);

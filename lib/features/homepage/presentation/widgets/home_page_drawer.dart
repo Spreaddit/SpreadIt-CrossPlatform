@@ -60,6 +60,7 @@ class HomePageDrawer extends StatelessWidget {
               onTap: () {
                 if (item['route'] == '/logout') {
                   UserSingleton().clearUserFromPrefs();
+
                   UserSingleton().user = null; 
                   signOutWithGoogle(context);
 
