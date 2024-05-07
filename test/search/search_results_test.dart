@@ -56,20 +56,6 @@ void main() {
       // Find the CustomPageView widget
       final pageViewFinder = find.byType(CustomPageView);
       expect(pageViewFinder, findsOneWidget);
-      // Get the pages list from the CustomPageView
-      // final CustomPageView pageViewState = tester.state(pageViewFinder) as CustomPageView;
-      // final List<Widget> pages = pageViewState.pages;
-      // Verify that the second element in the pages list is of type CommunitiesPageView
-      //expect(pages[1], isA<CommunitiesPageView>);
-      //await tester.enterText(searchBarFinder, 'test_search');
-
-      // Rebuild the widget tree
-      //
-
-      // Verify SuggestedResults are displayed
-      // expect(find.byType(SuggestedResults), findsOneWidget);
-      // expect(find.byType(RecentSearches), findsNothing); 
-      // expect(find.byType(TrendingMenu), findsNothing);
     });
   });
 }
