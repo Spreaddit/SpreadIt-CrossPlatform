@@ -9,11 +9,11 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/page
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/time_sort.dart';
 
-/// Responsible for displaying the posts search results.
-/// The class displays 2 filter buttons : Sort and Time.
+/// Responsible for displaying the search results for postss.
 /// The class also displays a list of [PostElement] widgets, which is a Custom widget to display the posts.
+/// The class handles the logic of tapping a post search result, which is navigating to the corresponding post.
 /// The class handles the filtering logic upon filter button press , it also handles the logic of tapping a post search result, which is navigating to the corresponding post card.
-/// The class also checks if the user comes from the home page or from a community page or user profile, to call the correct api accordingly  
+/// The class also checks if the user comes from the home page or from a community page or user profile, to call the correct api accordingly 
 
 class PostsPageView extends StatefulWidget {
 
@@ -80,13 +80,13 @@ class _PostsPageViewState extends State<PostsPageView> {
 
   void getPostsResults() async {
     if (fromUserProfile != null && fromUserProfile == true) {
-      posts = await getUserSearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+      posts = await GetInUserSearchResults().getUserSearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
     }
     else if (fromCommunityPage != null &&  fromCommunityPage == true) {
-      posts = await getCommunitySearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+      posts = await GetInCommunitySearchResults().getCommunitySearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
     }
     else {
-      posts = await getSearchResults(widget.searchItem, 'posts', sort);
+      posts = await GetSearchResults().getSearchResults(widget.searchItem, 'posts', sort);
     }
     mappedPosts = extractPostDetails(posts);
     orgMappedPosts = mappedPosts;
@@ -254,7 +254,7 @@ class _PostsPageViewState extends State<PostsPageView> {
               itemCount: mappedPosts.length,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () =>  navigateToPostCardPage(context, mappedPosts[index]['postId'] , true),
+                  onTap: () =>  navigateToPostCardPage(context, mappedPosts[index]['postId'], true ),
                   child: PostElement(
                     communityIcon: mappedPosts[index]['communityProfilePic'],
                     communityName: mappedPosts[index]['communityName'],

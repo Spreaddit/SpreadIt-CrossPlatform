@@ -31,7 +31,7 @@ class _SuggestedResultsState extends State<SuggestedResults> {
   }
 
   void saveSearchLog () async {
-    await postSearchLog(widget.searchItem,'normal', null, null , false);
+    await PostSearchLog().postSearchLog(widget.searchItem,'normal', null, null , false);
   }
 
   void navigateToGeneralSearchResults() {

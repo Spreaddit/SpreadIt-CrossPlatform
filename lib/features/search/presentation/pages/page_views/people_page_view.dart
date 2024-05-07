@@ -28,7 +28,7 @@ class _PeoplePageViewState extends State<PeoplePageView> {
   }
 
   void getUsersResults() async {
-    users = await getSearchResults(widget.searchItem, 'people','relevance');
+    users = await GetSearchResults().getSearchResults(widget.searchItem, 'people','relevance');
     mappedUsers = extractUsersDetails(users);
     setState(() {});
   }

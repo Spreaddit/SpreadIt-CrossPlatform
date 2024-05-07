@@ -41,7 +41,7 @@ class _GeneralSearchState extends State<GeneralSearch> {
   }
 
   void updateSuggestedResults() async {
-    Map<String,dynamic> response  = await getSuggestedResults(searchItem);
+    Map<String,dynamic> response  = await GetSuggestedResults().getSuggestedResults(searchItem);
     Map<String, List<Map<String, dynamic>>> data = await separateCommunitiesAndUsers(response);
     communities = data['communities']!;
     users = data['users']!;

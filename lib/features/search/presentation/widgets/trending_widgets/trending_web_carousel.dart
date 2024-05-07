@@ -32,7 +32,7 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
   }
 
   void getTrending() async {
-    trending = await getTrendingPosts();
+    trending = await GetTrendingPosts().getTrendingPosts();
     mappedTrending = extractTrendingData(trending);
     setState(() {}); 
   }

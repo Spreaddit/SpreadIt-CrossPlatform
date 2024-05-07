@@ -26,7 +26,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
   }
 
   void getTrending() async {
-    trending = await getTrendingPosts();
+    trending = await GetTrendingPosts().getTrendingPosts();
     mappedTrending = extractTrendingData(trending);
     setState((){});
   }
@@ -79,7 +79,7 @@ class _TrendingMenuState extends State<TrendingMenu> {
   }
 
   void saveSearchLog (String query) async {
-      await postSearchLog(query,'normal', null, null , false);
+      await PostSearchLog().postSearchLog(query,'normal', null, null , false);
     }
 
   @override

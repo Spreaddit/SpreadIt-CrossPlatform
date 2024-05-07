@@ -78,13 +78,13 @@ class _MediaPageViewState extends State<MediaPageView> {
 
   void getPostsResults() async {
     if (fromUserProfile != null && fromUserProfile == true) {
-      media = await getUserSearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+      media = await GetInUserSearchResults().getUserSearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
     }
     else if (fromCommunityPage != null && fromCommunityPage == true) {
-      media = await getCommunitySearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
+      media = await GetInCommunitySearchResults().getCommunitySearchResults(widget.searchItem, 'posts', sort, communityOrUserName);
     }
     else {
-      media = await getSearchResults(widget.searchItem, 'posts', sort);
+      media = await GetSearchResults().getSearchResults(widget.searchItem, 'posts', sort);
     }
     mappedMedia = extractMediaDetails(media);
     orgMappedMedia = mappedMedia;

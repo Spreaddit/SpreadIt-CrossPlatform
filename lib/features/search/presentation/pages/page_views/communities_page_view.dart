@@ -28,7 +28,7 @@ class _CommunitiesPageViewState extends State<CommunitiesPageView> {
   }
 
   void getCommunitiesResults() async {
-    communities = await getSearchResults(widget.searchItem, 'communities','relevance');
+    communities = await GetSearchResults().getSearchResults(widget.searchItem, 'communities','relevance');
     mappedCommunities = extractCommunityDetails(communities);
     setState(() {});
   }

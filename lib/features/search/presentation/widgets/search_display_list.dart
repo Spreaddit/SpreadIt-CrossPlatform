@@ -33,7 +33,7 @@ class _SearchDisplayListState extends State<SearchDisplayList> {
   }
 
   void saveSearchLog (String query) async {
-    await postSearchLog(query,'normal', null, null , false);
+    await PostSearchLog().postSearchLog(query,'normal', null, null , false);
   }
 
   void navigateToTappedItem(String searchItem , String type) {
