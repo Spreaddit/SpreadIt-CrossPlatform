@@ -13,9 +13,10 @@ class BannedUserCard extends StatefulWidget {
     required this.banReason,
     required this.days,
     required this.messageToUser,
-    required this.bannedDate,
+    required this.endOfBanDate,
     required this.avatarUrl,
     required this.onUnban,
+    required this.isPermanent,
     required this.onRequestCompleted,
   }) : super(key: key);
 
@@ -25,33 +26,37 @@ class BannedUserCard extends StatefulWidget {
   final String banReason;
   final int days;
   final String messageToUser;
-  final String bannedDate;
+  final String endOfBanDate;
   final String avatarUrl;
   final Function onUnban;
   final Function onRequestCompleted;
+  final bool isPermanent;
 
   @override
   State<BannedUserCard> createState() => _BannedUserCardState();
 }
 
 class _BannedUserCardState extends State<BannedUserCard> {
-  String passedBanLength = '';
+  String remainingBanLength = '';
 
   @override
   void initState() {
     super.initState();
-    String banLength = widget.bannedDate.replaceAll('Z', '');
-    Duration banDuration = DateTime.parse(DateTime.now().toString())
-        .difference(DateTime.parse(banLength));
-
-    if (banDuration.inDays > 0) {
-      passedBanLength = '${banDuration.inDays}d';
-    } else if (banDuration.inHours > 0) {
-      passedBanLength = '${banDuration.inHours}h';
-    } else if (banDuration.inMinutes > 0) {
-      passedBanLength = '${banDuration.inMinutes}m';
+    if (widget.isPermanent) {
+      remainingBanLength = 'Permanent';
     } else {
-      passedBanLength = 'Now';
+      Duration remBanDuration = DateTime.parse(widget.endOfBanDate)
+          .difference(DateTime.parse(DateTime.now().toUtc().toString()));
+
+      if (remBanDuration.inDays > 0) {
+        remainingBanLength = '${remBanDuration.inDays}d';
+      } else if (remBanDuration.inHours > 0) {
+        remainingBanLength = '${remBanDuration.inHours}h';
+      } else if (remBanDuration.inMinutes > 0) {
+        remainingBanLength = '${remBanDuration.inMinutes}m';
+      } else {
+        remainingBanLength = 'Now';
+      }
     }
   }
 
@@ -95,7 +100,7 @@ class _BannedUserCardState extends State<BannedUserCard> {
                       username: widget.username,
                       violation: widget.violation,
                       banReason: widget.banReason,
-                      days: widget.days,
+                      days: widget.isPermanent ? -1 :  widget.days,
                       messageToUser: widget.messageToUser,
                       onRequestCompleted: widget.onRequestCompleted,
                     ),
@@ -239,7 +244,7 @@ class _BannedUserCardState extends State<BannedUserCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '$passedBanLength • ${widget.violation}',
+                '$remainingBanLength • ${widget.violation}',
                 softWrap: true,
                 style: TextStyle(
                   color: Colors.grey[600],
