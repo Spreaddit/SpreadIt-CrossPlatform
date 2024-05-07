@@ -58,25 +58,7 @@ void main() {
       expect(find.byType(TrendingMenu), findsNothing);
     });
 
-    testWidgets('Selecting a tab in SearchResultHeader calls onTabSelected', (WidgetTester tester) async {
-      final mockResponse = {
-        'communities': [
-          {'name': 'Community 1'},
-          {'name': 'Community 2'},
-        ],
-        'users': [
-          {'username': 'user1'},
-          {'username': 'user2'},
-        ],
-      };
-  
-    });
-      // Add more tests to cover other functionalities like searching, navigation within page views, etc.
-  });
+    
 }
 
-// void pushWidget(Widget widget) {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   runApp(widget); // Wrap the widget directly
-//   //popUntil((route) => route.isFirst); // Pop until the first route (usually the test app)
-// }
+
