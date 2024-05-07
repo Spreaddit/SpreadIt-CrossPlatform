@@ -23,6 +23,8 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/to
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/add_muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/createusername.dart';
@@ -174,6 +176,10 @@ Map<String, WidgetBuilder> generateRoutes() {
             },
           ),
         ),
+    '/moderators-page': (context) =>
+        ProtectedRoute(child: ModeratorsPage(communityName: "chjk")),
+    '/post-types-page': (context) =>
+        ProtectedRoute(child: PostTypes(communityName: "df")),
   };
 }
 

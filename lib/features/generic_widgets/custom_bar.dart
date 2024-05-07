@@ -21,6 +21,7 @@ class _CustomBarState extends State<CustomBar> {
     setState(() {
       _selectedIndex = index;
     });
+    print('Index changed to: $index');
     widget.onIndexChanged(index);
   }
 
@@ -41,7 +42,7 @@ class _CustomBarState extends State<CustomBar> {
             ),
           ),
           SizedBox(height: 10),
-          if (index >= widget.tabs.length - 4) 
+          if (index >= widget.tabs.length - 4)
             Container(
               height: isSelected ? 4.0 : 0,
               color: isSelected ? Colors.blue : Colors.transparent,
@@ -54,17 +55,16 @@ class _CustomBarState extends State<CustomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white, 
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            widget.tabs.length,
-            (index) => Expanded(
-              child: _buildTab(index),
-            ),
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(
+          widget.tabs.length,
+          (index) => Expanded(
+            child: _buildTab(index),
           ),
         ),
+      ),
     );
   }
 }
-

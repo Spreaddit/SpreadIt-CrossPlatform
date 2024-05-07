@@ -146,6 +146,7 @@ class SocialMedia {
     return {
       'platform': platform,
       'displayName': displayName,
+      'displayName': displayName,
       'url': url,
     };
   }

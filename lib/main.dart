@@ -14,12 +14,14 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import './user_info.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );  
+  );
   await UserSingleton().loadFromPrefs();
   bool isAndroid;
   try {

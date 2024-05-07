@@ -35,9 +35,9 @@ Future<List> getBlockedAccounts() async {
     if (response.statusCode == 200) {
       {
         print("response data${response.data}");
-        print(response.data['blockedAccounts'] as List);
+        print(response.data['blockedUsers'] as List);
         print(response.statusMessage);
-        return response.data['blockedAccounts'] as List;
+        return response.data['blockedUsers'] as List;
       }
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');

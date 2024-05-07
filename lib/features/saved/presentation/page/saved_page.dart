@@ -80,16 +80,16 @@ class _SavedPageState extends State<SavedPage> {
                 ),
               )
             : SliverList(
-  delegate: SliverChildBuilderDelegate(
-    (context, index) {
-      return Container(
-        color: Colors.white, // Set background color to white
-        child: CommentShimmerWidget(saved: true),
-      );
-    },
-    childCount: 10,
-  ),
-);
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Container(
+                      color: Colors.white, // Set background color to white
+                      child: CommentShimmerWidget(saved: true),
+                    );
+                  },
+                  childCount: 10,
+                ),
+              );
 
       default:
         return SliverToBoxAdapter(
@@ -101,7 +101,7 @@ class _SavedPageState extends State<SavedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Saved'),
         leading: IconButton(
