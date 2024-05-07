@@ -26,7 +26,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-Future<int> submitPost(
+Future<String> submitPost(
   String title,
   String content,
   String community,
@@ -124,35 +124,35 @@ Future<int> submitPost(
             print(response.data);
             print(response.statusCode);
             print(response.statusMessage);
-            return 201;
+            return response.data['postId'];
           } else if (response.statusCode == 400) {
             print(response.statusMessage);
             print(response.statusCode);
-            return 400;
+            return '400';
           } else if (response.statusCode == 500) {
             print(response.statusMessage);
             print(response.statusCode);
-            return 500;
+            return '500';
           } else {
             print(response.statusMessage);
             print(response.statusCode);
-            return 404;
+            return '404';
           }
           } on DioException catch (e) {
           if (e.response != null) {
             if (e.response!.statusCode == 400) {
               print(e.response!.statusMessage);
               print(e.response?.data);
-              return 400;
+              return '400';
             } else if (e.response!.statusCode == 500) {
               print("Conflict: ${e.response!.statusMessage}");
-              return 500;
+              return '500';
             }
         }
         rethrow;
       } catch (e) {
         print("Error occurred: $e");
-        return 404;
+        return '404';
       }
   }
 
@@ -191,20 +191,23 @@ Future<int> submitPost(
 
       if (response.statusCode == 201) {
         print(response.statusCode);
-        return 201;
+        final responseBody = await response.stream.transform(utf8.decoder).join();
+        Map<String, dynamic> jsonData = jsonDecode(responseBody);
+        print(jsonData['postId']);
+        return jsonData['postId'];
       } else if (response.statusCode == 400) {
         print(response.statusCode);
-        return 400;
+        return '400';
       } else if (response.statusCode == 500) {
         print(response.statusCode);
-        return 500;
+        return '500';
       } else {
         print(response.statusCode);
-        return 404;
+        return '404';
       }
     } catch (e) {
       print('Error occurred: $e');
-      return 404;
+      return '404';
     }
   }
   else {
@@ -252,35 +255,35 @@ Future<int> submitPost(
         print(response.data);
         print(response.statusCode);
         print(response.statusMessage);
-        return 201;
+        return response.data['postId'];
       } else if (response.statusCode == 400) {
         print(response.statusMessage);
         print(response.statusCode);
-        return 400;
+        return '400';
       } else if (response.statusCode == 500) {
         print(response.statusMessage);
         print(response.statusCode);
-        return 500;
+        return '500';
       } else {
         print(response.statusMessage);
         print(response.statusCode);
-        return 404;
+        return '404';
       }
     } on DioException catch (e) {
       if (e.response != null) {
         if (e.response!.statusCode == 400) {
           print(e.response!.statusMessage);
           print(e.response?.data);
-          return 400;
+          return '400';
         } else if (e.response!.statusCode == 500) {
           print("Conflict: ${e.response!.statusMessage}");
-          return 500;
+          return '500';
         }
       }
       rethrow;
     } catch (e) {
       print("Error occurred: $e");
-      return 404;
+      return '404';
     }
   }
 }

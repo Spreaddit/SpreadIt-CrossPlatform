@@ -13,6 +13,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
 import '../widgets/content.dart';
@@ -304,17 +305,16 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   void submit () async {
-   int response = await submitPost(
+   String response = await submitPost(
       finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalImageWeb, finalVideo, finalVideoWeb, isSpoiler, isNSFW);
-    if ( response == 201 ) {
-      //CustomSnackbar(content: 'Posted successfully !').show(context);
-      returnToHomePage(context);
-    }
-    else if (response == 400) {
+    if (response == '400') {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
     }
-    else if (response == 500) {
+    else if (response == '500') {
       CustomSnackbar(content: 'Internal server error').show(context);
+    }
+    else {
+      navigateToPostCardPage(context,response, true);
     }
   }
 
