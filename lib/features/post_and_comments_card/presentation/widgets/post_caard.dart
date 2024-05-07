@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.d
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/comment_card_shimmer.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Widget representing a post card.
@@ -16,6 +17,8 @@ class PostCard extends StatefulWidget {
   List<Comment> comments;
   VoidCallback? setIsloaded;
   bool oneComment;
+  bool isModeratorView;
+  bool canManagePostsAndComments;
 
   /// Constructs a [PostCard] with the specified [post], [comments], and [isUserProfile] flag.
   PostCard({
@@ -23,6 +26,8 @@ class PostCard extends StatefulWidget {
     required this.comments,
     this.setIsloaded,
     this.oneComment = false,
+    this.isModeratorView = false,
+    this.canManagePostsAndComments = false,
   });
 
   @override
@@ -96,6 +101,9 @@ class _PostCardState extends State<PostCard> {
           PostWidget(
             post: widget.post,
             isFullView: true,
+            isModeratorView: widget.isModeratorView,
+            isUserProfile: widget.post.userId == UserSingleton().user!.id,
+            canManagePosts: widget.canManagePostsAndComments,
             isUserProfile:
                 widget.post.username == UserSingleton().user!.username || isAdmin,
 
@@ -115,6 +123,19 @@ class _PostCardState extends State<PostCard> {
             itemBuilder: (context, index) {
               return Column(
                 children: [
+                  if (widget.comments != null && widget.comments.isNotEmpty)
+                    CommentCard(
+                      canManageComment: widget.canManagePostsAndComments,
+                      isPostLocked: widget.post.isCommentsLocked!,
+                      isModeratorView: widget.isModeratorView,
+                      comment: widget.comments[index],
+                      community: widget.post.community,
+                      setIsLoaded: widget.setIsloaded,
+                      onecomment: widget.oneComment,
+                    ),
+                  if (widget.comments == null || widget.comments.isEmpty)
+                    Expanded(child: CommentCardShimmer()),
+
                   CommentCard(
                     comment: widget.comments[index],
                     community: widget.post.community,

@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:spreadit_crossplatform/api.dart'; 
+import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 
+String baseUrl = apiUrl;
 
-String baseUrl = apiUrl; /// Base URL for API requests.
+/// Base URL for API requests.
 
 /// Fetches comments based on the specified page and user information.
 ///
@@ -18,7 +19,8 @@ String baseUrl = apiUrl; /// Base URL for API requests.
 ///
 /// Returns:
 ///   - A Future<List<Comment>> representing the list of comments fetched from the server.
-Future<List<Comment>> fetchCommentsData(String username, String page, String postId) async {
+Future<List<Comment>> fetchCommentsData(
+    String username, String page, String postId) async {
   try {
     /// Retrieve the access token from the user singleton instance.
     String? accessToken = UserSingleton().accessToken;
@@ -53,7 +55,10 @@ Future<List<Comment>> fetchCommentsData(String username, String page, String pos
     /// Process the response based on the status code.
     if (response.statusCode == 200) {
       List<dynamic> commentsJson = response.data['comments'];
-      List<Comment> comments = commentsJson.map((json) => Comment.fromJson(json)).toList();
+      print(commentsJson);
+      List<Comment> comments =
+          commentsJson.map((json) => Comment.fromJson(json)).toList();
+
       return comments;
     } else if (response.statusCode == 404) {
       print("No comments");

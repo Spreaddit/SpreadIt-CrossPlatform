@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/comment_footer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
+//import 'package:spreadit_crossplatform/features/notifications/data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
@@ -193,6 +195,7 @@ class CommentWidget extends StatelessWidget {
           ),
           if (saved)
             CommentFooter(
+              commentId: comment.id,
               onMorePressed: () {
                 showModalBottomSheet(
                   context: context,

@@ -3,7 +3,8 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
-import '../../data/data_source/api_user_info_data.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import '../widgets/sort_home.dart';
 
 /// A page where users can configure various settings.
@@ -17,64 +18,23 @@ class SettingsPage extends StatefulWidget {
 
 /// [SettingsPage] state.
 class _SettingsPageState extends State<SettingsPage> {
-  /// Holds user data fetched.
-  late Map<String, dynamic> data;
+  /// A list of widgets representing the general settings section in the settings page.
+  List<Widget> generalSectionChildren = [];
 
-  /// Represents the username associated with the fetched data.
-  String username = "";
+  /// A list of widgets representing the feed options section in the settings page.
+  List<Widget> feedOptionsSectionChildren = [];
 
-  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
-  }
-
-  /// Fetches user information.
-  Future<void> fetchData() async {
-    data = await getUserInfo(); // Await the result of getData()
-    setState(() {
-      username = data["username"];
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    /// A list of widgets representing the general settings section in the settings page.
-    List<Widget> generalSectionChildren = [];
-
-    /// A list of widgets representing the feed options section in the settings page.
-    List<Widget> feedOptionsSectionChildren = [];
-
-    /// Navigates between pages with animation.
-    void navigateToPage(Widget route) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 200),
-          reverseTransitionDuration: Duration(milliseconds: 100),
-          pageBuilder: (_, __, ___) => route,
-          transitionsBuilder: (_, animation, __, child) {
-            return ScaleTransition(
-              scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-                CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.fastOutSlowIn,
-                ),
-              ),
-              child: child,
-            );
-          },
-        ),
-      );
-    }
-
     generalSectionChildren.addAll([
       ToPageBtn(
         iconData: Icons.person_outline,
-        mainText: "Account Settings for u/$username",
+        mainText: "Account Settings for u/${UserSingleton().user!.username}",
         onPressed: () =>
             Navigator.of(context).pushNamed('/settings/account-settings'),
       ),

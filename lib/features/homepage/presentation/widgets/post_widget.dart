@@ -11,8 +11,12 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/p
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/lock_comments.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/remove_spam.dart';
+import 'package:spreadit_crossplatform/features/homepage/data/unlock_comments.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
@@ -23,6 +27,8 @@ import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
+void navigateToPostCardPage({BuildContext context, String postId,
+    bool isUserProfile, bool isModeratorView, bool canManagePostsAndComments}) {
 void navigateToPostCardPage({
   required BuildContext context,
   required String postId,
@@ -36,6 +42,8 @@ void navigateToPostCardPage({
       ),
       builder: (context) => PostCardPage(
         postId: postId,
+        isModeratorView: isModeratorView,
+        canManagePostsAndComments: canManagePostsAndComments,
         post: post,
       ),
     ),
@@ -52,6 +60,7 @@ class _PostHeader extends StatefulWidget {
   final bool isNsfw;
   final bool isSpoiler;
   final bool isSaved;
+  final bool isLocked;
   final void Function(bool) onNsfwChanged;
   final void Function(bool) onSpoilerChanged;
   final void Function() onDeleted;
@@ -65,6 +74,7 @@ class _PostHeader extends StatefulWidget {
     required this.isNsfw,
     required this.isSpoiler,
     required this.isSaved,
+    required this.isLocked,
     required this.onsaved,
     required this.onSpoilerChanged,
     required this.onNsfwChanged,
@@ -164,6 +174,7 @@ class _PostHeaderState extends State<_PostHeader> {
                   communityName: widget.post.community,
                 ),
               ),
+              if (widget.isLocked) Icon(Icons.lock, color: Colors.orange),
               IconButton(
                 icon: Icon(Icons.more_vert),
                 onPressed: onShowMenu,
@@ -221,6 +232,7 @@ class _PostHeaderState extends State<_PostHeader> {
                     ? widget.post.content![widget.post.content!.length - 1]
                     : "",
                 onContentChanged: widget.onContentChanged,
+                communityName: widget.post.community,
               ),
             ),
           ),
@@ -677,6 +689,7 @@ class _VideoAppState extends State<VideoPlayerScreen> {
 /// This widget is responsible for displaying post interactions bottom bar
 /// count of shares, upvotes and comments is displayed here.
 class _PostInteractions extends StatefulWidget {
+  final String communityName;
   final int votesCount;
   final int sharesCount;
   final int commentsCount;
@@ -685,9 +698,14 @@ class _PostInteractions extends StatefulWidget {
   final bool isFullView;
   final bool hasUpvoted;
   final bool hasDownvoted;
+  final bool isModeratorView;
+  bool isCommentsLocked;
+  bool canManagePosts;
+  final void Function(bool) onLock;
   final Post post;
 
   _PostInteractions({
+    required this.communityName,
     required this.votesCount,
     required this.sharesCount,
     required this.commentsCount,
@@ -696,6 +714,10 @@ class _PostInteractions extends StatefulWidget {
     required this.isFullView,
     required this.hasUpvoted,
     required this.hasDownvoted,
+    required this.isModeratorView,
+    required this.isCommentsLocked,
+    required this.onLock,
+    required this.canManagePosts,
     required this.post,
   });
   @override
@@ -717,7 +739,40 @@ class _PostInteractionsState extends State<_PostInteractions> {
               initialVotesCount: widget.votesCount,
               isUpvoted: widget.hasUpvoted,
               isDownvoted: widget.hasDownvoted,
+              postId: widget.postId,
             ),
+            widget.isCommentsLocked
+                ? TextButton.icon(
+                    onPressed: () => navigateToPostCardPage(
+                      context,
+                      widget.postId,
+                      widget.isUserProfile,
+                      widget.isModeratorView,
+                      widget.canManagePosts,
+                    ),
+                    icon: Icon(
+                      Icons.comment,
+                      color:  Colors.grey,
+                    ),
+                    label: Text(
+                      widget.commentsCount.toString(),
+                    ),
+                  )
+                : TextButton.icon(
+                    onPressed: () => navigateToPostCardPage(
+                      context,
+                      widget.postId,
+                      widget.isUserProfile,
+                      widget.isModeratorView,
+                      widget.canManagePosts,
+                    ),
+                    icon: Icon(
+                      Icons.comment,
+                    ),
+                    label: Text(
+                      widget.commentsCount.toString(),
+                    ),
+                  ),
             TextButton.icon(
               onPressed: () => navigateToPostCardPage(
                 context: context,
@@ -735,12 +790,77 @@ class _PostInteractionsState extends State<_PostInteractions> {
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.shield,
+            if (widget.isModeratorView && widget.canManagePosts)
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CustomBottomSheet(
+                        icons: [
+                          Icons.lock,
+                          Icons.delete,
+                        ],
+                        text: [
+                          widget.isCommentsLocked
+                              ? "unlock comments"
+                              : "Lock comments",
+                          "Remove as spam",
+                        ],
+                        onPressedList: [
+                          () {
+                            //Lock comments
+                            setState(() {
+                              widget.isCommentsLocked
+                                  ? unlockComments(postId: widget.postId)
+                                  : lockComments(postId: widget.postId);
+                              widget.isCommentsLocked =
+                                  !widget.isCommentsLocked;
+                              widget.onLock(widget.isCommentsLocked);
+                              Navigator.pop(context);
+                              widget.isCommentsLocked
+                                  ? CustomSnackbar(
+                                          content:
+                                              "Comments on this post are locked successfully!")
+                                      .show(context)
+                                  : CustomSnackbar(
+                                          content:
+                                              "Comments on this post are unlocked successfully!")
+                                      .show(context);
+                            });
+                          },
+                          () {
+                            setState(() {
+                              removeAsSpam(
+                                  communityName: widget.communityName,
+                                  postId: widget.postId);
+                              Navigator.pop(context);
+                              CustomSnackbar(
+                                      content: "Post will be removed as spam!")
+                                  .show(context);
+                            });
+                          },
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: Icon(
+                  Icons.shield,
+                ),
+              )
+            else if (widget.isModeratorView && !widget.canManagePosts)
+              IconButton(
+                onPressed: () {
+                  CustomSnackbar(
+                          content: "You are not authorized to manage posts!")
+                      .show(context);
+                },
+                icon: Icon(
+                  Icons.shield,
+                  color: Colors.grey,
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -767,6 +887,8 @@ class PostWidget extends StatefulWidget {
   final bool isFullView;
   final bool isUserProfile;
   final bool isSavedPage;
+  final bool isModeratorView;
+  final bool canManagePosts;
   final BuildContext? feedContext;
 
   PostWidget({
@@ -775,6 +897,8 @@ class PostWidget extends StatefulWidget {
     required this.isUserProfile,
     this.isSavedPage = false,
     this.feedContext,
+    this.isModeratorView = false,
+    this.canManagePosts = false,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -786,6 +910,7 @@ class _PostWidgetState extends State<PostWidget> {
   late bool isSpoiler;
   late bool isDeleted = false;
   late bool isSaved;
+  late bool isCommentsLocked;
 
   @override
   void initState() {
@@ -794,6 +919,7 @@ class _PostWidgetState extends State<PostWidget> {
       isNsfw = widget.post.isNsfw!;
       isSpoiler = widget.post.isSpoiler!;
       isSaved = widget.post.isSaved!;
+      isCommentsLocked = widget.post.isCommentsLocked!;
       content = widget.post.content != null && widget.post.content!.isNotEmpty
           ? widget.post.content!
           : [];
@@ -816,6 +942,14 @@ class _PostWidgetState extends State<PostWidget> {
 
     setState(() {
       content.add(newContent);
+    });
+  }
+
+  void onLock(bool newIsCommentsLocked) {
+    if (!mounted) return;
+    print(newIsCommentsLocked);
+    setState(() {
+      isCommentsLocked = newIsCommentsLocked;
     });
   }
 
@@ -844,7 +978,6 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return (widget.isSavedPage && !isSaved)
         ? Center(
@@ -852,7 +985,6 @@ class _PostWidgetState extends State<PostWidget> {
           )
         : (!isDeleted)
             ? Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _PostHeader(
@@ -862,6 +994,7 @@ class _PostWidgetState extends State<PostWidget> {
                     isNsfw: isNsfw,
                     isSpoiler: isSpoiler,
                     isSaved: isSaved,
+                    isLocked: isCommentsLocked,
                     onsaved: onSaved,
                     onNsfwChanged: onChangeNsfw,
                     onSpoilerChanged: onChangeSpoiler,
@@ -880,6 +1013,8 @@ class _PostWidgetState extends State<PostWidget> {
                           context: context,
                           postId: widget.post.postId,
                           post: widget.post,
+                          isModeratorView:widget.isModeratorView,
+                           canManagePosts:widget.canManagePosts,
                         );
                       }
                     },
@@ -900,12 +1035,11 @@ class _PostWidgetState extends State<PostWidget> {
                       postId: widget.post.postId,
                       isNsfw: isNsfw,
                       isSpoiler: isSpoiler,
-                      selectedPollOption: widget.post.selectedPollOption,
-                      hasVotedOnPoll: widget.post.hasVotedOnPoll,
                     ),
                   ),
                   _PostInteractions(
                     postId: widget.post.postId,
+                    communityName: widget.post.community,
                     isUserProfile: widget.isUserProfile,
                     votesCount:
                         widget.post.votesUpCount! - widget.post.votesDownCount!,
@@ -914,6 +1048,10 @@ class _PostWidgetState extends State<PostWidget> {
                     isFullView: widget.isFullView,
                     hasDownvoted: widget.post.hasDownvoted ?? false,
                     hasUpvoted: widget.post.hasUpvoted ?? false,
+                    isModeratorView: widget.isModeratorView,
+                    canManagePosts: widget.canManagePosts,
+                    isCommentsLocked: isCommentsLocked,
+                    onLock: onLock,
                     post: widget.post,
                   )
                 ],

@@ -30,7 +30,7 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 Future<void> updateBlockedAccounts({required List<dynamic> updatedList}) async {
   try {
-    var data = {"blockedAccounts": updatedList, "allowFollow": true};
+    var data = {"blockedUsers": updatedList, "allowFollow": true};
     String? accessToken = UserSingleton().getAccessToken();
     final response = await Dio().put(
       '$apiUrl/mobile/settings/blocking-permissions',

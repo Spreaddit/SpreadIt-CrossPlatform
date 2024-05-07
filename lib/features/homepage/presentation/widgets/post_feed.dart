@@ -28,6 +28,8 @@ class PostFeed extends StatefulWidget {
   final int startSortIndex;
   final int endSortIndex;
   final bool isSavedPage;
+  final bool isModeratorView;
+  final bool canManagePosts;
   final ScrollController? scrollController;
 
   PostFeed({
@@ -39,6 +41,8 @@ class PostFeed extends StatefulWidget {
     this.startSortIndex = 0,
     this.endSortIndex = 3,
     this.isSavedPage = false,
+    this.isModeratorView = false,
+    this.canManagePosts = false,
     this.scrollController,
   });
 
@@ -204,6 +208,8 @@ class _PostFeedState extends State<PostFeed> {
                               children: [
                                 PostWidget(
                                     isSavedPage: widget.isSavedPage,
+                                    isModeratorView: widget.isModeratorView,
+                                    canManagePosts: widget.canManagePosts,
                                     feedContext: context,
                                     post: existingItems[index],
                                     isUserProfile:

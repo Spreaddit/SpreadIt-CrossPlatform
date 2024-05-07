@@ -28,39 +28,38 @@ class CommentShimmerWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 10.0,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8.0),
-                  Container(
-                    width: 100.0,
-                    height: 10.0,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8.0),
-                  Container(
-                    width: double.infinity,
-                    height: 10.0,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 8.0),
-                  if (generateRandomNumber() % 2 == 0)
-                    Container(
-                      width: double.infinity,
-                      height: 200.0,
-                      color: Colors.white,
-                    ),
-                  SizedBox(height: 15.0),
-                  if(saved)
-                  ShimmeringCommentFooter(),
-                ],
-              ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 10.0,
+              color: Colors.white,
             ),
-          );
+            SizedBox(height: 8.0),
+            Container(
+              width: 100.0,
+              height: 10.0,
+              color: Colors.white,
+            ),
+            SizedBox(height: 8.0),
+            Container(
+              width: double.infinity,
+              height: 10.0,
+              color: Colors.white,
+            ),
+            SizedBox(height: 8.0),
+            if (generateRandomNumber() % 2 == 0)
+              Container(
+                width: double.infinity,
+                height: 200.0,
+                color: Colors.white,
+              ),
+            SizedBox(height: 15.0),
+            if (saved) ShimmeringCommentFooter(),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -96,14 +95,18 @@ class ShimmeringCommentFooter extends StatelessWidget {
                 ),
               ),
               SizedBox(width: screenWidth * 0.01),
-              VoteButton(initialVotesCount: generateRandomNumber(), isUpvoted: false, isDownvoted: false) ,          
+              VoteButton(
+                initialVotesCount: generateRandomNumber(),
+                isUpvoted: false,
+                isDownvoted: false,
+                postId: "vb",
+              ),
             ],
           ),
         ],
       ),
     );
   }
-
 }
 
 int generateRandomNumber() {

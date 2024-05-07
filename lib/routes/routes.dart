@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/account_settings_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/location_select_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
 import 'package:spreadit_crossplatform/features/admin_view/presentation/pages/admin_view_page.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
@@ -23,6 +24,8 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/to
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/add_muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search.dart';
@@ -82,6 +85,13 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
     //     communityName: communityName,
     //   ),
     // );
+  } else if (pathSegments.contains('add-password') &&
+      pathSegments.length >= 5 &&
+      pathSegments[pathSegments.length - 1] != "add-password") {
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (_) => ProtectedRoute(
+        child: AddPasswordPage(),
   } else if (pathSegments.contains('user-profile') &&
       pathSegments.length >= 3) {
     final username = pathSegments[pathSegments.length - 1];
@@ -135,6 +145,10 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: NotificationsPageUI()),
     '/settings/account-settings/change-password': (context) =>
         ProtectedRoute(child: ResetPassword()),
+    '/settings/account-settings/update-email': (context) =>
+        ProtectedRoute(child: UpdateEmailPage()),
+    '/settings/account-settings/location-select': (context) =>
+        ProtectedRoute(child: SelectLocationPage()),
     '/post-to-community': (context) => ProtectedRoute(
           child: Builder(
             builder: (context) {
@@ -160,8 +174,6 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/user-profile': (context) => ProtectedRoute(child: UserProfile()),
     '/edit-profile': (context) => ProtectedRoute(child: EditProfilePage()),
     '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
-    '/settings/account-settings/add-password': (context) =>
-        ProtectedRoute(child: AddPasswordPage()),
     '/muted-communities': (context) =>
         ProtectedRoute(child: MutedCommunityPage()),
     '/muted-users': (context) => ProtectedRoute(child: MutedUsersPage()),
@@ -184,6 +196,7 @@ Map<String, WidgetBuilder> generateRoutes() {
                 selectedDay: args['selectedDay'],
                 isLinkAdded: args['isLinkAdded'],
                 community: args['community'],
+                isFromCommunityPage: args['isFromCommunityPage'],
               );
             },
           ),
@@ -201,6 +214,10 @@ Map<String, WidgetBuilder> generateRoutes() {
             },
           ),
         ),
+    '/moderators-page': (context) =>
+        ProtectedRoute(child: ModeratorsPage(communityName: "chjk")),
+    '/post-types-page': (context) =>
+        ProtectedRoute(child: PostTypes(communityName: "df")),
     '/general-search-results':(context) => ProtectedRoute(
         child: Builder ( 
           builder: (context) {

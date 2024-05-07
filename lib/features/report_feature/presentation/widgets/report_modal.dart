@@ -386,7 +386,7 @@ class ReportModal {
     int response;
     var postRequestInfo = {
       "reason": mainViolations[selectedMainIndex],
-      "sureason": (hasSubReasons[selectedMainIndex] && selectedSubIndex != -1)
+      "subreason": (hasSubReasons[selectedMainIndex] && selectedSubIndex != -1)
           ? subViolationsList[selectedMainIndex]["subViolations"]
               [selectedSubIndex]
           : ""
@@ -412,7 +412,17 @@ class ReportModal {
   }
 
   void reportUser(BuildContext context) async {
-    //TODO HANDLE REPORTING USER
+    //TODO TEST REPORTING USER
+    interactWithUser(
+      userId: reportedUserName,
+      action: InteractWithUsersActions.report,
+      reportReason: mainViolations[selectedMainIndex],
+      subReportReason:
+          (hasSubReasons[selectedMainIndex] && selectedSubIndex != -1)
+              ? subViolationsList[selectedMainIndex]["subViolations"]
+                  [selectedSubIndex]
+              : "",
+    );
     Navigator.pop(context);
     Navigator.pop(context);
     if (hasSubReasons[selectedMainIndex]) {
@@ -434,9 +444,8 @@ class ReportModal {
   void blockReportedUser(BuildContext context) {
     print(blockIsChecked);
     if (blockIsChecked) {
-      // TODO ASK IF REQUEST RESPONSE STATUS SHOULD BE RETURNED HERE
       interactWithUser(
-          userId: reportedUserName, action: InteractWithUsersActions.report);
+          userId: reportedUserName, action: InteractWithUsersActions.block);
     }
     Navigator.pop(context);
   }

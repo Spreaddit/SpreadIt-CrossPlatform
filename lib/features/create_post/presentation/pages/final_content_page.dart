@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
@@ -8,6 +11,9 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/widgets
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
+import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
@@ -41,6 +47,8 @@ class FinalCreatePost extends StatefulWidget {
   final bool? createPoll;
   final bool? isLinkAdded;
   final List<Community> community;
+  /// [isFromCommunityPage] : a boolean value which indicates if the user is posting from a community or not
+  final bool? isFromCommunityPage;
 
   const FinalCreatePost({
     Key? key,
@@ -56,6 +64,7 @@ class FinalCreatePost extends StatefulWidget {
     this.createPoll,
     this.isLinkAdded,
     required this.community,
+    this.isFromCommunityPage,
   }) : super(key: key);
 
   @override
@@ -89,6 +98,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool isNSFW = false;
   bool finalIsLinkAdded = false;
   bool finalCreatePoll = false;
+  bool isNotApprovedForPosting = false;
   bool isDateChanged = false;
 
   File? finalImage;
@@ -132,8 +142,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void initState() {
     super.initState();
     mapCommunityData();
+    checkIfCanPost();
     isModeratorFunction();
-    print(" am i a moderator $isModerator");
     if (widget.isLinkAdded != null) {
       finalIsLinkAdded = widget.isLinkAdded!;
     }
@@ -153,6 +163,22 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
+    }
+  }
+
+  /// [checkIfCanPost] : a function used to check if users aren't approved for posting in the community
+
+  void checkIfCanPost() async {
+    await checkIfNotApproved(communityName, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForPosting = value;
+    });
+    if (mounted) {
+      setState(() {
+        //TODO: check if this causes exception
+        isButtonEnabled =
+            !isNotApprovedForPosting && validatePostTitle(finalTitle);
+      });
     }
   }
 
@@ -193,15 +219,21 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void updateButtonState() {
     if (finalLink == null) {
       setState(() {
-        isButtonEnabled = validatePostTitle(finalTitle);
+        isButtonEnabled =
+            validatePostTitle(finalTitle) && !isNotApprovedForPosting;
+        
         allowScheduling = validatePostTitle(finalTitle) && isModerator;
       });
     } else {
-      isButtonEnabled =
-          validatePostTitle(finalTitle) && validatePostTitle(finalLink!);
+      setState(() {
+      isButtonEnabled = validatePostTitle(finalTitle) &&
+          validatePostTitle(finalLink!) &&
+          !isNotApprovedForPosting;
+     
       allowScheduling = validatePostTitle(finalTitle) &&
           validatePostTitle(finalLink!) &&
           isModerator;
+      });
     }
   }
 
@@ -316,6 +348,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   void submit() async {
+    int response = await submitPost(
     print("IsScheduled: $isScheduled");
     DateTime? selectedDateTime;
     if (isScheduled) {
@@ -339,8 +372,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         finalVideo,
         finalVideoWeb,
         isSpoiler,
-        isNSFW,
-        isScheduled ? selectedDateTime : null);
+        isNSFW);
+      
     if (response == '400') {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
     } else if (response == '500') {
@@ -579,7 +612,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     onPressed: submit,
                     isEnabled: isButtonEnabled,
                     onIconPress: () {
-                      showDiscardButtomSheet(context);
+                      showDiscardButtomSheet(context,
+                          isFromCommunityPage: widget.isFromCommunityPage);
                     },
                   ),
                 ),

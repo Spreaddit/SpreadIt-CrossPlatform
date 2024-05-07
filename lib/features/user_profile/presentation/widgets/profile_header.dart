@@ -14,6 +14,7 @@ import 'package:spreadit_crossplatform/features/user_profile/presentation/widget
 import 'package:spreadit_crossplatform/features/user_profile/presentation/widgets/social_media_button.dart';
 import '../../../generic_widgets/bottom_model_sheet.dart';
 import '../../../generic_widgets/share.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/widgets/invitation_to_moderate.dart';
 
 /// The `ProfileHeader` widget displays the header section of a user's profile.
 ///
@@ -115,6 +116,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     if (username == 'user-profile') {
       url = '$url/${widget.username}';
     }
+    // Set _headerHeight when the widget is first inserted into the tree
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _headerHeight = context.size!.height + 50.0;
@@ -324,7 +326,12 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                 ),
                                 child: IconButton(
                                   icon: Icon(Ionicons.person_add_outline),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showModalBottomSheetInvite(
+                                        context,
+                                        widget.moderatorCommunities,
+                                        widget.username);
+                                  },
                                   color: Colors.white,
                                   iconSize: iconSize * 0.75,
                                 ),

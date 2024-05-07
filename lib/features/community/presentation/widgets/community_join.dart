@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
@@ -22,33 +24,60 @@ class JoinCommunityBtn extends StatefulWidget {
 }
 
 class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
+  late Future<Map<String, dynamic>> subscriptionDataFuture;
   late Map<String, dynamic> subscriptionData;
   bool isJoined = false;
+  bool isNotApprovedForJoin = false;
 
   @override
   void initState() {
     super.initState();
+    checkIfCanJoin();
     fetchData();
+  }
+
+  /// [checkIfCanJoin] : a function used to check if users aren't approved for joining the community
+
+  void checkIfCanJoin() async {
+    await checkIfBannedOrPrivate(
+            widget.communityName, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForJoin = value;
+    });
+    if (mounted) {
+      setState(() {
+        //TODO: check if this causes exception
+        isNotApprovedForJoin = isNotApprovedForJoin;
+      });
+    }
   }
 
   /// Fetches the subscription data for the community.
   Future<void> fetchData() async {
-    subscriptionData = await getCommunitySubStatus(widget.communityName);
-    if (subscriptionData["isSubscribed"] == -1) {
-      CustomSnackbar(content: "Failed to retrieve subscription data")
-          .show(context);
-    } else {
-      setState(() {
+    subscriptionDataFuture =
+        getCommunitySubStatus(widget.communityName).then((value) {
+      subscriptionData = value;
+      if (subscriptionData["isSubscribed"] == -1) {
+        CustomSnackbar(content: "Failed to retrieve subscription data")
+            .show(context);
+      } else {
         isJoined = subscriptionData["isSubscribed"];
-      });
-      if (widget.shouldJoinButtonRender != null) {
-        widget.shouldJoinButtonRender!();
+
+        if (widget.shouldJoinButtonRender != null) {
+          widget.shouldJoinButtonRender!();
+        }
       }
-    }
+      return value;
+    });
   }
 
   /// Handles the button press event.
   void handleBtnPress() {
+    if (isNotApprovedForJoin && !isJoined) {
+      CustomSnackbar(content: "You are not approved to join this community")
+          .show(context);
+      return;
+    }
     if (!isJoined) {
       subscribe();
     } else {
@@ -130,6 +159,27 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: subscriptionDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.deepOrangeAccent,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return FailToFetchWidget(text: Text('Error fetching data 😔'));
+        } else if (snapshot.hasData) {
+          return _buildJoinButton();
+        } else {
+          return FailToFetchWidget(text: Text('Unknown Error 🤔'));
+        }
+      },
+    );
+  }
+
+  Widget _buildJoinButton() {
     return TextButton(
       onPressed: () {
         handleBtnPress();

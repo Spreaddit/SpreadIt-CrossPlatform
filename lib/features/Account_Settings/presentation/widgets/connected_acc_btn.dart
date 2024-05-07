@@ -15,10 +15,12 @@ class ConnectAccBtn extends StatefulWidget {
     Key? key,
     required this.iconData,
     required this.accountName,
+    required this.basicData,
   }) : super(key: key);
 
   final IconData iconData;
   final String accountName;
+  final Map<String, dynamic> basicData;
 
   @override
   State<ConnectAccBtn> createState() => _ConnectAccBtnState();
@@ -42,16 +44,15 @@ class _ConnectAccBtnState extends State<ConnectAccBtn> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
+    data = widget.basicData;
+    modifyState();
   }
 
-  /// Fetches data about the connected account.
-  Future<void> fetchData() async {
-    data = await getBasicData(); // Await the result of getData()
+  /// Updates widget states regarding the connected account.
+  Future<void> modifyState() async {
+    print("Data: $data");
     setState(() {
-      connectedEmail = data["connectedAccounts"][0];
+      connectedEmail = (data["connectedAccounts"].isNotEmpty) ?  data["connectedAccounts"][0] : "";
       if (data["email"] == "") {
         connectedAccOnly = true;
       } else {
@@ -59,6 +60,12 @@ class _ConnectAccBtnState extends State<ConnectAccBtn> {
       }
       _connectionAction = (connectedEmail == "") ? "Connect" : "Disconnect";
     });
+  }
+
+  /// Fetches data about the connected account.
+  Future<void> fetchData() async {
+    data = await getBasicData(); // Await the result of getData()
+    modifyState();
   }
 
   /// Handles the connection process
@@ -70,7 +77,8 @@ class _ConnectAccBtnState extends State<ConnectAccBtn> {
     } else {
       result = await signOutWithGoogle(context);
     }
-    if (accessToken.isNotEmpty || result != false) {
+    if (accessToken != "" || result != false) {
+      print("accessToken: $accessToken, result: $result");
       await Navigator.push(
         context,
         PageRouteBuilder(

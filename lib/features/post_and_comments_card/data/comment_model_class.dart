@@ -5,44 +5,70 @@ import 'package:equatable/equatable.dart';
 class Comment extends Equatable {
   /// Unique identifier for the comment.
   final String id;
+
   /// The text content of the comment.
   String content;
+
   /// The user who made the comment.
   final User? user;
+
   /// Number of likes the comment has received.
   final int likesCount;
+
   /// Number of replies the comment has received.
   final int? repliesCount;
+
   /// Indicates if the comment is a reply to another comment.
   final bool? isReply;
+
   /// List of media (such as images) associated with the comment.
   final List<Media>? media;
+
   /// Date and time when the comment was created.
   final DateTime createdAt;
+
   /// Indicates if the comment is hidden from view.
   final bool? isHidden;
+
   /// Indicates if the comment is saved by the user.
   final bool? isSaved;
+
   /// Title of the post to which the comment belongs.
   final String? postTitle;
+
   /// Name of the subreddit (community) where the comment was posted.
   final String? subredditName;
+
   /// List of replies to the comment.
   List<Comment>? replies;
+
   /// ID of the parent comment if this comment is a reply.
   final int? commentParentId;
+
   /// Indicates if the comment is collapsed (hidden from view) by the user.
   bool isCollapsed;
+
   /// URL of the profile picture of the user who made the comment.
   final String? profilePic;
+
   /// ID of the user who made the comment.
   final String? userId;
+
   /// ID of the post to which the comment belongs.
   final String? postId;
+
   /// Username of the user who made the comment.
   final String? username;
 
   /// Constructor for creating a Comment object.
+  //final bool? lastEdit;
+  final bool? isRemoved;
+  final bool? isLocked;
+  final bool? isApproved;
+  final bool? isUpvoted;
+  final bool? isDownvoted;
+  final bool? isRemoval;
+
   Comment({
     required this.id,
     required this.content,
@@ -63,6 +89,13 @@ class Comment extends Equatable {
     this.isCollapsed = false,
     this.profilePic = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     this.username = "rehab",
+    //this.lastEdit,
+    this.isRemoved,
+    this.isApproved,
+    this.isLocked,
+    this.isUpvoted,
+    this.isDownvoted,
+    this.isRemoval,
   });
 
   /// Factory constructor for creating a Comment object from JSON data.
@@ -78,15 +111,24 @@ class Comment extends Equatable {
       likesCount: json['likes_count'],
       repliesCount: json['replies_count'],
       isReply: json['is_reply'],
-      media: (json['media'] != null) ? List<Media>.from(json['media'].map((x) => Media.fromJson(x))) : null,
+      media: (json['media'] != null)
+          ? List<Media>.from(json['media'].map((x) => Media.fromJson(x)))
+          : null,
       createdAt: DateTime.parse(json['created_at'] as String),
       isHidden: json['is_hidden'] as bool,
       isSaved: json['is_saved'] as bool,
-      postTitle: json['post_title'] ?? "ayhaga",
-      subredditName: json['community_title']??"ayhaga",
+      postTitle: json['post_title'] ?? "",
+      subredditName: json['community_title'] ?? "",
       username: usernameFetched,
       profilePic: avatarFetched,
-      postId:  json['postId'] ?? '0', 
+      postId: json['postId'] ?? '0',
+      //lastEdit: json['last_edit'] ? json['last_edit'] as bool : false,
+      isApproved: json['is_approved'] as bool,
+      isLocked: json['is_locked'] as bool,
+      isRemoved: json['is_removed'] as bool,
+      isUpvoted: json['is_upvoted'] ? json['is_upvoted'] as bool : false,
+      isDownvoted: json['is_downvoted'] ? json['is_downvoted'] as bool : false,
+      isRemoval: json['is_removal'] ? json['is_removal'] as bool : false,
     );
   }
   @override
@@ -110,6 +152,13 @@ class Comment extends Equatable {
         userId,
         postId,
         username,
+        isRemoved,
+        isLocked,
+        isApproved,
+        //lastEdit,
+        isUpvoted,
+        isDownvoted,
+        isRemoval,
       ];
 }
 

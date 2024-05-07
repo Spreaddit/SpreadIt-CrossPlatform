@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+
+import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
@@ -7,6 +11,8 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
 /// Widget for adding a comment to a post.
 class AddCommentWidget extends StatefulWidget {
@@ -19,12 +25,15 @@ class AddCommentWidget extends StatefulWidget {
   /// Function to add a comment.
   final Function(Comment) addComment;
 
+  /// Name of the community.
+  final String communityName;
+
   /// Constructs an [AddCommentWidget] with the specified [commentsList], [postId], and [addComment] function.
-  AddCommentWidget({
-    required this.commentsList,
-    required this.postId,
-    required this.addComment,
-  });
+  AddCommentWidget(
+      {required this.commentsList,
+      required this.postId,
+      required this.addComment,
+      required this.communityName});
 
   @override
   State<AddCommentWidget> createState() {
@@ -41,6 +50,52 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _linkController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  bool isNotApprovedForCommenting = false;
+  File? uploadedImageFile;
+  Uint8List? uploadedImageWeb;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfCanComment();
+  }
+
+  Future<void> pickImage() async {
+    var image;
+    if (!kIsWeb) {
+      image = await pickImageFromFilePicker();
+      setState(() {
+        if (image != null) {
+          uploadedImageFile = image;
+        }
+      });
+    }
+    if (kIsWeb) {
+      image = await pickImageFromFilePickerWeb();
+      setState(() {
+        if (image != null) {
+          uploadedImageWeb = image;
+        }
+      });
+    }
+  }
+
+  /// [checkIfCanComment] : a function used to check if users aren't approved for commenting in the community
+
+  void checkIfCanComment() async {
+    if (widget.communityName == "") {
+      return;
+    }
+    await checkIfNotApproved(
+            widget.communityName, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForCommenting = value;
+    });
+    setState(() {
+      //TODO: check if this causes exception
+      isNotApprovedForCommenting = isNotApprovedForCommenting;
+    });
+  }
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -95,42 +150,98 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Expanded(
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: TextFormField(
-            controller: _commentController,
-            maxLines: null,
-            decoration: InputDecoration(
-              labelText: "Add a comment",
-              suffixIcon: IconButton(
-                onPressed: () {
-                  _showBottomSheet(context);
-                },
-                icon: Icon(Icons.link),
+      title: Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  if (uploadedImageFile != null || uploadedImageWeb != null)
+                    Container(
+                      height: 200, // Adjust the height as needed
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: selectImage(
+                              uploadedImageFile, null, uploadedImageWeb),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  TextFormField(
+                    controller: _commentController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      labelText: "Add a comment",
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _showBottomSheet(context);
+                            },
+                            icon: Icon(Icons.link),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              pickImage();
+                            },
+                            icon: Icon(Icons.image),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-        ),
+        ],
       ),
       trailing: OutlinedButton(
-        onPressed: () async {
-          if (_commentController.text != "") {
-            print('add comment');
-            FocusScope.of(context).unfocus();
-            String newComment = _commentController.text;
-            _commentController.clear();
-            Comment? nComment = await updateComments(
-              id: widget.postId,
-              content: newComment,
-              type: 'comment',
-            );
-            setState(() {
-              widget.addComment(nComment!);
-              print('nComment${nComment.content}');
-            });
-          }
-        },
+        onPressed: isNotApprovedForCommenting
+            ? () {
+                CustomSnackbar(
+                  content:
+                      "You are not approved for commenting in this community",
+                ).show(context);
+              }
+            : () async {
+                print("commenting: $isNotApprovedForCommenting");
+                if (_commentController.text.isNotEmpty) {
+                  print('add comment');
+                  FocusScope.of(context).unfocus();
+                  String newComment = _commentController.text;
+                  _commentController.clear();
+                  Comment? nComment = await updateComments(
+                    id: widget.postId,
+                    content: newComment,
+                    type: 'comment',
+                    imageFile: uploadedImageFile,
+                    imageWeb: uploadedImageWeb,
+                  );
+                  setState(() {
+                    widget.addComment(nComment!);
+                    print('nComment${nComment.content}');
+                    uploadedImageFile = null;
+                    uploadedImageWeb = null;
+                  });
+                } else if (uploadedImageFile != null ||
+                    uploadedImageWeb != null) {
+                  setState(() {
+                    uploadedImageFile = null;
+                    uploadedImageWeb = null;
+                    CustomSnackbar(
+                            content: "Sorry you can't post an image only :(")
+                        .show(context);
+                  });
+                } else {
+                  CustomSnackbar(
+                          content: "Sorry you can't post an empty comment :(")
+                      .show(context);
+                }
+              },
         child: Text("Post"),
       ),
     );

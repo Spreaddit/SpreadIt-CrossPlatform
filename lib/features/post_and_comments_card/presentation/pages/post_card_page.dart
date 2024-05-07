@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
@@ -6,6 +9,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_post_comments.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_caard.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_shimmer.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/post_card_top_bar.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
@@ -13,15 +17,19 @@ import 'package:spreadit_crossplatform/user_info.dart';
 class PostCardPage extends StatefulWidget {
   /// The ID of the post.
   final String postId;
-
-  /// Indicates whether the current user is the owner of the profile associated with the post.
+  bool isModeratorView;
+  bool canManagePostsAndComments;
   final String? commentId;
   final bool oneComment;
   final Post? post;
 
-  const PostCardPage(
+  /// Indicates whether the current user is the owner of the profile associated with the post.
+
+  PostCardPage(
       {Key? key,
       required this.postId,
+      this.isModeratorView = false,
+      this.canManagePostsAndComments = false,
       this.commentId,
       this.post,
       this.oneComment = false})
@@ -59,6 +67,8 @@ class _PostCardPageState extends State<PostCardPage> {
     _scrollController.dispose();
     super.dispose();
   }
+
+  bool isNotApprovedForPostView = false;
 
   /// Fetches comments associated with the post.
   Future<void> fetchComments() async {
@@ -117,10 +127,42 @@ class _PostCardPageState extends State<PostCardPage> {
     _scrollController = ScrollController();
     oneComment = widget.oneComment;
     fetchPost().then((post) {
+      checkIfCanViewPost();
       fetchComments().then((comments) {
         setState(() {});
       });
     });
+  }
+
+  /// [checkIfCanViewPost] : a function used to check if users aren't approved for viewing the post in the community
+  /// Shows a non-skippable alert dialog if the user is not approved to view the post.
+  void checkIfCanViewPost() async {
+    await checkIfBannedOrPrivate(
+            post!.community, UserSingleton().user!.username)
+        .then((value) {
+      isNotApprovedForPostView = value;
+    });
+    if (isNotApprovedForPostView) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showHaltingAlert(title: "You are not approved to view this post");
+      });
+    }
+  }
+
+  /// Shows a non-skippable alert dialog.
+  void _showHaltingAlert({required String title, String? content}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return NonSkippableAlertDialog(
+          title: title,
+          content: content,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -149,10 +191,15 @@ class _PostCardPageState extends State<PostCardPage> {
                           ? PostCard(
                               post: post!,
                               comments: comments,
+                              isModeratorView: widget.isModeratorView,
+                              setIsloaded: setIsloaded,
+                              oneComment: widget.oneComment,
+                              canManagePostsAndComments:
+                                  widget.canManagePostsAndComments,
                               setIsloaded: setIsloaded,
                               oneComment: widget.oneComment,
                             )
-                          : Text(""),
+                          : PostCardShimmer(), // Placeholder post card
                     ],
                   ),
                 ),
@@ -170,11 +217,14 @@ class _PostCardPageState extends State<PostCardPage> {
                 backgroundColor: Theme.of(context).colorScheme.tertiary,
                 foregroundColor: Colors.white,
               ),
-            AddCommentWidget(
-              commentsList: comments,
-              postId: widget.postId.toString(),
-              addComment: addComment,
-            ),
+            if (post != null && !post!.isCommentsLocked! ||
+                widget!.isModeratorView!)
+              AddCommentWidget(
+                commentsList: comments,
+                postId: widget.postId.toString(),
+                addComment: addComment,
+                communityName: post?.community ?? "",
+              ),
           ],
         ),
       ),
