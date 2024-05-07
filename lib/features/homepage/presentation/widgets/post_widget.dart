@@ -18,6 +18,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/in
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -81,6 +82,8 @@ class _PostHeaderState extends State<_PostHeader> {
   late String dateFormatted;
   late Timer timer;
   bool shouldRenderJoin = false;
+
+  bool isAdmin = UserSingleton().user?.role == "Admin";
 
   @override
   void initState() {
@@ -296,9 +299,10 @@ class _PostHeaderState extends State<_PostHeader> {
       context: context,
       builder: (BuildContext context) {
         return CustomBottomSheet(
-          icons: widget.isUserProfile ? writerIcons : viewerIcons,
-          text: widget.isUserProfile ? writerOptions : viewerOptions,
-          onPressedList: widget.isUserProfile ? writerActions : viewerActions,
+          icons: widget.isUserProfile || isAdmin ? writerIcons : viewerIcons,
+          text: widget.isUserProfile || isAdmin ? writerOptions : viewerOptions,
+          onPressedList:
+              widget.isUserProfile || isAdmin ? writerActions : viewerActions,
         );
       },
     );
