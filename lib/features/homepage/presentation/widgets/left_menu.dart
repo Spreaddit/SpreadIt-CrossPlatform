@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-class LeftMenu extends StatelessWidget {
-  List<String?> subscribedCommunities = UserSingleton().user!.subscribedCommunities!;
-  
+class LeftMenu extends StatefulWidget {
+  @override
+  _LeftMenuState createState() => _LeftMenuState();
+}
+
+class _LeftMenuState extends State<LeftMenu> {
+  List<String?> subscribedCommunities =
+      UserSingleton().user!.subscribedCommunities!;
+  bool showCommunities = true; 
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,23 +37,35 @@ class LeftMenu extends StatelessWidget {
               },
             );
           }).toList(),
-          
+
           ListTile(
             title: Text(
-              'Communities',
+              'Your Communities',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            trailing: IconButton(
+              icon: Icon(showCommunities
+                  ? Icons.arrow_drop_down
+                  : Icons.arrow_right),
+              onPressed: () {
+                setState(() {
+                  showCommunities = !showCommunities;
+                });
+              },
+            ),
           ),
-          
-        ...subscribedCommunities.map((community) {
-            return ListTile(
-              title: Text('r/${community??''}'),
-             onTap: () {navigateToCommunity(context, community!);},
-            );
-          }).toList(),
+          if (showCommunities)
+            ...subscribedCommunities.map((community) {
+              return ListTile(
+                title: Text('r/${community ?? ''}'),
+                onTap: () {
+                  navigateToCommunity(context, community!);
+                },
+              );
+            }).toList(),
         ],
       ),
     );
