@@ -24,6 +24,10 @@ import 'package:spreadit_crossplatform/features/moderation/muted_users/presentat
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/reset_password/presentation/pages/reset_password_main.dart';
 import 'package:spreadit_crossplatform/features/saved/presentation/page/saved_page.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search_results.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/in_community_or_user_search_results.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/search_in_community_or_user.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/createusername.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/email_screen.dart';
 import 'package:spreadit_crossplatform/features/sign_up/Presentaion/pages/log_in_page.dart';
@@ -174,6 +178,51 @@ Map<String, WidgetBuilder> generateRoutes() {
             },
           ),
         ),
+    '/general-search-results':(context) => ProtectedRoute(
+        child: Builder ( 
+          builder: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          return SearchResult(
+            searchItem: args['searchItem'],
+          );
+        },
+      ),
+    ),  
+    '/community-or-user-search-results':
+      (context) => ProtectedRoute(
+          child: Builder ( 
+            builder: (context) {
+            final args = ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>;
+            return InCommunityOrUserSearchResults(
+              searchItem: args['searchItem'],
+              communityOrUserName: args['communityOrUserName'],
+              communityOrUserIcon: args['communityOrUserIcon'],
+              sortFilter: args['sortFilter'],
+              timeFilter: args['timeFilter'],
+              fromUserProfile: args['fromUserProfile'],
+              fromCommunityPage: args['fromCommunityPage'],
+            );
+          },    
+        ),
+      ), 
+    '/general-search':(context) => ProtectedRoute(child: GeneralSearch()),   
+    '/community-or-user-search': 
+    (context) => ProtectedRoute(
+          child: Builder ( 
+            builder: (context) {
+            final args = ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>;
+            return SearchInCommunityOrUser(
+              communityOrUserName: args['communityOrUserName'],
+              communityOrUserIcon: args['communityOrUserIcon'],
+              fromUserProfile: args['fromUserProfile'],
+              fromCommunityPage: args['fromCommunityPage'],
+            );
+          },    
+        ),
+      ),
   };
 }
 

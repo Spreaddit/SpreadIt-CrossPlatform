@@ -6,26 +6,36 @@ class RenderedTag extends StatelessWidget {
 
   final IconData icon;
   final String text;
+  final double? height;
+  final double? width;
+  final double? fontSize;
+  final double? iconSize;
 
   const RenderedTag({
     required this.icon,
     required this.text,
+    this.height,
+    this.width,
+    this.fontSize,
+    this.iconSize,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 25,
-      width: 150,
+      height: height == null ? 25 : height,
+      width: width == null ? 150 : width,
       margin:EdgeInsets.fromLTRB(15, 0, 15, 5),
         child:Row(
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              size: iconSize == null ? 24 : iconSize ,),
             Text(
               text,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: fontSize == null ? 20 : fontSize,
               ),
             ),
          ],
