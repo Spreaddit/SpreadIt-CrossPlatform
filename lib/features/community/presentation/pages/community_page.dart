@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/accept_invite.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
@@ -9,6 +7,7 @@ import 'package:spreadit_crossplatform/features/community/data/mod_permissions.d
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
@@ -117,8 +116,8 @@ class _CommunityPageState extends State<CommunityPage> {
           );
         }
         if (snapshot.hasError) {
-          return Center(
-            child: Text("Error while fetching data 😔"),
+          return FailToFetchPage(
+            displayWidget: Text("Error while fetching data 😔"),
           );
         } else if (snapshot.hasData) {
           print("Fetching is complete");
@@ -167,7 +166,7 @@ class _CommunityPageState extends State<CommunityPage> {
             ),
           );
         } else {
-          return Center(child: Text("Unknown error fetching data 🤔"));
+          return FailToFetchPage(displayWidget: Text("Unknown error fetching data 🤔"));
         }
       },
     );

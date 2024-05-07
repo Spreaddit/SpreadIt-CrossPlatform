@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_basic_settings_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import '../../data/data_source/api_user_info_data.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
@@ -144,7 +145,8 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
                 ),
               );
             } else if (snapshot.hasError) {
-              return Text('Error occurred while fetching data 😢');
+              return FailToFetchPage(
+                  displayWidget: Text('Error occurred while fetching data 😢'));
             } else if (snapshot.hasData) {
               return Padding(
                 padding: EdgeInsets.all(16),
@@ -253,7 +255,8 @@ class _UpdateEmailPageState extends State<UpdateEmailPage> {
                 ),
               );
             } else {
-              return Text('Uknown error occurred while fetching data 🤔');
+              return FailToFetchPage(
+                  displayWidget: Text('Uknown error occurred while fetching data 🤔'));
             }
           },
         ));

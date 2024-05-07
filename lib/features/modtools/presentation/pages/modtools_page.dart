@@ -3,6 +3,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
@@ -205,7 +206,10 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error fetching data 😔"));
+            return FailToFetchPage(
+                displayWidget: Center(
+              child: Text("Error fetching data 😔"),
+            ));
           } else if (snapshot.hasData) {
             int index = snapshot.data!
                 .indexWhere((item) => item["username"] == modUsername);
@@ -224,7 +228,9 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
               ),
             );
           } else {
-            return Center(child: Text("Unknown error fetching data 🤔"));
+            return FailToFetchPage(
+                displayWidget:
+                    Center(child: Text("Unknown error fetching data 🤔")));
           }
         },
       ),

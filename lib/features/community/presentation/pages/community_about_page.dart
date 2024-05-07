@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_about_rules.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 
@@ -77,9 +78,10 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
           );
         }
         if (snapshot.hasError) {
-          return Center(
+          return FailToFetchPage(
+              displayWidget: Center(
             child: Text("Error while fetching data 😔"),
-          );
+          ));
         } else if (snapshot.hasData) {
           return Scaffold(
             backgroundColor: Color.fromARGB(237, 236, 236, 234),
@@ -126,7 +128,8 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
             ),
           );
         } else {
-          return Center(child: Text("Unknown error fetching data 🤔"));
+          return FailToFetchPage(
+              displayWidget: Center(child: Text("Unknown error fetching data 🤔")));
         }
       },
     );

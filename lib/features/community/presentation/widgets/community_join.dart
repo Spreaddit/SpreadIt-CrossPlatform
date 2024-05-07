@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/user.dart';
@@ -168,11 +169,11 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Error fetching data 😔');
+          return FailToFetchWidget(text: Text('Error fetching data 😔'));
         } else if (snapshot.hasData) {
           return _buildJoinButton();
         } else {
-          return Text('Unknown Error 🤔');
+          return FailToFetchWidget(text: Text('Unknown Error 🤔'));
         }
       },
     );

@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/get_permissions.dart';
 import 'package:spreadit_crossplatform/features/community/data/mod_permissions.dart';

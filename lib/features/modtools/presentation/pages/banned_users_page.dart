@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/banned_user_card.dart';
@@ -75,9 +76,10 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(
+            return FailToFetchPage(
+                displayWidget: Center(
               child: Text("Error fetching data 😔"),
-            );
+            ));
           } else if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
               return Center(
@@ -140,9 +142,10 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
               );
             }
           } else {
-            return Center(
+            return FailToFetchPage(
+                displayWidget: Center(
               child: Text("Unknown error fetching data 🤔"),
-            );
+            ));
           }
         },
       ),

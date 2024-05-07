@@ -27,11 +27,18 @@ Future<ModPermissions?> fetchPermissionsData(
       print('permissions: $permissions');
       return permissions;
     } else {
-      print('GET request failed with status: ${response.statusCode}');
+      print(
+          'GET fetchPermissionsData request failed with status: ${response.statusCode}');
       return null;
     }
   } catch (e) {
-    print('Error fetching data: $e');
-    return null;
+    print('fetchPermissionsData Error fetching data: $e');
+    Map<String, dynamic> responseData = {
+      "managePostsAndComments": false,
+      "manageUsers": false,
+      "manageSettings": false,
+    };
+    ModPermissions permissions = ModPermissions.fromJson(responseData);
+    return permissions;
   }
 }

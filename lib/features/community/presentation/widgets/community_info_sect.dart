@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_about_page.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/modtools_page_btn.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
@@ -9,7 +10,10 @@ import 'package:spreadit_crossplatform/user_info.dart';
 /// A widget that displays information about a community.
 class CommunityInfoSection extends StatefulWidget {
   const CommunityInfoSection(
-      {Key? key, required this.communityName, required this.communityData, required this.onReturnToCommunityPage})
+      {Key? key,
+      required this.communityName,
+      required this.communityData,
+      required this.onReturnToCommunityPage})
       : super(key: key);
 
   /// The name of the community.
@@ -76,9 +80,10 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
           );
         }
         if (snapshot.hasError) {
-          return Center(
+          return FailToFetchWidget(
+              text: Center(
             child: Text("Error while fetching data 😔"),
-          );
+          ));
         } else if (snapshot.hasData && snapshot.data != {}) {
           print(isModData);
           return Container(
@@ -126,7 +131,8 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
                       if (snapshot.data!["isModerator"] ?? false)
                         ModtoolsPageBtn(
                           communityName: widget.communityName,
-                          onReturnToCommunityPage: widget.onReturnToCommunityPage,
+                          onReturnToCommunityPage:
+                              widget.onReturnToCommunityPage,
                         ),
                       if (!(snapshot.data!["isModerator"] ?? false))
                         JoinCommunityBtn(
@@ -179,7 +185,8 @@ class _CommunityInfoSectionState extends State<CommunityInfoSection> {
             ),
           );
         } else {
-          return Center(child: Text("Unknown error fetching data 🤔"));
+          return FailToFetchWidget(
+              text: Center(child: Text("Unknown error fetching data 🤔")));
         }
       },
     );
