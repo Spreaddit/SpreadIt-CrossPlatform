@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/oauth_service.dart';
 import '../../../user_info.dart';
 import '../../user.dart';
 
@@ -25,7 +26,17 @@ Future<int> logInApi({
       UserSingleton().setUser(user);
       UserSingleton().setAccessToken(response.data['access_token'],
           DateTime.parse(response.data['token_expiration_date']));
-     await subscribeToNotifications();
+      try {
+        await loginWithEmailAndPassword(user.email!, password);
+      } catch (e) {
+        print('walahi ya ama error bgd ya ama 34an dh local 3la db el backend w msh mawgod 3la firebase dh el data el at3mlha seeding y3ny: $e');
+      }
+      try {
+        await subscribeToNotifications();
+      } catch (e) {
+        print('Failed to subscribe to notifications: $e');
+      }
+
       print(response.statusMessage);
       return 200;
     } else if (response.statusCode == 404) {
@@ -35,8 +46,12 @@ Future<int> logInApi({
       print("Bad request: ${response.statusMessage}");
       return 400;
     } else if (response.statusCode == 401) {
-      print("Unauthorized ${response.statusMessage}");
+      print("Unauthorized hena ${response.statusMessage}");
       return 401;
+    }
+    else if (response.statusCode == 402) {
+      print("User banned  ${response.statusMessage}");
+      return 402;
     } else {
       print("Unexpected status code: ${response.statusCode}");
       return 409;
@@ -49,7 +64,11 @@ Future<int> logInApi({
       } else if (e.response!.statusCode == 401) {
         print("Unauthorized ${e.response!.statusMessage}");
         return 401;
-      } else if (e.response!.statusCode == 404) {
+      }    else if (e.response!.statusCode == 402) {
+      print("User banned  ${e.response!.statusMessage}");
+      return 402;
+    } 
+      else if (e.response!.statusCode == 404) {
         print("Not Found: ${e.response!.statusMessage}");
         return 404;
       }

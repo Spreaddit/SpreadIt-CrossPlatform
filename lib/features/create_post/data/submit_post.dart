@@ -6,9 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:intl/intl.dart';
 
 /// This function takes all the post parameters such as [title], [content], [link], [image], [video], [poll],and [tags]to submit them to the backend.
-/// The parameters are: 
+/// The parameters are:
 /// 1) [title] : the post title.
 /// 2) [content] : the text content (body).
 /// 3) [community] : the name of the community the post is post to.
@@ -37,6 +38,7 @@ Future<int> submitPost(
   Uint8List? videoWeb,
   bool isSpoiler,
   bool isNSFW,
+  DateTime? scheduledDate,
 ) async {
   try {
     String? accessToken = UserSingleton().accessToken;
@@ -99,6 +101,9 @@ Future<int> submitPost(
       "fileType": fileType,
       "isSpoiler": isSpoiler,
       "isNSFW": isNSFW,
+      if (scheduledDate != null)
+        "scheduledDate":
+            DateFormat('yyyy-MM-dd HH:mm').format(scheduledDate).toString(),
     };
 
     var dataLink = {
@@ -110,6 +115,9 @@ Future<int> submitPost(
       "fileType": fileType,
       "isSpoiler": isSpoiler,
       "isNSFW": isNSFW,
+      if (scheduledDate != null)
+        "scheduledDate":
+            DateFormat('yyyy-MM-dd HH:mm').format(scheduledDate).toString(),
     };
 
     var dataContent = {
@@ -120,6 +128,9 @@ Future<int> submitPost(
       "fileType": fileType,
       "isSpoiler": isSpoiler,
       "isNSFW": isNSFW,
+      if (scheduledDate != null)
+        "scheduledDate":
+            DateFormat('yyyy-MM-dd HH:mm').format(scheduledDate).toString(),
     };
 
     var dataMedia = {
@@ -130,6 +141,9 @@ Future<int> submitPost(
       "fileType": fileType,
       "isSpoiler": isSpoiler,
       "isNSFW": isNSFW,
+      if (scheduledDate != null)
+        "scheduledDate":
+            DateFormat('yyyy-MM-dd HH:mm').format(scheduledDate).toString(),
       //TODO:
       //"file": await MultipartFile.fromFile(file.path),
       //     }, FormData.files.add(MapEntry(
@@ -153,6 +167,7 @@ Future<int> submitPost(
       }
     }
 
+    print(postType());
     final response = await Dio().post(
       apiUrl,
       options: Options(headers: {

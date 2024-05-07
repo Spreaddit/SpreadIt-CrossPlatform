@@ -26,7 +26,7 @@ void main() {
               socialMediaLinks: [
                 {'platform': 'twitter', 'displayName': 'Twitter', 'url': 'twitter_url'},
                 {'platform': 'facebook', 'displayName': 'Facebook', 'url': 'facebook_url'},
-              ],
+              ], displayName: 'testuser',
             ),
           ),
         ),

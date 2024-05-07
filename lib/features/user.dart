@@ -2,26 +2,26 @@ class User {
   String id;
   String name;
   String username;
-  String? email;
+  String? email; 
   String? googleId;
-  DateTime? birthDate;
-  String? phone;
+  DateTime? birthDate; 
+  String? phone; 
   String? avatarUrl;
-  String? backgroundPictureUrl;
-  String? location;
-  String? bio;
+  String? backgroundPictureUrl; 
+  String? location; 
+  String? bio; 
   int? followersCount;
   int? followingCount;
   DateTime? createdAt;
-  String? role;
+  String? role; 
   bool? nsfw;
   bool? activeInCommunityVisibility;
   bool? isVerified;
   bool? isVisible;
   bool? isActive;
-  String? displayName;
-  String? about;
-  bool? cakeDay;
+  String? displayName; 
+  String? about; 
+  DateTime? cakeDay; 
   List<String?>? subscribedCommunities;
   List<String?>? favouriteCommunities;
   final List<SocialMedia?>? socialLinks;
@@ -60,7 +60,7 @@ class User {
       'id': id,
       'name': name,
       'username': username,
-      'email': email,
+      'email': email ?? '',
       'googleId': googleId,
       'birth_date': birthDate?.toIso8601String(),
       'phone': phone,
@@ -77,9 +77,9 @@ class User {
       'isVerified': isVerified,
       'isVisible': isVisible,
       'isActive': isActive,
-      'displayName': displayName,
-      'about': about,
-      'cakeDay': cakeDay,
+      'displayName': displayName??'',
+      'about': about ?? '',
+      'cakeDay': cakeDay?.toIso8601String(),
       'subscribedCommunities': subscribedCommunities,
       'favouriteCommunities': favouriteCommunities,
       'socialLinks':
@@ -96,22 +96,22 @@ class User {
       id: json['id'],
       name: json['name'],
       username: json['username'],
-      email: json['email'],
+      email: json['email'] ?? '',
       googleId: json['googleId'],
       birthDate: json['birth_date'] != null
           ? DateTime.parse(json['birth_date'])
           : null,
-      phone: json['phone'],
+      phone: json['phone'] ?? '',
       avatarUrl: json['avatar_url'],
-      backgroundPictureUrl: json['background_picture_url'],
-      location: json['location'],
-      bio: json['bio'],
+      backgroundPictureUrl: json['background_picture_url'] ?? '',
+      location: json['location'] ?? '',
+      bio: json['bio'] ?? '',
       followersCount: json['followers_count'] as int?,
       followingCount: json['following_count'] as int?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : DateTime.now(),
-      role: json['role'],
+      role: json['role'] ??'',
       nsfw: json['nsfw'],
       activeInCommunityVisibility: json['activeInCommunityVisibility'],
       isActive: json['isActive'],
@@ -119,7 +119,9 @@ class User {
       isVerified: json['isVerified'],
       displayName: json['displayName'],
       about: json['about'],
-      cakeDay: json['cakeDay'] as bool?,
+      cakeDay:  json['cakeDay'] != null
+          ? DateTime.parse(json['cakeDay'])
+          : null,
       subscribedCommunities: json['subscribedCommunities'] != null
           ? List<String>.from(json['subscribedCommunities'])
           : [],

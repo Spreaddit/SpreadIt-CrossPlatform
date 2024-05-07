@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 
+/// A custom tab bar widget.
+///
+/// This widget displays tabs horizontally with customizable titles.
+///
+/// Example usage:
+/// ```dart
+/// CustomBar(
+///   onIndexChanged: (index) {
+///     // Handle tab selection
+///   },
+///   tabs: [
+///     'Tab 1',
+///     'Tab 2',
+///     'Tab 3',
+///   ],
+/// )
+/// ```
 class CustomBar extends StatefulWidget {
+  /// Callback function triggered when a tab is selected.
   final ValueChanged<int> onIndexChanged;
+
+  /// The list of tab titles.
   final List<String> tabs;
 
+  /// Creates a custom tab bar.
+  ///
+  /// The [onIndexChanged] and [tabs] parameters are required.
   const CustomBar({
     Key? key,
     required this.onIndexChanged,
@@ -55,16 +78,15 @@ class _CustomBarState extends State<CustomBar> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white, 
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            widget.tabs.length,
-            (index) => Expanded(
-              child: _buildTab(index),
-            ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(
+          widget.tabs.length,
+          (index) => Expanded(
+            child: _buildTab(index),
           ),
         ),
+      ),
     );
   }
 }
-

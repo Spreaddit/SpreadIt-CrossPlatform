@@ -11,10 +11,12 @@ enum PostCategories {
   top,
   random,
   recent,
+  hide,
+  downvoted,
+  upvoted,
   views,
   user,
   save,
-  hide,
 }
 
 /// takes [PostCategories] as a parameter and
@@ -40,13 +42,17 @@ String postCategoryEndpoint({
       case PostCategories.top:
         return "/home/top/";
       case PostCategories.recent:
-        return "/home/posts/"; //TODO: check history page options (Rehab - phase 3)
+        return "/home/posts/";
       case PostCategories.views:
         return "/home/sort/views/";
       case PostCategories.save:
         return "/posts/save/";
       case PostCategories.hide:
-        return "/home/posts/hide/";
+        return "/posts/hide/";
+      case PostCategories.downvoted:
+        return "/posts/downvote/";
+      case PostCategories.upvoted:
+        return "/posts/upvote/";
       default:
         return "";
     }
@@ -73,30 +79,38 @@ Future<List<Post>> getFeedPosts({
   String? subspreaditName,
   String? timeSort = "",
   String? username = "",
+  int page = 1,
 }) async {
+  String? requestURL;
   try {
     String? accessToken = UserSingleton().getAccessToken();
-    print(accessToken);
 
-    String requestURL = apiUrl +
+    requestURL = apiUrl +
         postCategoryEndpoint(
           action: category,
           subspreaditName: subspreaditName,
           timeSort: timeSort,
           username: username,
         );
-    print("post Category Endpoint: $requestURL");
     final response = await Dio().get(
       requestURL,
+      queryParameters: {
+        'page': page,
+        'count': 10,
+      },
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       ),
     );
+
     if (response.statusCode == 200) {
-      List<Post> posts =
-          (response.data as List).map((x) => Post.fromJson(x)).toList();
+      print(response.data);
+      List<Post> posts = (response.data['posts'] as List)
+          .map((x) => Post.fromJson(x))
+          .toList();
+
       return (posts);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
@@ -107,6 +121,7 @@ Future<List<Post>> getFeedPosts({
     }
     return [];
   } on DioException catch (e) {
+    print("URL: $requestURL");
     if (e.response != null) {
       if (e.response!.statusCode == 400) {
         print("Bad request: ${e.response!.statusMessage}");
@@ -134,7 +149,7 @@ Future<Post?> getPostById({
     String? accessToken = UserSingleton().getAccessToken();
 
     String requestURL = "$apiUrl/posts/$postId/";
-    print("post Category Endpoint: $requestURL");
+
     final response = await Dio().get(
       requestURL,
       options: Options(
@@ -144,7 +159,6 @@ Future<Post?> getPostById({
       ),
     );
     if (response.statusCode == 200) {
-      print(response.data);
       return Post.fromJson(response.data);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");

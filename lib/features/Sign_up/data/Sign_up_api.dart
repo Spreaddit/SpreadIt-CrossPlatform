@@ -17,13 +17,13 @@ Future<int> signUpApi({
   try {
     const apiroute = "/signup";
     String apiUrl = apibase + apiroute;
-    var data = {"username": username, "email": email, "password": password};
+    var data = {"username": username, "email": email, "password": password , "is_cross" :true};
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
       User user = User.fromJson(response.data['user']);
       UserSingleton().setUser(user);
-      await signInwithEmailandPasswird(email , password);
+      await signInwithEmailandPassword(email , password);
       print('User ID: ${user.id}');
       return 200;
     } else if (response.statusCode == 409) {

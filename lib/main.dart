@@ -1,36 +1,46 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spreadit_crossplatform/features/forget_password_verification/presentation/forget_password_verification.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/subscribe_notifications.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search.dart';
+import 'package:spreadit_crossplatform/features/search/presentation/pages/general_search_results.dart';
 import 'package:spreadit_crossplatform/routes/routes.dart';
 import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
 import './user_info.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  );  
   await UserSingleton().loadFromPrefs();
-  if (UserSingleton().user != null) {
-   // await subscribeToNotifications();
+  bool isAndroid;
+  try {
+    isAndroid = Platform.isAndroid;
+  } catch (e) {
+    print('Error detecting platform: $e');
+    isAndroid = false;
   }
-  runApp(SpreadIt());
+  runApp(SpreadIt(isAndroid: isAndroid));
 }
 
 class SpreadIt extends StatelessWidget {
-  SpreadIt({Key? key}) : super(key: key);
+  final bool isAndroid;
+
+  SpreadIt({required this.isAndroid, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      scrollBehavior: kIsWeb
+      scrollBehavior: !isAndroid
           ? const MaterialScrollBehavior().copyWith(
               dragDevices: {PointerDeviceKind.mouse},
             )
@@ -38,29 +48,7 @@ class SpreadIt extends StatelessWidget {
       title: 'Spread It',
       theme: spreadItTheme,
       home: UserSingleton().user != null ? HomePage() : StartUpPage(),
-      onGenerateRoute: (settings) {
-        final List<String>? pathSegments = settings.name?.split('/');
-        if (pathSegments == null || pathSegments.isEmpty) {
-          return null;
-        }
-
-        if (pathSegments.contains('post-card-page') &&
-            pathSegments.length >= 3) {
-          final postId = pathSegments[pathSegments.length - 2];
-          final isUserProfile = pathSegments[pathSegments.length - 1] == 'true';
-
-          return MaterialPageRoute(
-            builder: (_) =>
-                PostCardPage(postId: postId, isUserProfile: isUserProfile),
-          );
-        }
-
-        else if (pathSegments.contains('forget-password-verification') && pathSegments.length >= 3) {
-          final emailToken = pathSegments[pathSegments.length -1];
-          return MaterialPageRoute(builder: (_) => ForgetPasswordVerification());
-        }
-        return null;
-      },
+      onGenerateRoute: onGenerateRoute,
       routes: generateRoutes(),
     );
   }
