@@ -11,7 +11,6 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/p
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/lock_comments.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
@@ -192,12 +191,10 @@ class _PostHeaderState extends State<_PostHeader> {
       "Copy text",
       "Report",
       "Block account",
-      "Hide",
     ];
     List<String> writerOptions = [
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
-      "Hide",
       "Edit post",
       widget.isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
       widget.isNsfw ? "Unmark NSFW" : "Mark NSFW",
@@ -221,7 +218,6 @@ class _PostHeaderState extends State<_PostHeader> {
                 widget.onsaved(!widget.isSaved),
               },
       () => copyText(context, widget.content!),
-      hide,
       () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -287,13 +283,11 @@ class _PostHeaderState extends State<_PostHeader> {
             true,
           ),
       () => blockAccount(widget.post.username),
-      hide
     ];
 
     List<IconData> writerIcons = [
       Icons.save,
       Icons.copy,
-      Icons.hide_source_rounded,
       Icons.edit,
       Icons.new_releases_rounded,
       Icons.warning_rounded,
@@ -304,7 +298,6 @@ class _PostHeaderState extends State<_PostHeader> {
       Icons.copy,
       Icons.flag,
       Icons.block,
-      Icons.hide_source_rounded,
     ];
     showModalBottomSheet(
       context: context,
