@@ -1,46 +1,42 @@
-import 'package:dio/dio.dart';
-import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+import '../../discover_communities/data/community.dart';
+import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
 
-/// This function interacts with the backend to receive a list of communities and their info.
-
-String apibase = apiUrl;
-
-Future<List<Map<String, dynamic>>> getCommunitiesList() async {
-  try {
-    String? accessToken = UserSingleton().accessToken;
-    print('entered get communities');
-    var response = await Dio().get(
-      '$apiUrl/community/random-category',
-      options: Options(
+class GetAllCommunities {
+  Dio dio = Dio();
+  Future<List<Community>> getAllCommunities() async {
+    try {
+      String? accessToken = UserSingleton().accessToken;
+      Response response;
+      Options options = Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
-      ),
-    );
-    if (response.statusCode == 200) {
-      print(response.statusMessage);
-      print(response.statusCode);
-      print(response.data as List);
-      return (response.data as List).cast<Map<String, dynamic>>();
-    } else {
-      print(response.statusMessage);
-      print(response.statusCode);
-      return [];
-    }
-  } on DioException catch (e) {
-    if (e.response != null) {
-      if (e.response!.statusCode == 400) {
-        print(e.response!.statusMessage);
-      } else if (e.response!.statusCode == 500) {
-        print("Conflict: ${e.response!.statusMessage}");
+      );
+        response = await dio.get(
+          '$apiUrl/community/list',
+          options: options,
+        );
+
+      if (response.statusCode == 200) {
+        print(
+          "reponse ${response.data}",
+        );
+        List<Community> communities =
+            (response.data as List).map((i) => Community.fromJson(i)).toList();
+        print(communities);
+        return communities;
+      } else if (response.statusCode == 404) {
+        throw Exception('No communities found for the specified category');
+      } else if (response.statusCode == 500) {
+        throw Exception('Internal server error');
+      } else {
+        throw Exception('Bad request, invalid request paramters');
       }
-      return [];
+    } catch (e) {
+      throw Exception('Failed to load communities: $e ');
     }
-    rethrow;
-  } catch (e) {
-    print("Error occurred: $e");
-    return [];
   }
 }
