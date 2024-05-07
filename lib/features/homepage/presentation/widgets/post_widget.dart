@@ -236,19 +236,23 @@ class _PostHeaderState extends State<_PostHeader> {
           ? () => {
                 widget.onSpoilerChanged(!widget.isSpoiler),
                 unmarkSpoiler(context, widget.post.postId),
+                Navigator.of(context).pop(),
               }
           : () => {
                 widget.onSpoilerChanged(!widget.isSpoiler),
                 markSpoiler(context, widget.post.postId),
+                Navigator.of(context).pop(),
               },
       widget.isNsfw
           ? () => {
                 widget.onNsfwChanged(!widget.isNsfw),
                 unmarkNSFW(context, widget.post.postId),
+                Navigator.of(context).pop(),
               }
           : () => {
                 widget.onNsfwChanged(!widget.isNsfw),
                 markNSFW(context, widget.post.postId),
+                Navigator.of(context).pop(),
               },
       () => deletePost(
             widget.feedContext ?? context,
@@ -769,19 +773,6 @@ class _PostInteractionsState extends State<_PostInteractions> {
                       widget.commentsCount.toString(),
                     ),
                   ),
-            TextButton.icon(
-              onPressed: () => navigateToPostCardPage(
-                context: context,
-                postId: widget.post.postId,
-                post: widget.post,
-              ),
-              icon: Icon(
-                Icons.comment,
-              ),
-              label: Text(
-                widget.commentsCount.toString(),
-              ),
-            ),
             IconButton(
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),

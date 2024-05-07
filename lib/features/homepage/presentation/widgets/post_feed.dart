@@ -165,6 +165,7 @@ class _PostFeedState extends State<PostFeed> {
         if (mounted) {
           setState(() {
             isRefreshing = true;
+            existingItems.clear();
           });
         }
         return fetchData();

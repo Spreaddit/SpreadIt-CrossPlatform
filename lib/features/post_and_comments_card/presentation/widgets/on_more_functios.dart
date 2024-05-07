@@ -70,8 +70,7 @@ void unmarkSpoiler(BuildContext context, String postId) async {
     Navigator.pop(context);
     CustomSnackbar(content: "Your post now is unmarked Spoiler");
   } else if (response == 500) {
-    CustomSnackbar(content: 'Internal server error, try again later')
-        .show(context);
+    CustomSnackbar(content: 'An error occured').show(context);
   } else {
     CustomSnackbar(content: 'Post not found').show(context);
   }
