@@ -114,6 +114,7 @@ class _HomePageState extends State<HomePage> {
       InboxPage(
         isAllRead: isAllRead,
         newMessage: newMessage,
+        setNewMessage: setNewMessage,
       ),
       PostFeed(
         postCategory: PostCategories.hot,

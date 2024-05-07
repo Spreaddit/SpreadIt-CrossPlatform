@@ -20,11 +20,13 @@ MessageRepliesModel getLastMessage(MessageModel message) {
 class MessageInbox extends StatefulWidget {
   final bool isAllRead;
   final MessageModel? newMessage;
+  final void Function(MessageModel message) setNewMessage;
 
   const MessageInbox({
     Key? key,
     this.isAllRead = false,
-    this.newMessage,
+    required this.newMessage,
+    required this.setNewMessage,
   }) : super(key: key);
 
   @override
@@ -43,10 +45,13 @@ class _MessageInboxState extends State<MessageInbox> {
     super.initState();
   }
 
-  void fetchMessages() async {
-    setState(() {
-      isLoading = true;
-    });
+  void fetchMessages({bool shouldLoad = true}) async {
+    if (shouldLoad) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+
     List<MessageModel> fetchedMessages = await getMessages();
     setState(() {
       messages = fetchedMessages;
@@ -56,13 +61,12 @@ class _MessageInboxState extends State<MessageInbox> {
 
   @override
   void didUpdateWidget(covariant MessageInbox oldWidget) {
-    if (widget.newMessage != null &&
-        (oldWidget.newMessage == null &&
-            widget.newMessage?.primaryMessage.id !=
-                oldWidget.newMessage?.primaryMessage.id)) {
+    if (widget.newMessage != oldWidget.newMessage &&
+        widget.newMessage != null) {
       setState(() {
         messages = [...messages, widget.newMessage!];
       });
+      fetchMessages(shouldLoad: false);
     } else if (widget.isAllRead == true) {
       for (int i = 0; i < messages.length; i++) {
         handleReadConversation(messages[i], i, true);
@@ -128,6 +132,7 @@ class _MessageInboxState extends State<MessageInbox> {
                     isRead: isReadHandling(message),
                     handleReadConversation: handleReadConversation,
                     index: index,
+                    setNewMessage: widget.setNewMessage,
                   );
                 }
                 return Slidable(
@@ -158,6 +163,7 @@ class _MessageInboxState extends State<MessageInbox> {
                     isRead: isReadHandling(message),
                     handleReadConversation: handleReadConversation,
                     index: index,
+                    setNewMessage: widget.setNewMessage,
                   ),
                 );
               }).toList(),
@@ -170,6 +176,7 @@ class MessageTile extends StatefulWidget {
   final MessageModel message;
   final bool isRead;
   final int index;
+  final void Function(MessageModel message) setNewMessage;
 
   final void Function(
     MessageModel message,
@@ -182,6 +189,7 @@ class MessageTile extends StatefulWidget {
     required this.isRead,
     required this.handleReadConversation,
     required this.index,
+    required this.setNewMessage,
   });
 
   @override
@@ -242,6 +250,7 @@ class _MessageTileState extends State<MessageTile> {
           navigateToMessage(
             context: context,
             message: widget.message,
+            setNewMessage: widget.setNewMessage,
           );
         },
       ),
@@ -252,6 +261,7 @@ class _MessageTileState extends State<MessageTile> {
 navigateToMessage({
   required BuildContext context,
   required MessageModel message,
+  required void Function(MessageModel message) setNewMessage,
 }) {
   Navigator.push(
     context,
@@ -261,6 +271,7 @@ navigateToMessage({
       ),
       builder: (context) => MessagePage(
         message: message,
+        setNewMessage: setNewMessage,
       ),
     ),
   );

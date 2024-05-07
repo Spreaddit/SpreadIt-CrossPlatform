@@ -7,10 +7,12 @@ import 'package:spreadit_crossplatform/theme/theme.dart';
 
 class NewMessageForm extends StatefulWidget {
   final String? messageId;
-  final void Function(MessageModel) setNewMessage;
+  final void Function(MessageModel message) setNewMessage;
+  final void Function(MessageModel message)? setNewMessageInner;
   NewMessageForm({
     this.messageId,
     required this.setNewMessage,
+    this.setNewMessageInner,
   });
 
   @override
@@ -28,16 +30,22 @@ class _NewMessageFormState extends State<NewMessageForm> {
       String username = _usernameController.text;
       String subject = _subjectController.text;
       String message = _messageController.text;
-      sendMessage(
-              username: username,
-              subject: subject,
-              messageId: widget.messageId,
-              message: message)
-          .then(
-        (value) => value != null
-            ? widget.setNewMessage(value)
-            : CustomSnackbar(content: "Error sending message").show(context),
-      );
+      var value = await sendMessage(
+          username: username,
+          subject: subject,
+          messageId: widget.messageId,
+          message: message);
+
+      if (value != null) {
+        widget.setNewMessage(value);
+        if (widget.messageId != null) {
+          print("ANaaaa ahooo");
+          widget.setNewMessageInner!(value);
+        }
+      } else {
+        CustomSnackbar(content: "Error sending message").show(context);
+      }
+
       Navigator.pop(context);
     }
   }
@@ -249,16 +257,17 @@ class LinkBuilderForm extends StatelessWidget {
 void showSendMessage({
   required BuildContext context,
   String? messageId,
-  required final void Function(MessageModel) setNewMessage,
+  required final void Function(MessageModel message) setNewMessage,
+  final void Function(MessageModel message)? setNewMessageInner,
 }) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (BuildContext context) {
       return NewMessageForm(
-        messageId: messageId,
-        setNewMessage: setNewMessage,
-      );
+          messageId: messageId,
+          setNewMessage: setNewMessage,
+          setNewMessageInner: setNewMessageInner);
     },
   );
 }

@@ -95,10 +95,11 @@ Future<MessageModel?> sendMessage({
       ),
       data: requestBody,
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode != null &&
+        response.statusCode! >= 200 &&
+        response.statusCode! <= 300) {
       print(response.data);
-
-      return MessageModel.fromJson(response.data);
+      return MessageModel.fromJson(response.data['messageContent']);
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");
     } else if (response.statusCode == 400) {

@@ -7,10 +7,12 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 class MessagePage extends StatefulWidget {
   final MessageModel message;
+  final void Function(MessageModel message) setNewMessage;
 
   MessagePage({
     Key? key,
     required this.message,
+    required this.setNewMessage,
   }) : super(
           key: key,
         );
@@ -29,17 +31,7 @@ class _MessagePageState extends State<MessagePage> {
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(covariant MessagePage oldWidget) {
-    if (!mounted) return;
-
-    setState(() {
-      message = widget.message;
-    });
-    super.didUpdateWidget(oldWidget);
-  }
-
-  void setNewMessage(MessageModel newMessage) {
+  void setNewMessageInner(MessageModel newMessage) {
     MessageRepliesModel newMessageReply = newMessage.primaryMessage;
     setState(() {
       message.replies = [
@@ -104,9 +96,11 @@ class _MessagePageState extends State<MessagePage> {
               child: TextButton(
                 onPressed: () {
                   showSendMessage(
-                      context: context,
-                      messageId: getLastMessage(widget.message).id,
-                      setNewMessage: setNewMessage);
+                    context: context,
+                    messageId: getLastMessage(widget.message).id,
+                    setNewMessage: widget.setNewMessage,
+                    setNewMessageInner: setNewMessageInner,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

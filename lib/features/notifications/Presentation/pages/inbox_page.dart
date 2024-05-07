@@ -12,13 +12,16 @@ import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 /// A StatefulWidget representing the Saved page where users can view their saved posts and comments.
 class InboxPage extends StatefulWidget {
   final void Function(int)? onChangeHomeSubCategory;
+  final void Function(MessageModel message) setNewMessage;
   final MessageModel? newMessage;
   final bool isAllRead;
+
   const InboxPage({
     Key? key,
     this.onChangeHomeSubCategory,
-    this.newMessage,
+    required this.setNewMessage,
     required this.isAllRead,
+    required this.newMessage,
   }) : super(key: key);
 
   @override
@@ -130,6 +133,7 @@ class _InboxPageState extends State<InboxPage> {
             : MessageInbox(
                 isAllRead: widget.isAllRead,
                 newMessage: widget.newMessage,
+                setNewMessage: widget.setNewMessage,
               );
       default:
         return LoaderWidget(
