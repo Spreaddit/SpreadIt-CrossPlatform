@@ -64,17 +64,37 @@ Future<int> updateUserApi({
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/profile-info';
     String? username = UserSingleton().user!.username;
-    String jsonBody = jsonEncode(socialMedia);
-    
+     var data = {
+      "username": username,
+      "name": displayName,
+      "avatar": profilePicImageUrl,
+      "banner": backgroundImageUrl,
+      "about": aboutUs,
+      "socialLinks": socialMedia,
+      "isVisible": contentVisibility,
+      "isActive": showActiveCommunity,
+    };
+    final response = await Dio().put(
+      apiRoute,
+      data: data,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if(response.statusCode!=200)
+    {
+      print("An error occured");
+      return response.statusCode!;
+    }
     if (kIsWeb && (profileImageWeb!= null || backgroundImageWeb != null)) {
       var request = http.MultipartRequest('PUT', Uri.parse(apiRoute));
       request.headers['Authorization'] = 'Bearer $accessToken';
       request.fields['username'] = username;
       request.fields['name'] = displayName;
       request.fields['about'] = aboutUs;
-      request.fields['isVisible'] = contentVisibility.toString();
-      request.fields['isActive'] = showActiveCommunity.toString();
-      request.fields['socialLinks'] = jsonBody;
+
       if (profileImageWeb != null) {
         request.files.add(http.MultipartFile.fromBytes(
           'avatar',
@@ -111,14 +131,11 @@ Future<int> updateUserApi({
         print('Unexpected status code: ${response.statusCode}');
         return 404;
       }
-    } else  {
+    } else if(profilePicImage!= null || backgroundImage != null)  {
       var formData = FormData.fromMap({
         'username': username,
         'name': displayName,
         'about': aboutUs,
-        'isVisible': contentVisibility,
-        'isActive': showActiveCommunity,
-        'socialLinks': socialMedia,
       });
 
       if (profilePicImage != null) {
@@ -164,9 +181,7 @@ Future<int> updateUserApi({
           },
         ),
       );
-      print(response.statusCode);
-      print(response.statusMessage);
-      print(formData);
+
       if (response.statusCode == 200) {
         print(response.statusMessage);
         return 200;
@@ -178,6 +193,7 @@ Future<int> updateUserApi({
         return 404;
       }
     }
+    return 200;
   } catch (e) {
     print('Error occurred: $e');
     return 1;

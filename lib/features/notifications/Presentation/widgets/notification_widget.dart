@@ -156,18 +156,16 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             ],
           ),
         ),
-        title: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              widget.notification!.notificationType == 'Account Update'
-                  ? Text('You have been banned from Spreddit')
-                  : widget.community
-                      ? Text(widget.content)
-                      : Text("${widget.notification!.content} ${widget.date}"),
-              SizedBox(height: 4),
-            ],
-          ),
+        title: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.start,
+          children: [
+            widget.notification!.notificationType == 'Account Update'
+                ? Text('You have been banned from Spreddit')
+                : widget.community
+                    ? Text(widget.content)
+                    : Text("${widget.notification!.content} ${widget.date}"),
+            SizedBox(height: 4),
+          ],
         ),
         subtitle: (widget.buttonText != null && widget.buttonIcon != null)
             ? Column(
