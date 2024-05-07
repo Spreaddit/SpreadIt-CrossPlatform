@@ -11,8 +11,6 @@ Future<int> banUserRequest(
     required String modNote}) async {
   String? accessToken = UserSingleton().getAccessToken();
   try {
-    print("IsofDays: ${DateTime.now().add(Duration(days: days >= 0 ? days : 1)).toUtc().toIso8601String()}");
-    print("Normal days: ${DateTime.now().add(Duration(days: days >= 0 ? days : 1)).toString()}");
     var data = {
       "reason": violation,
       "isPermanent": days < 0 ? true : false,
