@@ -93,6 +93,7 @@ class ScheduledPostsBody extends StatelessWidget {
                   dateAndTime: post.date.add(Duration(hours: 3)),
                   username: post.username,
                   title: post.title!,
+                  communityName: post.community,
                   content: post.content?.last ?? '',
                 );
               }).toList(),

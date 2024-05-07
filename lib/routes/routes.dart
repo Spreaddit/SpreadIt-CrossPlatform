@@ -4,6 +4,7 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pa
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/location_select_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/settings.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/update_email_page.dart';
 import 'package:spreadit_crossplatform/features/admin_view/presentation/pages/admin_view_page.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/presentation/blocked_accounts_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_page.dart';
@@ -69,15 +70,13 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
         chatroomName: chatroomName,
       ),
     );
-  } else if (pathSegments.contains('home') &&
-      pathSegments.length == 3) {
+  } else if (pathSegments.contains('home') && pathSegments.length == 3) {
     // Handle navigation for /#/home/ayhaga
     print("ana tany haga");
     return MaterialPageRoute(
       builder: (_) => HomePage(),
     );
-  }
-  else if (pathSegments.contains('moderators') &&
+  } else if (pathSegments.contains('moderators') &&
       pathSegments.contains('community')) {
     final communityName = pathSegments[pathSegments.length - 1];
     // return MaterialPageRoute(
@@ -90,8 +89,8 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
       pathSegments[pathSegments.length - 1] != "add-password") {
     return MaterialPageRoute(
       settings: settings,
-      builder: (_) => ProtectedRoute(
-        child: AddPasswordPage(),
+      builder: (_) => ProtectedRoute(child: AddPasswordPage()),
+    );
   } else if (pathSegments.contains('user-profile') &&
       pathSegments.length >= 3) {
     final username = pathSegments[pathSegments.length - 1];
@@ -100,11 +99,11 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
         username: username,
       ),
     );
+  } else if (pathSegments.contains('forget-password-verification') &&
+      pathSegments.length >= 3) {
+    final emailToken = pathSegments[pathSegments.length - 1];
+    return MaterialPageRoute(builder: (_) => ForgetPasswordVerification());
   }
-  else if (pathSegments.contains('forget-password-verification') && pathSegments.length >= 3) {
-          final emailToken = pathSegments[pathSegments.length -1];
-          return MaterialPageRoute(builder: (_) => ForgetPasswordVerification());
-        }
 
   return null;
 };
@@ -121,7 +120,7 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/create-username-page': (context) => CreateUsername(),
     '/forget-password': (context) => ForgetPassword(),
     '/forget-username': (context) => ForgetUsername(),
-    '/forget-password-verification': (context) => ForgetPasswordVerification(), 
+    '/forget-password-verification': (context) => ForgetPasswordVerification(),
     '/email-verification': (context) => EmailSentPage(),
     '/home': (context) => ProtectedRoute(child: HomePage()),
     '/popular': (context) =>
@@ -218,51 +217,49 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: ModeratorsPage(communityName: "chjk")),
     '/post-types-page': (context) =>
         ProtectedRoute(child: PostTypes(communityName: "df")),
-    '/general-search-results':(context) => ProtectedRoute(
-        child: Builder ( 
-          builder: (context) {
-          final args = ModalRoute.of(context)!.settings.arguments
-              as Map<String, dynamic>;
-          return SearchResult(
-            searchItem: args['searchItem'],
-          );
-        },
-      ),
-    ),  
-    '/community-or-user-search-results':
-      (context) => ProtectedRoute(
-          child: Builder ( 
+    '/general-search-results': (context) => ProtectedRoute(
+          child: Builder(
             builder: (context) {
-            final args = ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic>;
-            return InCommunityOrUserSearchResults(
-              searchItem: args['searchItem'],
-              communityOrUserName: args['communityOrUserName'],
-              communityOrUserIcon: args['communityOrUserIcon'],
-              sortFilter: args['sortFilter'],
-              timeFilter: args['timeFilter'],
-              fromUserProfile: args['fromUserProfile'],
-              fromCommunityPage: args['fromCommunityPage'],
-            );
-          },    
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
+              return SearchResult(
+                searchItem: args['searchItem'],
+              );
+            },
+          ),
         ),
-      ), 
-    '/general-search':(context) => ProtectedRoute(child: GeneralSearch()),   
-    '/community-or-user-search': 
-    (context) => ProtectedRoute(
-          child: Builder ( 
+    '/community-or-user-search-results': (context) => ProtectedRoute(
+          child: Builder(
             builder: (context) {
-            final args = ModalRoute.of(context)!.settings.arguments
-                as Map<String, dynamic>;
-            return SearchInCommunityOrUser(
-              communityOrUserName: args['communityOrUserName'],
-              communityOrUserIcon: args['communityOrUserIcon'],
-              fromUserProfile: args['fromUserProfile'],
-              fromCommunityPage: args['fromCommunityPage'],
-            );
-          },    
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
+              return InCommunityOrUserSearchResults(
+                searchItem: args['searchItem'],
+                communityOrUserName: args['communityOrUserName'],
+                communityOrUserIcon: args['communityOrUserIcon'],
+                sortFilter: args['sortFilter'],
+                timeFilter: args['timeFilter'],
+                fromUserProfile: args['fromUserProfile'],
+                fromCommunityPage: args['fromCommunityPage'],
+              );
+            },
+          ),
         ),
-      ),
+    '/general-search': (context) => ProtectedRoute(child: GeneralSearch()),
+    '/community-or-user-search': (context) => ProtectedRoute(
+          child: Builder(
+            builder: (context) {
+              final args = ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>;
+              return SearchInCommunityOrUser(
+                communityOrUserName: args['communityOrUserName'],
+                communityOrUserIcon: args['communityOrUserIcon'],
+                fromUserProfile: args['fromUserProfile'],
+                fromCommunityPage: args['fromCommunityPage'],
+              );
+            },
+          ),
+        ),
   };
 }
 

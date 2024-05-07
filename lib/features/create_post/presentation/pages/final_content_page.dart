@@ -1,8 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
@@ -11,8 +8,6 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/widgets
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
-import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
@@ -47,6 +42,7 @@ class FinalCreatePost extends StatefulWidget {
   final bool? createPoll;
   final bool? isLinkAdded;
   final List<Community> community;
+
   /// [isFromCommunityPage] : a boolean value which indicates if the user is posting from a community or not
   final bool? isFromCommunityPage;
 
@@ -221,18 +217,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       setState(() {
         isButtonEnabled =
             validatePostTitle(finalTitle) && !isNotApprovedForPosting;
-        
+
         allowScheduling = validatePostTitle(finalTitle) && isModerator;
       });
     } else {
       setState(() {
-      isButtonEnabled = validatePostTitle(finalTitle) &&
-          validatePostTitle(finalLink!) &&
-          !isNotApprovedForPosting;
-     
-      allowScheduling = validatePostTitle(finalTitle) &&
-          validatePostTitle(finalLink!) &&
-          isModerator;
+        isButtonEnabled = validatePostTitle(finalTitle) &&
+            validatePostTitle(finalLink!) &&
+            !isNotApprovedForPosting;
+
+        allowScheduling = validatePostTitle(finalTitle) &&
+            validatePostTitle(finalLink!) &&
+            isModerator;
       });
     }
   }
@@ -348,8 +344,8 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   void submit() async {
-    int response = await submitPost(
     print("IsScheduled: $isScheduled");
+
     DateTime? selectedDateTime;
     if (isScheduled) {
       selectedDateTime = DateTime(
@@ -361,31 +357,34 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       );
     }
     String response = await submitPost(
-        finalTitle,
-        finalContent,
-        communityName,
-        finalPollOptions,
-        finalSelectedDay,
-        finalLink,
-        finalImage,
-        finalImageWeb,
-        finalVideo,
-        finalVideoWeb,
-        isSpoiler,
-        isNSFW);
-      
+      finalTitle,
+      finalContent,
+      communityName,
+      finalPollOptions,
+      finalSelectedDay,
+      finalLink,
+      finalImage,
+      finalImageWeb,
+      finalVideo,
+      finalVideoWeb,
+      isSpoiler,
+      isNSFW,
+      isScheduled ? selectedDateTime : null,
+    );
+
     if (response == '400') {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
     } else if (response == '500') {
       CustomSnackbar(content: 'Internal server error').show(context);
+    } else if (isScheduled) {
+      CustomSnackbar(content: 'Scheduled successfully !').show(context);
+      Navigator.of(context).pop();
+    } else if (widget.isFromCommunityPage == true) {
+      CustomSnackbar(content: 'Posted successfully !').show(context);
+      Navigator.of(context).pop();
     } else {
-      if (isScheduled) {
-        CustomSnackbar(content: 'Scheduled successfully !').show(context);
-        Navigator.of(context).pop();
-      } else {
-        CustomSnackbar(content: 'Posted successfully !').show(context);
-        navigateToPostCardPage(context: context, postId: response);
-      }
+      CustomSnackbar(content: 'Posted successfully !').show(context);
+      navigateToPostCardPage(context: context, postId: response);
     }
   }
 

@@ -27,12 +27,12 @@ import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
-void navigateToPostCardPage({BuildContext context, String postId,
-    bool isUserProfile, bool isModeratorView, bool canManagePostsAndComments}) {
 void navigateToPostCardPage({
   required BuildContext context,
   required String postId,
   Post? post,
+  bool isModeratorView = false,
+  bool canManagePostsAndComments = false,
 }) {
   Navigator.push(
     context,
@@ -744,15 +744,14 @@ class _PostInteractionsState extends State<_PostInteractions> {
             widget.isCommentsLocked
                 ? TextButton.icon(
                     onPressed: () => navigateToPostCardPage(
-                      context,
-                      widget.postId,
-                      widget.isUserProfile,
-                      widget.isModeratorView,
-                      widget.canManagePosts,
+                      context: context,
+                      postId: widget.postId,
+                      isModeratorView: widget.isModeratorView,
+                      canManagePostsAndComments: widget.canManagePosts,
                     ),
                     icon: Icon(
                       Icons.comment,
-                      color:  Colors.grey,
+                      color: Colors.grey,
                     ),
                     label: Text(
                       widget.commentsCount.toString(),
@@ -760,11 +759,10 @@ class _PostInteractionsState extends State<_PostInteractions> {
                   )
                 : TextButton.icon(
                     onPressed: () => navigateToPostCardPage(
-                      context,
-                      widget.postId,
-                      widget.isUserProfile,
-                      widget.isModeratorView,
-                      widget.canManagePosts,
+                      context: context,
+                      postId: widget.postId,
+                      isModeratorView: widget.isModeratorView,
+                      canManagePostsAndComments: widget.canManagePosts,
                     ),
                     icon: Icon(
                       Icons.comment,
@@ -1013,8 +1011,8 @@ class _PostWidgetState extends State<PostWidget> {
                           context: context,
                           postId: widget.post.postId,
                           post: widget.post,
-                          isModeratorView:widget.isModeratorView,
-                           canManagePosts:widget.canManagePosts,
+                          isModeratorView: widget.isModeratorView,
+                          canManagePostsAndComments: widget.canManagePosts,
                         );
                       }
                     },

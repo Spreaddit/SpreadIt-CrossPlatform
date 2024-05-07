@@ -2,14 +2,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/lock_a_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/remove_a_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unlock_a_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/vote_comment.dart';
-
-class CommentFooter extends StatefulWidget {
-  
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 
 /// A widget representing the footer section of a comment.
@@ -30,7 +26,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/presentat
 ///   downvoted: false,
 /// )
 /// ```
-class CommentFooter extends StatelessWidget {
+class CommentFooter extends StatefulWidget {
   /// Callback function triggered when the "more" button is pressed.
   final Function()? onMorePressed;
 
@@ -47,7 +43,6 @@ class CommentFooter extends StatelessWidget {
 
   /// Whether the comment is downvoted by the current user.
   final bool downvoted;
-  final String? commentId;
   final bool isPostLocked;
   bool isCommentLocked;
   bool isRemoved;
@@ -56,8 +51,7 @@ class CommentFooter extends StatelessWidget {
   final bool canManageComment;
   String? communityName;
 
-
-  /// the postId 
+  /// the postId
   String? postId;
 
   /// the Comment Id for the comment
@@ -82,7 +76,6 @@ class CommentFooter extends StatelessWidget {
     this.isCommentLocked = false,
     this.isRemoved = false,
     this.isRemoval = false,
-    this.commentId,
     this.isModeratorView = false,
     this.canManageComment = false,
     this.onLock,
@@ -133,7 +126,24 @@ class CommentFooterState extends State<CommentFooter> {
                 //   (!widget.isRemoved || !widget.isRemoval)))
                 if (!widget.isRemoved && !widget.isRemoval)
                   TextButton(
-                    onPressed: widget.onReplyPressed,
+                    onPressed: widget.isSaved
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                settings: RouteSettings(
+                                  name:
+                                      '/post-card-page/${widget.postId}/true/${widget.commentId}/true',
+                                ),
+                                builder: (context) => PostCardPage(
+                                  postId: widget.postId!,
+                                  commentId: widget.commentId!,
+                                  oneComment: true,
+                                ),
+                              ),
+                            );
+                          }
+                        : widget.onReplyPressed,
                     child: Row(
                       children: [
                         Icon(Icons.reply, color: Colors.grey),
@@ -166,31 +176,6 @@ class CommentFooterState extends State<CommentFooter> {
                               color: const Color.fromARGB(137, 219, 212, 212)),
                         ),
                       ],
-              TextButton(
-                onPressed: isSaved
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            settings: RouteSettings(
-                              name:
-                                  '/post-card-page/$postId/true/$commentId/true',
-                            ),
-                            builder: (context) => PostCardPage(
-                              postId: postId!,
-                              commentId: commentId!,
-                              oneComment: true,
-                            ),
-                          ),
-                        );
-                      }
-                    : onReplyPressed,
-                child: Row(
-                  children: [
-                    Icon(Icons.reply, color: Colors.grey),
-                    Text(
-                      'Reply',
-                      style: TextStyle(color: Colors.black54),
                     ),
                   )
               else

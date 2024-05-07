@@ -344,7 +344,7 @@ class _CommentCardState extends State<CommentCard> {
                                       saveOrUnsaveComment(
                                         context,
                                         comment.id,
-                                        issaved
+                                        isSaved,
                                       ),
                                       setState(() {
                                         isSaved = !isSaved;

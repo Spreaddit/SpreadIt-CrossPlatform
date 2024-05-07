@@ -40,8 +40,8 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// Represents the rules of the community.
   List<dynamic> communityRules = [];
 
-  ///Represents if the user is currently a member 
-  bool isMember=false;
+  ///Represents if the user is currently a member
+  bool isMember = false;
 
   @override
   void initState() {
@@ -66,7 +66,8 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
     return getModeratorsRequest(
       widget.communityName,
     );
-    
+  }
+
   Future<void> fetchData() async {
     communityData = await getCommunityInfo(widget.communityName);
     setState(() {
@@ -74,7 +75,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
       communityImageLink = communityData["image"] ?? "";
       communityDescription = communityData["description"];
       communityRules = communityData["rules"];
-      isMember=communityData['isMember'];
+      isMember = communityData['isMember'];
     });
   }
 
@@ -103,6 +104,19 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
               bannerImageLink: snapshot.data![0]["communityBanner"] ?? "",
               communityName: widget.communityName,
               blurImage: true,
+              joined: isMember,
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.create),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed('/final-content-page', arguments: {
+                  'title': "",
+                  'content': "",
+                  'community': [Community.fromJson(communityData)],
+                  'isFromCommunityPage': true,
+                });
+              },
             ),
             body: SingleChildScrollView(
               child: Container(
@@ -126,43 +140,13 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
                     ),
                   ],
                 ),
-    return Scaffold(
-      backgroundColor: Color.fromARGB(237, 236, 236, 234),
-      appBar: CommunityAppBar(
-        bannerImageLink: communityBannerLink,
-        communityName: widget.communityName,
-        blurImage: true,
-        joined: isMember,
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Color.fromARGB(255, 228, 227, 227),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              CommunityAboutDesc(
-                communityName: widget.communityName,
-                communityDesc: communityDescription,
-              ),              
-             ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.create),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed('/final-content-page', arguments: {
-                  'title': "",
-                  'content': "",
-                  'community': [Community.fromJson(communityData)],
-                  'isFromCommunityPage': true,
-                });
-              },
+              ),
             ),
           );
         } else {
           return FailToFetchPage(
-              displayWidget: Center(child: Text("Unknown error fetching data 🤔")));
+              displayWidget:
+                  Center(child: Text("Unknown error fetching data 🤔")));
         }
       },
     );
