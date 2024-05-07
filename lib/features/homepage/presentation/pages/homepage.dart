@@ -43,11 +43,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    print('initState');
     _homePageKey = GlobalKey<_HomePageState>();
+     _getCurrentUrlAndProcessToken();
     setState(() {
       currentPage = widget.currentPage;
     });
-    _getCurrentUrlAndProcessToken();
   }
 
   void setNewMessage(MessageModel message) {
@@ -64,25 +65,14 @@ class _HomePageState extends State<HomePage> {
       print("token $token");
       int response = 100;
       if ((token != 'home' || token == '') &&
-          UserSingleton().user!.isVerified! == false) {
-        response = await verifyEmail(emailToken: token);
+          UserSingleton().user ==null) {
+        response = await verifyEmail(emailToken: token , place: 'home');
         if (response == 200) {
           CustomSnackbar(content: "Email verifed Succesfully").show(context);
         } else {
           Navigator.pushNamedAndRemoveUntil(
               context, '/start-up-page', (route) => false);
         }
-      } else if (token == 'home') {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String? userDataJson = prefs.getString('userSingleton');
-        Map<String, dynamic> jsonMap = json.decode(userDataJson!);
-        bool isVerified = User.fromJson(jsonMap['user']).isVerified!;
-        if (isVerified==false)
-        {
-           Navigator.pushNamedAndRemoveUntil(
-              context, '/start-up-page', (route) => false);
-        }
-        
       }
     } catch (e) {
       print("Error while getting current URL: $e");

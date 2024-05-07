@@ -21,10 +21,7 @@ Future<int> signUpApi({
     final response = await Dio().post(apiUrl, data: data);
 
     if (response.statusCode == 200) {
-      User user = User.fromJson(response.data['user']);
-      UserSingleton().setUser(user);
       await signInwithEmailandPassword(email , password);
-      print('User ID: ${user.id}');
       return 200;
     } else if (response.statusCode == 409) {
       print("Conflict: ${response.statusMessage}");

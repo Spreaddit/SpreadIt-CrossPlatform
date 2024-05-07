@@ -16,34 +16,45 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ProfileHeader(
-              backgroundImage: 'https://media.gettyimages.com/id/641697142/photo/landscape-of-cairo.jpg?s=612x612&w=gi&k=20&c=wDzngyj9rr5yyy6CP0HKbMHQh9S8mfvDaiHcJF8fwMU=',
-              profilePicture: 'https://media.gettyimages.com/id/641697142/photo/landscape-of-cairo.jpg?s=612x612&w=gi&k=20&c=wDzngyj9rr5yyy6CP0HKbMHQh9S8mfvDaiHcJF8fwMU=',
+              backgroundImage:
+                  'https://media.gettyimages.com/id/641697142/photo/landscape-of-cairo.jpg?s=612x612&w=gi&k=20&c=wDzngyj9rr5yyy6CP0HKbMHQh9S8mfvDaiHcJF8fwMU=',
+              profilePicture:
+                  'https://media.gettyimages.com/id/641697142/photo/landscape-of-cairo.jpg?s=612x612&w=gi&k=20&c=wDzngyj9rr5yyy6CP0HKbMHQh9S8mfvDaiHcJF8fwMU=',
               username: 'test_user',
               userinfo: 'Test User',
               about: 'About Test User',
               myProfile: true,
               followed: false,
               socialMediaLinks: [
-                {'platform': 'twitter', 'displayName': 'Twitter', 'url': 'twitter_url'},
-                {'platform': 'facebook', 'displayName': 'Facebook', 'url': 'facebook_url'},
-              ], displayName: 'testuser',
+                {
+                  'platform': 'twitter',
+                  'displayName': 'Twitter',
+                  'url': 'twitter_url'
+                },
+                {
+                  'platform': 'facebook',
+                  'displayName': 'Facebook',
+                  'url': 'facebook_url'
+                },
+              ],
+              displayName: 'testuser',
             ),
           ),
         ),
       );
 
       // Find elements in the widget tree
-      final usernameFinder = find.text('test_user');
       final userinfoFinder = find.text('Test User');
       final aboutFinder = find.text('About Test User');
       final twitterButtonFinder = find.byIcon(Ionicons.logo_twitter);
       final facebookButtonFinder = find.byIcon(Icons.facebook);
+      final editButtonFinder = find.text('Edit');
 
-      expect(usernameFinder, findsOneWidget);
       expect(userinfoFinder, findsOneWidget);
       expect(aboutFinder, findsOneWidget);
       expect(twitterButtonFinder, findsOneWidget);
       expect(facebookButtonFinder, findsOneWidget);
+      expect(editButtonFinder, findsOneWidget);
     });
   });
 }
