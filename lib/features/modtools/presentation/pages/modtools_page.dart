@@ -137,7 +137,7 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
       ToPageBtn(
         iconData: Icons.article_outlined,
         mainText: "Post types",
-        onPressed: () => navigateToPage(routes["post_types_page-"]),
+        onPressed: () => navigateToPage(routes["post_types_page"]),
       ),
       ToPageBtn(
         iconData: Icons.explore_outlined,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_user_info_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
@@ -35,28 +34,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  /// Fetches user information.
-  Future<void> fetchData() async {
-    futureData = getUserInfo().then((value) {
-      data = value;
-      generalSectionChildren.addAll([
-        ToPageBtn(
-          iconData: Icons.person_outline,
-          mainText: "Account Settings for u/${data["username"]}",
-          onPressed: () =>
-              Navigator.of(context).pushNamed('/settings/account-settings'),
-        ),
-        ToPageBtn(
-          iconData: Icons.shield_rounded,
-          mainText: "RehabCom",
-          onPressed: () => navigateToCommunity(context, "RehabCom"),
-        ),
-      ]);
-      return value;
-    });
   }
 
   @override
@@ -70,8 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       ToPageBtn(
         iconData: Icons.shield_rounded,
-        mainText: "DummyCommunity", //"GalalModCommunity2",
-        onPressed: () => navigateToCommunity(context, "DummyCommunity"),
+        mainText: "GalalModCommunity2", //"RehabCom",
+        onPressed: () => navigateToCommunity(context, "GalalModCommunity2"),
       ),
     ]);
 
