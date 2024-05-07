@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/widgets/new_message.dart';
 
 enum CurrentPage {
   home,
@@ -321,7 +322,8 @@ class _InboxPageModalState extends State<InboxPageModal> {
 
   void onTap(int index) {
     if (index == 0) {
-      //TODO: navigate to new message
+      Navigator.pop(context);
+      showSendMessage(context);
     } else if (index == 1) {
       widget.onReadMessages!();
       Navigator.pop(context);
