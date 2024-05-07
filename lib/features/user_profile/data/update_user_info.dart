@@ -63,7 +63,7 @@ Future<int> updateUserApi({
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/profile-info';
     String? username = UserSingleton().user!.username;
-     var data = {
+    var data = {
       "username": username,
       "name": displayName,
       "avatar": profilePicImageUrl,
@@ -75,19 +75,18 @@ Future<int> updateUserApi({
     };
     final response = await Dio().put(
       apiRoute,
-      data: formData,
+      data: data,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
         },
       ),
     );
-    if(response.statusCode!=200)
-    {
+    if (response.statusCode != 200) {
       print("An error occured");
       return response.statusCode!;
     }
-    if (kIsWeb && (profileImageWeb!= null || backgroundImageWeb != null)) {
+    if (kIsWeb && (profileImageWeb != null || backgroundImageWeb != null)) {
       var request = http.MultipartRequest('PUT', Uri.parse(apiRoute));
       request.headers['Authorization'] = 'Bearer $accessToken';
       request.fields['username'] = username;
@@ -130,7 +129,7 @@ Future<int> updateUserApi({
         print('Unexpected status code: ${response.statusCode}');
         return 404;
       }
-    } else if(profilePicImage!= null || backgroundImage != null)  {
+    } else if (profilePicImage != null || backgroundImage != null) {
       var formData = FormData.fromMap({
         'username': username,
         'name': displayName,

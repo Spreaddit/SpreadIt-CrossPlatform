@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';

@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
