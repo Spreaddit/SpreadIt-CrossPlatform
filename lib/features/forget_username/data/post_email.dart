@@ -19,7 +19,10 @@ Future<int> sendEmail(String email) async {
           'Authorization' :'Bearer $accessToken',
         }
       ),
-      data: {"email": email},
+      data: {
+        "email": email,
+        "is_cross": true,
+      },
     );
     if (response.statusCode == 200) {
       print(response.statusCode);

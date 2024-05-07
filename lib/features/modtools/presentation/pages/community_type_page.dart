@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_community_info.dart';
@@ -86,9 +87,10 @@ class _CommunityTypePageState extends State<CommunityTypePage> {
                 ),
               );
             } else if (snapshot.hasError) {
-              return Center(
+              return FailToFetchPage(
+                  displayWidget: Center(
                 child: Text("Error fetching data 😔"),
-              );
+              ));
             } else if (snapshot.hasData) {
               return Column(
                 children: [
@@ -107,9 +109,10 @@ class _CommunityTypePageState extends State<CommunityTypePage> {
                 ],
               );
             } else {
-              return Center(
+              return FailToFetchPage(
+                  displayWidget: Center(
                 child: Text("Unknown error fetching data 🤔"),
-              );
+              ));
             }
           }),
     );

@@ -107,7 +107,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   @override
   void initState() {
     super.initState();
-    //getFollowers();
+    if (widget.myProfile) {
+      getFollowers();
+    }
     url = Uri.base.toString();
     List<String> parts = url.split('/');
     String username = parts.last;
@@ -123,11 +125,22 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   }
 
   Future<void> getFollowers() async {
-    List<FollowUser> users = await getFollwersusers();
+    List<FollowUser> users = await getFollowersUsers();
     setState(() {
       followerslist = users;
     });
   }
+
+  void navigateToUserSearch() {
+        Navigator.of(context).pushNamed('/community-or-user-search', 
+        arguments: {
+          'communityOrUserName': widget.username,
+          'communityOrUserIcon': widget.profilePicture ,
+          'fromUserProfile': true,
+          'fromCommunityPage': false,
+        });
+      }
+
 
   @override
   Widget build(BuildContext context) {
@@ -190,9 +203,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.search),
-                            onPressed: () {
-                              // TO DO : Update this when search is implemented
-                            },
+                            onPressed: navigateToUserSearch,
                             color: Colors.white,
                             iconSize: iconSize,
                           ),
@@ -353,7 +364,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             color: Colors.white,
                           ),
                         ),
-                        if (followerslist.isNotEmpty)
+                        if (followerslist.isNotEmpty && widget.myProfile)
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
@@ -380,10 +391,11 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                               ],
                             ),
                           ),
-                        SizedBox(
-                            height: kIsWeb
-                                ? screenHeight * 0.015
-                                : screenHeight * 0.02),
+                        if (followerslist.isNotEmpty && widget.myProfile)
+                          SizedBox(
+                              height: kIsWeb
+                                  ? screenHeight * 0.015
+                                  : screenHeight * 0.02),
                         Text(
                           widget.userinfo,
                           style: TextStyle(

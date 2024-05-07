@@ -27,8 +27,13 @@ import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
-void navigateToPostCardPage(BuildContext context, String postId,
-    bool isUserProfile, bool isModeratorView, bool canManagePostsAndComments) {
+void navigateToPostCardPage({BuildContext context, String postId,
+    bool isUserProfile, bool isModeratorView, bool canManagePostsAndComments}) {
+void navigateToPostCardPage({
+  required BuildContext context,
+  required String postId,
+  Post? post,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -39,6 +44,7 @@ void navigateToPostCardPage(BuildContext context, String postId,
         postId: postId,
         isModeratorView: isModeratorView,
         canManagePostsAndComments: canManagePostsAndComments,
+        post: post,
       ),
     ),
   );
@@ -85,6 +91,8 @@ class _PostHeaderState extends State<_PostHeader> {
   late String dateFormatted;
   late Timer timer;
   bool shouldRenderJoin = false;
+
+  bool isAdmin = UserSingleton().user?.role == "Admin";
 
   @override
   void initState() {
@@ -302,9 +310,10 @@ class _PostHeaderState extends State<_PostHeader> {
       context: context,
       builder: (BuildContext context) {
         return CustomBottomSheet(
-          icons: widget.isUserProfile ? writerIcons : viewerIcons,
-          text: widget.isUserProfile ? writerOptions : viewerOptions,
-          onPressedList: widget.isUserProfile ? writerActions : viewerActions,
+          icons: widget.isUserProfile || isAdmin ? writerIcons : viewerIcons,
+          text: widget.isUserProfile || isAdmin ? writerOptions : viewerOptions,
+          onPressedList:
+              widget.isUserProfile || isAdmin ? writerActions : viewerActions,
         );
       },
     );
@@ -693,6 +702,7 @@ class _PostInteractions extends StatefulWidget {
   bool isCommentsLocked;
   bool canManagePosts;
   final void Function(bool) onLock;
+  final Post post;
 
   _PostInteractions({
     required this.communityName,
@@ -708,6 +718,7 @@ class _PostInteractions extends StatefulWidget {
     required this.isCommentsLocked,
     required this.onLock,
     required this.canManagePosts,
+    required this.post,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -741,7 +752,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                     ),
                     icon: Icon(
                       Icons.comment,
-                      color: Colors.grey,
+                      color:  Colors.grey,
                     ),
                     label: Text(
                       widget.commentsCount.toString(),
@@ -762,6 +773,19 @@ class _PostInteractionsState extends State<_PostInteractions> {
                       widget.commentsCount.toString(),
                     ),
                   ),
+            TextButton.icon(
+              onPressed: () => navigateToPostCardPage(
+                context: context,
+                postId: widget.post.postId,
+                post: widget.post,
+              ),
+              icon: Icon(
+                Icons.comment,
+              ),
+              label: Text(
+                widget.commentsCount.toString(),
+              ),
+            ),
             IconButton(
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),
@@ -986,11 +1010,12 @@ class _PostWidgetState extends State<PostWidget> {
                       print("tapped");
                       if (!widget.isFullView) {
                         navigateToPostCardPage(
-                            context,
-                            widget.post.postId,
-                            widget.isUserProfile,
-                            widget.isModeratorView,
-                            widget.canManagePosts);
+                          context: context,
+                          postId: widget.post.postId,
+                          post: widget.post,
+                          isModeratorView:widget.isModeratorView,
+                           canManagePosts:widget.canManagePosts,
+                        );
                       }
                     },
                     child: _PostBody(
@@ -1027,6 +1052,7 @@ class _PostWidgetState extends State<PostWidget> {
                     canManagePosts: widget.canManagePosts,
                     isCommentsLocked: isCommentsLocked,
                     onLock: onLock,
+                    post: widget.post,
                   )
                 ],
               )

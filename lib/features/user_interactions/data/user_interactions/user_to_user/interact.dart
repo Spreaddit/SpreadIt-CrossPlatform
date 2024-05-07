@@ -28,11 +28,16 @@ String interactionType(InteractWithUsersActions action) {
 void interactWithUser(
     {required String userId,
     required InteractWithUsersActions action,
-    String? reportReason}) async {
+    String? reportReason,
+    String? subReportReason}) async {
   try {
     String requestURL = apiUrl + interactionType(action);
     String? accessToken = UserSingleton().getAccessToken();
-    var data = {'username': userId, 'reason': reportReason};
+    var data = {
+      'username': userId,
+      'reason': reportReason,
+      'subreason': subReportReason
+    };
     final response = await Dio().post(
       requestURL,
       data: data,

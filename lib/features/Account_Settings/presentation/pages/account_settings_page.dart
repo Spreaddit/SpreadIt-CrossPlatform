@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_allow_follow_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/connected_acc_only_dialog.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import '../widgets/connected_acc_btn.dart';
 import '../widgets/settings_followers_sect.dart';
 import '../widgets/settings_gender_modal.dart';
@@ -100,6 +101,9 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             Navigator.of(context)
                 .pushNamed('/settings/account-settings/update-email')
                 .then((_) => fetchData());
+            Navigator.of(context)
+                .pushNamed('/settings/account-settings/update-email')
+                .then((_) => fetchData());
           }
         },
       ),
@@ -160,7 +164,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         iconData: Icons.volume_mute_outlined,
         mainText: "Manage muted communities",
         onPressed:  () => Navigator.of(context)
-            .pushNamed('/muted-commuinties'),
+            .pushNamed('/muted-communities'),
       ),
       FollowersSwitchSection(allowFollow: followSettingsData["allowFollow"]),
     ];
@@ -183,7 +187,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Text('Error occurred while fetching data 😢');
+            return FailToFetchPage(
+                displayWidget: Text('Error occurred while fetching data 😢'));
           } else if (snapshot.hasData) {
             setupPageSections();
             return SingleChildScrollView(
@@ -215,7 +220,8 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               ),
             );
           } else {
-            return Text('Uknown error occurred while fetching data 🤔');
+            return FailToFetchPage(
+                displayWidget: Text('Uknown error occurred while fetching data 🤔'));
           }
         }),
       ),

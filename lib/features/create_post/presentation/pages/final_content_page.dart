@@ -1,24 +1,22 @@
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
-import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../widgets/header_and_footer_widgets/community_and_rules_header.dart';
@@ -30,7 +28,8 @@ import '../widgets/tags_widgets/rendered_tag.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/features/schedule_posts/data/is_user_moderator_service.dart';
+import 'package:intl/intl.dart';
 
 /// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
 /// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
@@ -92,12 +91,15 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
+  bool allowScheduling = false;
+  bool isModerator = true;
   bool isNSFWAllowed = true;
   bool isSpoiler = false;
   bool isNSFW = false;
   bool finalIsLinkAdded = false;
   bool finalCreatePoll = false;
   bool isNotApprovedForPosting = false;
+  bool isDateChanged = false;
 
   File? finalImage;
   Uint8List? finalImageWeb;
@@ -105,6 +107,10 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   Uint8List? finalVideoWeb;
   String? finalLink;
   IconData? lastPressedIcon;
+
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  bool isScheduled = false;
 
   /// [mapCommunityData] : a function which extracts the [communityName], [communityIcon] and [communityRules] from the passsed list of communities
 
@@ -137,6 +143,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     super.initState();
     mapCommunityData();
     checkIfCanPost();
+    isModeratorFunction();
     if (widget.isLinkAdded != null) {
       finalIsLinkAdded = widget.isLinkAdded!;
     }
@@ -175,6 +182,15 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     }
   }
 
+  /// [isModeratorFunction] : a function which checks if the user is a moderator of the community
+  Future<void> isModeratorFunction() async {
+    bool moderatorStatus =
+        await IsUserModeratorService().isUserModerator(communityName);
+    setState(() {
+      isModerator = moderatorStatus;
+    });
+  }
+
   void updateTitle(String value) {
     finalTitle = value;
     _finalTitleForm.currentState!.save();
@@ -205,11 +221,19 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       setState(() {
         isButtonEnabled =
             validatePostTitle(finalTitle) && !isNotApprovedForPosting;
+        
+        allowScheduling = validatePostTitle(finalTitle) && isModerator;
       });
     } else {
+      setState(() {
       isButtonEnabled = validatePostTitle(finalTitle) &&
           validatePostTitle(finalLink!) &&
           !isNotApprovedForPosting;
+     
+      allowScheduling = validatePostTitle(finalTitle) &&
+          validatePostTitle(finalLink!) &&
+          isModerator;
+      });
     }
   }
 
@@ -275,8 +299,13 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   Future<void> pickVideo() async {
-    File? video = await pickVideoFromFilePicker.pickVideo();
-    if (video != null) {
+    if (kIsWeb) {
+      final video = await pickVideoFromFilePickerWeb();
+      setState(() {
+        finalVideoWeb = video;
+      });
+    } else {
+      final video = await pickVideoFromFilePicker();
       setState(() {
         finalVideo = video;
       });
@@ -320,6 +349,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   void submit() async {
     int response = await submitPost(
+    print("IsScheduled: $isScheduled");
+    DateTime? selectedDateTime;
+    if (isScheduled) {
+      selectedDateTime = DateTime(
+        selectedDate!.year,
+        selectedDate!.month,
+        selectedDate!.day,
+        selectedTime!.hour,
+        selectedTime!.minute,
+      );
+    }
+    String response = await submitPost(
         finalTitle,
         finalContent,
         communityName,
@@ -332,20 +373,227 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         finalVideoWeb,
         isSpoiler,
         isNSFW);
-    if (response == 201) {
-      CustomSnackbar(content: 'Posted successfully !').show(context);
-      if (widget.isFromCommunityPage == true) {
-        // if the user is posting from a community page, 
-        // we need to pop once to return to the community page
-        Navigator.of(context).pop();
-        return;
-      }
-      returnToHomePage(context);
-    } else if (response == 400) {
+      
+    if (response == '400') {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
-    } else if (response == 500) {
+    } else if (response == '500') {
       CustomSnackbar(content: 'Internal server error').show(context);
+    } else {
+      if (isScheduled) {
+        CustomSnackbar(content: 'Scheduled successfully !').show(context);
+        Navigator.of(context).pop();
+      } else {
+        CustomSnackbar(content: 'Posted successfully !').show(context);
+        navigateToPostCardPage(context: context, postId: response);
+      }
     }
+  }
+
+  void showDateTimePickerModalSheet(BuildContext context, Function callback) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return IntrinsicHeight(
+                key: UniqueKey(),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            callback();
+                          },
+                        ),
+                        title: Text('Schedule Post',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: OutlinedButton(
+                          onPressed: () {
+                            if (isScheduled && !isDateChanged) {
+                              setState(() {
+                                isScheduled = false;
+                                isDateChanged = false;
+                                selectedDate = null;
+                                selectedTime = null;
+                              });
+                            }
+                            Navigator.of(context).pop();
+                            callback();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(0, 69, 172, 1.0),
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0),
+                                width: 2),
+                          ),
+                          child: isScheduled && !isDateChanged
+                              ? Text('Clear')
+                              : Text('Save'),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Starts on date'),
+                        trailing: TextButton(
+                          child: Text(
+                            selectedDate != null
+                                ? '${DateFormat.MMMd().format(selectedDate!)}, ${selectedDate!.year}'
+                                : '${DateFormat.MMMd().format(DateTime.now())}, ${DateTime.now().year}',
+                            style: TextStyle(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0)),
+                          ),
+                          onPressed: () async {
+                            isScheduled = true;
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null &&
+                                pickedDate != selectedDate) {
+                              setState(() {
+                                selectedDate = pickedDate;
+                                isScheduled = true;
+                                isDateChanged = true;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Starts on time'),
+                        trailing: TextButton(
+                          child: Text(
+                            selectedTime != null
+                                ? selectedTime!.format(context)
+                                : DateFormat.jm().format(DateTime.now()),
+                            style: TextStyle(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0)),
+                          ),
+                          onPressed: () async {
+                            isScheduled = true;
+                            selectedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                              initialEntryMode: TimePickerEntryMode.dialOnly,
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData.light().copyWith(
+                                    textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          const Color.fromRGBO(0, 69, 172, 1.0),
+                                    )),
+                                    canvasColor: Colors.red,
+                                    primaryColor:
+                                        Colors.white, // header background color
+                                    colorScheme: ColorScheme.light(
+                                      primary: Colors.grey, // dial hand color
+                                      onPrimary:
+                                          Colors.white, // dial hand dot color
+                                      onSurface:
+                                          Colors.black, // dial numbers color
+                                      surface: Colors
+                                          .white, // dial inner background color
+                                    ),
+                                    dialogBackgroundColor:
+                                        Colors.white, // dialog background color
+                                    timePickerTheme: TimePickerThemeData(
+                                      dialHandColor: const Color.fromRGBO(
+                                          0, 69, 172, 1.0), // dial hand color
+                                      hourMinuteTextColor:
+                                          Colors.black, // dial numbers color
+                                      hourMinuteColor: Colors
+                                          .white, // time background colour
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            );
+                            if (selectedTime != null) {
+                              setState(() {
+                                isScheduled = true;
+                                isDateChanged = true;
+                              });
+                            }
+                            // Use selectedTime here
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  void showSchedulePostBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return IntrinsicHeight(
+                key: UniqueKey(),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('Post Settings',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.calendar_today),
+                        title: Text('Schedule Post'),
+                        trailing: isScheduled
+                            ? Text(
+                                '${DateFormat.MMMd().format(selectedDate!)}, ${selectedDate!.year} ${selectedTime!.format(context)}',
+                                style: TextStyle(color: Colors.blue),
+                              )
+                            : Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          if (!isScheduled) {
+                            setState(() {
+                              isScheduled = true;
+                              selectedDate = DateTime.now();
+                              selectedTime = TimeOfDay(
+                                  hour: TimeOfDay.now().hour + 1,
+                                  minute: TimeOfDay.now().minute);
+                              isDateChanged = true;
+                            });
+                          }
+                          if (isScheduled) {
+                            setState(() {
+                              isDateChanged = false;
+                              isScheduled = true;
+                            });
+                          }
+                          showDateTimePickerModalSheet(context, () {
+                            setState(() {});
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }).then((value) => setState(() {}));
   }
 
   @override
@@ -358,7 +606,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               children: [
                 Container(
                   child: CreatePostHeader(
-                    buttonText: "Post",
+                    allowScheduling: allowScheduling,
+                    showSchedulePostBottomSheet: showSchedulePostBottomSheet,
+                    buttonText: isScheduled ? "Schedule" : "Post",
                     onPressed: submit,
                     isEnabled: isButtonEnabled,
                     onIconPress: () {
@@ -419,9 +669,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalVideo != null || finalVideoWeb != null)
-                  ImageOrVideoWidget(
-                    imageOrVideo: finalVideo,
-                    imageOrVideoWeb: finalVideoWeb,
+                  VideoWidget(
+                    video: finalVideo,
+                    videoWeb: finalVideoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)

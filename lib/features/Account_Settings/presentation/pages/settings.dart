@@ -38,11 +38,6 @@ class _SettingsPageState extends State<SettingsPage> {
         onPressed: () =>
             Navigator.of(context).pushNamed('/settings/account-settings'),
       ),
-      ToPageBtn(
-        iconData: Icons.shield_rounded,
-        mainText: "FoodLovers", //"GalalModCommunity2"
-        onPressed: () => navigateToCommunity(context, "FoodLovers"),
-      ),
     ]);
 
     feedOptionsSectionChildren.addAll([

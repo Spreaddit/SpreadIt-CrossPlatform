@@ -5,6 +5,15 @@ import 'dart:math';
 
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 
+/// A widget that displays a shimmering effect to mimic loading comments.
+///
+/// This widget is used to display a shimmering effect while comments are being loaded.
+/// It includes placeholders for comment content and optionally a footer.
+///
+/// Example usage:
+/// ```dart
+/// CommentShimmerWidget(saved: true),
+/// ```
 class CommentShimmerWidget extends StatelessWidget {
   final bool saved;
 

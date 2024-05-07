@@ -27,7 +27,8 @@ Future<ModPermissions?> fetchPermissionsData(
       print('permissions: $permissions');
       return permissions;
     } else {
-      print('GET request failed with status: ${response.statusCode}');
+      print(
+          'GET fetchPermissionsData request failed with status: ${response.statusCode}');
       return null;
     }
   } catch (e) {

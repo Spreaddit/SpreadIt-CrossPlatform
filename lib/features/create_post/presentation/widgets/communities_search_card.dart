@@ -20,14 +20,12 @@ class CommunitiesCard extends StatefulWidget {
 class _CommunitiesCardState extends State<CommunitiesCard> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
+    return Container(
         margin:EdgeInsets.all(15),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage(widget.communityIcon),
+              backgroundImage: NetworkImage(widget.communityIcon),
               radius: 20,
             ),
             SizedBox(width: 10),
@@ -44,7 +42,6 @@ class _CommunitiesCardState extends State<CommunitiesCard> {
             ),
           ],
         ),
-      ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:spreadit_crossplatform/features/community/data/mod_permissions.d
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
@@ -57,6 +58,7 @@ class _CommunityPageState extends State<CommunityPage> {
     ],
     ["You are not an approved user 🔐", "This is a private community 🫣"]
   ];
+  bool isMember=false;
 
   @override
   void initState() {
@@ -92,6 +94,11 @@ class _CommunityPageState extends State<CommunityPage> {
       widget.communityName,
       (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => permissionsData = value!);
+    data = await getCommunityInfo(widget.communityName);
+    setState(() {
+      communityBannerLink = data["communityBanner"];
+      isMember=data['isMember'];
+    });
   }
 
   @override
@@ -115,8 +122,8 @@ class _CommunityPageState extends State<CommunityPage> {
           );
         }
         if (snapshot.hasError) {
-          return Center(
-            child: Text("Error while fetching data 😔"),
+          return FailToFetchPage(
+            displayWidget: Text("Error while fetching data 😔"),
           );
         } else if (snapshot.hasData) {
           print("Fetching is complete");
@@ -149,6 +156,7 @@ class _CommunityPageState extends State<CommunityPage> {
             appBar: CommunityAppBar(
               bannerImageLink: communityData["communityBanner"],
               communityName: widget.communityName,
+              joined:communityData["isMember"],
             ),
             body: _buildNormalBody(),
             floatingActionButton: FloatingActionButton(
@@ -165,7 +173,7 @@ class _CommunityPageState extends State<CommunityPage> {
             ),
           );
         } else {
-          return Center(child: Text("Unknown error fetching data 🤔"));
+          return FailToFetchPage(displayWidget: Text("Unknown error fetching data 🤔"));
         }
       },
     );
@@ -197,6 +205,33 @@ class _CommunityPageState extends State<CommunityPage> {
               scrollController: _scrollController,
             ),
           ],
+    return Scaffold(
+      backgroundColor: Color.fromARGB(237, 236, 236, 234),
+      appBar: CommunityAppBar(
+        bannerImageLink: communityBannerLink,
+        communityName: widget.communityName,
+        joined : isMember,
+      ),
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Container(
+          color: Color.fromARGB(255, 228, 227, 227),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              CommunityInfoSection(
+                communityName: widget.communityName,
+              ),
+              PostFeed(
+                postCategory: PostCategories.hot,
+                subspreaditName: widget.communityName,
+                startSortIndex: 1,
+                endSortIndex: 3,
+                showSortTypeChange: true,
+                scrollController: _scrollController,
+              ),
+            ],
+          ),
         ),
       ),
     );

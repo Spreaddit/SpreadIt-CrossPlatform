@@ -1,21 +1,50 @@
 import 'package:equatable/equatable.dart';
 
+/// Represents a notification object.
 class Notifications extends Equatable {
+  /// Unique identifier for the notification.
   final String? id;
+
+  /// Content of the notification.
   final String? content;
+
+  /// Type of the notification (e.g., comment, post, community).
   final String notificationType;
+
+  /// Information about the user related to the notification.
   final RelatedUser? relatedUser;
+
+  /// Indicates whether the notification has been read.
   final bool isRead;
+
+  /// Indicates whether the notification is hidden.
   final bool isHidden;
+
+  /// Timestamp indicating when the notification was created.
   final DateTime createdAt;
-  final Comment? comment;
-  final Post? post;
+
+  /// Details of the related comment notification.
+  final CommentNotification? comment;
+
+  /// Details of the related post notification.
+  final PostNotification? post;
+
+  /// ID of the user associated with the notification.
   final String? userId;
+
+  /// ID of the post associated with the notification.
   final String? postId;
+
+  /// ID of the comment associated with the notification.
   final String? commentId;
+
+  /// Name of the community associated with the notification.
   final String? communityname;
+
+  /// Image URL of the community associated with the notification.
   final String? communitypic;
 
+  /// Constructor for Notifications.
   Notifications({
     this.id,
     this.content,
@@ -50,7 +79,14 @@ class Notifications extends Equatable {
         communityname,
         communitypic,
       ];
+
+  /// Factory method to create a Notifications object from a JSON map.
   factory Notifications.fromJson(Map<String, dynamic> json) {
+    DateTime? parsedDateTime;
+    final createdString = json['created_at'] ?? json['dateCreated'];
+    if (createdString != null) {
+      parsedDateTime = DateTime.tryParse(createdString);
+    }
     return Notifications(
       id: json['_id'] ?? 'id',
       content: json['content'] ?? 'content',
@@ -60,29 +96,33 @@ class Notifications extends Equatable {
           : null,
       isRead: json['is_read'] ?? false,
       isHidden: json['is_hidden'] ?? false,
-      createdAt:
-          DateTime.parse(json['created_at'] ?? json['dateCreated'] ?? ''),
+      createdAt: parsedDateTime ?? DateTime.now(),
       comment: json['comment'] != null
-          ? Comment.fromJson(json['comment'])
-          : Comment(),
+          ? CommentNotification.fromJson(json['comment'])
+          : CommentNotification(),
       post: json['post'] != null
           ? json.containsKey('post')
-              ? Post.fromJson(json['post'])
+              ? PostNotification.fromJson(json['post'])
               : null
-          : Post(),
+          : PostNotification(),
       userId: json['userId'] ?? "-1",
       postId: json['postId'] ?? "-1",
       commentId: json['commentId'] ?? "-1",
-      communityname: json['name'] ?? '',
-      communitypic: json['image'] ?? '',
+      communityname: json['communityname'] ?? '',
+      communitypic: json['communitybanner'] ?? '',
     );
   }
 }
 
+/// Represents a related user in a notification.
 class RelatedUser extends Equatable {
+  /// Username of the related user.
   final String? username;
+
+  /// URL of the avatar image of the related user.
   final String? avatarUrl;
 
+  /// Constructor for RelatedUser.
   RelatedUser({
     this.username = '',
     this.avatarUrl = '',
@@ -91,6 +131,7 @@ class RelatedUser extends Equatable {
   @override
   List<Object?> get props => [username, avatarUrl];
 
+  /// Factory method to create a RelatedUser object from a JSON map.
   factory RelatedUser.fromJson(Map<String, dynamic> json) {
     return RelatedUser(
       username: json['username'] ?? '',
@@ -99,11 +140,16 @@ class RelatedUser extends Equatable {
   }
 }
 
-class Post extends Equatable {
+/// Represents details of a post notification.
+class PostNotification extends Equatable {
+  /// Title of the post.
   final String title;
+
+  /// Name of the community to which the post belongs.
   final String community;
 
-  Post({
+  /// Constructor for PostNotification.
+  PostNotification({
     this.title = '',
     this.community = '',
   });
@@ -111,20 +157,28 @@ class Post extends Equatable {
   @override
   List<Object?> get props => [title, community];
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
+  /// Factory method to create a PostNotification object from a JSON map.
+  factory PostNotification.fromJson(Map<String, dynamic> json) {
+    return PostNotification(
       title: json['title'] ?? '',
       community: json['community'] ?? '',
     );
   }
 }
 
-class Comment extends Equatable {
+/// Represents details of a comment notification.
+class CommentNotification extends Equatable {
+  /// Content of the comment.
   final String content;
+
+  /// Title of the post to which the comment belongs.
   final String postTitle;
+
+  /// Title of the community to which the post belongs.
   final String communityTitle;
 
-  Comment({
+  /// Constructor for CommentNotification.
+  CommentNotification({
     this.content = '',
     this.postTitle = '',
     this.communityTitle = '',
@@ -133,8 +187,9 @@ class Comment extends Equatable {
   @override
   List<Object?> get props => [content, postTitle, communityTitle];
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment(
+  /// Factory method to create a CommentNotification object from a JSON map.
+  factory CommentNotification.fromJson(Map<String, dynamic> json) {
+    return CommentNotification(
       content: json['content'] ?? '',
       postTitle: json['postTitle'] ?? '',
       communityTitle: json['communityTitle'] ?? '',

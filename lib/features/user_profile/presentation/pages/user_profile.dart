@@ -88,7 +88,7 @@ class _UserProfileState extends State<UserProfile> {
     try {
       followStatus = await isFollowed(username);
     } catch (e) {
-      CustomSnackbar(content: 'Internal server error').show(context);
+      CustomSnackbar(content: "An error ocuured please try again later").show(context);
     }
   }
 
@@ -138,7 +138,8 @@ class _UserProfileState extends State<UserProfile> {
       } else if (response == 404) {
         CustomSnackbar(content: 'User not found').show(context);
       } else if (response == 500) {
-        CustomSnackbar(content: 'Internal server error').show(context);
+        CustomSnackbar(content: "an error ocuured try again later")
+            .show(context);
       }
     } catch (e) {
       print('Error toggling follow status: $e');

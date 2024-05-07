@@ -5,6 +5,7 @@ import 'package:spreadit_crossplatform/features/community/presentation/widgets/c
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_about_rules.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/fail_to_fetch.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 
@@ -39,6 +40,9 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// Represents the rules of the community.
   List<dynamic> communityRules = [];
 
+  ///Represents if the user is currently a member 
+  bool isMember=false;
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +54,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// This method fetches the community information using the [getCommunityInfo] function
   /// and updates the state with the fetched data. It retrieves the community banner link,
   /// community image link, community description, and community rules from the fetched data.
+  /// It also checks if the user is currently a member
   /// If the community banner or image link is not available, empty strings are assigned.
   Future<Map<String, dynamic>> fetchCommunityData() async {
     return getCommunityInfo(widget.communityName)
@@ -61,6 +66,16 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
     return getModeratorsRequest(
       widget.communityName,
     );
+    
+  Future<void> fetchData() async {
+    communityData = await getCommunityInfo(widget.communityName);
+    setState(() {
+      communityBannerLink = communityData["communityBanner"] ?? "";
+      communityImageLink = communityData["image"] ?? "";
+      communityDescription = communityData["description"];
+      communityRules = communityData["rules"];
+      isMember=communityData['isMember'];
+    });
   }
 
   @override
@@ -77,9 +92,10 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
           );
         }
         if (snapshot.hasError) {
-          return Center(
+          return FailToFetchPage(
+              displayWidget: Center(
             child: Text("Error while fetching data 😔"),
-          );
+          ));
         } else if (snapshot.hasData) {
           return Scaffold(
             backgroundColor: Color.fromARGB(237, 236, 236, 234),
@@ -110,7 +126,26 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
                     ),
                   ],
                 ),
-              ),
+    return Scaffold(
+      backgroundColor: Color.fromARGB(237, 236, 236, 234),
+      appBar: CommunityAppBar(
+        bannerImageLink: communityBannerLink,
+        communityName: widget.communityName,
+        blurImage: true,
+        joined: isMember,
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          color: Color.fromARGB(255, 228, 227, 227),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              CommunityAboutDesc(
+                communityName: widget.communityName,
+                communityDesc: communityDescription,
+              ),              
+             ),
             ),
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.create),
@@ -126,7 +161,8 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
             ),
           );
         } else {
-          return Center(child: Text("Unknown error fetching data 🤔"));
+          return FailToFetchPage(
+              displayWidget: Center(child: Text("Unknown error fetching data 🤔")));
         }
       },
     );

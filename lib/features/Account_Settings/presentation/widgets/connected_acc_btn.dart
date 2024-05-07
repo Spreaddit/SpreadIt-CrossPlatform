@@ -77,7 +77,8 @@ class _ConnectAccBtnState extends State<ConnectAccBtn> {
     } else {
       result = await signOutWithGoogle(context);
     }
-    if (accessToken.isNotEmpty || result != false) {
+    if (accessToken != "" || result != false) {
+      print("accessToken: $accessToken, result: $result");
       await Navigator.push(
         context,
         PageRouteBuilder(
