@@ -12,6 +12,7 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/pages/r
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_comment_page.dart';
 import 'package:spreadit_crossplatform/features/forget_password/presentation/pages/forget_password_main.dart';
+import 'package:spreadit_crossplatform/features/forget_password_verification/presentation/forget_password_verification.dart';
 import 'package:spreadit_crossplatform/features/forget_username/presentation/pages/forget_username.dart';
 import 'package:spreadit_crossplatform/features/history_page/history_page.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
@@ -36,6 +37,7 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/create-username-page': (context) => CreateUsername(),
     '/forget-password': (context) => ForgetPassword(),
     '/forget-username': (context) => ForgetUsername(),
+    '/forget-password-verification': (context) => ForgetPasswordVerification(), 
     '/home': (context) => ProtectedRoute(child: HomePage()),
     '/popular': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.popular)),
@@ -115,7 +117,7 @@ Map<String, WidgetBuilder> generateRoutes() {
               );
             },
           ),
-        ),
+        ), 
   };
 }
 

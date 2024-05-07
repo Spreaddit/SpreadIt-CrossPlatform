@@ -32,6 +32,7 @@ class _ForgetPasswordState extends State<ForgetPasswordVerification> {
   @override
   void initState() {
     super.initState();
+    print('verification initialized');
     getVerificationToken();
   }
 
@@ -77,7 +78,7 @@ class _ForgetPasswordState extends State<ForgetPasswordVerification> {
   }
 
   void postData() async{
-    int response =  await sendPasswords(_newPassword, _confirmedPassword);
+    int response =  await sendPasswords(_newPassword);
     if (response == 200){
       CustomSnackbar(content: "password updated successfully").show(context);
       UserSingleton().clearUserFromPrefs();
