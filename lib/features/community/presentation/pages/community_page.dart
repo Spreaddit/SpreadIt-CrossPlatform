@@ -58,7 +58,7 @@ class _CommunityPageState extends State<CommunityPage> {
     ],
     ["You are not an approved user 🔐", "This is a private community 🫣"]
   ];
-  bool isMember=false;
+  bool isMember = false;
 
   @override
   void initState() {
@@ -97,7 +97,7 @@ class _CommunityPageState extends State<CommunityPage> {
     data = await getCommunityInfo(widget.communityName);
     setState(() {
       communityBannerLink = data["communityBanner"];
-      isMember=data['isMember'];
+      isMember = data['isMember'];
     });
   }
 
@@ -156,7 +156,7 @@ class _CommunityPageState extends State<CommunityPage> {
             appBar: CommunityAppBar(
               bannerImageLink: communityData["communityBanner"],
               communityName: widget.communityName,
-              joined:communityData["isMember"],
+              joined: communityData["isMember"],
             ),
             body: _buildNormalBody(),
             floatingActionButton: FloatingActionButton(
@@ -173,7 +173,8 @@ class _CommunityPageState extends State<CommunityPage> {
             ),
           );
         } else {
-          return FailToFetchPage(displayWidget: Text("Unknown error fetching data 🤔"));
+          return FailToFetchPage(
+              displayWidget: Text("Unknown error fetching data 🤔"));
         }
       },
     );
@@ -205,33 +206,6 @@ class _CommunityPageState extends State<CommunityPage> {
               scrollController: _scrollController,
             ),
           ],
-    return Scaffold(
-      backgroundColor: Color.fromARGB(237, 236, 236, 234),
-      appBar: CommunityAppBar(
-        bannerImageLink: communityBannerLink,
-        communityName: widget.communityName,
-        joined : isMember,
-      ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Container(
-          color: Color.fromARGB(255, 228, 227, 227),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CommunityInfoSection(
-                communityName: widget.communityName,
-              ),
-              PostFeed(
-                postCategory: PostCategories.hot,
-                subspreaditName: widget.communityName,
-                startSortIndex: 1,
-                endSortIndex: 3,
-                showSortTypeChange: true,
-                scrollController: _scrollController,
-              ),
-            ],
-          ),
         ),
       ),
     );

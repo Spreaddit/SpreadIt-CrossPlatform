@@ -226,7 +226,6 @@ class CommentWidget extends StatelessWidget {
               upvoted: false,
               downvoted: false,
               postId: comment.postId,
-              commentId: comment.id,
               isSaved: true,
             ),
         ],

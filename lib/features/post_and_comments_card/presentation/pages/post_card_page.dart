@@ -196,8 +196,6 @@ class _PostCardPageState extends State<PostCardPage> {
                               oneComment: widget.oneComment,
                               canManagePostsAndComments:
                                   widget.canManagePostsAndComments,
-                              setIsloaded: setIsloaded,
-                              oneComment: widget.oneComment,
                             )
                           : PostCardShimmer(), // Placeholder post card
                     ],

@@ -11,6 +11,7 @@ class ScheduledPostCard extends StatelessWidget {
   final DateTime dateAndTime;
   final String id;
   final Function refreshScheduledPosts;
+  final String communityName;
 
   ScheduledPostCard({
     required this.username,
@@ -19,6 +20,7 @@ class ScheduledPostCard extends StatelessWidget {
     required this.dateAndTime,
     required this.id,
     required this.refreshScheduledPosts,
+    required this.communityName,
   });
 
   @override
@@ -68,6 +70,7 @@ class ScheduledPostCard extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditPost(
+                            communityName: communityName,
                             postId: id,
                             postContent: content,
                             onContentChanged: (String newContent) {},

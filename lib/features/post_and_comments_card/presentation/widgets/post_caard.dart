@@ -102,11 +102,9 @@ class _PostCardState extends State<PostCard> {
             post: widget.post,
             isFullView: true,
             isModeratorView: widget.isModeratorView,
-            isUserProfile: widget.post.userId == UserSingleton().user!.id,
-            canManagePosts: widget.canManagePostsAndComments,
             isUserProfile:
-                widget.post.username == UserSingleton().user!.username || isAdmin,
-
+                widget.post.userId == UserSingleton().user!.id || isAdmin,
+            canManagePosts: widget.canManagePostsAndComments,
           ),
           Container(
             decoration: BoxDecoration(
@@ -135,7 +133,6 @@ class _PostCardState extends State<PostCard> {
                     ),
                   if (widget.comments == null || widget.comments.isEmpty)
                     Expanded(child: CommentCardShimmer()),
-
                   CommentCard(
                     comment: widget.comments[index],
                     community: widget.post.community,
