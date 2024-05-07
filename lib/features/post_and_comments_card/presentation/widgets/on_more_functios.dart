@@ -24,6 +24,7 @@ void copyText(BuildContext context, String text) {
   CustomSnackbar(
     content: "copied to clipboard",
   ).show(context);
+  Navigator.of(context).pop();
 }
 
 void save() {
@@ -107,8 +108,7 @@ void savePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
   Navigator.pop(context);
   if (statusCode == 200) {
-     CustomSnackbar(content: 'Post saved successfully.')
-        .show(context);
+    CustomSnackbar(content: 'Post saved successfully.').show(context);
   } else {
     CustomSnackbar(content: "Error occurred while trying to unsave")
         .show(context);
@@ -120,23 +120,25 @@ void unsavePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
   Navigator.pop(context);
   if (statusCode == 200) {
-    CustomSnackbar(content: 'Post unsaved successfully.')
-        .show(context);
+    CustomSnackbar(content: 'Post unsaved successfully.').show(context);
   } else {
-    CustomSnackbar(content: "Error occurred while trying to unsave, Please try again later")
+    CustomSnackbar(
+            content:
+                "Error occurred while trying to unsave, Please try again later")
         .show(context);
   }
 }
 
-void saveOrUnsaveComment(BuildContext context, String id , bool isSaved) async {
+void saveOrUnsaveComment(BuildContext context, String id, bool isSaved) async {
   int statusCode = await saveOrUnsave(id: id, type: 'comments');
   Navigator.pop(context);
   if (statusCode == 200) {
     print('Comment unsaved/saved successfully.');
     String content;
-    isSaved ? content ='Comment Unsaved successfully': content= 'Comment Saved successfully';
-     CustomSnackbar(content: content)
-        .show(context);
+    isSaved
+        ? content = 'Comment Unsaved successfully'
+        : content = 'Comment Saved successfully';
+    CustomSnackbar(content: content).show(context);
   } else {
     CustomSnackbar(content: "Error occurred Please Try again later")
         .show(context);
