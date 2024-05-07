@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// This widget displays tabs horizontally with customizable titles.
 ///
 /// Example usage:
-/// dart
+/// ```dart
 /// CustomBar(
 ///   onIndexChanged: (index) {
 ///     // Handle tab selection
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 ///     'Tab 3',
 ///   ],
 /// )
-///
+/// ```
 class CustomBar extends StatefulWidget {
   /// Callback function triggered when a tab is selected.
   final ValueChanged<int> onIndexChanged;
@@ -64,7 +64,7 @@ class _CustomBarState extends State<CustomBar> {
             ),
           ),
           SizedBox(height: 10),
-          if (index >= widget.tabs.length - 4)
+          if (index >= widget.tabs.length - 4) 
             Container(
               height: isSelected ? 4.0 : 0,
               color: isSelected ? Colors.blue : Colors.transparent,
@@ -77,7 +77,7 @@ class _CustomBarState extends State<CustomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Colors.white, 
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(
