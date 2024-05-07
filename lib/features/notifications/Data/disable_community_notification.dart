@@ -2,22 +2,42 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import '../../../user_info.dart'; // Importing user information.
 
-var apibase= "http://192.168.1.4:3001/MOHAMEDREFAAT031/Notification/2.0.0";
+/// Disables notifications for a specific community.
+///
+/// Sends a POST request to the server to disable notifications for the specified community.
+///
+/// The [id] parameter is the identifier of the community for which to disable notifications.
+///
+/// Returns a Future<int> representing the HTTP status code of the response.
+/// - 200: Successfully disabled notifications for the community.
+/// - 404: Not found, the specified community does not exist.
+/// - 500: Internal server error or other unexpected error occurred.
+///
+/// Throws a [DioException] if the request fails due to Dio related issues.
+/// Throws a generic [Exception] if any other error occurs.
+///
+/// Example usage:
+/// ```dart
+/// try {
+///   int statusCode = await disableCommunitynotifications(id: 'communityId');
+///   if (statusCode == 200) {
+///     print('Notifications disabled successfully');
+///   } else {
+///     print('Failed to disable notifications, status code: $statusCode');
+///   }
+/// } catch (e) {
+///   print('Error occurred: $e');
+/// }
+/// ```
 Future<int> disableCommunitynotifications({
   required String id,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
-    String requestURL = '$apibase/community/update/disable';
+    String requestURL = '$apiUrl/community/update/disable/$id';
     
-      var data = {
-      "communityId": id,
-    };
-
-    /// Send a POST request to the server to save or unsave the post or comment.
     final response = await Dio().post(
       requestURL,
-      queryParameters: data,
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
@@ -25,7 +45,6 @@ Future<int> disableCommunitynotifications({
       ),
     );
 
-    /// Process the response based on the status code.
     if (response.statusCode == 200) {
       print(response.statusMessage);
       return 200;

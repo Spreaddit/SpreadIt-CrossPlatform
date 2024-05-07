@@ -1,54 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_notifications_settings.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/get_notifications.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/get_recommended_community.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/hide_notifications.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/get_according_to_type.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/notification_widget.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({Key? key}) : super(key: key);
+  List<Notifications> todayNotifications;
+  List<Notifications> earlierNotifications;
+  List<Notifications> notifications;
+  final bool isAllRead;
+
+  NotificationPage({
+    Key? key,
+    required this.todayNotifications,
+    required this.earlierNotifications,
+    required this.notifications,
+    this.isAllRead = false,
+  }) : super(key: key);
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
 class _NotificationPageState extends State<NotificationPage> {
+  List<Notifications> todayNotifications = [];
+  List<Notifications> earlierNotifications = [];
   List<Notifications> notifications = [];
-  bool isLoading = true;
-  bool noNotifications = false;
-  Community? recommendedCommunity;
+
+  Map<String, dynamic> notificationsSettingsValues = {
+    "newFollowers": false,
+    "mentions": false,
+    "inboxMessages": false,
+    "chatMessages": false,
+    "chatRequests": false,
+    "repliesToComments": false,
+    "cakeDay": false,
+    "modNotifications": false,
+    "commentsOnYourPost": false,
+    "commentsYouFollow": false,
+    "upvotes": false
+  };
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    notifications = widget.notifications;
+    earlierNotifications = widget.earlierNotifications;
+    todayNotifications = widget.todayNotifications;
   }
 
-  Future<void> fetchData() async {
+  Future<void> turnOffNotification(String key) async {
     try {
-      notifications = await fetchNotifications();
-      recommendedCommunity = await getRecommendedCommunity();
+      var data = await getData();
+      setState(() {
+        notificationsSettingsValues = data;
+        notificationsSettingsValues[key] = !notificationsSettingsValues[key];
+      });
+      print("Updated notifics: $notificationsSettingsValues");
+      var result = await updateData(
+          updatedNotificationsSettings: notificationsSettingsValues);
+      if (result != 200) {
+        setState(() {
+          notificationsSettingsValues[key] = !notificationsSettingsValues[key];
+        });
+      }
     } catch (e) {
       print(e);
-      noNotifications = true;
-      recommendedCommunity = await getRecommendedCommunity();
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
   void onHide(String id, Notifications removedNotification) async {
     try {
-      final status = await HideNotification(id: id);
+      final status = await hideNotification(id: id);
       if (status == 200) {
         setState(() {
-          notifications.removeWhere((n) => n.id == id);
+          earlierNotifications.removeWhere((n) => n.id == id);
+          todayNotifications.removeWhere((n) => n.id == id);
         });
       }
     } catch (e) {
@@ -59,41 +88,82 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dummy Notifications'),
-      ),
-      body: isLoading
-          ? LoaderWidget(
-              dotSize: 10,
-              logoSize: 100,
-            )
-          : notifications.isEmpty || noNotifications
-              ? Center(
-                child: Text("No notifications"),
-              )
-              : ListView.builder(
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    final notification = notifications[index];
-                    final data = processNotification(notification);
-                    return NotificationWidget(
-                      content: data.content,
-                      notification: notification,
-                      date: dateToDuration(notification.createdAt),
-                      iconData: data.icon,
-                      buttonIcon: data.icon,
-                      buttonText: data.buttonText,
-                      onPressed: data.onPress,
-                      isRead: notification.isRead,
-                      followed: followed(notification.notificationType),
-                      onHide: onHide,
-                    );
-                  },
+      backgroundColor: Colors.white,
+      body: ListView.builder(
+        itemCount: todayNotifications.length + earlierNotifications.length + 2,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            if (todayNotifications.isNotEmpty) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Text(
+                  "Today",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+              );
+            } else {
+              return SizedBox.shrink();
+            }
+          } else if (index == todayNotifications.length + 1) {
+            if (earlierNotifications.isNotEmpty) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Text(
+                  "Earlier",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            } else {
+              return SizedBox.shrink();
+            }
+          } else if (index < todayNotifications.length + 1) {
+            final notification = todayNotifications[index - 1];
+            final data = processNotification(notification, context);
+            return NotificationWidget(
+              content: data.content!,
+              notification: notification,
+              date: dateToDuration(notification.createdAt),
+              iconData: data.icon,
+              buttonIcon: data.icon,
+              buttonText: data.buttonText,
+              onPressed: data.onPress,
+              isRead: widget.isAllRead || notification.isRead,
+              onHide: onHide,
+              community: community(notification.notificationType),
+              disable: turnOffNotification,
+            );
+          } else {
+            final earlierIndex = index - todayNotifications.length - 2;
+            final notification = earlierNotifications[earlierIndex];
+            final data = processNotification(notification, context);
+            return NotificationWidget(
+              content: data.content!,
+              notification: notification,
+              date: dateToDuration(notification.createdAt),
+              iconData: data.icon,
+              buttonIcon: data.icon,
+              buttonText: data.buttonText,
+              onPressed: data.onPress,
+              isRead: widget.isAllRead || notification.isRead,
+              onHide: onHide,
+              community: community(notification.notificationType),
+              disable: turnOffNotification,
+            );
+          }
+        },
+      ),
     );
   }
 }
 
-bool followed(String notificationType) {
-  return notificationType == "posts" || notificationType == "comments";
+bool community(String notificationType) {
+  bool isCommunity = notificationType == "community";
+  print(" comminty $isCommunity");
+  return isCommunity;
 }

@@ -15,8 +15,6 @@ import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:uuid/uuid.dart';
 
-String userId = 'KMmoAXLiVc9UBl0rNqTO';
-
 class ChatPage extends StatefulWidget {
   final String id;
   final String chatroomName;
@@ -43,8 +41,7 @@ class _ChatPageState extends State<ChatPage> {
         metadata: {
           'email': UserSingleton().user!.email,
         },
-        // id: UserSingleton().user!.firebaseId,
-        id: userId,
+        id: UserSingleton().firebaseId!,
         imageUrl: UserSingleton().user!.avatarUrl,
         lastName: UserSingleton().user!.username,
       );
@@ -91,6 +88,34 @@ class _ChatPageState extends State<ChatPage> {
 
     String imageUrl = '';
 
+    void handleSendMessage() {
+      _addMessage(message);
+
+      Map<String, dynamic> messageMap = {
+        'chatRoomId': widget.id,
+        'content': "",
+        'image': imageUrl,
+        'sender': {
+          'avatarUrl': _user.imageUrl ?? "",
+          'email': _user.metadata!['email'],
+          'id': _user.id,
+          'name': _user.lastName ?? '',
+        },
+        'time': Timestamp.now(),
+        'type': 'image',
+      };
+
+      CollectionReference messages =
+          FirebaseFirestore.instance.collection('messages');
+
+      messages
+          .add(messageMap)
+          .then((value) => print("Message sent"))
+          .catchError(
+            (error) => print("Failed to send message"),
+          );
+    }
+
     kIsWeb
         ? storageRef
             .putData(
@@ -100,50 +125,20 @@ class _ChatPageState extends State<ChatPage> {
             .whenComplete(() async {
             await storageRef.getDownloadURL().then((value) {
               imageUrl = value;
-              setState(() {
-                isUploading = false;
-              });
             });
+            handleSendMessage();
+          }).catchError((error) {
+            print('Error uploading image: $error');
+            CustomSnackbar(content: "Error uploading image: $error");
           })
         : storageRef.putFile(image, metadata).whenComplete(() async {
             await storageRef.getDownloadURL().then((value) {
               imageUrl = value;
-              setState(() {
-                isUploading = false;
-              });
             });
-
-            while (isUploading) {}
-
-            _addMessage(message);
-
-            print("image url $imageUrl");
-
-            Map<String, dynamic> messageMap = {
-              'chatRoomId': widget.id,
-              'content': "",
-              'image': imageUrl,
-              'sender': {
-                'avatarUrl': _user.imageUrl ?? "",
-                'email': _user.metadata!['email'],
-                'id': _user.id,
-                'name': _user.lastName ?? '',
-              },
-              'time': Timestamp.now(),
-              'type': 'image',
-            };
-
-            CollectionReference messages =
-                FirebaseFirestore.instance.collection('messages');
-
-            messages
-                .add(messageMap)
-                .then((value) => print("Message sent"))
-                .catchError(
-                  (error) => print("Failed to send message"),
-                );
+            handleSendMessage();
           }).catchError((error) {
             print('Error uploading image: $error');
+            CustomSnackbar(content: "Error uploading image: $error");
           });
   }
 
@@ -345,7 +340,7 @@ class _ChatPageState extends State<ChatPage> {
     required BuildContext context,
     required types.Message message,
   }) {
-    if (message.author.id == userId) {
+    if (message.author.id == UserSingleton().firebaseId!) {
       showModalBottomSheet(
         context: context,
         builder: (context) => Container(

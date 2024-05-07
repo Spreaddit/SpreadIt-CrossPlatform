@@ -1,35 +1,98 @@
-class Message {
-  final String messageId;
-  final String related;
-  final String subject;
-  final String content;
-  final DateTime sentTime;
+class MessageModel {
+  MessageRepliesModel primaryMessage;
+  List<MessageRepliesModel>? replies;
 
-  Message({
-    required this.messageId,
-    required this.related,
-    required this.subject,
-    required this.content,
-    required this.sentTime,
+  MessageModel({
+    required this.primaryMessage,
+    required this.replies,
   });
 
-  factory Message.fromJson(Map<String, dynamic> json) {
-    return Message(
-      messageId: json['messageId'],
-      related: json['related'],
-      subject: json['subject'],
-      content: json['content'],
-      sentTime: DateTime.parse(json['sent-time']),
+  factory MessageModel.fromJson(Map<String, dynamic> json) {
+    return MessageModel(
+      primaryMessage: MessageRepliesModel.fromJson(json),
+      replies: [],
+    );
+  }
+
+  addReplies(Map<String, dynamic> replyJson) {
+    replies!.add(
+      MessageRepliesModel.fromJson(
+        replyJson,
+      ),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'messageId': messageId,
-      'related': related,
-      'subject': subject,
+      '_id': primaryMessage.id,
+      'conversationId': primaryMessage.conversationId,
+      'senderType': primaryMessage.senderType,
+      'relatedUserOrCommunity': primaryMessage.relatedUserOrCommunity,
+      'type': primaryMessage.type,
+      'content': primaryMessage.content,
+      'time': primaryMessage.time.toIso8601String(),
+      'direction': primaryMessage.direction,
+      'isRead': primaryMessage.isRead,
+      'isDeleted': false,
+      'subject': primaryMessage.subject,
+    };
+  }
+}
+
+class MessageRepliesModel {
+  String id;
+  String conversationId;
+  String senderType;
+  String relatedUserOrCommunity;
+  String type;
+  String content;
+  DateTime time;
+  String direction;
+  bool isRead;
+  String subject;
+
+  MessageRepliesModel({
+    required this.id,
+    required this.conversationId,
+    required this.senderType,
+    required this.relatedUserOrCommunity,
+    required this.type,
+    required this.content,
+    required this.time,
+    required this.direction,
+    required this.isRead,
+    required this.subject,
+  });
+
+  factory MessageRepliesModel.fromJson(Map<String, dynamic> json) {
+    return MessageRepliesModel(
+      id: json['_id'],
+      conversationId: json['conversationId'],
+      senderType: json['senderType'],
+      relatedUserOrCommunity: json['relatedUserOrCommunity'] ?? "",
+      type: json['type'],
+      content: json['content'],
+      time: DateTime.parse(json['time']),
+      direction: json['direction'],
+      isRead: json['isRead'],
+      subject: json['subject'],
+    );
+  }
+
+  get primaryMessage => null;
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'conversationId': conversationId,
+      'senderType': senderType,
+      'relatedUserOrCommunity': relatedUserOrCommunity,
+      'type': type,
       'content': content,
-      'sent-time': sentTime.toIso8601String(),
+      'time': time.toIso8601String(),
+      'direction': direction,
+      'isRead': isRead,
+      'subject': subject,
     };
   }
 }

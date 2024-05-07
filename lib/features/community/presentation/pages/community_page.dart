@@ -21,6 +21,7 @@ class _CommunityPageState extends State<CommunityPage> {
   late Map<String, dynamic> data;
   String communityBannerLink = "";
   ScrollController _scrollController = ScrollController();
+  bool isMember=false;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _CommunityPageState extends State<CommunityPage> {
     data = await getCommunityInfo(widget.communityName);
     setState(() {
       communityBannerLink = data["communityBanner"];
+      isMember=data['isMember'];
     });
   }
 
@@ -45,6 +47,7 @@ class _CommunityPageState extends State<CommunityPage> {
       appBar: CommunityAppBar(
         bannerImageLink: communityBannerLink,
         communityName: widget.communityName,
+        joined : isMember,
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
