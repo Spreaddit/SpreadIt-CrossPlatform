@@ -2,18 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-//String apibase = apiUrl; REmember to uncomment
-const String apibase = galalModUrl;
+String apibase = apiUrl;
 
 Future<void> declineInvite({
   required String communityName,
-  required String username,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
 
-    var apiRoute =
-        "/community/moderation/$communityName/$username/decline-invite";
+    var apiRoute = "/community/moderation/$communityName/decline-invite";
     String apiUrl = apibase + apiRoute;
 
     final response = await Dio().post(

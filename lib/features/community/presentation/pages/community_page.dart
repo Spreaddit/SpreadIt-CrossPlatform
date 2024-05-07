@@ -9,6 +9,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_di
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_invited.dart';
@@ -122,12 +123,12 @@ class _CommunityPageState extends State<CommunityPage> {
                 content = alertTexts[0][1];
                 _showHaltingAlert(title: title, content: content);
               } else if (communityData["communityType"] == "Private" &&
-                  isApprovedData["isContributor"] == false && communityData["isModerator"] == false) {
+                  isApprovedData["isContributor"] == false &&
+                  communityData["isModerator"] == false) {
                 title = alertTexts[1][0];
                 content = alertTexts[1][1];
                 _showHaltingAlert(title: title, content: content);
-              }
-              else if (isInvitedData["isInvited"] == true) {
+              } else if (isInvitedData["isInvited"] == true) {
                 _showInvitationDialog();
               }
             });
@@ -223,6 +224,14 @@ class _CommunityPageState extends State<CommunityPage> {
                     acceptInvite(communityName: widget.communityName);
                     //Navigate to moderators page
                     Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ModeratorsPage(
+                          communityName: widget.communityName,
+                        ),
+                      ),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.blue),
@@ -238,8 +247,9 @@ class _CommunityPageState extends State<CommunityPage> {
                   onPressed: () {
                     // Decline invitation logic
                     declineInvite(
-                        communityName: widget.communityName,
-                        username: UserSingleton().user!.username);
+                      communityName: widget.communityName,
+                    );
+
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(

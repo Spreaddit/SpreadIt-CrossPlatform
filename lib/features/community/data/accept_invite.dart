@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-//String apibase = apiUrl; REMEMBER TO UNCOMMENT
-const String apibase = galalModUrl;
+String apibase = apiUrl;
 
 Future<void> acceptInvite({
   required String communityName,

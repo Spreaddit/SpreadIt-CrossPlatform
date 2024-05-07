@@ -70,8 +70,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       ToPageBtn(
         iconData: Icons.shield_rounded,
-        mainText: "RehabCom", //"GalalModCommunity2",
-        onPressed: () => navigateToCommunity(context, "RehabCom"),
+        mainText: "DummyCommunity", //"GalalModCommunity2",
+        onPressed: () => navigateToCommunity(context, "DummyCommunity"),
       ),
     ]);
 

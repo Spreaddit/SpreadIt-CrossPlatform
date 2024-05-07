@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-const apiUrl =
-    "http://localhost:3006/FAROUQDIAA52/Module9V2/1.0.0"; //EMSA7eeehaaaaaaaaaaaaa
 String apibase = apiUrl;
 
 Future<void> updatePermissions({

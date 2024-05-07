@@ -5,12 +5,14 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
+import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_moderators_data.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/approved_users_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/banned_users_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/community_type_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/description_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/dummy_page.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 class ModtoolsPage extends StatefulWidget {
@@ -98,7 +100,7 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
       "community_type_page": CommunityTypePage(
         communityName: widget.communityName,
       ),
-      "post_types_page": DummyPage(
+      "post_types_page": PostTypes(
         communityName: widget.communityName,
       ),
       "discovery_page": DummyPage(
@@ -110,7 +112,7 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
       "scheduled_posts_page": DummyPage(
         communityName: widget.communityName,
       ),
-      "moderators_page": DummyPage(
+      "moderators_page": ModeratorsPage(
         communityName: widget.communityName,
       ),
       "approved_users_page": ApprovedUsersPage(

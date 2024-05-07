@@ -13,60 +13,6 @@ import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/widgets/invitation_to_moderate.dart';
 
-List<Map<String, String>> communities = [
-  {
-    'name': 'Icon 1',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 2',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 3',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 4',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 5',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 6',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 7',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 8',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 9',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  {
-    'name': 'Icon 10',
-    'url':
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s',
-  },
-  // Add more icons as needed
-];
-
 class ModeratorsPage extends StatefulWidget {
   final String communityName;
   const ModeratorsPage({required this.communityName});
@@ -80,7 +26,8 @@ class ModeratorsPage extends StatefulWidget {
 class _ModeratorsPageState extends State<ModeratorsPage> {
   bool isModerator = true;
   int _selectedIndex = 0;
-  List<Moderator> ModeratorsList = [];
+  List<Moderator> moderatorsList = [];
+  List<Moderator> editableModeratorsList = [];
   @override
   void initState() {
     super.initState();
@@ -106,7 +53,11 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
           await fetchModeratorsData(widget.communityName, _selectedIndex);
       print(data);
       setState(() {
-        ModeratorsList = data;
+        if (_selectedIndex == 1) {
+          editableModeratorsList = data;
+        } else {
+          moderatorsList = data;
+        }
       });
     } catch (e) {
       print('Error fetching moderators: $e');
@@ -115,7 +66,8 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
 
   void removeModeratorFromList(Moderator moderator) {
     setState(() {
-      ModeratorsList.remove(moderator);
+      editableModeratorsList.remove(moderator);
+      moderatorsList.remove(moderator);
       deleteModerator(widget.communityName, moderator.username);
     });
   }
@@ -128,7 +80,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
         return SliverToBoxAdapter(
           child: ListView(
               shrinkWrap: true,
-              children: ModeratorsList.map((e) {
+              children: moderatorsList.map((e) {
                 return ListTile(
                     leading:
                         CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
@@ -205,7 +157,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
         return SliverToBoxAdapter(
           child: ListView(
               shrinkWrap: true,
-              children: ModeratorsList.map((e) {
+              children: editableModeratorsList.map((e) {
                 void onPermissionsChanged(bool newManagePostAndComments,
                     bool newManageUsers, bool newManageSettings) {
                   setState(() {
@@ -359,7 +311,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
         return SliverToBoxAdapter(
           child: ListView(
               shrinkWrap: true,
-              children: ModeratorsList.map((e) {
+              children: moderatorsList.map((e) {
                 return ListTile(
                   leading:
                       CircleAvatar(foregroundImage: NetworkImage(e.avatar)),
