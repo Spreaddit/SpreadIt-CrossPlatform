@@ -18,7 +18,7 @@ class _PostOptionsBoxState extends State<PostOptionsBox> {
   @override
   void initState() {
     super.initState();
-    _selectedOption = widget.initialOption; // Set initial option here
+    _selectedOption = widget.initialOption;
   }
 
   @override

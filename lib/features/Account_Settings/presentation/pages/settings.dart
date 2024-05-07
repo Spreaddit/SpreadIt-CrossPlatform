@@ -18,7 +18,6 @@ class SettingsPage extends StatefulWidget {
 
 /// [SettingsPage] state.
 class _SettingsPageState extends State<SettingsPage> {
-
   /// A list of widgets representing the general settings section in the settings page.
   List<Widget> generalSectionChildren = [];
 
@@ -41,8 +40,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       ToPageBtn(
         iconData: Icons.shield_rounded,
-        mainText: "TestingPermissions", //"GalalModCommunity2"
-        onPressed: () => navigateToCommunity(context, "TestingPermissions"),
+        mainText: "FoodLovers", //"GalalModCommunity2"
+        onPressed: () => navigateToCommunity(context, "FoodLovers"),
       ),
     ]);
 

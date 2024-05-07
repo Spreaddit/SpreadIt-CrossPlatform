@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/accept_invite.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
