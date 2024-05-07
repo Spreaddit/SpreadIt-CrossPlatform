@@ -28,6 +28,7 @@ class _ForgetPasswordState extends State<ForgetPasswordVerification> {
   String _newPassword = '';
   String _confirmedPassword = '';
   bool isValidInput = false ;
+  String token = '';
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _ForgetPasswordState extends State<ForgetPasswordVerification> {
     try {
       String currentUrl = Uri.base.toString();
       final List<String> parts = currentUrl.split('/');
-      final String token = parts.last;
+      token = parts.last;
       print("token $token");
       await verifyEmail(emailToken: token);
     }
@@ -64,6 +65,7 @@ class _ForgetPasswordState extends State<ForgetPasswordVerification> {
   }
 
   void checkNotEmpty(){
+    print('entered check not empty');
     if(validateNotEmpty(_newPassword) && validateNotEmpty(_confirmedPassword)){
       if(checkIdentical(_newPassword, _confirmedPassword)) {
         postData();
@@ -78,12 +80,13 @@ class _ForgetPasswordState extends State<ForgetPasswordVerification> {
   }
 
   void postData() async{
-    int response =  await sendPasswords(_newPassword);
+    print('entered post data');
+    int response =  await sendPasswords(_newPassword, token);
     if (response == 200){
       CustomSnackbar(content: "password updated successfully").show(context);
       UserSingleton().clearUserFromPrefs();
-      UserSingleton().user = null; // Clear user info
-      Navigator.pushNamedAndRemoveUntil(context, '/api/login', (route) => false);
+      UserSingleton().user = null; 
+      Navigator.pushNamedAndRemoveUntil(context, '/log-in-page', (route) => false);
     }
     else if (response == 400){
       CustomSnackbar(content: "please enter your email or username").show(context);

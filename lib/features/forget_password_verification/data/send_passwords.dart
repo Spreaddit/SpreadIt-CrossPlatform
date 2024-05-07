@@ -7,18 +7,14 @@ String apibase = apiUrl;
 /// It takes the [usernameOrEmail] from the input field and sends it to the backend to ensure that this user exists and send them an
 /// email with the password
 
-Future<int> sendPasswords(String newPassword) async {
+Future<int> sendPasswords(String newPassword , String token) async {
   try {
-    String? accessToken = UserSingleton().accessToken;
     const apiRoute = "/reset-password-by-token";
     String apiUrl = apibase + apiRoute;
     final response = await Dio().post(apiUrl,
-        options: Options(headers: {
-          'Authorization': 'Bearer $accessToken',
-        }),
         data: {
           "password": newPassword,
-          "resetToken": accessToken,
+          "emailToken": token,
         });
     if (response.statusCode == 200) {
       print(response.statusCode);
