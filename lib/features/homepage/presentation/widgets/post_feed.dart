@@ -166,6 +166,8 @@ class _PostFeedState extends State<PostFeed> {
           setState(() {
             isRefreshing = true;
             existingItems.clear();
+            isLoading = true;
+            page = 1;
           });
         }
         return fetchData();
