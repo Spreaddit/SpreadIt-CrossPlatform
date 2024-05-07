@@ -6,11 +6,6 @@ import 'firebase_options.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/pages/homepage.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 import "features/Sign_up/Presentaion/pages/start_up_page.dart";
-import 'features/Sign_up/Presentaion/pages/createusername.dart';
-import 'features/create_post/presentation/pages/primary_content_page.dart';
-import 'features/create_post/presentation/pages/rules_page.dart';
-import 'features/user_profile/presentation/pages/user_profile.dart';
-import 'features/schedule_posts/presentation/pages/schedule_posts_page.dart';
 import './user_info.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
