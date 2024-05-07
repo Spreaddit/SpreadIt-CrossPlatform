@@ -90,7 +90,7 @@ class ScheduledPostsBody extends StatelessWidget {
                 return ScheduledPostCard(
                   id: post.postId,
                   refreshScheduledPosts: refreshScheduledPosts,
-                  dateAndTime: post.date,
+                  dateAndTime: post.date.add(Duration(hours: 3)),
                   username: post.username,
                   title: post.title!,
                   content: post.content?.last ?? '',
