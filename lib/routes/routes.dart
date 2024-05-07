@@ -143,8 +143,6 @@ Map<String, WidgetBuilder> generateRoutes() {
     '/user-profile': (context) => ProtectedRoute(child: UserProfile()),
     '/edit-profile': (context) => ProtectedRoute(child: EditProfilePage()),
     '/edit_comment': (context) => ProtectedRoute(child: EditComment()),
-    '/settings/account-settings/add-password': (context) =>
-        ProtectedRoute(child: AddPasswordPage()),
     '/muted-commuinties': (context) =>
         ProtectedRoute(child: MutedCommunityPage()),
     '/muted-users': (context) => ProtectedRoute(child: MutedUsersPage()),

@@ -45,6 +45,7 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
         final currentRoute = ModalRoute.of(context)?.settings.name;
         final List<String> pathSegments = currentRoute!.split('/');
         emailToken = pathSegments[pathSegments.length - 1];
+        setState(() {});
         checkEmailToken(emailToken);
       });
     }
@@ -129,6 +130,16 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          title: Text("Add Password"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/settings/account-settings');
+            },
+          )),
       body: Column(
         children: [
           Expanded(
