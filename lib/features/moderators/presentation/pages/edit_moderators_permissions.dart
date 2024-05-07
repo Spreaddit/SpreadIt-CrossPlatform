@@ -5,14 +5,26 @@ import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_a
 import 'package:spreadit_crossplatform/features/moderators/data/update_moderator_permmissions.dart';
 
 class EditPermissionsPage extends StatefulWidget {
+  /// The name of the community where the moderator exists.
   String communityName;
+
+  // /The username of the moderator whose permissions are being edited.
   String username;
+
+  /// Whether the moderator can manage posts and comments.
   bool managePostsAndComments;
+
+  /// Whether the moderator can manage users.
   bool manageUsers;
+
+  /// Whether the moderator can manage community settings.
   bool manageSettings;
+
+  /// A callback function to notify when permissions are changed.
   final void Function(bool newManagePostsAndCommnets, bool newManageUsers,
       bool newManageSettings) onPermissionsChanged;
 
+  /// Constructs an EditPermissionsPage with the given parameters.
   EditPermissionsPage({
     required this.communityName,
     required this.username,
@@ -28,6 +40,7 @@ class EditPermissionsPage extends StatefulWidget {
   }
 }
 
+/// The state class associated with EditPermissionsPage.
 class _EditPermissionsPageState extends State<EditPermissionsPage> {
   @override
   void initState() {

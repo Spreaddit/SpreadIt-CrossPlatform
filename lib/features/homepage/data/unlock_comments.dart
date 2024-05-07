@@ -4,6 +4,11 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Unlocks comments for a specific post.
+///
+/// This function sends a request to the server to unlock comments for the specified post.
+///
+/// [postId] is the ID of the post for which comments will be unlocked.
 Future<void> unlockComments({required String postId}) async {
   try {
     String? accessToken = UserSingleton().accessToken;

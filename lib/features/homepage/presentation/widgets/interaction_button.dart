@@ -5,15 +5,28 @@ import 'package:spreadit_crossplatform/features/homepage/data/downvote.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/upvote.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
-/// This widget is responsible for the display
-/// of [VoteCount]
-/// and the total vote count (upvotes - down votes)
+/// This widget displays voting buttons for a post.
+///
+/// It allows users to upvote or downvote a post, and it shows the current vote count.
 class VoteButton extends StatefulWidget {
+  /// The initial vote count for the post.
   final int initialVotesCount;
+
+  /// A boolean indicating whether the post is upvoted.
   bool isUpvoted;
+
+  /// A boolean indicating whether the post is downvoted.
   bool isDownvoted;
+
+  /// The ID of the post.
   final String postId;
 
+  /// Constructs a [VoteButton] widget.
+  ///
+  /// [initialVotesCount] is the initial vote count for the post.
+  /// [isUpvoted] is a boolean indicating whether the post is upvoted.
+  /// [isDownvoted] is a boolean indicating whether the post is downvoted.
+  /// [postId] is the ID of the post.
   VoteButton({
     required this.initialVotesCount,
     required this.isUpvoted,

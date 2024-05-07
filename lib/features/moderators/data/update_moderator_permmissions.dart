@@ -2,6 +2,26 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Updates the permissions of a moderator in a community.
+///
+/// This function sends a PUT request to the server to update the permissions
+/// of a moderator in a specific community.
+///
+/// Parameters:
+/// - `communityName`: The name of the community where the moderator's
+///   permissions will be updated.
+/// - `username`: The username of the moderator whose permissions will be
+///   updated.
+/// - `managePostsAndComments`: A boolean value indicating whether the moderator
+///   should have permission to manage posts and comments in the community.
+/// - `manageUsers`: A boolean value indicating whether the moderator should
+///   have permission to manage users in the community.
+/// - `manageSettings`: A boolean value indicating whether the moderator should
+///   have permission to manage settings in the community.
+///
+/// Throws:
+/// - DioError: If an error occurs during the HTTP request.
+
 String apibase = apiUrl;
 
 Future<void> updatePermissions({

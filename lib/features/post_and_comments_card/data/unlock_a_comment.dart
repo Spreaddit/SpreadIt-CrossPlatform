@@ -4,6 +4,14 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Unlocks a comment.
+///
+/// This function sends a request to the server to unlock a comment.
+///
+/// [communityName] is the name of the community where the comment belongs.
+/// [commentId] is the ID of the comment to be unlocked.
+///
+/// Throws a DioException if the request fails.
 Future<void> unlockComment(
     {required String communityName, required String commentId}) async {
   try {

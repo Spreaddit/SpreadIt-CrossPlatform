@@ -1,8 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Deletes a moderator from a specified community.
+///
+/// The function sends an HTTP DELETE request to the API endpoint to delete
+/// the moderator with the given [username] from the specified [communityName].
+///
+/// [communityName]: The name of the community from which the moderator is to be deleted.
+/// [username]: The username of the moderator to be deleted.
 Future<void> deleteModerator(String communityName, String username) async {
   try {
     String? accessToken = UserSingleton().accessToken;

@@ -1,9 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/moderators/data/moderator_class_model.dart';
-
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Fetches moderators data for a specified community.
+///
+/// The function sends an HTTP GET request to the API endpoint to fetch moderators data
+/// for the specified community based on the display mode.
+///
+/// [communityName]: The name of the community for which moderators data is to be fetched.
+/// [display]: An integer indicating the display mode:
+///           0 - Fetch all moderators.
+///           1 - Fetch only editable moderators.
 Future<List<Moderator>> fetchModeratorsData(
     String communityName, int display) async {
   try {

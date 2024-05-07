@@ -4,6 +4,13 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Upvotes a comment.
+///
+/// [commentId]: The ID of the comment to upvote.
+///
+/// Returns the number of votes if successful, otherwise returns null.
+///
+/// Throws a DioException if the request fails.
 Future<int?> upvoteComment({required String commentId}) async {
   try {
     String? accessToken = UserSingleton().accessToken;

@@ -4,6 +4,14 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Downvotes a post.
+///
+/// This function sends a request to the server to downvote a post.
+///
+/// [postId] is the ID of the post to be downvoted.
+///
+/// Returns the updated vote count if successful, otherwise returns null.
+/// Throws a DioException if the request fails.
 Future<int?> downvote({required String postId}) async {
   try {
     String? accessToken = UserSingleton().accessToken;

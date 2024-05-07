@@ -4,6 +4,13 @@ import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_
 import 'package:spreadit_crossplatform/user_info.dart';
 
 String baseUrl = apiUrl;
+
+/// Fetches post settings data for a given community.
+///
+/// Retrieves the post settings for the specified [communityName].
+/// Returns a [PostSettings] object if the request is successful, otherwise returns null.
+///
+/// Throws an error if the request fails.
 Future<PostSettings?> fetchPostSettingsData(String communityName) async {
   try {
     String? accessToken = UserSingleton().accessToken;

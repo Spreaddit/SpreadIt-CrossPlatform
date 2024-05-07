@@ -4,6 +4,16 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Sends an invitation to a user to become a moderator of a community.
+///
+/// The function sends an HTTP POST request to the API endpoint to invite a user to become a moderator
+/// of a specified community with the provided permissions.
+///
+/// [communityName]: The name of the community where the user is invited to become a moderator.
+/// [username]: The username of the user to be invited as a moderator.
+/// [managePostsAndComments]: A boolean indicating whether the invited user will have permission to manage posts and comments.
+/// [manageUsers]: A boolean indicating whether the invited user will have permission to manage users.
+/// [manageSettings]: A boolean indicating whether the invited user will have permission to manage settings.
 Future<void> inviteModerator({
   required String communityName,
   required String username,

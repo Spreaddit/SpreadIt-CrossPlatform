@@ -4,6 +4,13 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Upvotes a specific post.
+///
+/// This function sends a request to the server to upvote the specified post.
+///
+/// [postId] is the ID of the post to upvote.
+///
+/// Returns the updated number of votes on success, or null if the operation fails.
 Future<int?> upvote({required String postId}) async {
   try {
     String? accessToken = UserSingleton().accessToken;
