@@ -4,6 +4,36 @@ import 'package:ionicons/ionicons.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/data/muted_user_class_model.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/widgets/unmute_mute_user.dart';
+/// A tile widget representing a muted user within a community.
+///
+/// This tile widget displays information about a muted user, including their username,
+/// profile picture, mute date, and moderator note. It provides options for moderators
+/// to view details, view the user's profile, and unmute the user.
+///
+/// The tile includes a leading circle avatar displaying the user's profile picture,
+/// a title showing the username, and a subtitle showing the mute date and moderator note.
+/// It also includes a trailing icon button for showing additional options in a bottom sheet.
+///
+/// This tile is typically used within a list view to display a list of muted users.
+///
+/// Example usage:
+///
+/// ```dart
+/// MutedUserTile(
+///   mutedUser: mutedUser,
+///   onTap: () {
+///     // Handle tap event
+///   },
+///   communityName: 'Sample Community',
+///   onUnmute: () {
+///     // Handle unmute event
+///   },
+///   onUpdate: (updatedUser) {
+///     // Handle update event
+///   },
+/// );
+/// ```
+/// 
 class MutedUserTile extends StatelessWidget {
   final MutedUser mutedUser;
   final VoidCallback onTap;

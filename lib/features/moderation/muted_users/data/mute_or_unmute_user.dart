@@ -2,6 +2,34 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart'; // Importing the API configuration.
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Mutes or unmutes a user in a community.
+///
+/// This function sends a request to the server to mute or unmute a user in a specified community.
+///
+/// The [communityName] parameter is the name of the community where the user is to be muted or unmuted.
+/// The [username] parameter is the username of the user to be muted or unmuted.
+/// The [type] parameter specifies the action to perform, either "mute" or "unmute".
+/// The [note] parameter is an optional note to accompany the mute action.
+/// The [post] parameter indicates whether to use POST or PUT method for the request.
+///
+/// Returns a Future<int> representing the status code of the response:
+/// - 200 if successful.
+/// - 400 for invalid data or parameters.
+/// - 401 if unauthorized.
+/// - 402 if the user is not a moderator.
+/// - 404 if the community or user is not found.
+/// - 406 if the moderator doesn't have permission.
+/// - 500 for internal server error or other unexpected errors.
+///
+/// Example usage:
+/// ```dart
+/// int statusCode = await muteOrUnmuteUser('communityName', 'username', 'mute', 'Reason for mute', true);
+/// if (statusCode == 200) {
+///   print('User muted successfully');
+/// } else {
+///   print('Error occurred: $statusCode');
+/// }
+/// ```
 Future<int> muteOrUnmuteUser(String communityName, String username, String type,
     String note, bool post) async {
   try {
@@ -9,7 +37,6 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
     String? accessToken = UserSingleton().accessToken;
     var data;
 
-    /// Determine the API route based on the specified type.
     switch (type) {
       case "mute":
         apiroute = "/community/moderation/$communityName/$username/mute";
@@ -25,29 +52,26 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
 
     String requestURL = '$apiUrl$apiroute';
     var option = Options(
-          headers: {
-            'Authorization': 'Bearer $accessToken',
-          },
-        );
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
     Response response;
-    
+
     if (post) {
-       response = await Dio().post(
+      response = await Dio().post(
         requestURL,
         data: type == 'mute' ? data : null,
         options: option,
       );
-    }
-    else 
-    {
-       response = await Dio().put(
+    } else {
+      response = await Dio().put(
         requestURL,
         data: data,
         options: option,
       );
     }
 
-    /// Process the response based on the status code.
     switch (response.statusCode) {
       case 200:
         print("User muted successfully");
@@ -72,7 +96,7 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
         return 500;
       default:
         print("Unexpected Status Code: ${response.statusCode}");
-        return 404;
+        return 1;
     }
   } on DioException catch (e) {
     if (e.response != null) {
@@ -98,7 +122,7 @@ Future<int> muteOrUnmuteUser(String communityName, String username, String type,
           return 500;
         default:
           print("Unexpected Status Code: ${e.response!.statusCode}");
-          return 404; // Assuming 404 for unhandled status codes
+          return 1; 
       }
     }
     print("Dio error occurred: $e");

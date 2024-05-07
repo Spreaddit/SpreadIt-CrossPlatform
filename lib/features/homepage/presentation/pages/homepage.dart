@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_user_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/floating_new_chat_button.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
@@ -12,6 +15,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/to
 import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 CurrentPage previousPage = CurrentPage.home;
@@ -54,9 +58,23 @@ class _HomePageState extends State<HomePage> {
       if ((token != 'home' || token == '') &&
           UserSingleton().user!.isVerified! == false) {
         response = await verifyEmail(emailToken: token);
-      }
-      if (response == 200) {
-        CustomSnackbar(content: "Email verifed Succesfully").show(context);
+        if (response == 200) {
+          CustomSnackbar(content: "Email verifed Succesfully").show(context);
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/start-up-page', (route) => false);
+        }
+      } else if (token == 'home') {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? userDataJson = prefs.getString('userSingleton');
+        Map<String, dynamic> jsonMap = json.decode(userDataJson!);
+        bool isVerified = User.fromJson(jsonMap['user']).isVerified!;
+        if (isVerified==false)
+        {
+           Navigator.pushNamedAndRemoveUntil(
+              context, '/start-up-page', (route) => false);
+        }
+        
       }
     } catch (e) {
       print("Error while getting current URL: $e");
@@ -64,8 +82,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> markallnotificationsasRead() async {
-    await MarkAsRead(type: 'all');
-
+    await markAsRead(type: 'all');
     setState(() {
       isAllRead = true;
     });

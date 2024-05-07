@@ -101,7 +101,7 @@ class _SavedPageState extends State<SavedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Colors.white,
+       backgroundColor:  Colors.grey[100],
       appBar: AppBar(
         title: Text('Saved'),
         leading: IconButton(

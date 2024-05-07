@@ -1,8 +1,18 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Verifies an email using the provided email token.
+///
+/// Makes a request to the server to verify the email associated with the provided token.
+///
+/// [emailToken] is the token sent to the user's email for verification.
+///
+/// Returns a [Future] that resolves to an integer representing the HTTP status code:
+/// - 200 if the email verification is successful.
+/// - 404 if the user is not found or unauthorized.
+/// - 500 if there is an internal server error or any other error occurs.
+/// 
 Future<int> verifyEmail({
   required String emailToken,
 }) async {
@@ -16,7 +26,7 @@ Future<int> verifyEmail({
     print('inside verify email');
     if (response.statusCode == 200) {
       UserSingleton().setAccessToken(response.data['accessToken'],
-          DateTime.parse(response.data['token_expiration_date']));
+          DateTime.now());
           print('verify successful');
           UserSingleton().setVerifed();
       return 200;

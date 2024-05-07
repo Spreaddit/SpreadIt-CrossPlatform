@@ -1,10 +1,28 @@
 import 'package:flutter/material.dart';
 
+/// A widget representing a loader with animated dots.
+///
+/// This widget displays a logo followed by animated dots, each with a specified color and size.
+/// The dots animate repeatedly in a loop, creating a loading effect.
+///
+/// Example usage:
+/// ```dart
+/// LoaderWidget(
+///   dotSize: 10,
+///   logoSize: 100,
+/// )
+/// ```
 class LoaderWidget extends StatefulWidget {
+  /// The size of each dot.
   final double dotSize;
+
+  /// The size of the logo image.
   final double logoSize;
 
-  LoaderWidget({
+  /// Creates a loader widget with animated dots.
+  ///
+  /// The [dotSize] and [logoSize] parameters are required.
+   LoaderWidget({
     required this.dotSize,
     required this.logoSize,
   });
@@ -70,17 +88,42 @@ class _LoaderWidgetState extends State<LoaderWidget>
   }
 }
 
+/// A widget representing a single animated dot in the loader.
+///
+/// This widget displays a single animated dot with a specified color, size, and delay.
+/// The dot animates up and down repeatedly, synchronized with the loader animation.
+///
+/// Example usage:
+/// ```dart
+/// LoaderDot(
+///   animation: animationController,
+///   color: Colors.blue,
+///   size: 10,
+///   delay: Duration(milliseconds: 500),
+/// )
+/// ```
 class LoaderDot extends StatelessWidget {
+  /// The animation controller for the loader.
   final Animation<double> animation;
+
+  /// The color of the dot.
   final Color color;
+
+  /// The size of the dot.
   final double size;
+
+  /// The delay before the dot starts animating.
   final Duration delay;
 
-  LoaderDot(
-      {required this.animation,
-      required this.color,
-      required this.size,
-      required this.delay});
+  /// Creates a loader dot widget.
+  ///
+  /// The [animation], [color], [size], and [delay] parameters are required.
+  LoaderDot({
+    required this.animation,
+    required this.color,
+    required this.size,
+    required this.delay,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -2,11 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/follow_unfollow_api.dart';
 
+/// A tile widget representing a follower in a list.
+///
+/// This widget displays information about a follower, including their username
+/// and avatar. It also provides the functionality to follow or unfollow the user.
+///
+/// Example usage:
+/// ```dart
+/// FollowerListTile(
+///   username: 'example_username',
+///   avatarUrl: 'https://example.com/avatar.png',
+///   isFollowed: true,
+/// )
+/// ```
 class FollowerListTile extends StatefulWidget {
+  /// The username of the follower.
   final String username;
+
+  /// The URL of the follower's avatar image.
   final String avatarUrl;
+
+  /// Indicates whether the current user is following this follower.
   final bool isFollowed;
 
+  /// Constructs a [FollowerListTile] with the given parameters.
   FollowerListTile({
     required this.username,
     required this.avatarUrl,
@@ -18,6 +37,7 @@ class FollowerListTile extends StatefulWidget {
 }
 
 class _FollowerListTileState extends State<FollowerListTile> {
+  /// Indicates the current follow status.
   bool followStatus = false;
 
   @override
@@ -26,10 +46,13 @@ class _FollowerListTileState extends State<FollowerListTile> {
     followStatus = widget.isFollowed;
   }
 
+  /// Toggles the follow status of the user.
   Future<void> unfollowOrFollow() async {
     try {
       var response = await toggleFollow(
-          isFollowing: followStatus, username: widget.username);
+        isFollowing: followStatus,
+        username: widget.username,
+      );
       if (response == 200) {
         setState(() {
           followStatus = !followStatus;
@@ -39,7 +62,8 @@ class _FollowerListTileState extends State<FollowerListTile> {
       } else if (response == 404) {
         CustomSnackbar(content: 'User not found').show(context);
       } else if (response == 500) {
-        CustomSnackbar(content: 'Internal server error').show(context);
+        CustomSnackbar(content: "An error ocuured please try again later")
+            .show(context);
       }
     } catch (e) {
       print('Error toggling follow status: $e');
@@ -64,22 +88,22 @@ class _FollowerListTileState extends State<FollowerListTile> {
         ),
         title: Text(widget.username),
         subtitle: Text(widget.username),
-        trailing:  MouseRegion(
-        cursor: SystemMouseCursors.basic,
-        onHover: (_) {},
-        child: TextButton(
-          onPressed: () async {
-            await unfollowOrFollow();
-          },
-          child: Text(
-            followStatus ? 'Following' : 'Follow',
-            style: TextStyle(
-              color: followStatus ? Colors.grey : Colors.blue,
-              fontWeight: FontWeight.bold,
+        trailing: MouseRegion(
+          cursor: SystemMouseCursors.basic,
+          onHover: (_) {},
+          child: TextButton(
+            onPressed: () async {
+              await unfollowOrFollow();
+            },
+            child: Text(
+              followStatus ? 'Following' : 'Follow',
+              style: TextStyle(
+                color: followStatus ? Colors.grey : Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }

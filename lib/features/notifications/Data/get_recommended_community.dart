@@ -1,9 +1,32 @@
-import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
-
+/// Fetches recommended community data.
+///
+/// This function sends a GET request to the backend API to fetch recommended
+/// community data for the user. It requires an access token for authentication.
+///
+/// Returns a Future that resolves to a Notifications object containing the
+/// recommended community data if the request is successful.
+///
+/// Throws an exception with an error message if the request fails or encounters
+/// an error, including the following cases:
+/// - 404: No recommended communities found.
+/// - 500: Internal server error.
+/// - Any other error encountered during the request process.
+///
+/// Example usage:
+///
+/// ```dart
+/// try {
+///   Notifications recommendedCommunity = await getRecommendedCommunity();
+///   // Handle recommendedCommunity data
+/// } catch (e) {
+///   // Handle error
+///   print('Failed to fetch recommended community data: $e');
+/// }
+/// ```
 
 Future<Notifications> getRecommendedCommunity() async {
   try {

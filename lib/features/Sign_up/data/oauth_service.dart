@@ -42,6 +42,7 @@ Future<bool> signOutWithGoogle(BuildContext context) async {
   return true;
 }
 
+/// Function to sign in with firebase email and password
 Future<void> signInwithEmailandPassword(String email, String password) async {
  try {
   UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
@@ -62,7 +63,7 @@ Future<void> signInwithEmailandPassword(String email, String password) async {
 }
 }
 
-
+/// Function to Login with firebase email and password
 Future<void> loginWithEmailAndPassword(String email, String password) async {
   try {
     UserCredential userCredential = await _auth.signInWithEmailAndPassword(
