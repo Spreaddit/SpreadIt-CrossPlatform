@@ -6,7 +6,9 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/sugg
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_menu.dart';
 import '../widgets/search_display_list.dart';
 
-
+/// This is what the user first sees when he taps the search icon from the home page.
+/// The class diplays a [CustomSearchBar] in which the user can write his search query, his [RecentSearches] if any, and today's trending posts through [TrendingMenu].
+/// When the user starts typing is search query, a list of [SuggestedResults] gets displays, this class also handles the logic behind updating this list.
 class GeneralSearch extends StatefulWidget {
   const GeneralSearch({Key? key}) : super(key: key);
 

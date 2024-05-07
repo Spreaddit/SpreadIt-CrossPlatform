@@ -1,17 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
+import 'package:video_player/video_player.dart';
+
+/// A custom widget for displaying the trending posts in the home page in web.
+/// Parameters: 
+/// 1) [image] : the image to be displayed in the background
+/// 2) [video] : the video to be displayed in the background
+/// 3) [content] : the post content 
+/// 4) [communityIcon] : the icon of the community to which this post was created 
+/// 5) [communityName] : the name of the community to which this post was created 
 
 class TrendingCardWeb extends StatefulWidget {
 
-  final String image ;
+  final String? image ;
+  final String? video;
   final String title;
   final String? content;
   final String communityIcon;
   final String communityName;
 
   const TrendingCardWeb({
-    required this.image,
+    this.image,
+    this.video,
     required this.title,
     this.content,
     required this.communityIcon,
@@ -35,20 +47,31 @@ class _TrendingCardWebState extends State<TrendingCardWeb> {
             child: SizedBox(
               width: 350,
               height: 170,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Stack(
-                  children: [
-                    Image(
-                      image: NetworkImage(widget.image),
-                      fit: BoxFit.cover, 
-                    ),
-                    Container( 
-                      color: Colors.black.withOpacity(0.3), 
-                    ),
-                  ],
-                ),
-              ),
+              child: widget.image != null ? 
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Stack(
+                    children: [
+                      Image(
+                        image: NetworkImage(widget.image!),
+                        fit: BoxFit.cover, 
+                      ),
+                      Container( 
+                        color: Colors.black.withOpacity(0.3), 
+                      ),
+                    ],
+                  ),
+                ) : ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Stack(
+                    children: [
+                      VideoPlayerScreen(videoURL: widget.video!),
+                      Container( 
+                        color: Colors.black.withOpacity(0.3), 
+                      ),
+                    ],
+                  ),
+                )
             ),
           ),
           Positioned.fill(

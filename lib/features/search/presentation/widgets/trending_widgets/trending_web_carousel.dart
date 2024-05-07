@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_trending_posts.dart';
 import 'trending_card_web.dart'; 
 
+/// A class which displays the posts trending today in the home page in web 
+
 class TrendingWebCarousel extends StatefulWidget {
   final int displayedCards;
 
@@ -100,6 +102,7 @@ class _TrendingWebCarouselState extends State<TrendingWebCarousel> {
               onTap: () => navigateToSearchResult(mappedTrending[index]['title']),
               child: TrendingCardWeb(
                 image: mappedTrending[index]['image'],
+                video: mappedTrending[index]['video'],
                 title: mappedTrending[index]['title'],
                 content: mappedTrending[index]['content'],
                 communityIcon: mappedTrending[index]['communityProfilePic'],

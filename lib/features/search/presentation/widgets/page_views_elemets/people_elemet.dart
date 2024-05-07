@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/follow_unfollow_api.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
+/// This is the customized widget for displaying the people search result.
+/// Parameters :
+/// 1) [username] : the username of the user result.
+/// 2) [userIcon] : the avatar of the user result .
+/// 3) [followersCount] : number of user followers.
+/// 4) [isFollowing] :  whether the searcher is following the user in the search result.
+/// 5) [toggleIsFollowing] : a function to toggle the following state.
+
 class PeopleElement extends StatefulWidget {
 
   final String username;

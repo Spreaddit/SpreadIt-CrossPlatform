@@ -4,6 +4,19 @@ import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/rendered_tag.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 
+/// This is the customized widget for displaying the post search result.
+/// Parameters :
+/// 1) [communityIcon] : the icon of the community to which the post was made.
+/// 2) [communityName] : the name of the community to which to post was made.
+/// 3) [time] : when was the post created.
+/// 4) [postTitle] : the title of the created post.
+/// 5) [upvotes] : number of post upvotes.
+/// 6) [comments] : number of post comments.
+/// 7) [isNsfw] : render the tag of NSFW.
+/// 8) [isSpoiler] : render tyhe tag of Spoiler.
+/// 9) [image] : optional parameter if there is an image attached to the post.
+/// 10) [video] : optional parameter if there is a video attached to the post.
+
 class PostElement extends StatefulWidget {
 
   final String communityIcon;

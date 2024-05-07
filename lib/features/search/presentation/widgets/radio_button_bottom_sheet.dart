@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// A custom buttom sheet that appears when the user presses a filter button (Time or Sort).
+/// Parameters:
+/// 1) [title] : the title of this bottomsheet
+/// 2) [items] : a list of the items to be displayed.
+/// 3) [updateFilter] : a function to call th ecorresponding filtering api upon filter selection
+/// 4) [context]  
+
 void openBottomSheet (
   String title,
   List items,

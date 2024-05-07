@@ -3,6 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/search/data/post_search_log.dart';
 
+/// A custom search bar in which the user Writes his search query.
+/// Parameters :
+/// 1) [formKey] : the formkey of the text field.
+/// 2) [hintText] : the text which will be displayed on the search bar when it is empty.
+/// 3) [updateSearchItem] : a function which updates the variable for the search item.
+/// 4) [navigateToSearchResult] : on form submission, navigate to the search result of the search item.
+/// 5) [navigateToSuggestedResults] : on focused, suggested search results are displayed.
+/// 6) [initialBody] : if the search bar was passed to another page, the search query is also passed.
+/// 7) [communityOrUserName] : an optional parameter to display the community or user name in case the user searches from inside a community page or user profile.
+/// 8) [communityOrUserIcon] : an optional parameter to display the community or user icon in case the user searches from inside a community page or user profile.
+/// 9) [isContained] : a boolean to determinate if the communtiy or username are passed or not , and if they are, they will be wrapped in a container.
+/// 10) [inCommunityPage] : a boolean to determine if the user enters the seach from a community page.
+/// 11) [inUserProfile] :  a boolean to determine if the user enters the seach from a user profile.
+
 class CustomSearchBar extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final String hintText;

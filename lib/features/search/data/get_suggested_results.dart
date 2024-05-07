@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-/// This function interacts with the backend to get the seaarch history of the user.
+/// This function interacts with the backend to get the suggested results for a given search query.
 
 String apibase = apiUrl;
 

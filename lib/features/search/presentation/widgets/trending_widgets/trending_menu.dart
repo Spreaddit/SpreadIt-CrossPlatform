@@ -4,6 +4,8 @@ import 'package:spreadit_crossplatform/features/search/data/get_trending_posts.d
 import 'package:spreadit_crossplatform/features/search/data/post_search_log.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/trending_widgets/trending_card_mobile.dart';
 
+/// A class which displays the menu of the trending posts in the search from home page
+
 class TrendingMenu extends StatefulWidget {
   const TrendingMenu({Key? key}) : super(key: key);
 

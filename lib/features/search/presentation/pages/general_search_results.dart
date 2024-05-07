@@ -9,6 +9,14 @@ import 'package:spreadit_crossplatform/features/search/presentation/pages/page_v
 import 'package:spreadit_crossplatform/features/search/presentation/pages/page_views/people_page_view.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/search_result_header.dart';
 
+/// This class gets displayed in 3 cases:
+/// 1) when the user taps 'enter' after typing a search query in the [CustomSearchBar].
+/// 2) when the user taps one of the suggested community pages or user profiles.
+/// 3) when the user taps one of the trending posts.
+/// This class displays some [CustomPageView]s to display the search results.
+/// These page views include [PostsPageView], [CommunitiesPageView], [CommentsPageView], [MediaPageView], and [PeoplePageView].
+/// Initially , [PostsPageView] is displayed , but on label tap, the page is animated to the required page view
+
 class SearchResult extends StatefulWidget {
 
   final String searchItem ;

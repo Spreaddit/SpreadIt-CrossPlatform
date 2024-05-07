@@ -4,8 +4,9 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
-/// It takes the [] from the input field and sends it to the backend to ensure that this user exists and send them an
-/// email with the password
+/// Takes a query, search type (normal, community or user) , community name if the type is community, username is the type is user 
+/// and isInuserProfile, which is only true for the type user.
+/// Posts the search log to be retrieved as a search history.
 
 Future<int> postSearchLog(String query,String type, String? communityName, String? username, bool isInProfile) async {
   try {

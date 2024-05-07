@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// a custom filter button. On press, a bottomsheet is opened for the user to choose the filter.
+/// Parameters:
+/// 1) [openBottomSheet] : the function which opens the bottomsheet
+/// 2) [text] : the text displayed on the button
+
 class FilterButton extends StatefulWidget {
   
   final VoidCallback openBottomSheet;

@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// This is the customized widget for displaying the comments search result.
+/// Parameters :
+/// 1) [communityIcon] : the icon of the community to which the post was made.
+/// 2) [communityName] : the name of the community to which to post was made.
+/// 3) [commentorName] : the name of the commentor on the post.
+/// 4) [commentorIcon] : the icon of the commentor on the post.
+/// 5) [postTitle] : the title of the created post.
+/// 6) [comment] : the comment content.
+/// 7) [commentUpvotes] : number of comment upvotes.
+/// 8) [postUpvotes] : number of post upvotes.
+/// 9) [commentsCount] : number of commnets on the post.
+
 class CommentElement extends StatefulWidget {
 
   final String communityName;

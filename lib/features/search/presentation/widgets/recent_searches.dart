@@ -4,6 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/search/data/delete_search_history.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_history.dart';
 
+/// A cutsom widget for getting and displaying the search history of the user 
+/// It makes an api call upon initialization to get the user's search history.
+/// For each search history item, a cancel button is displayed which deletes this item from the search history.
+
 class RecentSearches extends StatefulWidget {
   const RecentSearches({Key? key}) : super(key: key);
 

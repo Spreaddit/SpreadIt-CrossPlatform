@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_search_results.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/people_elemet.dart';
 
+/// Responsible for displaying the search results for user profiles.
+/// The class also displays a list of [PeopleElement] widgets, which is a Custom widget to display the user profiles.
+/// The class handles the logic of tapping a user profile search result, which is navigating to the corresponding user profile.
+/// The class also handles the logic of pressing the 'Follow/Unfollow' button by toggling the following state.
+
 
 class PeoplePageView extends StatefulWidget {
   final String searchItem;

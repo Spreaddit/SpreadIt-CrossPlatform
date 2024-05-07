@@ -1,3 +1,5 @@
+/// A function that takes a list of posts and filters them according to a passed time period
+
 List<Map<String, dynamic>> sortByTime(List<Map<String, dynamic>> posts,String timePeriod) {
     posts.sort((a, b) => b['createdAt'].compareTo(a['createdAt']));
     final filteredPosts = posts.where((post) {

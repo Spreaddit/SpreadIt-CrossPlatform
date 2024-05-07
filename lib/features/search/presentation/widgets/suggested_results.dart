@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/search/data/get_suggested_results.dart';
+import 'package:spreadit_crossplatform/features/search/data/post_search_log.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/search_display_list.dart';
+
+/// This class displays the suggested results that appear when the user writes a search query to the [CustomsearchBar]
 
 class SuggestedResults extends StatefulWidget {
   final String searchItem;
@@ -21,6 +24,15 @@ class SuggestedResults extends StatefulWidget {
 class _SuggestedResultsState extends State<SuggestedResults> {
 
   String searchItem = '';
+
+  void handleTap() {
+    saveSearchLog();
+    navigateToGeneralSearchResults();
+  }
+
+  void saveSearchLog () async {
+    await postSearchLog(widget.searchItem,'normal', null, null , false);
+  }
 
   void navigateToGeneralSearchResults() {
     Navigator.of(context).pushNamed('/general-search-results', arguments : {

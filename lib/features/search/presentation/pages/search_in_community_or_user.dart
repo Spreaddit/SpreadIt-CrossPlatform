@@ -3,6 +3,13 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/best_and_new_widgets.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/custom_search_bar.dart';
 
+/// This is what the user first sees when he taps the search icon from a community page or from a user profile page.
+/// The class diplays a [CustomSearchBar] in which the user can write his search query and 2 texts : 
+/// 1) Best of community or user, which directs the user to the top posts of this community or user.
+/// 2) New in community or user, which directs the user to the newest posts of the community or user.
+/// When the user types a search query and presses enter, he gets navigated to the search results of this query.
+/// If the user taps one of the 2 texts 'Best of' and 'New in', he gets navigated to the search results with an automatic filter 'Top' for 'Best of' and 'New' for 'New in'.
+
 class SearchInCommunityOrUser extends StatefulWidget {
 
   final String communityOrUserName;

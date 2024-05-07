@@ -2,8 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
+import 'package:spreadit_crossplatform/features/search/data/post_search_log.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import '../../../generic_widgets/communities_search_card.dart';
+
+/// A custom widget which displays teh suggested search results.
+/// Parameters :
+/// 1) [displayList] : the list of suggested results to be displayed. 
+/// 2) [type] : community or user.
 
 class SearchDisplayList extends StatefulWidget {
 
@@ -20,6 +26,15 @@ class SearchDisplayList extends StatefulWidget {
 }
 
 class _SearchDisplayListState extends State<SearchDisplayList> {
+
+  void handleTap(String searchItem , String type) {
+    saveSearchLog(searchItem);
+    navigateToTappedItem(searchItem, type);
+  }
+
+  void saveSearchLog (String query) async {
+    await postSearchLog(query,'normal', null, null , false);
+  }
 
   void navigateToTappedItem(String searchItem , String type) {
     if(type == 'user') {
@@ -49,7 +64,7 @@ class _SearchDisplayListState extends State<SearchDisplayList> {
         itemBuilder: (context, index) {
           String searchItem = widget.type == 'user'? widget.displayList[index]['username'] : widget.displayList[index]['communityName'];
           return InkWell(
-            onTap: () => navigateToTappedItem(searchItem,widget.type) ,  
+            onTap: () => handleTap(searchItem,widget.type) ,  
             child: CommunitiesCard(
               communityName: widget.type == 'user'? 
                   widget.displayList[index]['username'] 

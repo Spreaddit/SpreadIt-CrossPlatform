@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-/// This function interacts with the backend to receive a list of communities and their info.
+/// This function interacts with the backend to delete a search history given the query.
 
 String apibase = apiUrl;
 

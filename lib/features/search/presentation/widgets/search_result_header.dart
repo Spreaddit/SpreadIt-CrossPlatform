@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// this is the class of the search result header, 
+/// Parametes :
+/// 1) [labels] : a list of labels to be displayed 
+/// 2) [onTabSelected] : a function which changes the page view displayed according to the selected tab
+
 class SearchResultHeader extends StatefulWidget {
   final List labels;
   final ValueChanged<int> onTabSelected;

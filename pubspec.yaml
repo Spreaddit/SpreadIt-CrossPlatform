@@ -21,7 +21,7 @@ dependencies:
   any_link_preview: ^3.0.1
   custom_refresh_indicator: ^3.1.0
   flutter_polls: ^0.1.6
-
+  http: ^1.2.1
   cupertino_icons: ^1.0.2
 
   carousel_slider: ^4.2.1
@@ -90,4 +90,3 @@ flutter:
   - assets/images/Empty_Toast.png
   - assets/images/upvoteicon.png
   - assets/images/downvoteicon.png
-  - assets/images/SB-Standees-Spong-3_800x.png

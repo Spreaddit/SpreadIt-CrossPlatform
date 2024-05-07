@@ -7,6 +7,12 @@ import 'package:spreadit_crossplatform/features/search/presentation/widgets/filt
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/page_views_elemets/comment_element.dart';
 import 'package:spreadit_crossplatform/features/search/presentation/widgets/radio_button_bottom_sheet.dart';
 
+/// Responsible for displaying the comments search results.
+/// The class displays 1 filter button for Sort.
+/// The class also displays a list of [CommentElement] widgets, which is a Custom widget to display the commnets.
+/// The class handles the filtering logic upon filter button press , it also handles the logic of tapping a comment search result, which is navigating to the corresponding comment card.
+/// The class also checks if the user comes from the home page or from a community page or user profile, to call the correct api accordingly 
+
 class CommentsPageView extends StatefulWidget {
   final String searchItem;
   final String? initialSortFilter;

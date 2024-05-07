@@ -3,6 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import 'package:video_player/video_player.dart';
 
+/// This is the customized widget for displaying the media search result.
+/// Parameters :
+/// 1) [username] : the username of the post creator.
+/// 2) [userIcon] : the avatar of the post creator .
+/// 3) [postTitle] : the title of the created post.
+/// 4) [media] : attached image or video.
+/// 5) [mediaType] : image or video.
+
 class MediaElement extends StatefulWidget {
 
   final String username;
@@ -41,7 +49,10 @@ class _MediaElementState extends State<MediaElement> {
               ),
             ),
           if (widget.mediaType == 'video') 
-           VideoPlayerScreen(videoURL: widget.media),
+            ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: VideoPlayerScreen(videoURL: widget.media),
+              ),
           Row(
             children: [
               Container(

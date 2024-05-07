@@ -4,6 +4,13 @@ import 'package:spreadit_crossplatform/features/community/data/api_subscription_
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
 import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 
+/// This is the customized widget for displaying the community search result.
+/// Parameters :
+/// 1) [communityName] : the community result name.
+/// 2) [communityIcon] : the community result profile picture .
+/// 3) [membersCount] : the number of community members.
+/// 4) [isFollowing] :  whether the searcher is joining this community.
+
 class CommunityElement extends StatefulWidget {
 
   final String communityName;

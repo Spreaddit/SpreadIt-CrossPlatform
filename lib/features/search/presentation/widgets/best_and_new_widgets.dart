@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// A custom class for diasplaying the 'best of' and 'New in' text s in the in community or user search.
+/// Parameters:
+/// 1) [icon] : the icon to be displyed to the left 
+/// 2) [bestOrNew] : 'Best of' or 'New in' text
+/// 3) [communityOrUserName] : the community or user name to be displayed next to bestOrNew text
+/// 4) [onTap] : the function which navigates the user to the search results with the corresponding filter on text tap
+/// 
 class BestAndNewWidget extends StatefulWidget {
 
   final IconData icon;

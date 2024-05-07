@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-/// This function interacts with the backend to get the seaarch history of the user.
+/// This function interacts with the backend to get the search results from the community page .
+/// It takes the query to search for, the type of results to be retrieved (posts & comments) and the sorting filter if any
 
 String apibase = apiUrl;
 
