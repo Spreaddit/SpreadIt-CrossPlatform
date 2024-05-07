@@ -15,8 +15,6 @@ void getReplyNotifications() {
   //TODO: get reply notifications logic
 }
 
-void subscribeToPost() {}
-
 void hide() {}
 
 void copyText(BuildContext context, String text) {
@@ -103,36 +101,44 @@ void deletePost(
     BuildContext context, String postId, void Function() onDeleted) {
   deletePostButtomSheet(context, postId, onDeleted);
 }
+
 ///function to fetch save post
 void savePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
   Navigator.pop(context);
   if (statusCode == 200) {
-    print('Post unsaved successfully.');
-  } else {
-    CustomSnackbar(content: "Error occurred while trying to unsave")
+     CustomSnackbar(content: 'Post saved successfully.')
         .show(context);
-  }
-}
-///function to fetch unsave post
-void unsavePost(BuildContext context, String postId) async {
-  int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
-  Navigator.pop(context);
-  if (statusCode == 200) {
-    print('Post unsaved successfully.');
   } else {
     CustomSnackbar(content: "Error occurred while trying to unsave")
         .show(context);
   }
 }
 
-void saveOrUnsaveComment(BuildContext context, String id) async {
+///function to fetch unsave post
+void unsavePost(BuildContext context, String postId) async {
+  int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
+  Navigator.pop(context);
+  if (statusCode == 200) {
+    CustomSnackbar(content: 'Post unsaved successfully.')
+        .show(context);
+  } else {
+    CustomSnackbar(content: "Error occurred while trying to unsave, Please try again later")
+        .show(context);
+  }
+}
+
+void saveOrUnsaveComment(BuildContext context, String id , bool isSaved) async {
   int statusCode = await saveOrUnsave(id: id, type: 'comments');
   Navigator.pop(context);
   if (statusCode == 200) {
     print('Comment unsaved/saved successfully.');
+    String content;
+    isSaved ? content ='Comment Unsaved successfully': content= 'Comment Saved successfully';
+     CustomSnackbar(content: content)
+        .show(context);
   } else {
-    CustomSnackbar(content: "Error occurred while trying to unsave/save")
+    CustomSnackbar(content: "Error occurred Please Try again later")
         .show(context);
   }
 }

@@ -28,6 +28,13 @@ class DiscoverCommunitiesPage extends StatelessWidget {
 class DiscoverCommunitiesBody extends StatelessWidget {
   final List<String> categories = [
     '🏆 Community top charts',
+    'Technology',
+    'Science',
+    'Art and Creativity',
+    'Mental Health and Psychology',
+    'Travel and Adventure',
+    'Food and Cooking',
+    'Entertainment and Pop Culture',
     'Q&As',
     'Funny',
     'Entertainment',

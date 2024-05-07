@@ -21,7 +21,7 @@ dependencies:
   any_link_preview: ^3.0.1
   custom_refresh_indicator: ^3.1.0
   flutter_polls: ^0.1.6
-
+  http: ^1.2.1
   cupertino_icons: ^1.0.2
 
   carousel_slider: ^4.2.1
@@ -49,6 +49,7 @@ dependencies:
   url_launcher: ^6.2.5
   http_parser: ^4.0.2
 
+  firebase_messaging: ^14.8.2
   dio: ^5.4.1
   flutter_dotenv: ^5.1.0
   time_machine: ^0.9.17
@@ -63,15 +64,22 @@ dependencies:
   flutter_link_previewer: ^3.2.2
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
+  http_parser: ^4.0.2
+  flutter_chat_ui: ^1.6.12
+  mime: ^1.0.5
+  flutter_chat_types: ^3.6.2
+  firebase_storage: ^11.7.4
+  cloud_firestore: ^4.17.2
+  transparent_image: ^2.0.1
+  textfield_tags: ^3.0.1
+  flutter_slidable: ^3.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  network_image_mock: ^2.0.1
   retrofit_generator: ^8.1.0
   floor_generator: ^1.4.2
-  build_runner: ^2.4.8
   mockito: ^5.4.4
   
 

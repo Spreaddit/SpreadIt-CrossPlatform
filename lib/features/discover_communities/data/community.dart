@@ -45,9 +45,9 @@ class Community extends Equatable {
         membersCount = json['membersCount'],
         backgroundImage = json['communityBanner'] ??
             "https://i.pinimg.com/200x/16/ed/ff/16edfff4cfc69f8c58054793e2947aa0.jpg",
-        rules = (json['rules'] as List<dynamic>)
-            .map((ruleJson) => Rule.fromJson(ruleJson))
-            .toList();
+        rules = (json['rules'] as List<dynamic>?)
+                ?.map((ruleJson) => Rule.fromJson(ruleJson))
+                .toList() ?? [];
 
   @override
   List<Object?> get props => [
@@ -77,7 +77,7 @@ class Rule extends Equatable {
 
   factory Rule.fromJson(Map<String, dynamic> json) {
     return Rule(
-      id: json['_id'] ?? "0",
+      id: json['_id']?? "0",
       title: json['title'],
       description: json['description'],
       reportReason: json['reportReason'],

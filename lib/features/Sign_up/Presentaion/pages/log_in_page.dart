@@ -57,6 +57,8 @@ class LogInScreenState extends State<LogInScreen> {
       CustomSnackbar(content: "User not found").show(context);
     } else if (responseCode == 401) {
       CustomSnackbar(content: "Authentication failed").show(context);
+    } else if (responseCode==402){
+      CustomSnackbar(content: "You have been banned from Spreddit").show(context);
     }
   }
 

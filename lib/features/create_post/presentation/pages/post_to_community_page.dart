@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
-import '../../../generic_widgets/search_bar.dart';
+import '../widgets/search_bar.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
-import '../widgets/communities_search_card.dart';
+import '../../../generic_widgets/communities_search_card.dart';
 
 /// this class renders the [PostToCommunity] page , which allows the user to chose which community to post to.
 /// It contains a [searchbar] to search for the desired community from the list of communities.
@@ -120,7 +120,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
               Navigator.pop(context);
             },
           ),
-          CustomSearchBar(
+          CommunitySearchBar(
             hintText: 'Search for a community',
             searchList: communityData,
             onSearch: updateFilteredList,
@@ -134,12 +134,14 @@ class _PostToCommunityState extends State<PostToCommunity> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          print('tap detected');
                           navigateToFinalContentPage(displayList[index]);
                         },
                         child: CommunitiesCard(
                           communityName: displayList[index].name,
                           communityIcon: displayList[index].image!,
+                          boxSize: 10,
+                          iconRadius: 20,
+                          fontSize: 20,
                         ),
                       );
                     },

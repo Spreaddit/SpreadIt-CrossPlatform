@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 
-class CustomSearchBar extends StatefulWidget {
+class CommunitySearchBar extends StatefulWidget {
   final String hintText;
   final List<Community> searchList;
   final Function(List<Community>) onSearch;
 
-  const CustomSearchBar({
+  const CommunitySearchBar({
     required this.hintText,
     required this.searchList,
     required this.onSearch,
   });
 
   @override
-  State<CustomSearchBar> createState() => _CustomSearchBarState();
+  State<CommunitySearchBar> createState() => _CommunitySearchBarState();
 }
 
-class _CustomSearchBarState extends State<CustomSearchBar> {
+class _CommunitySearchBarState extends State<CommunitySearchBar> {
   final TextEditingController searchController = TextEditingController();
 
   @override

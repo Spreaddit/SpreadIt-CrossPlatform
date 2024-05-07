@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import '../../../discover_communities/data/community.dart';
 
 /// The `ActiveCommunity` class is responsible for displaying information about an active community.
@@ -28,13 +29,7 @@ class ActiveCommunity extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => CommunityPage(
-              communityName: community.name,
-            ),
-          ),
-        );
+        navigateToCommunity(context, community.name);
       },
       child: Container(
         decoration: BoxDecoration(

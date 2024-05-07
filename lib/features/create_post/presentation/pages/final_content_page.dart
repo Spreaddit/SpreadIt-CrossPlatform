@@ -1,22 +1,12 @@
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
-import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../widgets/header_and_footer_widgets/community_and_rules_header.dart';
@@ -28,13 +18,13 @@ import '../widgets/tags_widgets/rendered_tag.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
+import 'package:spreadit_crossplatform/features/schedule_posts/data/is_user_moderator_service.dart';
+import 'package:intl/intl.dart';
 
 /// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
 /// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
 
 class FinalCreatePost extends StatefulWidget {
-
   final String title;
   final String content;
   final String? link;
@@ -62,14 +52,13 @@ class FinalCreatePost extends StatefulWidget {
     this.createPoll,
     this.isLinkAdded,
     required this.community,
-    }) : super(key: key);
+  }) : super(key: key);
 
   @override
   State<FinalCreatePost> createState() => _FinalCreatePostState();
 }
 
 class _FinalCreatePostState extends State<FinalCreatePost> {
-
   final GlobalKey<FormState> _finalTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalContentForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _finalLinkForm = GlobalKey<FormState>();
@@ -79,21 +68,24 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   ];
 
   String finalTitle = '';
-  String finalContent ='';
+  String finalContent = '';
   String communityName = '';
   String communityIcon = '';
   List<Rule?>? communityRules = [];
   List<String> finalPollOptions = ['', ''];
-  List<String> finalInitialBody = ['',''];
+  List<String> finalInitialBody = ['', ''];
   int finalSelectedDay = 1;
 
   bool isPrimaryFooterVisible = true;
   bool isButtonEnabled = false;
+  bool allowScheduling = false;
+  bool isModerator = true;
   bool isNSFWAllowed = true;
   bool isSpoiler = false;
   bool isNSFW = false;
-  bool finalIsLinkAdded = false ;  
-  bool finalCreatePoll = false;   
+  bool finalIsLinkAdded = false;
+  bool finalCreatePoll = false;
+  bool isDateChanged = false;
 
   File? finalImage;
   Uint8List? finalImageWeb;
@@ -102,9 +94,13 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   String? finalLink;
   IconData? lastPressedIcon;
 
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  bool isScheduled = false;
+
   /// [mapCommunityData] : a function which extracts the [communityName], [communityIcon] and [communityRules] from the passsed list of communities
 
-  void mapCommunityData () {
+  void mapCommunityData() {
     communityName = widget.community.first.name;
     communityIcon = widget.community.first.image!;
     communityRules = widget.community.first.rules;
@@ -112,18 +108,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
 
   /// [mapPoll] : a function used to map the passed [pollOptions]
 
-  void mapPoll () {
+  void mapPoll() {
     if (widget.selectedDay != null) {
-     finalSelectedDay = widget.selectedDay!;
+      finalSelectedDay = widget.selectedDay!;
     }
     finalInitialBody.clear();
     finalPollOptions.clear();
     finalInitialBody.addAll(widget.pollOptions!);
     finalPollOptions.addAll(widget.pollOptions!);
-    if(finalPollOptions.length > 2) {
-      for(int i = 2; i < finalPollOptions.length; i++) {
+    if (finalPollOptions.length > 2) {
+      for (int i = 2; i < finalPollOptions.length; i++) {
         GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
-        finalFormKeys.add(newFormKey); 
+        finalFormKeys.add(newFormKey);
       }
     }
   }
@@ -132,29 +128,40 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void initState() {
     super.initState();
     mapCommunityData();
-    if(widget.isLinkAdded != null) {
+    isModeratorFunction();
+    print(" am i a moderator $isModerator");
+    if (widget.isLinkAdded != null) {
       finalIsLinkAdded = widget.isLinkAdded!;
     }
-    if(widget.image != null) {
+    if (widget.image != null) {
       finalImage = widget.image;
     }
-    if(widget.imageWeb != null) {
+    if (widget.imageWeb != null) {
       finalImageWeb = widget.imageWeb;
     }
-    if(widget.video != null) {
+    if (widget.video != null) {
       finalVideo = widget.video;
     }
-    if(widget.videoWeb != null) {
+    if (widget.videoWeb != null) {
       finalVideoWeb = widget.videoWeb;
     }
-    if(widget.createPoll != null) { 
+    if (widget.createPoll != null) {
       mapPoll();
       openPollWidow();
       setLastPressedIcon(Icons.poll);
-      }
+    }
   }
-  
-   void updateTitle(String value) {
+
+  /// [isModeratorFunction] : a function which checks if the user is a moderator of the community
+  Future<void> isModeratorFunction() async {
+    bool moderatorStatus =
+        await IsUserModeratorService().isUserModerator(communityName);
+    setState(() {
+      isModerator = moderatorStatus;
+    });
+  }
+
+  void updateTitle(String value) {
     finalTitle = value;
     _finalTitleForm.currentState!.save();
     updateButtonState();
@@ -163,18 +170,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void updateContent(String value) {
     finalContent = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    if (_finalContentForm.currentState != null) {
-      _finalContentForm.currentState!.save();
-    }
+      if (_finalContentForm.currentState != null) {
+        _finalContentForm.currentState!.save();
+      }
     });
   }
 
   void updateLink(String value) {
     finalLink = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    if (_finalLinkForm.currentState != null) {
-      _finalLinkForm.currentState!.save();
-    }
+      if (_finalLinkForm.currentState != null) {
+        _finalLinkForm.currentState!.save();
+      }
     });
     validatePostTitle(finalLink!);
   }
@@ -183,10 +190,14 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     if (finalLink == null) {
       setState(() {
         isButtonEnabled = validatePostTitle(finalTitle);
+        allowScheduling = validatePostTitle(finalTitle) && isModerator;
       });
-    }
-    else {
-      isButtonEnabled = validatePostTitle(finalTitle) && validatePostTitle(finalLink!);  
+    } else {
+      isButtonEnabled =
+          validatePostTitle(finalTitle) && validatePostTitle(finalLink!);
+      allowScheduling = validatePostTitle(finalTitle) &&
+          validatePostTitle(finalLink!) &&
+          isModerator;
     }
   }
 
@@ -203,7 +214,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     print(isSpoiler);
   }
 
-  void updateIsNSFW () {
+  void updateIsNSFW() {
     setState(() {
       isNSFW = !isNSFW;
     });
@@ -222,13 +233,12 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
     if (finalIsLinkAdded) {
       setLastPressedIcon(Icons.link);
-    }
-    else {
+    } else {
       setLastPressedIcon(null);
     }
   }
 
-  void cancelImageOrVideo () {
+  void cancelImageOrVideo() {
     setState(() {
       finalImageWeb = null;
       finalVideoWeb = null;
@@ -244,23 +254,21 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       setState(() {
         finalImageWeb = image;
       });
-    }
-    else {
+    } else {
       final image = await pickImageFromFilePicker();
       setState(() {
         finalImage = image;
       });
     }
   }
-  
+
   Future<void> pickVideo() async {
-    if(kIsWeb) {
+    if (kIsWeb) {
       final video = await pickVideoFromFilePickerWeb();
       setState(() {
         finalVideoWeb = video;
       });
-    }
-    else {
+    } else {
       final video = await pickVideoFromFilePicker();
       setState(() {
         finalVideo = video;
@@ -277,9 +285,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   void updatePollOption(int optionNumber, String value) {
     setState(() {
       finalPollOptions[optionNumber - 1] = value;
-      print(finalPollOptions[optionNumber-1]);
+      print(finalPollOptions[optionNumber - 1]);
     });
-    finalFormKeys[optionNumber-1].currentState!.save();
+    finalFormKeys[optionNumber - 1].currentState!.save();
   }
 
   void updateSelectedDay(int selectedDay) {
@@ -295,27 +303,260 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     });
   }
 
-
-  void navigateToAddTags(){
+  void navigateToAddTags() {
     Navigator.of(context).pushNamed('/add-tags');
   }
 
-  void returnToHomePage (BuildContext context) {
+  void returnToHomePage(BuildContext context) {
     Navigator.of(context).pushNamed('/home');
   }
 
-  void submit () async {
-   String response = await submitPost(
-      finalTitle, finalContent, communityName, finalPollOptions, finalSelectedDay, finalLink, finalImage, finalImageWeb, finalVideo, finalVideoWeb, isSpoiler, isNSFW);
+  void submit() async {
+    print("IsScheduled: $isScheduled");
+    DateTime? selectedDateTime;
+    if (isScheduled) {
+      selectedDateTime = DateTime(
+        selectedDate!.year,
+        selectedDate!.month,
+        selectedDate!.day,
+        selectedTime!.hour,
+        selectedTime!.minute,
+      );
+    }
+    String response = await submitPost(
+        finalTitle,
+        finalContent,
+        communityName,
+        finalPollOptions,
+        finalSelectedDay,
+        finalLink,
+        finalImage,
+        finalImageWeb,
+        finalVideo,
+        finalVideoWeb,
+        isSpoiler,
+        isNSFW,
+        isScheduled ? selectedDateTime : null);
     if (response == '400') {
       CustomSnackbar(content: 'Invalid post ID or post data').show(context);
-    }
-    else if (response == '500') {
+    } else if (response == '500') {
       CustomSnackbar(content: 'Internal server error').show(context);
+    } else {
+      if (isScheduled) {
+        CustomSnackbar(content: 'Scheduled successfully !').show(context);
+        Navigator.of(context).pop();
+      } else {
+        CustomSnackbar(content: 'Posted successfully !').show(context);
+        navigateToPostCardPage(context: context, postId: response);
+      }
     }
-    else {
-      navigateToPostCardPage(context,response, true);
-    }
+  }
+
+  void showDateTimePickerModalSheet(BuildContext context, Function callback) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return IntrinsicHeight(
+                key: UniqueKey(),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            callback();
+                          },
+                        ),
+                        title: Text('Schedule Post',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: OutlinedButton(
+                          onPressed: () {
+                            if (isScheduled && !isDateChanged) {
+                              setState(() {
+                                isScheduled = false;
+                                isDateChanged = false;
+                                selectedDate = null;
+                                selectedTime = null;
+                              });
+                            }
+                            Navigator.of(context).pop();
+                            callback();
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromRGBO(0, 69, 172, 1.0),
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0),
+                                width: 2),
+                          ),
+                          child: isScheduled && !isDateChanged
+                              ? Text('Clear')
+                              : Text('Save'),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Starts on date'),
+                        trailing: TextButton(
+                          child: Text(
+                            selectedDate != null
+                                ? '${DateFormat.MMMd().format(selectedDate!)}, ${selectedDate!.year}'
+                                : '${DateFormat.MMMd().format(DateTime.now())}, ${DateTime.now().year}',
+                            style: TextStyle(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0)),
+                          ),
+                          onPressed: () async {
+                            isScheduled = true;
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null &&
+                                pickedDate != selectedDate) {
+                              setState(() {
+                                selectedDate = pickedDate;
+                                isScheduled = true;
+                                isDateChanged = true;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: Text('Starts on time'),
+                        trailing: TextButton(
+                          child: Text(
+                            selectedTime != null
+                                ? selectedTime!.format(context)
+                                : DateFormat.jm().format(DateTime.now()),
+                            style: TextStyle(
+                                color: const Color.fromRGBO(0, 69, 172, 1.0)),
+                          ),
+                          onPressed: () async {
+                            isScheduled = true;
+                            selectedTime = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                              initialEntryMode: TimePickerEntryMode.dialOnly,
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData.light().copyWith(
+                                    textButtonTheme: TextButtonThemeData(
+                                        style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          const Color.fromRGBO(0, 69, 172, 1.0),
+                                    )),
+                                    canvasColor: Colors.red,
+                                    primaryColor:
+                                        Colors.white, // header background color
+                                    colorScheme: ColorScheme.light(
+                                      primary: Colors.grey, // dial hand color
+                                      onPrimary:
+                                          Colors.white, // dial hand dot color
+                                      onSurface:
+                                          Colors.black, // dial numbers color
+                                      surface: Colors
+                                          .white, // dial inner background color
+                                    ),
+                                    dialogBackgroundColor:
+                                        Colors.white, // dialog background color
+                                    timePickerTheme: TimePickerThemeData(
+                                      dialHandColor: const Color.fromRGBO(
+                                          0, 69, 172, 1.0), // dial hand color
+                                      hourMinuteTextColor:
+                                          Colors.black, // dial numbers color
+                                      hourMinuteColor: Colors
+                                          .white, // time background colour
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            );
+                            if (selectedTime != null) {
+                              setState(() {
+                                isScheduled = true;
+                                isDateChanged = true;
+                              });
+                            }
+                            // Use selectedTime here
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  void showSchedulePostBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return IntrinsicHeight(
+                key: UniqueKey(),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text('Post Settings',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.calendar_today),
+                        title: Text('Schedule Post'),
+                        trailing: isScheduled
+                            ? Text(
+                                '${DateFormat.MMMd().format(selectedDate!)}, ${selectedDate!.year} ${selectedTime!.format(context)}',
+                                style: TextStyle(color: Colors.blue),
+                              )
+                            : Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          if (!isScheduled) {
+                            setState(() {
+                              isScheduled = true;
+                              selectedDate = DateTime.now();
+                              selectedTime = TimeOfDay(
+                                  hour: TimeOfDay.now().hour + 1,
+                                  minute: TimeOfDay.now().minute);
+                              isDateChanged = true;
+                            });
+                          }
+                          if (isScheduled) {
+                            setState(() {
+                              isDateChanged = false;
+                              isScheduled = true;
+                            });
+                          }
+                          showDateTimePickerModalSheet(context, () {
+                            setState(() {});
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }).then((value) => setState(() {}));
   }
 
   @override
@@ -328,18 +569,22 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               children: [
                 Container(
                   child: CreatePostHeader(
-                    buttonText: "Post",
+                    allowScheduling: allowScheduling,
+                    showSchedulePostBottomSheet: showSchedulePostBottomSheet,
+                    buttonText: isScheduled ? "Schedule" : "Post",
                     onPressed: submit,
                     isEnabled: isButtonEnabled,
-                    onIconPress : () { showDiscardButtomSheet(context);},
+                    onIconPress: () {
+                      showDiscardButtomSheet(context);
+                    },
                   ),
                 ),
                 Container(
-                 margin: EdgeInsets.all(10),
-                 child:  CommunityAndRulesHeader(
-                  communityIcon: communityIcon,
-                  communityName: communityName,
-                  communityRules: communityRules,
+                  margin: EdgeInsets.all(10),
+                  child: CommunityAndRulesHeader(
+                    communityIcon: communityIcon,
+                    communityName: communityName,
+                    communityRules: communityRules,
                   ),
                 ),
                 Align(
@@ -348,30 +593,32 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     buttonText: 'Add tags',
                     onPressed: () {
                       showAddTagButtomSheet(
-                        context, 
-                        isSpoiler, 
-                        isNSFW, 
-                        isNSFWAllowed, 
+                        context,
+                        isSpoiler,
+                        isNSFW,
+                        isNSFWAllowed,
                         updateIsSpoiler,
                         updateIsNSFW,
-                        );
-                      },
+                      );
+                    },
                     isEnabled: true,
                     width: 150,
                     height: 10,
                   ),
                 ),
                 if (isSpoiler && !isNSFW)
-                    RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler'),
+                  RenderedTag(
+                      icon: Icons.new_releases_rounded, text: 'Spoiler'),
                 if (!isSpoiler && isNSFW)
-                    RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'), 
+                  RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'),
                 if (isSpoiler && isNSFW)
-                  Row (
+                  Row(
                     children: [
-                      RenderedTag(icon: Icons.new_releases_rounded, text: 'Spoiler'),
+                      RenderedTag(
+                          icon: Icons.new_releases_rounded, text: 'Spoiler'),
                       RenderedTag(icon: Icons.warning_rounded, text: 'NSFW'),
                     ],
-                  ),             
+                  ),
                 PostTitle(
                   formKey: _finalTitleForm,
                   onChanged: updateTitle,
@@ -382,32 +629,35 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     imageOrVideo: finalImage,
                     imageOrVideoWeb: finalImageWeb,
                     onIconPress: cancelImageOrVideo,
-                  ), 
+                  ),
                 if (finalVideo != null || finalVideoWeb != null)
-                   VideoWidget(
+                  VideoWidget(
                     video: finalVideo,
                     videoWeb: finalVideoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)
-                   LinkTextField(
+                  LinkTextField(
                     formKey: _finalLinkForm,
                     onChanged: updateLink,
                     hintText: 'URL',
                     initialBody: widget.link,
                     onIconPress: addLink,
                   ),
-                if (finalIsLinkAdded  && finalLink != null && !validateLink(finalLink!)) 
+                if (finalIsLinkAdded &&
+                    finalLink != null &&
+                    !validateLink(finalLink!))
                   Container(
-                    margin:EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
                     decoration: BoxDecoration(
                       color: Colors.grey,
                     ),
-                    child: Text('Oops, this link isn\'t valid. Double-check, and try again.'),
-                  ),      
+                    child: Text(
+                        'Oops, this link isn\'t valid. Double-check, and try again.'),
+                  ),
                 PostContent(
                   formKey: _finalContentForm,
-                  onChanged:  updateContent,
+                  onChanged: updateContent,
                   hintText: 'body text (optional)',
                   initialBody: widget.content,
                 ),
@@ -426,28 +676,30 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               ],
             ),
           ),
-          isPrimaryFooterVisible? PostFooter(
-            toggleFooter: toggleFooter,
-            showAttachmentIcon: true,
-            showPhotoIcon: true,
-            showVideoIcon: true,
-            showPollIcon: true,
-            onLinkPress: addLink,
-            onImagePress: pickImage,
-            onVideoPress: pickVideo,
-            onPollPress: openPollWidow,
-            lastPressedIcon: lastPressedIcon, 
-            setLastPressedIcon: setLastPressedIcon,
-            ) : SecondaryPostFooter(
-              onLinkPress: addLink,
-              onImagePress: pickImage,
-              onVideoPress: pickVideo,
-              onPollPress: openPollWidow,
-              lastPressedIcon: lastPressedIcon, 
-              setLastPressedIcon: setLastPressedIcon,
-            ),
-          ],
-        ),
+          isPrimaryFooterVisible
+              ? PostFooter(
+                  toggleFooter: toggleFooter,
+                  showAttachmentIcon: true,
+                  showPhotoIcon: true,
+                  showVideoIcon: true,
+                  showPollIcon: true,
+                  onLinkPress: addLink,
+                  onImagePress: pickImage,
+                  onVideoPress: pickVideo,
+                  onPollPress: openPollWidow,
+                  lastPressedIcon: lastPressedIcon,
+                  setLastPressedIcon: setLastPressedIcon,
+                )
+              : SecondaryPostFooter(
+                  onLinkPress: addLink,
+                  onImagePress: pickImage,
+                  onVideoPress: pickVideo,
+                  onPollPress: openPollWidow,
+                  lastPressedIcon: lastPressedIcon,
+                  setLastPressedIcon: setLastPressedIcon,
+                ),
+        ],
+      ),
     );
   }
 }

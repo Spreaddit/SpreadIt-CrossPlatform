@@ -24,7 +24,7 @@ void main()
   test('validate text username2', () {
     String intial ="mar";
     String check = validateusernametext(intial);
-    expect(check, "Great name! it's not taken, so it's all yours.");
+    expect(check, "Username must be between 7 and 20 characters.");
   });
  test('validate text username3', () {
     String intial ="mariam 23";

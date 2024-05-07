@@ -36,6 +36,9 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// Represents the rules of the community.
   List<dynamic> communityRules = [];
 
+  ///Represents if the user is currently a member 
+  bool isMember=false;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +50,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// This method fetches the community information using the [getCommunityInfo] function
   /// and updates the state with the fetched data. It retrieves the community banner link,
   /// community image link, community description, and community rules from the fetched data.
+  /// It also checks if the user is currently a member
   /// If the community banner or image link is not available, empty strings are assigned.
   Future<void> fetchData() async {
     communityData = await getCommunityInfo(widget.communityName);
@@ -55,6 +59,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
       communityImageLink = communityData["image"] ?? "";
       communityDescription = communityData["description"];
       communityRules = communityData["rules"];
+      isMember=communityData['isMember'];
     });
   }
 
@@ -66,6 +71,7 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
         bannerImageLink: communityBannerLink,
         communityName: widget.communityName,
         blurImage: true,
+        joined: isMember,
       ),
       body: SingleChildScrollView(
         child: Container(

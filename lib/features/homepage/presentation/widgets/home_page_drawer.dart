@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/oauth_service.dart';
 
 class HomePageDrawer extends StatelessWidget {
+  bool isAdmin = UserSingleton().user?.role == 'Admin';
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -39,6 +41,12 @@ class HomePageDrawer extends StatelessWidget {
               'text': 'Settings',
               'route': '/settings'
             },
+            if (isAdmin)
+              {
+                'icon': Icons.admin_panel_settings_outlined,
+                'text': 'View Reports',
+                'route': '/admin-view'
+              },
             // Logout Button
             {
               'icon': Icons.logout,
@@ -51,8 +59,11 @@ class HomePageDrawer extends StatelessWidget {
               title: Text(item['text'], style: TextStyle(fontSize: 18.0)),
               onTap: () {
                 if (item['route'] == '/logout') {
-                   UserSingleton().clearUserFromPrefs();
-                  UserSingleton().user = null; // Clear user info
+                  UserSingleton().clearUserFromPrefs();
+
+                  UserSingleton().user = null; 
+                  signOutWithGoogle(context);
+
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/start-up-page', (route) => false);
                 } else {

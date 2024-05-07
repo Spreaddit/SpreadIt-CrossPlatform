@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter_polls/flutter_polls.dart';
-import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_join.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/pages/edit_post_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
@@ -16,6 +17,8 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/da
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/interaction_button.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -24,16 +27,17 @@ void navigateToPostCardPage(
   BuildContext context,
   String postId,
   bool isUserProfile,
+  Post post,
 ) {
   Navigator.push(
     context,
     MaterialPageRoute(
       settings: RouteSettings(
-        name: '/post-card-page/$postId/$isUserProfile',
+        name: '/post-card-page/$postId',
       ),
       builder: (context) => PostCardPage(
         postId: postId,
-        isUserProfile: isUserProfile,
+        post: post,
       ),
     ),
   );
@@ -53,6 +57,7 @@ class _PostHeader extends StatefulWidget {
   final void Function(bool) onSpoilerChanged;
   final void Function() onDeleted;
   final void Function(bool) onsaved;
+  final BuildContext? feedContext;
 
   _PostHeader({
     required this.post,
@@ -66,6 +71,7 @@ class _PostHeader extends StatefulWidget {
     required this.onNsfwChanged,
     required this.onDeleted,
     this.content = "",
+    this.feedContext,
   });
 
   @override
@@ -76,6 +82,8 @@ class _PostHeaderState extends State<_PostHeader> {
   late String dateFormatted;
   late Timer timer;
   bool shouldRenderJoin = false;
+
+  bool isAdmin = UserSingleton().user?.role == "Admin";
 
   @override
   void initState() {
@@ -111,11 +119,9 @@ class _PostHeaderState extends State<_PostHeader> {
             alignment: WrapAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (_) => CommunityPage(
-                            communityName: widget.post.community,
-                          )),
+                onTap: () => navigateToCommunity(
+                  context,
+                  widget.post.community,
                 ),
                 child: Text(
                   "r/${widget.post.community}",
@@ -127,13 +133,16 @@ class _PostHeaderState extends State<_PostHeader> {
           ),
           subtitle: GestureDetector(
             onTap: () => {
-              Navigator.of(context).pushNamed(
-                '/user-profile',
-                arguments: {
-                  'username': widget.post.username,
-                },
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  settings: RouteSettings(
+                    name: '/user-profile/${widget.post.username}',
+                  ),
+                  builder: (context) => UserProfile(
+                    username: widget.post.username,
+                  ),
+                ),
               ),
-              print('username: ${widget.post.username}'),
             },
             child: Text(widget.post.username),
           ),
@@ -148,6 +157,7 @@ class _PostHeaderState extends State<_PostHeader> {
                 opacity: shouldRenderJoin ? 1 : 0,
                 child: JoinCommunityBtn(
                   shouldJoinButtonRender: () {
+                    if (!mounted) return;
                     setState(() {
                       shouldRenderJoin = true;
                     });
@@ -168,7 +178,6 @@ class _PostHeaderState extends State<_PostHeader> {
 
   void onShowMenu() {
     List<String> viewerOptions = [
-      "Subscribe to post",
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
       "Report",
@@ -176,7 +185,6 @@ class _PostHeaderState extends State<_PostHeader> {
       "Hide",
     ];
     List<String> writerOptions = [
-      "Subscribe to post",
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
       "Hide",
@@ -187,7 +195,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<void Function()> writerActions = [
-      subscribeToPost,
       widget.isSaved
           ? () => {
                 unsavePost(
@@ -236,11 +243,14 @@ class _PostHeaderState extends State<_PostHeader> {
                 widget.onNsfwChanged(!widget.isNsfw),
                 markNSFW(context, widget.post.postId),
               },
-      () => deletePost(context, widget.post.postId, widget.onDeleted),
+      () => deletePost(
+            widget.feedContext ?? context,
+            widget.post.postId,
+            widget.onDeleted,
+          ),
     ];
 
     List<void Function()> viewerActions = [
-      subscribeToPost,
       widget.isSaved
           ? () => {
                 unsavePost(
@@ -270,7 +280,6 @@ class _PostHeaderState extends State<_PostHeader> {
     ];
 
     List<IconData> writerIcons = [
-      Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
       Icons.hide_source_rounded,
@@ -280,7 +289,6 @@ class _PostHeaderState extends State<_PostHeader> {
       Icons.delete,
     ];
     List<IconData> viewerIcons = [
-      Icons.notifications_on_rounded,
       Icons.save,
       Icons.copy,
       Icons.flag,
@@ -291,9 +299,10 @@ class _PostHeaderState extends State<_PostHeader> {
       context: context,
       builder: (BuildContext context) {
         return CustomBottomSheet(
-          icons: widget.isUserProfile ? writerIcons : viewerIcons,
-          text: widget.isUserProfile ? writerOptions : viewerOptions,
-          onPressedList: widget.isUserProfile ? writerActions : viewerActions,
+          icons: widget.isUserProfile || isAdmin ? writerIcons : viewerIcons,
+          text: widget.isUserProfile || isAdmin ? writerOptions : viewerOptions,
+          onPressedList:
+              widget.isUserProfile || isAdmin ? writerActions : viewerActions,
         );
       },
     );
@@ -315,6 +324,8 @@ class _PostBody extends StatelessWidget {
   final String postId;
   final bool isSpoiler;
   final bool isNsfw;
+  final bool? hasVotedOnPoll;
+  final String? selectedPollOption;
 
   _PostBody({
     required this.title,
@@ -329,6 +340,8 @@ class _PostBody extends StatelessWidget {
     required this.postId,
     this.isNsfw = false,
     this.isSpoiler = false,
+    this.hasVotedOnPoll = false,
+    this.selectedPollOption,
   });
 
   @override
@@ -348,6 +361,7 @@ class _PostBody extends StatelessWidget {
         ),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Opacity(
               opacity: 0.6,
@@ -416,6 +430,8 @@ class _PostBody extends StatelessWidget {
               postId: postId,
               isNsfw: isNsfw,
               isSpoiler: isSpoiler,
+              selectedPollOption: selectedPollOption,
+              hasVotedOnPoll: hasVotedOnPoll,
             ),
           ],
         ),
@@ -443,6 +459,8 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CarouselSlider(
           options: CarouselOptions(
@@ -452,6 +470,8 @@ class _ImageCaruoselState extends State<_ImageCaruosel> {
             enableInfiniteScroll: true,
             onPageChanged: (index, reason) {
               setState(() {
+                if (!mounted) return;
+
                 _currentImageIndex = index;
               });
             },
@@ -514,6 +534,8 @@ class _PostContent extends StatelessWidget {
   final String postId;
   final bool isSpoiler;
   final bool isNsfw;
+  final bool? hasVotedOnPoll;
+  final String? selectedPollOption;
 
   _PostContent({
     required this.postType,
@@ -527,6 +549,8 @@ class _PostContent extends StatelessWidget {
     required this.postId,
     this.isNsfw = false,
     this.isSpoiler = false,
+    this.hasVotedOnPoll = false,
+    this.selectedPollOption,
   });
 
   @override
@@ -574,9 +598,17 @@ class _PostContent extends StatelessWidget {
       if (pollOption == null || pollOption!.length < 2) {
         return Text("Oops. something went wrong");
       }
+
+      print("has voted ahoooo $hasVotedOnPoll $selectedPollOption");
       return FlutterPolls(
         pollTitle: Text(""),
         pollId: Uuid().v1(),
+        hasVoted: hasVotedOnPoll ?? false,
+        userVotedOptionId: selectedPollOption != null
+            ? pollOption!
+                .indexWhere((element) => element.option == selectedPollOption)
+                .toString()
+            : "0",
         onVoted: (chosenPollOption, newTotalVotes) {
           return handlePolls(
               postId: postId,
@@ -652,6 +684,9 @@ class _PostInteractions extends StatefulWidget {
   final bool isUserProfile;
   final String postId;
   final bool isFullView;
+  final bool hasUpvoted;
+  final bool hasDownvoted;
+  final Post post;
 
   _PostInteractions({
     required this.votesCount,
@@ -660,6 +695,9 @@ class _PostInteractions extends StatefulWidget {
     required this.isUserProfile,
     required this.postId,
     required this.isFullView,
+    required this.hasUpvoted,
+    required this.hasDownvoted,
+    required this.post,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -678,22 +716,32 @@ class _PostInteractionsState extends State<_PostInteractions> {
           children: [
             VoteButton(
               initialVotesCount: widget.votesCount,
+              isUpvoted: widget.hasUpvoted,
+              isDownvoted: widget.hasDownvoted,
             ),
-            CommentButton(
-                initialCommensCount: widget.commentsCount,
-                onCommentsPressed: () => {
-                      if (!widget.isFullView)
-                        {
-                          navigateToPostCardPage(
-                            context,
-                            widget.postId,
-                            widget.isUserProfile,
-                          ),
-                        }
-                    }),
-            ShareButton(
-              initialSharesCount: widget.sharesCount,
-              message: "false",
+            TextButton.icon(
+              onPressed: () => navigateToPostCardPage(
+                context,
+                widget.postId,
+                widget.isUserProfile,
+                widget.post,
+              ),
+              icon: Icon(
+                Icons.comment,
+              ),
+              label: Text(
+                widget.commentsCount.toString(),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () => sharePressed("should render"),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.shield,
+              ),
             ),
           ],
         ),
@@ -721,12 +769,14 @@ class PostWidget extends StatefulWidget {
   final bool isFullView;
   final bool isUserProfile;
   final bool isSavedPage;
+  final BuildContext? feedContext;
 
   PostWidget({
     required this.post,
     this.isFullView = false,
     required this.isUserProfile,
-    this.isSavedPage=false,
+    this.isSavedPage = false,
+    this.feedContext,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -753,6 +803,8 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void onDeleted() {
+    if (!mounted) return;
+
     if (widget.isFullView) {
       Navigator.of(context).pushNamed('/home');
     }
@@ -762,24 +814,32 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   void onContentChanged(String newContent) {
+    if (!mounted) return;
+
     setState(() {
       content.add(newContent);
     });
   }
 
   void onChangeSpoiler(bool newIsSpoiler) {
+    if (!mounted) return;
+
     setState(() {
       isSpoiler = newIsSpoiler;
     });
   }
 
   void onSaved(bool newIsSaved) {
+    if (!mounted) return;
+
     setState(() {
       isSaved = newIsSaved;
     });
   }
 
   void onChangeNsfw(bool newIsNsfw) {
+    if (!mounted) return;
+
     setState(() {
       isNsfw = newIsNsfw;
     });
@@ -787,73 +847,82 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   @override
-Widget build(BuildContext context) {
-  return (widget.isSavedPage && !isSaved)
-      ? Center(
+  Widget build(BuildContext context) {
+    return (widget.isSavedPage && !isSaved)
+        ? Center(
             child: Text("Post Has Been Unsaved"),
           )
-      : (!isDeleted) 
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _PostHeader(
-                  post: widget.post,
-                  onContentChanged: onContentChanged,
-                  isUserProfile: widget.isUserProfile,
-                  isNsfw: isNsfw,
-                  isSpoiler: isSpoiler,
-                  isSaved: isSaved,
-                  onsaved: onSaved,
-                  onNsfwChanged: onChangeNsfw,
-                  onSpoilerChanged: onChangeSpoiler,
-                  onDeleted: onDeleted,
-                  content: widget.post.content != null &&
-                          widget.post.content!.isNotEmpty
-                      ? widget.post.content![widget.post.content!.length - 1]
-                      : widget.post.title,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("tapped");
-                    if (!widget.isFullView) {
-                      navigateToPostCardPage(
-                        context,
-                        widget.post.postId,
-                        widget.isUserProfile,
-                      );
-                    }
-                  },
-                  child: _PostBody(
-                    title: widget.post.title!,
+        : (!isDeleted)
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _PostHeader(
+                    post: widget.post,
+                    onContentChanged: onContentChanged,
+                    isUserProfile: widget.isUserProfile,
+                    isNsfw: isNsfw,
+                    isSpoiler: isSpoiler,
+                    isSaved: isSaved,
+                    onsaved: onSaved,
+                    onNsfwChanged: onChangeNsfw,
+                    onSpoilerChanged: onChangeSpoiler,
+                    onDeleted: onDeleted,
+                    feedContext: widget.feedContext,
                     content: widget.post.content != null &&
                             widget.post.content!.isNotEmpty
                         ? widget.post.content![widget.post.content!.length - 1]
-                        : "",
-                    attachments: widget.post.attachments,
-                    link: widget.post.link,
-                    postType: widget.post.type!,
-                    isFullView: widget.isFullView,
-                    pollOption: widget.post.pollOptions,
-                    isPollEnabled: widget.post.isPollEnabled,
-                    pollVotingLength: widget.post.pollVotingLength,
-                    postId: widget.post.postId,
-                    isNsfw: isNsfw,
-                    isSpoiler: isSpoiler,
+                        : widget.post.title,
                   ),
-                ),
-                _PostInteractions(
-                  postId: widget.post.postId,
-                  isUserProfile: widget.isUserProfile,
-                votesCount:
-                    widget.post.votesUpCount! - widget.post.votesDownCount!,
-                  sharesCount: widget.post.sharesCount!,
-                  commentsCount: widget.post.commentsCount!,
-                  isFullView: widget.isFullView,
-                )
-              ],
-            )
-        : Center(
-            child: Text("Post Has Been Deleted"),
-          );
+                  GestureDetector(
+                    onTap: () {
+                      print("tapped");
+                      if (!widget.isFullView) {
+                        navigateToPostCardPage(
+                          context,
+                          widget.post.postId,
+                          widget.isUserProfile,
+                          widget.post,
+                        );
+                      }
+                    },
+                    child: _PostBody(
+                      title: widget.post.title!,
+                      content: widget.post.content != null &&
+                              widget.post.content!.isNotEmpty
+                          ? widget
+                              .post.content![widget.post.content!.length - 1]
+                          : "",
+                      attachments: widget.post.attachments,
+                      link: widget.post.link,
+                      postType: widget.post.type!,
+                      isFullView: widget.isFullView,
+                      pollOption: widget.post.pollOptions,
+                      isPollEnabled: widget.post.isPollEnabled,
+                      pollVotingLength: widget.post.pollVotingLength,
+                      postId: widget.post.postId,
+                      isNsfw: isNsfw,
+                      isSpoiler: isSpoiler,
+                      selectedPollOption: widget.post.selectedPollOption,
+                      hasVotedOnPoll: widget.post.hasVotedOnPoll,
+                    ),
+                  ),
+                  _PostInteractions(
+                    postId: widget.post.postId,
+                    isUserProfile: widget.isUserProfile,
+                    votesCount:
+                        widget.post.votesUpCount! - widget.post.votesDownCount!,
+                    sharesCount: widget.post.sharesCount!,
+                    commentsCount: widget.post.commentsCount!,
+                    isFullView: widget.isFullView,
+                    hasDownvoted: widget.post.hasDownvoted ?? false,
+                    hasUpvoted: widget.post.hasUpvoted ?? false,
+                    post: widget.post,
+                  )
+                ],
+              )
+            : Center(
+                child: Text("Post Has Been Deleted"),
+              );
   }
 }

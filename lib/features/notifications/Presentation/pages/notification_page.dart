@@ -1,31 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_notifications_settings.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/get_notifications.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/hide_notifications.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/get_according_to_type.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/notification_widget.dart';
-import 'dart:math';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({Key? key}) : super(key: key);
+  List<Notifications> todayNotifications;
+  List<Notifications> earlierNotifications;
+  List<Notifications> notifications;
+  final bool isAllRead;
+
+  NotificationPage({
+    Key? key,
+    required this.todayNotifications,
+    required this.earlierNotifications,
+    required this.notifications,
+    this.isAllRead = false,
+  }) : super(key: key);
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  late List<Notifications> notification;
-  var community = false;
+  List<Notifications> todayNotifications = [];
+  List<Notifications> earlierNotifications = [];
+  List<Notifications> notifications = [];
+
+  Map<String, dynamic> notificationsSettingsValues = {
+    "newFollowers": false,
+    "mentions": false,
+    "inboxMessages": false,
+    "chatMessages": false,
+    "chatRequests": false,
+    "repliesToComments": false,
+    "cakeDay": false,
+    "modNotifications": false,
+    "commentsOnYourPost": false,
+    "commentsYouFollow": false,
+    "upvotes": false
+  };
+
   @override
   void initState() {
     super.initState();
-    fetchnotificationsinfo();
+    notifications = widget.notifications;
+    earlierNotifications = widget.earlierNotifications;
+    todayNotifications = widget.todayNotifications;
   }
 
-  void fetchnotificationsinfo() async {
+  Future<void> turnOffNotification(String key) async {
     try {
-      notification = await fetchNotifications();
+      var data = await getData();
+      setState(() {
+        notificationsSettingsValues = data;
+        notificationsSettingsValues[key] = !notificationsSettingsValues[key];
+      });
+      print("Updated notifics: $notificationsSettingsValues");
+      var result = await updateData(
+          updatedNotificationsSettings: notificationsSettingsValues);
+      if (result != 200) {
+        setState(() {
+          notificationsSettingsValues[key] = !notificationsSettingsValues[key];
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void onHide(String id, Notifications removedNotification) async {
+    try {
+      final status = await hideNotification(id: id);
+      if (status == 200) {
+        setState(() {
+          earlierNotifications.removeWhere((n) => n.id == id);
+          todayNotifications.removeWhere((n) => n.id == id);
+        });
+      }
     } catch (e) {
       print(e);
     }
@@ -33,60 +87,83 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Notifications>>(
-      future: fetchNotifications(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoaderWidget(
-            dotSize: 10,
-            logoSize: 100,
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else {
-          List<Notifications>? notifications = snapshot.data;
-          return ListView.builder(
-            itemCount: notifications!.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              final data = processNotification(notification);
-              return NotificationWidget(
-                content: data.content,
-                title: notification.content,
-                profilePicUrl: notification.relatedUser.avatarUrl,
-                date: dateToDuration(notification.createdAt),
-                iconData: data.icon,
-                buttonIcon: data.icon,
-                buttonText: data.buttonText,
-                onPressed: data.onPress,
-                isRead: notification.isRead,
-                followed: followed(notification.notificationType),
-                community: getRandomBool(),
-
-                ///To be changed later
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ListView.builder(
+        itemCount: todayNotifications.length + earlierNotifications.length + 2,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            if (todayNotifications.isNotEmpty) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Text(
+                  "Today",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               );
-            },
-          );
-        }
-      },
+            } else {
+              return SizedBox.shrink();
+            }
+          } else if (index == todayNotifications.length + 1) {
+            if (earlierNotifications.isNotEmpty) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Text(
+                  "Earlier",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            } else {
+              return SizedBox.shrink();
+            }
+          } else if (index < todayNotifications.length + 1) {
+            final notification = todayNotifications[index - 1];
+            final data = processNotification(notification, context);
+            return NotificationWidget(
+              content: data.content!,
+              notification: notification,
+              date: dateToDuration(notification.createdAt),
+              iconData: data.icon,
+              buttonIcon: data.icon,
+              buttonText: data.buttonText,
+              onPressed: data.onPress,
+              isRead: widget.isAllRead || notification.isRead,
+              onHide: onHide,
+              community: community(notification.notificationType),
+              disable: turnOffNotification,
+            );
+          } else {
+            final earlierIndex = index - todayNotifications.length - 2;
+            final notification = earlierNotifications[earlierIndex];
+            final data = processNotification(notification, context);
+            return NotificationWidget(
+              content: data.content!,
+              notification: notification,
+              date: dateToDuration(notification.createdAt),
+              iconData: data.icon,
+              buttonIcon: data.icon,
+              buttonText: data.buttonText,
+              onPressed: data.onPress,
+              isRead: widget.isAllRead || notification.isRead,
+              onHide: onHide,
+              community: community(notification.notificationType),
+              disable: turnOffNotification,
+            );
+          }
+        },
+      ),
     );
   }
 }
 
-bool followed(String notificationType) {
-  if (notificationType == "posts" || notificationType == "comments") {
-    return true;
-  }
-  return false;
-}
-
-bool getRandomBool() {
-  // Generate a random number between 0 and 1
-  var random = Random();
-  var randomNumber = random.nextDouble();
-
-  // Return true if the random number is greater than or equal to 0.5, otherwise false
-  return randomNumber >= 0.5;
+bool community(String notificationType) {
+  bool isCommunity = notificationType == "community";
+  print(" comminty $isCommunity");
+  return isCommunity;
 }

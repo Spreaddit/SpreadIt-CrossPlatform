@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import './features/user.dart';
 
-
 class UserSingleton {
   static final UserSingleton _singleton = UserSingleton._internal();
 
@@ -17,16 +16,37 @@ class UserSingleton {
   DateTime? accessTokenExpiry;
   String? googleToken;
   String? googleEmail;
+  bool? isloggedIn;
+  String? firebaseId;
+  bool? verifyEmailCalledForSignup;
+
+  void setUserId(String userId) {
+    firebaseId = userId;
+    _saveToPrefs();
+  }
+
+   void setVerify() {
+    verifyEmailCalledForSignup = true;
+    _saveToPrefs();
+  }
+
 
   void setUser(User newUser) {
     user = newUser;
-    _saveToPrefs(); 
+    _saveToPrefs();
   }
 
-  void setGoogleInfo(String token , String email) {
-    googleEmail=email;
-    googleToken=token;
-    _saveToPrefs(); 
+  void setVerifed() {
+    User newUser = user!;
+    newUser.isVerified = true;
+    user = newUser;
+    _saveToPrefs();
+  }
+
+  void setGoogleInfo(String token, String email) {
+    googleEmail = email;
+    googleToken = token;
+    _saveToPrefs();
   }
 
   User? getUser() {
@@ -36,7 +56,7 @@ class UserSingleton {
   void setAccessToken(String token, DateTime expiry) {
     accessToken = token;
     accessTokenExpiry = expiry;
-    _saveToPrefs(); 
+    _saveToPrefs();
   }
 
   String? getAccessToken() {
@@ -50,17 +70,18 @@ class UserSingleton {
   // Save data to shared preferences
   Future<void> _saveToPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+    isloggedIn = true;
     String jsonString = json.encode({
       'user': user?.toJson(),
       'access_token': accessToken,
       'token_expiration_date': accessTokenExpiry?.toIso8601String(),
       'google_token': googleToken,
       'google_email': googleEmail,
+      'isLoggedin': isloggedIn,
+      'firebaseId': firebaseId,
     });
     await prefs.setString('userSingleton', jsonString);
   }
-
 
   // Load data from shared preferences
   Future<void> loadFromPrefs() async {
@@ -76,12 +97,16 @@ class UserSingleton {
       accessTokenExpiry = jsonMap['token_expiration_date'] != null
           ? DateTime.parse(jsonMap['token_expiration_date'])
           : null;
-
+      isloggedIn = jsonMap['isLoggedin'];
+      firebaseId = jsonMap['firebaseId'];
     }
   }
-    // Clear user information from shared preferences
+
+  // Clear user information from shared preferences
   Future<void> clearUserFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    isloggedIn = false;
+    verifyEmailCalledForSignup=false;
     await prefs.remove('userSingleton');
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 
 /// This file defines the SocialMedia and UserInfo classes used to represent social media profiles and user information.

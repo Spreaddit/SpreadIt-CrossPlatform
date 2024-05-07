@@ -1,37 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
-import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/show_discard_bottomsheet.dart';
 import '../../../generic_widgets/photo_and_video_pickers/image_picker.dart';
 import '../../../generic_widgets/photo_and_video_pickers/video_picker.dart';
-import '../widgets/poll_widgets/poll.dart';
-import '../widgets/link.dart';
 import '../widgets/image_and_video_widgets.dart';
 
 /// [CreatePost] class renders the create post page , which allows the user to create a post by adding a [title], [content], [link]
 /// [image], [video] or [poll].
 /// it serves as the first draft for the user to write his post
 
-class CreatePost extends StatefulWidget {  
-
+class CreatePost extends StatefulWidget {
   @override
   State<CreatePost> createState() => _CreatePostState();
 }
 
 class _CreatePostState extends State<CreatePost> {
-
   final GlobalKey<FormState> _primaryTitleForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _primaryContentForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _primaryLinkForm = GlobalKey<FormState>();
@@ -70,9 +59,9 @@ class _CreatePostState extends State<CreatePost> {
   void updateContent(String value) {
     content = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    if (_primaryContentForm.currentState != null) {
-      _primaryContentForm.currentState!.save();
-    }
+      if (_primaryContentForm.currentState != null) {
+        _primaryContentForm.currentState!.save();
+      }
     });
   }
 
@@ -80,26 +69,25 @@ class _CreatePostState extends State<CreatePost> {
   void updateLink(String value) {
     link = value;
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-    if (_primaryLinkForm.currentState != null) {
-      _primaryLinkForm.currentState!.save();
-      updateButtonState();
-    }
+      if (_primaryLinkForm.currentState != null) {
+        _primaryLinkForm.currentState!.save();
+        updateButtonState();
+      }
     });
   }
 
- /// [updateButtonState] : a function which controls the enablement of the 'Next' button
+  /// [updateButtonState] : a function which controls the enablement of the 'Next' button
   void updateButtonState() {
     if (link == null) {
       setState(() {
         isButtonEnabled = validatePostTitle(title);
       });
-    }
-    else {
-      isButtonEnabled = validatePostTitle(title) && validatePostTitle(link!);  
+    } else {
+      isButtonEnabled = validatePostTitle(title) && validatePostTitle(link!);
     }
   }
 
- /// [setLastPreddedIcon] : a function which sets the last pressed icon variable to the last pressed icon by the user to disable the rest
+  /// [setLastPreddedIcon] : a function which sets the last pressed icon variable to the last pressed icon by the user to disable the rest
   void setLastPressedIcon(IconData? passedIcon) {
     setState(() {
       lastPressedIcon = passedIcon;
@@ -119,14 +107,13 @@ class _CreatePostState extends State<CreatePost> {
     });
     if (isLinkAdded) {
       setLastPressedIcon(Icons.link);
-    }
-    else {
+    } else {
       setLastPressedIcon(null);
     }
   }
 
   /// [cancelImageOrVideo] : removes the uploaded image or video
-  void cancelImageOrVideo () {
+  void cancelImageOrVideo() {
     setState(() {
       imageWeb = null;
       videoWeb = null;
@@ -137,13 +124,12 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> pickImage() async {
-    if(kIsWeb) {
+    if (kIsWeb) {
       final image = await pickImageFromFilePickerWeb();
       setState(() {
         imageWeb = image;
       });
-    }
-    else {
+    } else {
       final image = await pickImageFromFilePicker();
       setState(() {
         this.image = image;
@@ -166,7 +152,7 @@ class _CreatePostState extends State<CreatePost> {
     }
   }
 
-  /// [openPollWindow] : renders the poll 
+  /// [openPollWindow] : renders the poll
   void openPollWidow() {
     setState(() {
       createPoll = !createPoll;
@@ -178,7 +164,7 @@ class _CreatePostState extends State<CreatePost> {
     setState(() {
       pollOptions[optionNumber - 1] = value;
     });
-    formKeys[optionNumber-1].currentState!.save();
+    formKeys[optionNumber - 1].currentState!.save();
   }
 
   void updateSelectedDay(int selectedDay) {
@@ -201,14 +187,13 @@ class _CreatePostState extends State<CreatePost> {
       'link': link,
       'image': image,
       'imageWeb': imageWeb,
-      'video':video,
-      'videoWeb':videoWeb,
+      'video': video,
+      'videoWeb': videoWeb,
       'pollOptions': pollOptions,
       'selectedDay': selectedDay,
       'createPoll': createPoll,
-      'isLinkAdded':isLinkAdded,
-      }
-    );
+      'isLinkAdded': isLinkAdded,
+    });
   }
 
   @override
@@ -221,18 +206,23 @@ class _CreatePostState extends State<CreatePost> {
               children: [
                 CreatePostHeader(
                   buttonText: "Next",
+                  allowScheduling: false,
                   onPressed: navigateToPostToCommunity,
                   isEnabled: isButtonEnabled,
-                  onIconPress: validatePostTitle(title) ? () {}: () {showDiscardButtomSheet(context);},  // if invalid , pop to home page
+                  onIconPress: validatePostTitle(title)
+                      ? () {}
+                      : () {
+                          showDiscardButtomSheet(context);
+                        }, // if invalid , pop to home page
                 ),
                 PostTitle(
                   formKey: _primaryTitleForm,
-                  onChanged:updateTitle,
+                  onChanged: updateTitle,
                   initialBody: '',
                 ),
                 if (image != null || imageWeb != null)
                   ImageOrVideoWidget(
-                    imageOrVideo: image, 
+                    imageOrVideo: image,
                     imageOrVideoWeb: imageWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
@@ -243,24 +233,25 @@ class _CreatePostState extends State<CreatePost> {
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (isLinkAdded)
-                   LinkTextField(
+                  LinkTextField(
                     formKey: _primaryLinkForm,
                     onChanged: updateLink,
                     hintText: 'URL',
                     initialBody: '',
                     onIconPress: addLink,
-                ), 
+                  ),
                 if (isLinkAdded && link != null && !validateLink(link!))
                   Container(
-                    margin:EdgeInsets.fromLTRB(15, 5, 15, 5),
+                    margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
                     decoration: BoxDecoration(
                       color: Colors.grey,
                     ),
-                    child: Text('Oops, this link isn\'t valid. Double-check, and try again.'),
-                  ),    
+                    child: Text(
+                        'Oops, this link isn\'t valid. Double-check, and try again.'),
+                  ),
                 PostContent(
                   formKey: _primaryContentForm,
-                  onChanged:updateContent,
+                  onChanged: updateContent,
                   hintText: 'body text (optional)',
                   initialBody: '',
                 ),
@@ -277,28 +268,30 @@ class _CreatePostState extends State<CreatePost> {
                     initialBody: initialBody,
                   ),
               ],
-            ),     
-          ), 
-          isPrimaryFooterVisible? PostFooter(
-            toggleFooter: toggleFooter,
-            showAttachmentIcon: true,
-            showPhotoIcon: true,
-            showVideoIcon: true,
-            showPollIcon: true,
-            onLinkPress: addLink,
-            onImagePress: pickImage,
-            onVideoPress: pickVideo,
-            onPollPress: openPollWidow,
-            lastPressedIcon: lastPressedIcon, 
-            setLastPressedIcon: setLastPressedIcon,
-            ) : SecondaryPostFooter(
-              onLinkPress: addLink,
-              onImagePress: pickImage,
-              onVideoPress: pickVideo,
-              onPollPress: openPollWidow,
-              lastPressedIcon: lastPressedIcon, 
-              setLastPressedIcon: setLastPressedIcon,
             ),
+          ),
+          isPrimaryFooterVisible
+              ? PostFooter(
+                  toggleFooter: toggleFooter,
+                  showAttachmentIcon: true,
+                  showPhotoIcon: true,
+                  showVideoIcon: true,
+                  showPollIcon: true,
+                  onLinkPress: addLink,
+                  onImagePress: pickImage,
+                  onVideoPress: pickVideo,
+                  onPollPress: openPollWidow,
+                  lastPressedIcon: lastPressedIcon,
+                  setLastPressedIcon: setLastPressedIcon,
+                )
+              : SecondaryPostFooter(
+                  onLinkPress: addLink,
+                  onImagePress: pickImage,
+                  onVideoPress: pickVideo,
+                  onPollPress: openPollWidow,
+                  lastPressedIcon: lastPressedIcon,
+                  setLastPressedIcon: setLastPressedIcon,
+                ),
         ],
       ),
     );

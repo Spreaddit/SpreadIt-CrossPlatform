@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/disable_community_notification.dart';
+import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/get_according_to_type.dart';
 
+/// A bottom sheet widget for managing notifications.
 class ManageNotificationBottomSheet extends StatelessWidget {
-  final bool followed;
+  /// Callback function to disable notifications.
+  final Function(String) disable;
+
+  /// Boolean indicating whether the notification is related to a community.
   final bool community;
 
-  ManageNotificationBottomSheet({
-    required this.followed,
+  /// Callback function to hide a notification.
+  final void Function(String, Notifications) onHide;
+
+  /// The notification object to manage.
+  final Notifications notification;
+
+  /// Constructs a [ManageNotificationBottomSheet] instance with the given parameters.
+   ManageNotificationBottomSheet({
+    required this.disable,
     required this.community,
+    required this.onHide,
+    required this.notification,
   });
 
   @override
@@ -33,36 +49,47 @@ class ManageNotificationBottomSheet extends StatelessWidget {
               ),
             ),
             Divider(),
-            if (!followed && !community)
+            if (notification.notificationType == "Comment Reply" ||
+                notification.notificationType == "Comment")
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Don't get updates on this"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  String key = getNotificationType(notification);
+                  disable(key);
+                  Navigator.pop(context);
                 },
               ),
-            if (followed || community)
+            if (notification.notificationType != "Comment Reply" &&
+                notification.notificationType != "Comment" &&
+                !community)
               ListTile(
                 leading: Icon(Icons.visibility_off, color: Colors.black),
                 title: Text("Hide this notification"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  onHide(notification.id!, notification);
+                  Navigator.pop(context);
                 },
               ),
-            if (followed || community)
+            if (notification.notificationType != "Comment Reply" &&
+                notification.notificationType != "Comment" &&
+                !community)
               ListTile(
                 leading: Icon(Icons.notifications_off, color: Colors.black),
                 title: Text("Turn off this notification type"),
                 onTap: () {
-                  // Add your logic here for handling this action
+                  String key = getNotificationType(notification);
+                  disable(key);
+                  Navigator.pop(context);
                 },
               ),
             if (community)
               ListTile(
                 leading: Icon(Icons.do_not_disturb_on, color: Colors.black),
                 title: Text("Disable updates from this community"),
-                onTap: () {
-                  // Add your logic here for handling this action
+                onTap: () async {
+                  await disableCommunitynotifications(id: notification.id!);
+                  Navigator.pop(context);
                 },
               ),
             Button(
@@ -70,10 +97,10 @@ class ManageNotificationBottomSheet extends StatelessWidget {
                 Navigator.pop(context);
               },
               text: 'Close',
-              backgroundColor: Color(0xFFEFEFED), 
-              foregroundColor: Color.fromARGB(255, 113, 112, 112), 
+              backgroundColor: Color(0xFFEFEFED),
+              foregroundColor: Color.fromARGB(255, 113, 112, 112),
             ),
-            SizedBox(height: 8), 
+            SizedBox(height: 8),
           ],
         ),
       ),
