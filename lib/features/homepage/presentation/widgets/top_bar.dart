@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/widgets/new_message.dart';
 
 enum CurrentPage {
   home,
@@ -20,6 +22,7 @@ class TopBar extends AppBar {
   final void Function()? onReadMessages;
   final Key? key;
   final int? chatFilterSelectedOption;
+  final void Function(MessageModel message) setNewMessage;
 
   TopBar({
     this.currentPage = CurrentPage.home,
@@ -29,6 +32,7 @@ class TopBar extends AppBar {
     this.key,
     this.onReadMessages,
     this.chatFilterSelectedOption = 3,
+    required this.setNewMessage,
   }) : super(
           key: key,
           toolbarHeight: 60,
@@ -40,11 +44,13 @@ class TopBar extends AppBar {
           ),
           actions: [
             chooseActions(
-                currentPage: currentPage,
-                context: context,
-                onChangeChatFilter: onChangeChatFilter,
-                onReadMessages: onReadMessages!,
-                chatFilterSelectedOption: chatFilterSelectedOption),
+              currentPage: currentPage,
+              context: context,
+              onChangeChatFilter: onChangeChatFilter,
+              onReadMessages: onReadMessages!,
+              chatFilterSelectedOption: chatFilterSelectedOption,
+              setNewMessage: setNewMessage,
+            ),
             Builder(
               builder: (context) => IconButton(
                 icon: Icon(Icons.account_circle),
@@ -146,9 +152,15 @@ Widget chooseTitle(
   return titles[currentPage.index % 5];
 }
 
+  void navigateToGeneralSearch(BuildContext context) {
+    Navigator.of(context).pushNamed('/general-search');
+  }
+
+
 Widget chooseActions({
   required CurrentPage currentPage,
   required BuildContext context,
+  required final void Function(MessageModel message) setNewMessage,
   required final void Function() onReadMessages,
   int? chatFilterSelectedOption,
   final void Function(int)? onChangeChatFilter,
@@ -156,15 +168,15 @@ Widget chooseActions({
   List<Widget> actions = [
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
     IconButton(
       onPressed: () {
@@ -185,13 +197,14 @@ Widget chooseActions({
           context: context,
           builder: (BuildContext context) => InboxPageModal(
             onReadMessages: onReadMessages,
+            setNewMessage: setNewMessage,
           ),
         );
       },
     ),
     IconButton(
       icon: Icon(Icons.search),
-      onPressed: () {},
+      onPressed: () => navigateToGeneralSearch(context),
     ),
   ];
   return actions[currentPage.index % 5];
@@ -290,10 +303,12 @@ class _FilteringChatTypeModalState extends State<FilteringChatTypeModal> {
 
 class InboxPageModal extends StatefulWidget {
   final void Function()? onReadMessages;
+  final void Function(MessageModel message) setNewMessage;
 
   const InboxPageModal({
     Key? key,
     required this.onReadMessages,
+    required this.setNewMessage,
   }) : super(key: key);
 
   @override
@@ -321,7 +336,11 @@ class _InboxPageModalState extends State<InboxPageModal> {
 
   void onTap(int index) {
     if (index == 0) {
-      //TODO: navigate to new message
+      Navigator.pop(context);
+      showSendMessage(
+        context: context,
+        setNewMessage: widget.setNewMessage,
+      );
     } else if (index == 1) {
       widget.onReadMessages!();
       Navigator.pop(context);

@@ -1,34 +1,57 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Verifies an email using the provided email token.
+///
+/// Makes a request to the server to verify the email associated with the provided token.
+///
+/// [emailToken] is the token sent to the user's email for verification.
+///
+/// Returns a [Future] that resolves to an integer representing the HTTP status code:
+/// - 200 if the email verification is successful.
+/// - 404 if the user is not found or unauthorized.
+/// - 500 if there is an internal server error or any other error occurs.
+///
 Future<int> verifyEmail({
   required String emailToken,
+  required String place,
 }) async {
   try {
     final String endpoint = '/verify-email/$emailToken';
     final String requestURL = apiUrl + endpoint;
+    if ((place == 'home' &&
+            UserSingleton().verifyEmailCalledForSignup == null) ||
+        place != 'home') {
+      print('ana nadat 3la verify');
+      final Response response = await Dio().post(
+        requestURL,
+      );
 
-    final Response response = await Dio().post(
-      requestURL,
-    );
-    print('inside verify email');
-    if (response.statusCode == 200) {
-      UserSingleton().setAccessToken(response.data['accessToken'],
-          DateTime.parse(response.data['token_expiration_date']));
-          print('verify successful');
-          UserSingleton().setVerifed();
-      return 200;
-    } else if (response.statusCode == 401) {
-      print('Unautharized');
-      return 404;
-    } else if (response.statusCode == 404) {
-      print('UsernotFound');
-      return 404;
+      print('inside verify email');
+      if (response.statusCode == 200) {
+        print("response ${response.data}");
+        User user = User.fromJson(response.data['user']);
+        UserSingleton().setUser(user);
+        UserSingleton()
+            .setAccessToken(response.data['accessToken'], DateTime.now());
+        print('verify successful');
+        UserSingleton().setVerify();
+
+        return 200;
+      } else if (response.statusCode == 401) {
+        print('Unautharized');
+        return 404;
+      } else if (response.statusCode == 404) {
+        print('UsernotFound');
+        return 404;
+      } else {
+        print('Internal server error ${response.statusCode}');
+        return 500;
+      }
     } else {
-      print('Internal server error ${response.statusCode}');
-      return 500;
+      return 200;
     }
   } on DioException catch (e) {
     if (e.response != null) {

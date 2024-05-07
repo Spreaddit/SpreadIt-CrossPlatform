@@ -82,6 +82,7 @@ class _EditPostState extends State<EditPost> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: GenericHeader(
             buttonText: "Save",
             onPressed: () async {

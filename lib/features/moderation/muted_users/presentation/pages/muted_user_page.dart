@@ -1,10 +1,33 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/data/get_muted_users.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/data/muted_user_class_model.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/widgets/muted_user_tile.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// A page for managing muted users within a community.
+///
+/// This page displays a list of muted users within a community, allowing moderators
+/// to view, search, and manage the muted users. Moderators can unmute users, update
+/// moderator notes, and add new users to the mute list. The page includes a search
+/// functionality to filter the list of muted users.
+///
+/// This page is typically used within a navigation stack, allowing moderators to access
+/// it when they need to manage muted users within a specific community.
+///
+/// The page automatically fetches the list of muted users when it is first loaded
+/// and updates the list when a user is unmuted or when a new user is added to the
+/// mute list.
+///
+/// Example usage:
+///
+/// ```dart
+/// Navigator.push(
+///   context,
+///   MaterialPageRoute(
+///     builder: (context) => MutedUsersPage(),
+///   ),
+/// );
+/// ```
 class MutedUsersPage extends StatefulWidget {
   @override
   _MutedUsersPageState createState() => _MutedUsersPageState();

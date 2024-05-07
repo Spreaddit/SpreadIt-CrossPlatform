@@ -3,7 +3,25 @@ import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/data/get_muted_communities.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/presentation/widgets/muted_community_widget.dart';
-
+/// A page for displaying muted communities.
+///
+/// This page displays a list of communities that the user has muted. It provides
+/// information about muted communities and allows users to search for specific
+/// communities using a search field.
+///
+/// Posts from muted communities do not appear in the user's feeds or recommendations.
+///
+/// Example usage:
+///
+/// ```dart
+/// Navigator.push(
+///   context,
+///   MaterialPageRoute(
+///     builder: (context) => MutedCommunityPage(),
+///   ),
+/// );
+/// ```
+/// 
 class MutedCommunityPage extends StatefulWidget {
   @override
   _MutedCommunityPageState createState() => _MutedCommunityPageState();

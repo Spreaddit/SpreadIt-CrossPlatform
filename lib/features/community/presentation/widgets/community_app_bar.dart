@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_bottom_sheet.dart';
+import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/moderation/muted_communities/data/get_muted_communities.dart';
 
 /// A custom app bar widget for the community page.
 class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -8,22 +12,36 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// The [bannerImageLink] is the link to the community banner image.
   /// The [communityName] is the name of the community.
   /// The [blurImage] determines whether to apply a blur effect to the banner image and display community name.
+  /// The [joined] determines whether the user is a member of this community
   CommunityAppBar({
     Key? key,
     required this.bannerImageLink,
     required this.communityName,
     this.blurImage = false,
+    required this.joined,
   }) : super(key: key);
 
   final String bannerImageLink;
   final String communityName;
   final bool blurImage;
+  bool joined;
 
   @override
   Size get preferredSize => Size.fromHeight(65);
 
   @override
   Widget build(BuildContext context) {
+    void navigateToCommunitySearch() {
+      Navigator.of(context).pushNamed('/community-or-user-search', arguments: {
+        'communityOrUserName': communityName,
+        'communityOrUserIcon': bannerImageLink != ''
+            ? bannerImageLink
+            : 'assets/images/LogoSpreadIt.png',
+        'fromUserProfile': false,
+        'fromCommunityPage': true,
+      });
+    }
+
     return AppBar(
       backgroundColor: Colors.transparent,
       titleSpacing: 0,
@@ -79,6 +97,71 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
           : null,
+      actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.75),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.search,
+              ),
+              color: Colors.white,
+              onPressed: navigateToCommunitySearch,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.75),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.more_vert,
+              ),
+              color: Colors.white,
+              onPressed: () async {
+                bool isMuted = await getIsMuted(communityName, context);
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CommunityBottomSheet(
+                      communityName: communityName,
+                      muted: isMuted,
+                      joined: joined,
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
+  }
+}
+
+/// Function to get if the community is currently muted by the user.
+Future<bool> getIsMuted(String communityName, BuildContext context) async {
+  try {
+    GetMutedCommunities getMutedCommunities = GetMutedCommunities();
+    List<Community> mutedCommunities =
+        await getMutedCommunities.getMutedCommunities();
+
+    // Check if communityName is present in the mutedCommunities list
+    bool isMuted =
+        mutedCommunities.any((community) => community.name == communityName);
+    return isMuted;
+  } catch (e) {
+    CustomSnackbar(content: "an error occurred , please try again later")
+        .show(context);
+
+    return false;
   }
 }

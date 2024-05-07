@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/pages/chat_user_page.dart';
 import 'package:spreadit_crossplatform/features/chat/presentation/widgets/floating_new_chat_button.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/pages/primary_content_page.dart';
@@ -9,9 +12,11 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/ho
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/left_menu.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_feed.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
+import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/sign_up/data/verify_email.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 CurrentPage previousPage = CurrentPage.home;
@@ -33,15 +38,23 @@ class _HomePageState extends State<HomePage> {
   late GlobalKey<_HomePageState> _homePageKey;
   int chatFilterSelectedOption = 3;
   bool isAllRead = false;
+  MessageModel? newMessage;
 
   @override
   void initState() {
     super.initState();
+    print('initState');
     _homePageKey = GlobalKey<_HomePageState>();
+     _getCurrentUrlAndProcessToken();
     setState(() {
       currentPage = widget.currentPage;
     });
-    _getCurrentUrlAndProcessToken();
+  }
+
+  void setNewMessage(MessageModel message) {
+    setState(() {
+      newMessage = message;
+    });
   }
 
   Future<void> _getCurrentUrlAndProcessToken() async {
@@ -52,11 +65,14 @@ class _HomePageState extends State<HomePage> {
       print("token $token");
       int response = 100;
       if ((token != 'home' || token == '') &&
-          UserSingleton().user!.isVerified! == false) {
-        response = await verifyEmail(emailToken: token);
-      }
-      if (response == 200) {
-        CustomSnackbar(content: "Email verifed Succesfully").show(context);
+          UserSingleton().user ==null) {
+        response = await verifyEmail(emailToken: token , place: 'home');
+        if (response == 200) {
+          CustomSnackbar(content: "Email verifed Succesfully").show(context);
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/start-up-page', (route) => false);
+        }
       }
     } catch (e) {
       print("Error while getting current URL: $e");
@@ -64,7 +80,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> markallnotificationsasRead() async {
-    await MarkAsRead(type: 'all');
+    await markAsRead(type: 'all');
     setState(() {
       isAllRead = true;
     });
@@ -80,7 +96,7 @@ class _HomePageState extends State<HomePage> {
       currentPage = CurrentPage.values[newIndex];
     });
     if (currentPage.index <= 5) {
-      previousPage = currentPage;
+      previousPage = CurrentPage.values[currentPage.index % 5];
     }
   }
 
@@ -104,6 +120,8 @@ class _HomePageState extends State<HomePage> {
       ),
       InboxPage(
         isAllRead: isAllRead,
+        newMessage: newMessage,
+        setNewMessage: setNewMessage,
       ),
       PostFeed(
         postCategory: PostCategories.hot,
@@ -147,13 +165,15 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: TopBar(
-          key: _homePageKey,
-          onReadMessages: markallnotificationsasRead,
-          context: context,
-          currentPage: currentPage,
-          onChangeHomeCategory: changeSelectedIndex,
-          onChangeChatFilter: onChangeChatFilter,
-          chatFilterSelectedOption: chatFilterSelectedOption),
+        key: _homePageKey,
+        onReadMessages: markallnotificationsasRead,
+        context: context,
+        currentPage: currentPage,
+        onChangeHomeCategory: changeSelectedIndex,
+        onChangeChatFilter: onChangeChatFilter,
+        chatFilterSelectedOption: chatFilterSelectedOption,
+        setNewMessage: setNewMessage,
+      ),
       body: screens[currentPage.index],
       endDrawer: HomePageDrawer(),
       drawer: LeftMenu(),

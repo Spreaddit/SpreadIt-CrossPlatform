@@ -9,12 +9,43 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unlo
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/vote_comment.dart';
 
 class CommentFooter extends StatefulWidget {
+  
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
+
+/// A widget representing the footer section of a comment.
+///
+/// This widget displays interaction buttons and the comment score.
+///
+/// Example usage:
+/// ```dart
+/// CommentFooter(
+///   onMorePressed: () {
+///     // Handle "more" button pressed
+///   },
+///   onReplyPressed: () {
+///     // Handle "reply" button pressed
+///   },
+///   number: 42,
+///   upvoted: true,
+///   downvoted: false,
+/// )
+/// ```
+class CommentFooter extends StatelessWidget {
+  /// Callback function triggered when the "more" button is pressed.
   final Function()? onMorePressed;
+
+  /// Callback function triggered when the "reply" button is pressed.
   final Function()? onReplyPressed;
   final void Function(bool)? onLock;
   final void Function(bool)? onRemove;
+
+  /// The score (number of upvotes) for the comment.
   final int number;
+
+  /// Whether the comment is upvoted by the current user.
   final bool upvoted;
+
+  /// Whether the comment is downvoted by the current user.
   final bool downvoted;
   final String? commentId;
   final bool isPostLocked;
@@ -24,10 +55,27 @@ class CommentFooter extends StatefulWidget {
   final bool isModeratorView;
   final bool canManageComment;
   String? communityName;
+
+
+  /// the postId 
+  String? postId;
+
+  /// the Comment Id for the comment
+  String? commentId;
+
+  ///boolen to know if i am coming from saved page
+  bool isSaved;
+
+  /// Creates a comment footer.
+  ///
+  /// The [onMorePressed], [onReplyPressed], and [number] parameters are required.
+  /// The [upvoted] and [downvoted] parameters are optional and default to false.
   CommentFooter({
     required this.onMorePressed,
     required this.onReplyPressed,
     required this.number,
+    this.postId,
+    this.commentId,
     this.upvoted = false,
     this.downvoted = false,
     this.isPostLocked = false,
@@ -40,6 +88,7 @@ class CommentFooter extends StatefulWidget {
     this.onLock,
     this.onRemove,
     this.communityName,
+    this.isSaved = false,
   });
   @override
   State<CommentFooter> createState() => CommentFooterState();
@@ -117,6 +166,31 @@ class CommentFooterState extends State<CommentFooter> {
                               color: const Color.fromARGB(137, 219, 212, 212)),
                         ),
                       ],
+              TextButton(
+                onPressed: isSaved
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            settings: RouteSettings(
+                              name:
+                                  '/post-card-page/$postId/true/$commentId/true',
+                            ),
+                            builder: (context) => PostCardPage(
+                              postId: postId!,
+                              commentId: commentId!,
+                              oneComment: true,
+                            ),
+                          ),
+                        );
+                      }
+                    : onReplyPressed,
+                child: Row(
+                  children: [
+                    Icon(Icons.reply, color: Colors.grey),
+                    Text(
+                      'Reply',
+                      style: TextStyle(color: Colors.black54),
                     ),
                   )
               else

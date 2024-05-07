@@ -21,6 +21,7 @@ class PostCardPage extends StatefulWidget {
   bool canManagePostsAndComments;
   final String? commentId;
   final bool oneComment;
+  final Post? post;
 
   /// Indicates whether the current user is the owner of the profile associated with the post.
 
@@ -30,6 +31,7 @@ class PostCardPage extends StatefulWidget {
       this.isModeratorView = false,
       this.canManagePostsAndComments = false,
       this.commentId,
+      this.post,
       this.oneComment = false})
       : super(key: key);
 
@@ -102,6 +104,7 @@ class _PostCardPageState extends State<PostCardPage> {
 
   /// Fetches the post by its ID.
   Future<void> fetchPost() async {
+    if (widget.post != null) return;
     Post? fetchedPost = await getPostById(
       postId: widget.postId,
     );
@@ -118,6 +121,9 @@ class _PostCardPageState extends State<PostCardPage> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      post = widget.post;
+    });
     _scrollController = ScrollController();
     oneComment = widget.oneComment;
     fetchPost().then((post) {
@@ -190,6 +196,8 @@ class _PostCardPageState extends State<PostCardPage> {
                               oneComment: widget.oneComment,
                               canManagePostsAndComments:
                                   widget.canManagePostsAndComments,
+                              setIsloaded: setIsloaded,
+                              oneComment: widget.oneComment,
                             )
                           : PostCardShimmer(), // Placeholder post card
                     ],

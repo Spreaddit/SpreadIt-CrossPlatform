@@ -45,7 +45,7 @@ class _CommunityAndRulesHeaderState extends State<CommunityAndRulesHeader> {
         Container(
           margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
           child: CircleAvatar(
-            backgroundImage: AssetImage(widget.communityIcon),
+            backgroundImage: NetworkImage(widget.communityIcon),
             radius: 15,
           ),
         ),

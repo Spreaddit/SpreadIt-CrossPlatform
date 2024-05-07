@@ -41,13 +41,13 @@ Future<Map<String, dynamic>> getCommunityInfo(String communityName) async {
         return response.data;
       }
     } else {
-      print("kys");
       print('getCommunityInfo Failed to fetch data. Status code: ${response.statusCode}');
+      print('Failed to fetch data. Status code: ${response.statusCode}');
       return defaultResponse;
     }
   } catch (e) {
-    print("kyss");
     print('getCommunityInfo Error fetching data: $e');
+    print('Error fetching data: $e');
     return defaultResponse;
   }
 }
