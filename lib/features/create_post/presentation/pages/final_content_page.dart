@@ -139,6 +139,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
     super.initState();
     mapCommunityData();
     isModeratorFunction();
+    print(" am i a moderator $isModerator");
     if (widget.isLinkAdded != null) {
       finalIsLinkAdded = widget.isLinkAdded!;
     }
@@ -316,6 +317,17 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   void submit() async {
+    print("IsScheduled: $isScheduled");
+    DateTime? selectedDateTime;
+    if (isScheduled) {
+      selectedDateTime = DateTime(
+        selectedDate!.year,
+        selectedDate!.month,
+        selectedDate!.day,
+        selectedTime!.hour,
+        selectedTime!.minute,
+      );
+    }
     int response = await submitPost(
         finalTitle,
         finalContent,
@@ -329,9 +341,11 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         finalVideoWeb,
         isSpoiler,
         isNSFW,
-        isScheduled ? selectedDate : null);
+        isScheduled ? selectedDateTime : null);
     if (response == 201) {
       if (isScheduled) {
+        CustomSnackbar(content: 'Scheduled successfully !').show(context);
+        returnToHomePage(context);
       } else {
         CustomSnackbar(content: 'Posted successfully !').show(context);
         returnToHomePage(context);
@@ -547,7 +561,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
               );
             },
           );
-        });
+        }).then((value) => setState(() {}));
   }
 
   @override
