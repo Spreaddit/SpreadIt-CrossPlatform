@@ -85,11 +85,15 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
   }
 
   void editBannedUser() async {
+    if(_messageToUserController.text.isEmpty){
+      CustomSnackbar(content: "Please add a message to the user").show(context);
+      return;
+    }
     int response = await editBannedUserRequest(
         communityName: widget.communityName,
         username: _usernameController.text,
         violation: _violationController.text,
-        days: days ?? 0,
+        days: days ?? 1,
         messageToUser: _messageToUserController.text);
     if (response == 200) {
       Navigator.pop(context);

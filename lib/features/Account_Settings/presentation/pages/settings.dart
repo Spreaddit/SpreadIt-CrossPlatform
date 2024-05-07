@@ -18,11 +18,6 @@ class SettingsPage extends StatefulWidget {
 
 /// [SettingsPage] state.
 class _SettingsPageState extends State<SettingsPage> {
-  /// Holds user data fetched.
-  late Map<String, dynamic> data;
-
-  /// Future that holds the user data fetched.
-  late Future<Map<String, dynamic>> futureData;
 
   /// A list of widgets representing the general settings section in the settings page.
   List<Widget> generalSectionChildren = [];
@@ -30,7 +25,6 @@ class _SettingsPageState extends State<SettingsPage> {
   /// A list of widgets representing the feed options section in the settings page.
   List<Widget> feedOptionsSectionChildren = [];
 
-  /// Calls the [fetchData] method to fetch user information.
   @override
   void initState() {
     super.initState();
