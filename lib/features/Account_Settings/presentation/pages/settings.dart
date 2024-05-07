@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_user_info_data.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
@@ -69,8 +70,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       ToPageBtn(
         iconData: Icons.shield_rounded,
-        mainText: "GalalModCommunity2",
-        onPressed: () => navigateToCommunity(context, "GalalModCommunity2"),
+        mainText: "RehabCom", //"GalalModCommunity2",
+        onPressed: () => navigateToCommunity(context, "RehabCom"),
       ),
     ]);
 
