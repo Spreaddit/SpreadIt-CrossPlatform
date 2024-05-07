@@ -33,6 +33,7 @@ class _PostCardState extends State<PostCard> {
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _linkController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final bool isAdmin = UserSingleton().user!.role == 'Admin';
 
   /// Shows a bottom sheet for adding a link to the comment.
   void _showBottomSheet(BuildContext context) {
@@ -96,7 +97,8 @@ class _PostCardState extends State<PostCard> {
             post: widget.post,
             isFullView: true,
             isUserProfile:
-                widget.post.username == UserSingleton().user!.username,
+                widget.post.username == UserSingleton().user!.username || isAdmin,
+
           ),
           Container(
             decoration: BoxDecoration(
