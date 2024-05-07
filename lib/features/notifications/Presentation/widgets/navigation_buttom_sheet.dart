@@ -4,13 +4,22 @@ import 'package:spreadit_crossplatform/features/notifications/Data/disable_commu
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/get_according_to_type.dart';
 
+/// A bottom sheet widget for managing notifications.
 class ManageNotificationBottomSheet extends StatelessWidget {
+  /// Callback function to disable notifications.
   final Function(String) disable;
+
+  /// Boolean indicating whether the notification is related to a community.
   final bool community;
+
+  /// Callback function to hide a notification.
   final void Function(String, Notifications) onHide;
+
+  /// The notification object to manage.
   final Notifications notification;
 
-  ManageNotificationBottomSheet({
+  /// Constructs a [ManageNotificationBottomSheet] instance with the given parameters.
+   ManageNotificationBottomSheet({
     required this.disable,
     required this.community,
     required this.onHide,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_inbox.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_total_notifications.dart';
-import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/notification_page.dart';
 import '../../../generic_widgets/custom_bar.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/get_notifications.dart';
@@ -10,7 +11,18 @@ import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 
 /// A StatefulWidget representing the Saved page where users can view their saved posts and comments.
 class InboxPage extends StatefulWidget {
-  const InboxPage({Key? key}) : super(key: key);
+  final void Function(int)? onChangeHomeSubCategory;
+  final void Function(MessageModel message) setNewMessage;
+  final MessageModel? newMessage;
+  final bool isAllRead;
+
+  const InboxPage({
+    Key? key,
+    this.onChangeHomeSubCategory,
+    required this.setNewMessage,
+    required this.isAllRead,
+    required this.newMessage,
+  }) : super(key: key);
 
   @override
   State<InboxPage> createState() => _InboxPageState();
@@ -23,8 +35,7 @@ class _InboxPageState extends State<InboxPage> {
   List<Notifications> notifications = [];
   bool isLoading = true;
   Notifications? recommendedCommunity;
-  bool isAllRead = false;
-  int unreadNotifications=-1;
+  int unreadNotifications = -1;
 
   @override
   void initState() {
@@ -37,6 +48,7 @@ class _InboxPageState extends State<InboxPage> {
     setState(() {
       _selectedIndex = index;
     });
+    widget.onChangeHomeSubCategory!(index + 7);
   }
 
   Future<void> getSuggestedCommunity() async {
@@ -75,10 +87,11 @@ class _InboxPageState extends State<InboxPage> {
             return !todayNotifications.contains(n) &&
                 notificationDate.isBefore(today);
           }).toList();
-          print('notifications state ${notifications.isNotEmpty}' );
+          print('notifications state ${notifications.isNotEmpty}');
 
           print('todayNotifications  state ${todayNotifications.isNotEmpty}');
-          print('earliear notification state ${earlierNotifications.isNotEmpty}');
+          print(
+              'earliear notification state ${earlierNotifications.isNotEmpty}');
         });
       }
     } catch (e) {
@@ -94,17 +107,8 @@ class _InboxPageState extends State<InboxPage> {
     }
   }
 
-  Future<void> markallnotificationsasRead() async {
-      await MarkAsRead( type: 'all');
-      setState(() {
-        isAllRead = true;
-      });
-  }
-  
-  Future<void> unreadNotificationsCount()  async
-  {
-    int number= await getNotificationUnreadCount();
-    print('number issssssssss $number');
+  Future<void> unreadNotificationsCount() async {
+    int number = await getNotificationUnreadCount();
     setState(() {
       unreadNotifications = number;
     });
@@ -114,50 +118,43 @@ class _InboxPageState extends State<InboxPage> {
   Widget _buildSelectedPage() {
     switch (_selectedIndex) {
       case 0:
-        return isLoading ? LoaderWidget(dotSize: 10, logoSize: 100): NotificationPage(
+        return isLoading
+            ? LoaderWidget(dotSize: 10, logoSize: 100)
+            : NotificationPage(
                 todayNotifications: todayNotifications,
                 earlierNotifications: earlierNotifications,
                 notifications: notifications,
-                isAllRead: isAllRead,
-                );
-            
+                isAllRead: widget.isAllRead,
+              );
+
       case 1:
-        return LoaderWidget(
-                dotSize: 10,
-                logoSize: 100,
-              ); //To be messages
+        return isLoading
+            ? LoaderWidget(dotSize: 10, logoSize: 100)
+            : MessageInbox(
+                isAllRead: widget.isAllRead,
+                newMessage: widget.newMessage,
+                setNewMessage: widget.setNewMessage,
+              );
       default:
         return LoaderWidget(
-                dotSize: 10,
-                logoSize: 100,
-              );
+          dotSize: 10,
+          logoSize: 100,
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:  AppBar(
-        backgroundColor: Colors.white,
-        title: Text('unread count $unreadNotifications'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: markallnotificationsasRead,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          CustomBar(
-            tabs: ['Notifications', 'Messages'],
-            onIndexChanged: _onIndexChanged,
-          ),
-          Expanded(
-            child: _buildSelectedPage(),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        CustomBar(
+          tabs: ['Notifications', 'Messages'],
+          onIndexChanged: _onIndexChanged,
+        ),
+        Expanded(
+          child: _buildSelectedPage(),
+        ),
+      ],
     );
   }
 }

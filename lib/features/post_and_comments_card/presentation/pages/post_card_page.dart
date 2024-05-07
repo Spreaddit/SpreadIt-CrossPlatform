@@ -17,11 +17,13 @@ class PostCardPage extends StatefulWidget {
   /// Indicates whether the current user is the owner of the profile associated with the post.
   final String? commentId;
   final bool oneComment;
+  final Post? post;
 
   const PostCardPage(
       {Key? key,
       required this.postId,
       this.commentId,
+      this.post,
       this.oneComment = false})
       : super(key: key);
 
@@ -32,17 +34,16 @@ class PostCardPage extends StatefulWidget {
 class _PostCardPageState extends State<PostCardPage> {
   List<Comment> comments = [];
   Post? post;
-  List<Comment> allComments = []; 
+  List<Comment> allComments = [];
   bool oneComment = false;
   bool isLoaded = false;
   late ScrollController _scrollController;
 
-  void setIsloaded()
-  {
+  void setIsloaded() {
     setState(() {
-      isLoaded=true;
+      isLoaded = true;
     });
-     if (widget.oneComment && isLoaded) {
+    if (widget.oneComment && isLoaded) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
@@ -53,34 +54,35 @@ class _PostCardPageState extends State<PostCardPage> {
     }
   }
 
-    @override
+  @override
   void dispose() {
-    _scrollController.dispose(); 
+    _scrollController.dispose();
     super.dispose();
   }
 
   /// Fetches comments associated with the post.
   Future<void> fetchComments() async {
-  try {
-    var data = await fetchCommentsData('user', 'post', "${widget.postId}");
-    setState(() {
-      comments = data;
-      allComments = data;
-      if (widget.oneComment == true) {
-        try {
-          Comment? oneComment = comments.firstWhere((comment) => comment.id == widget.commentId);
-          comments = [oneComment];
-        } catch (e) {
-          print('Comment not found with id: ${widget.commentId}');
+    try {
+      var data = await fetchCommentsData('user', 'post', "${widget.postId}");
+      setState(() {
+        comments = data;
+        allComments = data;
+        if (widget.oneComment == true) {
+          try {
+            Comment? oneComment = comments
+                .firstWhere((comment) => comment.id == widget.commentId);
+            comments = [oneComment];
+          } catch (e) {
+            print('Comment not found with id: ${widget.commentId}');
+          }
         }
-      }
-    });
+      });
 
-    print(comments);
-  } catch (e) {
-    print('Error fetching comments: $e');
+      print(comments);
+    } catch (e) {
+      print('Error fetching comments: $e');
+    }
   }
-}
 
   /// Adds a new comment to the post.
   void addComment(Comment newComment) {
@@ -92,6 +94,7 @@ class _PostCardPageState extends State<PostCardPage> {
 
   /// Fetches the post by its ID.
   Future<void> fetchPost() async {
+    if (widget.post != null) return;
     Post? fetchedPost = await getPostById(
       postId: widget.postId,
     );
@@ -108,8 +111,11 @@ class _PostCardPageState extends State<PostCardPage> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      post = widget.post;
+    });
     _scrollController = ScrollController();
-    oneComment = widget.oneComment; 
+    oneComment = widget.oneComment;
     fetchPost().then((post) {
       fetchComments().then((comments) {
         setState(() {});
@@ -128,7 +134,7 @@ class _PostCardPageState extends State<PostCardPage> {
             Expanded(
               child: SingleChildScrollView(
                 physics: ScrollPhysics(),
-                controller: _scrollController, 
+                controller: _scrollController,
                 child: Container(
                   color: Colors.white,
                   child: Column(
@@ -143,8 +149,8 @@ class _PostCardPageState extends State<PostCardPage> {
                           ? PostCard(
                               post: post!,
                               comments: comments,
-                              setIsloaded : setIsloaded,  
-                              oneComment: widget.oneComment, 
+                              setIsloaded: setIsloaded,
+                              oneComment: widget.oneComment,
                             )
                           : Text(""),
                     ],
@@ -152,7 +158,7 @@ class _PostCardPageState extends State<PostCardPage> {
                 ),
               ),
             ),
-            if (oneComment && isLoaded) 
+            if (oneComment && isLoaded)
               Button(
                 onPressed: () {
                   setState(() {

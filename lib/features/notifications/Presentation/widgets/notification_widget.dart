@@ -4,21 +4,58 @@ import 'package:spreadit_crossplatform/features/notifications/Data/mark_as_read.
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/navigation_buttom_sheet.dart';
 
+/// A widget for displaying a single notification item.
 class NotificationWidget extends StatefulWidget {
+  /// The notification object to display.
   final Notifications? notification;
+
+  /// The content of the notification.
   final String content;
+
+  /// The icon data to display with the notification.
   final IconData? iconData;
+
+  /// Callback function to be executed when the notification is pressed.
   final VoidCallback? onPressed;
+
+  /// Callback function to hide the notification.
   final void Function(String, Notifications) onHide;
+
+  /// Callback function to disable the notification.
   final void Function(String) disable;
 
+  /// The text to display on the button (if any).
   final String? buttonText;
+
+  /// The icon data to display on the button (if any).
   final IconData? buttonIcon;
+
+  /// The date of the notification.
   final String date;
+
+  /// Flag indicating whether the notification is read.
   final bool isRead;
+
+  /// Flag indicating whether the user is followed.
   final bool followed;
+
+  /// Flag indicating whether the notification is related to a community.
   final bool community;
 
+  /// Constructs a [NotificationWidget].
+  ///
+  /// [notification] is the notification object to display.
+  /// [content] is the content of the notification.
+  /// [date] is the date of the notification.
+  /// [iconData] is the icon data to display with the notification.
+  /// [onPressed] is the callback function when the notification is pressed.
+  /// [onHide] is the callback function to hide the notification.
+  /// [disable] is the callback function to disable the notification.
+  /// [buttonText] is the text to display on the button.
+  /// [buttonIcon] is the icon data to display on the button.
+  /// [isRead] indicates whether the notification is read.
+  /// [followed] indicates whether the user is followed.
+  /// [community] indicates whether the notification is related to a community.
   const NotificationWidget({
     Key? key,
     this.notification,
@@ -48,13 +85,27 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     isRead = widget.isRead;
   }
 
-  void markmessageasRead()  {
+  void markmessageasRead() {
     if (widget.notification!.isRead == false) {
-       MarkAsRead(id: widget.notification!.id!, type: 'one');
+      markAsRead(id: widget.notification!.id!, type: 'one');
       setState(() {
         isRead = true;
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    isRead = widget.isRead;
+  }
+
+  @override
+  void didUpdateWidget(covariant NotificationWidget oldWidget) {
+    setState(() {
+      isRead = widget.isRead;
+    });
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -85,8 +136,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               if (widget.notification!.communitypic == null &&
                   widget.notification!.relatedUser == null)
                 CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/LogoSpreadIt.png'),
+                  backgroundImage: AssetImage('assets/images/LogoSpreadIt.png'),
                   radius: 20.0,
                 ),
               if (widget.iconData != null)
@@ -126,8 +176,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: ()  {
-                         markmessageasRead();
+                      onPressed: () {
+                        markmessageasRead();
                         widget.onPressed?.call();
                       },
                       icon: Icon(
@@ -156,7 +206,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                 : null,
         trailing: GestureDetector(
           onTap: () async {
-             markmessageasRead();
+            markmessageasRead();
             showModalBottomSheet(
               context: context,
               builder: (context) => ManageNotificationBottomSheet(
@@ -173,3 +223,28 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     );
   }
 }
+
+/// Example usage:
+///
+/// ```dart
+/// NotificationWidget(
+///   notification: notification,
+///   content: 'New comment on your post',
+///   date: '2024-05-06',
+///   iconData: Icons.comment,
+///   onPressed: () {
+///     // Handle notification pressed event
+///   },
+///   onHide: (id, notification) {
+///     // Handle hiding the notification
+///   },
+///   disable: (type) {
+///     // Handle disabling the notification
+///   },
+///   buttonText: 'View',
+///   buttonIcon: Icons.visibility,
+///   isRead: false,
+///   followed: true,
+///   community: false,
+/// )
+/// ```

@@ -177,7 +177,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
         iconData: Icons.volume_mute_outlined,
         mainText: "Manage muted communities",
         onPressed:  () => Navigator.of(context)
-            .pushNamed('/muted-commuinties'),
+            .pushNamed('/muted-communities'),
       ),
       SwitchSection(),
     ]);

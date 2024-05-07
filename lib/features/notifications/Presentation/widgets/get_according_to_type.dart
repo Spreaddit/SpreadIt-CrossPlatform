@@ -7,12 +7,21 @@ import 'package:spreadit_crossplatform/features/notifications/Data/notifications
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
+/// Data class representing a notification with its icon, content, button text, and onPress callback.
 class NotificationData extends Equatable {
+  /// The icon data representing the notification.
   final IconData? icon;
+
+  /// The text content of the notification.
   final String? content;
+
+  /// Text for the button associated with the notification (if any).
   final String? buttonText;
+
+  /// Callback function to be executed when the notification is pressed.
   final VoidCallback? onPress;
 
+  /// Constructs a [NotificationData] instance with the given parameters.
   NotificationData({
     required this.icon,
     required this.content,
@@ -24,6 +33,25 @@ class NotificationData extends Equatable {
   List<Object?> get props => [icon, content, buttonText, onPress];
 }
 
+/// Navigates to the post feed page with specific parameters.
+void navigateToPostFeed(
+    BuildContext context, String postId, String? commentId, bool oneComment) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      settings: RouteSettings(
+        name: '/post-card-page/$postId/true/$commentId/$oneComment',
+      ),
+      builder: (context) => PostCardPage(
+        postId: postId,
+        commentId: commentId,
+        oneComment: oneComment,
+      ),
+    ),
+  );
+}
+
+/// Processes a notification and returns corresponding NotificationData.
 NotificationData processNotification(
     Notifications notification, BuildContext context) {
   IconData? icon;
@@ -54,20 +82,8 @@ NotificationData processNotification(
       content = notification.post!.title;
       buttonText = null;
       onPress = () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            settings: RouteSettings(
-              name:
-                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
-            ),
-            builder: (context) => PostCardPage(
-              postId: notification.postId!,
-              commentId: notification.commentId,
-              oneComment: true,
-            ),
-          ),
-        );
+        navigateToPostFeed(
+            context, notification.postId!, notification.commentId!, true);
       };
       break;
     case "Upvote Posts":
@@ -75,17 +91,7 @@ NotificationData processNotification(
       content = notification.post!.title;
       buttonText = null;
       onPress = () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            settings: RouteSettings(
-              name: '/post-card-page/${notification.postId}/true',
-            ),
-            builder: (context) => PostCardPage(
-              postId: notification.postId!,
-            ),
-          ),
-        );
+        navigateToPostFeed(context, notification.postId!, null, false);
       };
       break;
 
@@ -94,40 +100,16 @@ NotificationData processNotification(
       content = notification.comment!.content;
       buttonText = "Reply";
       onPress = () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            settings: RouteSettings(
-              name:
-                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
-            ),
-            builder: (context) => PostCardPage(
-              postId: notification.postId!,
-              commentId: notification.commentId,
-              oneComment: true,
-            ),
-          ),
-        );
+        navigateToPostFeed(
+            context, notification.postId!, notification.commentId!, true);
       };
       break;
     case "Comment":
       icon = Ionicons.chatbubble;
       content = notification.comment!.content;
       onPress = () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            settings: RouteSettings(
-              name:
-                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
-            ),
-            builder: (context) => PostCardPage(
-              postId: notification.postId!,
-              commentId: notification.commentId,
-              oneComment: true,
-            ),
-          ),
-        );
+        navigateToPostFeed(
+            context, notification.postId!, notification.commentId!, true);
       };
       break;
     case "community":
@@ -144,31 +126,25 @@ NotificationData processNotification(
         );
       };
       break;
-      case "mention":
+    case "mention":
       icon = CupertinoIcons.person;
       content = notification.comment!.content;
       buttonText = null;
       onPress = () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            settings: RouteSettings(
-              name:
-                  '/post-card-page/${notification.postId}/true/${notification.commentId}/true',
-            ),
-            builder: (context) => PostCardPage(
-              postId: notification.postId!,
-              commentId: notification.commentId,
-              oneComment: true,
-            ),
-          ),
-        );
+        navigateToPostFeed(
+            context, notification.postId!, notification.commentId!, true);
       };
       break;
-      case "Account Update":
+    case "Account Update":
       icon = Ionicons.ban;
       content = '';
       buttonText = null;
+      onPress = () {};
+      break;
+    case "Invite":
+      icon = Ionicons.person;
+      content = '';
+      buttonText = 'Accept invitation';
       onPress = () {};
       break;
     default:
@@ -184,17 +160,19 @@ NotificationData processNotification(
   );
 }
 
+/// Gets the notification type as a string based on the notification
+/// Used to be able to disable notification type
 String getNotificationType(Notifications notification) {
   switch (notification.notificationType) {
-    case "follow":
+    case "Follow":
       return "newFollowers";
-    case "upvoteComments":
+    case "Upvote Comments":
       return "upvotes";
-    case "upvotePosts":
+    case "Upvote Posts":
       return "upvotes";
-    case "commentReply":
+    case "Comment Reply":
       return "repliesToComments";
-    case "comment":
+    case "Comment":
       return "commentsOnYourPost";
     default:
       return "other";

@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/presentation/widgets/unmute_mute_community.dart';
-
+/// A tile widget representing a community.
+///
+/// This tile widget displays information about a community, including its name and image,
+/// and provides an option to mute or unmute the community.
+///
+/// Users can interact with the tile by tapping the "Mute" or "Unmute" button to toggle
+/// the mute state of the community. When muted, posts from the community are not displayed
+/// in the user's feeds or recommendations.
+///
+/// Example usage:
+///
+/// ```dart
+/// CommunityTile(
+///   community: community,
+///   isMuted: isMuted,
+/// );
+/// ```
 class CommunityTile extends StatefulWidget {
   final Community community;
   final bool isMuted;

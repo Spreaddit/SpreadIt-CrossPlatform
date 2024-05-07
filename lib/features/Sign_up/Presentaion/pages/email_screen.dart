@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+
+/// A page to inform the user that an email has been sent for email verification.
+///
+/// This page displays a message informing the user that an email has been sent to their provided email address
+/// with a link to verify their account. It also provides instructions in case the email is not received.
+///
+/// Example usage:
+/// ```dart
+/// Navigator.pushNamed(context, '/email-sent', arguments: {'email': userEmail});
+/// ```
+/// 
 class EmailSentPage extends StatelessWidget {
   late String email='';
 
