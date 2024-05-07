@@ -3,7 +3,13 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 ///describes different user_to_user interactions
-enum InteractWithUsersActions { follow, unfollow, block, report }
+enum InteractWithUsersActions {
+  follow,
+  unfollow,
+  block,
+  report,
+  unblock,
+}
 
 /// takes [InteractWithUsersActions] as a parameter and
 /// returns its respective endpoint
@@ -15,6 +21,8 @@ String interactionType(InteractWithUsersActions action) {
       return "/users/unfollow/";
     case InteractWithUsersActions.block:
       return "/users/block/";
+    case InteractWithUsersActions.unblock:
+      return "/users/unblock/";
     case InteractWithUsersActions.report:
       return "/users/report/";
   }

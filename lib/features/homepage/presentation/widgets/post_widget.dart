@@ -282,7 +282,12 @@ class _PostHeaderState extends State<_PostHeader> {
             widget.post.username,
             true,
           ),
-      () => blockAccount(widget.post.username),
+      () {
+        blockAccount(widget.post.username);
+        CustomSnackbar(content: "You blocked ${widget.post.username}")
+            .show(context);
+        Navigator.of(context).pop();
+      },
     ];
 
     List<IconData> writerIcons = [
