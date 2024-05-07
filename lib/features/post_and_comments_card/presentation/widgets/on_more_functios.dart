@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/NSFW_post.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/hide_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/spoiler_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unNSFW_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unspoiler_post.dart';
@@ -15,7 +16,17 @@ void getReplyNotifications() {
   //TODO: get reply notifications logic
 }
 
-void hide() {}
+void hide({
+  required BuildContext context,
+  required String postId,
+  required bool shouldHide,
+  required void Function() onHide,
+}) async {
+  var response = await hidePost(postId, shouldHide);
+  if (response != 200) {
+    CustomSnackbar(content: "An error occured").show(context);
+  }
+}
 
 void copyText(BuildContext context, String text) {
   Clipboard.setData(ClipboardData(
@@ -27,12 +38,6 @@ void copyText(BuildContext context, String text) {
   Navigator.of(context).pop();
 }
 
-void save() {
-  //TODO:Save comment logic
-}
-void collapseThread() {
-  //TODO:Collaps thread logic
-}
 void blockAccount(String username) {
   interactWithUser(
     userId: username,
