@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
+/// Represents a range slider widget for selecting the visibility type of a community.
+///
+/// This widget provides a range slider to choose between different visibility types:
+/// - Public: Anyone can see and participate in this community.
+/// - Restricted: Anyone can see, join, or vote in this community, but you control who posts and comments.
+/// - Private: Only approved members can see and participate in this community.
+///
+/// Required parameters:
+/// - [communityName]: The name of the community.
+/// - [onTypeChanged]: Callback function invoked when the visibility type is changed.
+/// - [communityInfo]: Information about the community, including the current visibility type.
 class CommunityRangeSlider extends StatefulWidget {
-  CommunityRangeSlider(
-      {Key? key,
-      required this.communityName,
-      required this.onTypeChanged,
-      required this.communityInfo})
-      : super(key: key);
+  const CommunityRangeSlider({
+    Key? key,
+    required this.communityName,
+    required this.onTypeChanged,
+    required this.communityInfo,
+  }) : super(key: key);
 
   final String communityName;
   final Function onTypeChanged;

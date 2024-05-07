@@ -5,8 +5,20 @@ import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.d
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/add_data_appbar.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// A page for adding or editing banned users in a community.
 class AddOrEditBannedPage extends StatefulWidget {
-  AddOrEditBannedPage({
+  /// Constructs a new instance of AddOrEditBannedPage.
+  ///
+  /// [key] is an optional key to identify this widget.
+  /// [communityName] is the name of the community.
+  /// [isAdding] is true if adding a new banned user, false if editing an existing one.
+  /// [onRequestCompleted] is a callback function to be called when the request is completed.
+  /// [username] is the username of the banned user.
+  /// [violation] is the reason for the ban.
+  /// [banReason] is a note for moderators regarding the ban.
+  /// [days] is the duration of the ban.
+  /// [messageToUser] is a note to be included in the ban message sent to the user.
+  const AddOrEditBannedPage({
     Key? key,
     required this.communityName,
     required this.isAdding,
@@ -18,19 +30,28 @@ class AddOrEditBannedPage extends StatefulWidget {
     this.messageToUser = '',
   }) : super(key: key);
 
-  /// The name of the community
+  /// The name of the community.
   final String communityName;
 
-  /// true if adding, false if editing
+  /// True if adding a new banned user, false if editing an existing one.
   final bool isAdding;
 
-  /// Callback function to be called when the request is completed
+  /// Callback function to be called when the request is completed.
   final Function onRequestCompleted;
 
+  /// The username of the banned user.
   final String username;
+
+  /// The reason for the ban.
   final String violation;
+
+  /// A note for moderators regarding the ban.
   final String banReason;
+
+  /// The duration of the ban.
   final int days;
+
+  /// A note to be included in the ban message sent to the user.
   final String messageToUser;
 
   @override

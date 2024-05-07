@@ -15,10 +15,13 @@ import 'package:spreadit_crossplatform/features/modtools/presentation/pages/dumm
 import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Widget to display moderator tools for a community.
 class ModtoolsPage extends StatefulWidget {
-  ModtoolsPage({Key? key, required this.communityName}) : super(key: key);
-
+  /// The name of the community.
   final String communityName;
+
+  /// Constructor for [ModtoolsPage].
+  const ModtoolsPage({Key? key, required this.communityName}) : super(key: key);
 
   @override
   State<ModtoolsPage> createState() => _ModtoolsPageState();

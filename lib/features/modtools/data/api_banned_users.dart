@@ -2,6 +2,20 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Sends a request to ban a user from a community.
+///
+/// The [communityName] parameter specifies the name of the community.
+/// The [username] parameter specifies the username of the user to be banned.
+/// The [violation] parameter specifies the reason for the ban.
+/// The [days] parameter specifies the duration of the ban in days.
+/// The [messageToUser] parameter specifies the message to be displayed to the banned user.
+/// The [modNote] parameter specifies an optional note for the moderator.
+///
+/// Returns a [Future] that completes with an [int] representing the status code of the request.
+/// A status code of 200 indicates a successful ban request.
+/// A status code between 400 and 499 indicates a client-side error.
+/// A status code of 500 indicates a server-side error.
+/// Returns 0 if an error occurs during the request.
 Future<int> banUserRequest(
     {required String communityName,
     required String username,
@@ -47,6 +61,21 @@ Future<int> banUserRequest(
   }
 }
 
+/// Sends a request to unban a user in a community.
+///
+/// The [communityName] parameter specifies the name of the community where the user is banned.
+/// The [username] parameter specifies the username of the user to be unbanned.
+///
+/// Returns a [Future] that completes with an [int] representing the status code of the request.
+/// If the request is successful, the status code will be 200.
+/// If there is an error, the status code will be 400 for client errors or 500 for server errors.
+/// If an exception occurs during the request, the status code will be 0.
+///
+/// Example usage:
+/// ```dart
+/// int statusCode = await unbanUserRequest(communityName: 'community', username: 'user123');
+/// print('Unban user request status code: $statusCode');
+/// ```
 Future<int> unbanUserRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();
@@ -78,7 +107,31 @@ Future<int> unbanUserRequest(
     return 0;
   }
 }
-
+/// Edits the banned user request.
+///
+/// This method sends a PATCH request to the server to edit the ban details of a user in a community.
+///
+/// The [communityName] parameter specifies the name of the community.
+/// The [username] parameter specifies the username of the user to be banned.
+/// The [violation] parameter specifies the reason for the ban.
+/// The [days] parameter specifies the duration of the ban in days. Use a negative value for a permanent ban.
+/// The [messageToUser] parameter specifies the message to be shown to the banned user.
+///
+/// Returns a [Future] that completes with an [int] representing the status code of the request.
+/// If the request is successful, the status code will be 200.
+/// If there is an error, the status code will be non-zero.
+/// If an exception occurs, the status code will be 0.
+///
+/// Example usage:
+/// ```dart
+/// int statusCode = await editBannedUserRequest(
+///   communityName: 'example_community',
+///   username: 'example_user',
+///   violation: 'spamming',
+///   days: 7,
+///   messageToUser: 'You have been banned for spamming.',
+/// );
+/// ```
 Future<int> editBannedUserRequest({
   required String communityName,
   required String username,
@@ -123,6 +176,11 @@ Future<int> editBannedUserRequest({
   }
 }
 
+/// Retrieves a list of banned users for a given community.
+///
+/// The [communityName] parameter specifies the name of the community.
+/// Returns a [Future] that resolves to a [List<dynamic>] containing the banned users.
+/// If an error occurs during the API request, an empty list is returned.
 Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   List<dynamic> defaultResponse = [];
@@ -156,6 +214,11 @@ Future<List<dynamic>> getBannedUsersRequest(String communityName) async {
   }
 }
 
+/// Makes a request to check if a user is banned in a specific community.
+///
+/// Returns a [Future] that resolves to a [Map] containing the response data.
+/// The [communityName] parameter specifies the name of the community to check in.
+/// The [username] parameter specifies the username of the user to check.
 Future<Map<String, dynamic>> checkIfBannedRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();

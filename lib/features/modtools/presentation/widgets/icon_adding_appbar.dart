@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_approved_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_edit_banned_page.dart';
 
+/// Represents an app bar with an icon for adding approved users or banned users.
+///
+/// This app bar contains a title, back button, and an add icon button for adding either approved or banned users,
+/// based on the value of [isApproving].
+///
+/// Required parameters:
+/// - [title] : The title of the app bar.
+/// - [communityName] : The name of the community.
+/// - [onRequestCompleted] : Callback function invoked when the request is completed.
+/// - [isApproving] : A boolean value indicating whether the action is approving (true) or banning (false).
 class IconAddingAppBar extends StatefulWidget implements PreferredSizeWidget {
-  IconAddingAppBar({
+  const IconAddingAppBar({
     Key? key,
     required this.title,
     required this.communityName,
@@ -13,11 +23,7 @@ class IconAddingAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   final String title;
   final String communityName;
-
-  /// Callback function to be called when the request is completed
   final Function onRequestCompleted;
-
-  /// true if approving, false if banning
   final bool isApproving;
 
   @override

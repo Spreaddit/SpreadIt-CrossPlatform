@@ -2,6 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Retrieves the moderation community information for a given community name.
+///
+/// The [communityName] parameter specifies the name of the community for which the information is to be retrieved.
+///
+/// Returns a [Future] that resolves to a [Map<String, dynamic>] containing the community information, or `null` if an error occurs.
+/// 
+/// Throws an exception if there is an error fetching the community information.
 Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
   //TODO - CHECK CORS PROBLEM IN BE INTEGRATION
   String? accessToken = UserSingleton().getAccessToken();
@@ -29,6 +36,18 @@ Future<Map<String, dynamic>?>? getModCommunityInfo(String communityName) async {
   }
 }
 
+/// Updates the mod community information.
+///
+/// Returns a [Future] that completes with an [int] representing the status code of the update operation.
+/// The status code indicates whether the update was successful or not.
+///
+/// Example usage:
+/// ```dart
+/// int statusCode = await updateModCommunityInfo();
+/// print('Update status code: $statusCode');
+/// ```
+///
+/// Throws an [Exception] if an error occurs during the update process.
 Future<int> updateModCommunityInfo(
   String communityName, {
   String? name,

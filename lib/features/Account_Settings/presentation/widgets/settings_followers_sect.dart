@@ -3,9 +3,9 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'switch_type_1.dart';
 import '../../data/data_source/api_allow_follow_data.dart';
 
-/// A widget representing a section with two switches of type [SwitchBtn1].
+/// A widget representing a section with 1 switches of type [SwitchBtn1].
 ///
-/// The first switch controls the visibility of the second switch.
+/// The switch allowing people to follow the user is displayed in this section.
 class FollowersSwitchSection extends StatefulWidget {
   /// Creates a switch section widget.
   const FollowersSwitchSection({
@@ -61,18 +61,6 @@ class _FollowersSwitchSectionState extends State<FollowersSwitchSection> {
             }),
             tertiaryText:
                 "Followers will be notified about posts you make to your profile and see them in their home feed.",
-          ),
-        ),
-        Visibility(
-          visible: allowFollow,
-          maintainState: true,
-          child: SwitchBtn1(
-            iconData: Icons.group_outlined,
-            currentLightVal: false,
-            mainText: "Show your follower count",
-            onPressed: (() {}),
-            tertiaryText:
-                "Turning this off hides your follower count on your profile from others",
           ),
         ),
       ],

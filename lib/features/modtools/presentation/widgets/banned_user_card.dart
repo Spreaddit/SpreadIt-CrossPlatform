@@ -4,8 +4,25 @@ import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.d
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/add_edit_banned_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
+/// Represents a card widget displaying information about a banned user.
+///
+/// This widget displays the username, avatar, remaining ban length, violation details,
+/// and provides options to interact with the banned user such as viewing profile and unbanning.
+///
+/// Required parameters:
+/// - [username]: The username of the banned user.
+/// - [communityName]: The name of the community to which the user belongs.
+/// - [violation]: The details of the violation for which the user was banned.
+/// - [banReason]: The reason for the ban.
+/// - [days]: The number of days for which the user is banned.
+/// - [messageToUser]: A message sent to the user regarding the ban.
+/// - [endOfBanDate]: The date when the ban ends.
+/// - [avatarUrl]: The URL of the user's avatar image.
+/// - [onUnban]: Callback function invoked when the user is unbanned.
+/// - [onRequestCompleted]: Callback function invoked when the request is completed.
+/// - [isPermanent]: A flag indicating whether the ban is permanent.
 class BannedUserCard extends StatefulWidget {
-  BannedUserCard({
+  const BannedUserCard({
     Key? key,
     required this.username,
     required this.communityName,
@@ -16,8 +33,8 @@ class BannedUserCard extends StatefulWidget {
     required this.endOfBanDate,
     required this.avatarUrl,
     required this.onUnban,
-    required this.isPermanent,
     required this.onRequestCompleted,
+    required this.isPermanent,
   }) : super(key: key);
 
   final String username;

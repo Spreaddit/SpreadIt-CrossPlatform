@@ -3,8 +3,19 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 
+/// Represents a card widget displaying information about an approved user.
+///
+/// This widget displays the username, avatar, and banner of the approved user
+/// along with options to interact with the user like viewing profile and removing approval.
+///
+/// Required parameters:
+/// - [username] : The username of the approved user.
+/// - [communityName] : The name of the community to which the user belongs.
+/// - [avatarUrl] : The URL of the user's avatar image.
+/// - [banner] : The URL of the user's banner image.
+/// - [onUnApprove] : Callback function invoked when the user is unapproved.
 class ApprovedUserCard extends StatefulWidget {
-  ApprovedUserCard({
+  const ApprovedUserCard({
     Key? key,
     required this.username,
     required this.communityName,

@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
+/// Represents an app bar with save functionality.
+///
+/// This app bar contains a title, back button, and a save button. When the save button is pressed,
+/// the [onSavePressed] callback function is invoked.
+///
+/// Required parameters:
+/// - [title] : The title of the app bar.
+/// - [onSavePressed] : Callback function invoked when the save button is pressed.
 class SavingAppBar extends StatefulWidget implements PreferredSizeWidget {
-  SavingAppBar({Key? key, required this.title, required this.onSavePressed})
-      : super(key: key);
+  const SavingAppBar({
+    Key? key,
+    required this.title,
+    required this.onSavePressed,
+  }) : super(key: key);
 
   final String title;
   final VoidCallback? onSavePressed;

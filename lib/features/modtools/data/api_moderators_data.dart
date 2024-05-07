@@ -2,13 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Makes a request to get the moderators for a given community.
+///
+/// Returns a Future that resolves to a List<dynamic> containing the moderators' data.
 Future<List<dynamic>> getModeratorsRequest(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   List<dynamic> defaultResponse = [];
   try {
     final response = await Dio().get(
-      //TODO USE REAL API URL
-      // '$galalModUrl2/community/moderation/$communityName/moderators',
       '$apiUrl/community/moderation/$communityName/moderators',
       options: Options(
         headers: {
@@ -36,6 +37,21 @@ Future<List<dynamic>> getModeratorsRequest(String communityName) async {
   }
 }
 
+/// Checks if a moderator request is valid.
+///
+/// Returns a Future that completes with a Map containing the response data.
+/// Checks if a moderator request is valid.
+///
+/// This function takes no parameters and returns a [Future] that resolves to a [Map] with a [String] key and [dynamic] value.
+/// The returned map contains information about the moderator request.
+///
+/// Example usage:
+/// ```dart
+/// Future<Map<String, dynamic>> result = checkIfModeratorRequest();
+/// result.then((data) {
+///   print(data);
+/// });
+/// ```
 Future<Map<String, dynamic>> checkIfModeratorRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();

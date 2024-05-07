@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
+/// Represents a switch widget for toggling the NSFW (Not Safe For Work) status of a community.
+///
+/// This widget provides a switch toggle to mark a community as 18+ or not.
+///
+/// Required parameters:
+/// - [communityName]: The name of the community.
+/// - [onTypeChanged]: Callback function invoked when the NSFW status is changed.
+/// - [communityInfo]: Information about the community, including the current NSFW status.
 class CommunityNSFWSwitch extends StatefulWidget {
-  CommunityNSFWSwitch(
-      {Key? key,
-      required this.communityName,
-      required this.onTypeChanged,
-      required this.communityInfo})
-      : super(key: key);
+  const CommunityNSFWSwitch({
+    Key? key,
+    required this.communityName,
+    required this.onTypeChanged,
+    required this.communityInfo,
+  }) : super(key: key);
 
   final String communityName;
   final Function onTypeChanged;

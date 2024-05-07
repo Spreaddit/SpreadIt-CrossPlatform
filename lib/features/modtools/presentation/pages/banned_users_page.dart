@@ -4,10 +4,14 @@ import 'package:spreadit_crossplatform/features/modtools/data/api_banned_users.d
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/banned_user_card.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/icon_adding_appbar.dart';
 
+/// Widget to display banned users for a community.
 class BannedUsersPage extends StatefulWidget {
-  BannedUsersPage({Key? key, required this.communityName}) : super(key: key);
-
+  /// The name of the community.
   final String communityName;
+
+  /// Constructor for [BannedUsersPage].
+  const BannedUsersPage({Key? key, required this.communityName})
+      : super(key: key);
 
   @override
   State<BannedUsersPage> createState() => _BannedUsersPageState();
@@ -26,10 +30,12 @@ class _BannedUsersPageState extends State<BannedUsersPage> {
     fetchData();
   }
 
+  /// Fetches banned users data for the community.
   void fetchData() async {
     _bannedUsersData = getBannedUsersRequest(widget.communityName);
   }
 
+  /// Filters users based on search text.
   void filterResults() {
     setState(() {
       _filteredData = (_searchController.text.isEmpty)

@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/modtools_page.dart';
 
+/// Represents a button to navigate to the mod tools page.
+///
+/// This button, when pressed, navigates to the mod tools page for a specific community.
+///
+/// Required parameters:
+/// - [communityName]: The name of the community.
+/// - [onReturnToCommunityPage]: Callback function invoked when returning to the community page.
 class ModtoolsPageBtn extends StatelessWidget {
-  ModtoolsPageBtn({Key? key, required this.communityName, required this.onReturnToCommunityPage}) : super(key: key);
+  const ModtoolsPageBtn({
+    Key? key,
+    required this.communityName,
+    required this.onReturnToCommunityPage,
+  }) : super(key: key);
 
   final String communityName;
   final Function onReturnToCommunityPage;
@@ -14,9 +25,10 @@ class ModtoolsPageBtn extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => ModtoolsPage(
-                    communityName: communityName,
-                  )),
+            builder: (_) => ModtoolsPage(
+              communityName: communityName,
+            ),
+          ),
         ).then((value) => onReturnToCommunityPage());
       },
       style: TextButton.styleFrom(
@@ -34,3 +46,4 @@ class ModtoolsPageBtn extends StatelessWidget {
     );
   }
 }
+

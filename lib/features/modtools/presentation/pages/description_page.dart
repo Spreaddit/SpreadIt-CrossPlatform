@@ -4,10 +4,14 @@ import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
 import 'package:spreadit_crossplatform/features/modtools/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/saving_appbar.dart';
 
+/// Widget to manage community description settings.
 class DescriptionPage extends StatefulWidget {
-  DescriptionPage({Key? key, required this.communityName}) : super(key: key);
-
+  /// The name of the community.
   final String communityName;
+
+  /// Constructor for [DescriptionPage].
+  const DescriptionPage({Key? key, required this.communityName})
+      : super(key: key);
 
   @override
   State<DescriptionPage> createState() => _DescriptionPageState();
@@ -25,10 +29,12 @@ class _DescriptionPageState extends State<DescriptionPage> {
     fetchData();
   }
 
+  /// Fetches community info data.
   void fetchData() async {
     communityInfo = getModCommunityInfo(widget.communityName);
   }
 
+  /// Updates the community description.
   void updateDescription(String description) async {
     int response = await updateModCommunityInfo(widget.communityName,
         description: description);

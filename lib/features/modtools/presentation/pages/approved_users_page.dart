@@ -4,10 +4,14 @@ import 'package:spreadit_crossplatform/features/modtools/data/api_approved_users
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/approved_user_card.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/icon_adding_appbar.dart';
 
+/// Widget to display approved users for a community.
 class ApprovedUsersPage extends StatefulWidget {
-  ApprovedUsersPage({Key? key, required this.communityName}) : super(key: key);
-
+  /// The name of the community.
   final String communityName;
+
+  /// Constructor for [ApprovedUsersPage].
+  const ApprovedUsersPage({Key? key, required this.communityName})
+      : super(key: key);
 
   @override
   State<ApprovedUsersPage> createState() => _ApprovedUsersPageState();
@@ -26,10 +30,12 @@ class _ApprovedUsersPageState extends State<ApprovedUsersPage> {
     fetchData();
   }
 
+  /// Fetches approved users data for the community.
   void fetchData() async {
     _approvedUsersData = getApprovedUsersRequest(widget.communityName);
   }
 
+  /// Filters users based on search text.
   void filterResults() {
     setState(() {
       _filteredData = (_searchController.text.isEmpty)

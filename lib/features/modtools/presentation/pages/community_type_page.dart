@@ -6,10 +6,14 @@ import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/co
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/comm_type_range_slider.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/widgets/saving_appbar.dart';
 
+/// Widget to manage community type settings.
 class CommunityTypePage extends StatefulWidget {
-  CommunityTypePage({Key? key, required this.communityName}) : super(key: key);
-
+  /// The name of the community.
   final String communityName;
+
+  /// Constructor for [CommunityTypePage].
+  const CommunityTypePage({Key? key, required this.communityName})
+      : super(key: key);
 
   @override
   State<CommunityTypePage> createState() => _CommunityTypePageState();
@@ -31,10 +35,12 @@ class _CommunityTypePageState extends State<CommunityTypePage> {
     fetchData();
   }
 
+  /// Fetches community info data.
   void fetchData() async {
     communityInfo = getModCommunityInfo(widget.communityName);
   }
 
+  /// Checks if the community type or NSFW setting has changed.
   void isTypeOrNSFWChanged() {
     if (_rangeSliderKey.currentState!.isTypeChanged ||
         _nsfwSwitchSliderKey.currentState!.isNSFWChanged) {
@@ -48,6 +54,7 @@ class _CommunityTypePageState extends State<CommunityTypePage> {
     }
   }
 
+  /// Updates the community type and NSFW setting.
   void updateCommunityType() async {
     String communityType = _rangeSliderKey.currentState!.getCommunityType();
     bool isNSFW = _nsfwSwitchSliderKey.currentState!.isNSFW;

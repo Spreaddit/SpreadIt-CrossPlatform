@@ -2,6 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Approves a user request to become a contributor in a community.
+///
+/// Returns the status code of the API response.
+/// If the status code is 200, the user request was approved successfully.
+/// If the status code is between 400 and 499, there was an error in the request.
+/// If the status code is 500, there was a server error.
+/// If an exception occurs during the API call, returns 0.
 Future<int> approveUserRequest({
   required String communityName,
   required String username,
@@ -36,6 +43,13 @@ Future<int> approveUserRequest({
   }
 }
 
+/// Removes a user from the list of approved contributors in a community.
+///
+/// Returns the status code of the API response.
+/// If the status code is 200, the user was removed successfully.
+/// If the status code is between 400 and 499, there was an error in the request.
+/// If the status code is 500, there was a server error.
+/// If an exception occurs during the API call, returns 0.
 Future<int> removeApprovedUserRequest({
   required String communityName,
   required String username,
@@ -70,6 +84,13 @@ Future<int> removeApprovedUserRequest({
   }
 }
 
+/// Retrieves the list of approved contributors in a community.
+///
+/// Returns a list of contributors as dynamic objects.
+/// If the API call is successful, returns the list of contributors.
+/// If the status code is between 400 and 499, there was an error in the request and returns an empty list.
+/// If the status code is 500, there was a server error and returns an empty list.
+/// If an exception occurs during the API call, returns an empty list.
 Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
   String? accessToken = UserSingleton().getAccessToken();
   List<dynamic> defaultResponse = [];
@@ -103,6 +124,14 @@ Future<List<dynamic>> getApprovedUsersRequest(String communityName) async {
   }
 }
 
+/// Checks if a user is an approved contributor in a community.
+///
+/// Returns a map containing the response data.
+/// If the user is an approved contributor, the map will contain the response data.
+/// If the user is not an approved contributor, the map will contain {"isContributor": false}.
+/// If the status code is between 400 and 499, there was an error in the request and returns an empty map.
+/// If the status code is 500, there was a server error and returns an empty map.
+/// If an exception occurs during the API call, returns {"isContributor": false}.
 Future<Map<String, dynamic>> checkIfApprovedRequest(
     {required String communityName, required String username}) async {
   String? accessToken = UserSingleton().getAccessToken();

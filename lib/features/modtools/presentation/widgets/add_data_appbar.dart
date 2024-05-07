@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
-class AddOrSaveDataAppBar extends StatefulWidget
-    implements PreferredSizeWidget {
-  AddOrSaveDataAppBar(
-      {Key? key,
-      required this.title,
-      required this.onButtonPressed,
-      required this.actionText})
-      : super(key: key);
-
+/// Custom app bar widget for adding or saving data.
+class AddOrSaveDataAppBar extends StatefulWidget implements PreferredSizeWidget {
+  /// Title of the app bar.
   final String title;
+
+  /// Callback function when the button is pressed.
   final VoidCallback? onButtonPressed;
+
+  /// Text to be displayed on the action button.
   final String actionText;
+
+  /// Constructor for [AddOrSaveDataAppBar].
+  const AddOrSaveDataAppBar({
+    Key? key,
+    required this.title,
+    required this.onButtonPressed,
+    required this.actionText,
+  }) : super(key: key);
 
   @override
   Size get preferredSize => AppBar().preferredSize;
