@@ -17,7 +17,7 @@ class IsUserModeratorService {
     );
     try {
       final response = await dio.get(
-        '$apiUrl/$communityName/$username/is-moderator',
+        '$apiUrl/community/moderation/$communityName/$username/is-moderator',
         options: options,
       );
 
