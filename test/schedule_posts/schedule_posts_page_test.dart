@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spreadit_crossplatform/features/schedule_posts/presentation/pages/schedule_posts_card.dart';
+import 'package:spreadit_crossplatform/features/schedule_posts/presentation/pages/schedule_posts_page.dart';
 import 'package:spreadit_crossplatform/features/schedule_posts/presentation/widgets/schedule_posts_body.dart';
 
 void main() {
