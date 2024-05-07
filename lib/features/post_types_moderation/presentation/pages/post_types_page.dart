@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/switch_type_1.dart';
-import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/switch_type_2.dart';
-import 'package:spreadit_crossplatform/features/create_post/presentation/pages/test_page.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/data/get_allowed_post_settings.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_settings_model_class.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/data/update_allowed_post_settings.dart';
