@@ -58,10 +58,8 @@ class _PostToCommunityState extends State<PostToCommunity> {
   }
 
   void getCommunityData() async {
-    GetSpecificCommunity getSpecificCommunity = GetSpecificCommunity();
-    List<Community> communities = await getSpecificCommunity.getCommunities(
-      "🌍 Top globally",
-    );
+    GetAllCommunities getSpecificCommunity = GetAllCommunities();
+    List<Community> communities = await GetAllCommunities().getAllCommunities();
     setState(() {
       this.communities = communities;
     });
