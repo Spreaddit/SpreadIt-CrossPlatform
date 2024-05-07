@@ -3,8 +3,6 @@ import 'package:spreadit_crossplatform/api.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_settings_model_class.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
-const apiUrl =
-    "http://localhost:3007/FAROUQDIAA52/Moderators/1.0.0"; //REMOVE BEFORE INTEGRATING
 String baseUrl = apiUrl;
 Future<void> updatePostSettings(
     PostSettings updatedSettings, String communityName) async {

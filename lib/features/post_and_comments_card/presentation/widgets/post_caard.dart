@@ -18,6 +18,7 @@ class PostCard extends StatefulWidget {
   VoidCallback? setIsloaded;
   bool oneComment;
   bool isModeratorView;
+  bool canManagePostsAndComments;
 
   /// Constructs a [PostCard] with the specified [post], [comments], and [isUserProfile] flag.
   PostCard({
@@ -26,6 +27,7 @@ class PostCard extends StatefulWidget {
     this.setIsloaded,
     this.oneComment = false,
     this.isModeratorView = false,
+    this.canManagePostsAndComments = false,
   });
 
   @override
@@ -100,6 +102,7 @@ class _PostCardState extends State<PostCard> {
             isFullView: true,
             isModeratorView: widget.isModeratorView,
             isUserProfile: widget.post.userId == UserSingleton().user!.id,
+            canManagePosts: widget.canManagePostsAndComments,
           ),
           Container(
             decoration: BoxDecoration(
@@ -118,6 +121,7 @@ class _PostCardState extends State<PostCard> {
                 children: [
                   if (widget.comments != null && widget.comments.isNotEmpty)
                     CommentCard(
+                      canManageComment: widget.canManagePostsAndComments,
                       isPostLocked: widget.post.isCommentsLocked!,
                       isModeratorView: widget.isModeratorView,
                       comment: widget.comments[index],

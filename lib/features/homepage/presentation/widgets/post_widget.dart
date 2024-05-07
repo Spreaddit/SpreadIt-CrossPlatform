@@ -27,12 +27,8 @@ import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
-void navigateToPostCardPage(
-  BuildContext context,
-  String postId,
-  bool isUserProfile,
-  bool isModeratorView,
-) {
+void navigateToPostCardPage(BuildContext context, String postId,
+    bool isUserProfile, bool isModeratorView, bool canManagePostsAndComments) {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -42,6 +38,7 @@ void navigateToPostCardPage(
       builder: (context) => PostCardPage(
         postId: postId,
         isModeratorView: isModeratorView,
+        canManagePostsAndComments: canManagePostsAndComments,
       ),
     ),
   );
@@ -694,6 +691,7 @@ class _PostInteractions extends StatefulWidget {
   final bool hasDownvoted;
   final bool isModeratorView;
   bool isCommentsLocked;
+  bool canManagePosts;
   final void Function(bool) onLock;
 
   _PostInteractions({
@@ -709,6 +707,7 @@ class _PostInteractions extends StatefulWidget {
     required this.isModeratorView,
     required this.isCommentsLocked,
     required this.onLock,
+    required this.canManagePosts,
   });
   @override
   State<_PostInteractions> createState() => _PostInteractionsState();
@@ -738,6 +737,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                       widget.postId,
                       widget.isUserProfile,
                       widget.isModeratorView,
+                      widget.canManagePosts,
                     ),
                     icon: Icon(
                       Icons.comment,
@@ -753,6 +753,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
                       widget.postId,
                       widget.isUserProfile,
                       widget.isModeratorView,
+                      widget.canManagePosts,
                     ),
                     icon: Icon(
                       Icons.comment,
@@ -765,7 +766,7 @@ class _PostInteractionsState extends State<_PostInteractions> {
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),
             ),
-            if (widget.isModeratorView)
+            if (widget.isModeratorView && widget.canManagePosts)
               IconButton(
                 onPressed: () {
                   showModalBottomSheet(
@@ -823,6 +824,18 @@ class _PostInteractionsState extends State<_PostInteractions> {
                 icon: Icon(
                   Icons.shield,
                 ),
+              )
+            else if (widget.isModeratorView && !widget.canManagePosts)
+              IconButton(
+                onPressed: () {
+                  CustomSnackbar(
+                          content: "You are not authorized to manage posts!")
+                      .show(context);
+                },
+                icon: Icon(
+                  Icons.shield,
+                  color: Colors.grey,
+                ),
               ),
           ],
         ),
@@ -851,6 +864,7 @@ class PostWidget extends StatefulWidget {
   final bool isUserProfile;
   final bool isSavedPage;
   final bool isModeratorView;
+  final bool canManagePosts;
   final BuildContext? feedContext;
 
   PostWidget({
@@ -860,6 +874,7 @@ class PostWidget extends StatefulWidget {
     this.isSavedPage = false,
     this.feedContext,
     this.isModeratorView = false,
+    this.canManagePosts = false,
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -970,8 +985,12 @@ class _PostWidgetState extends State<PostWidget> {
                     onTap: () {
                       print("tapped");
                       if (!widget.isFullView) {
-                        navigateToPostCardPage(context, widget.post.postId,
-                            widget.isUserProfile, widget.isModeratorView);
+                        navigateToPostCardPage(
+                            context,
+                            widget.post.postId,
+                            widget.isUserProfile,
+                            widget.isModeratorView,
+                            widget.canManagePosts);
                       }
                     },
                     child: _PostBody(
@@ -1005,6 +1024,7 @@ class _PostWidgetState extends State<PostWidget> {
                     hasDownvoted: widget.post.hasDownvoted ?? false,
                     hasUpvoted: widget.post.hasUpvoted ?? false,
                     isModeratorView: widget.isModeratorView,
+                    canManagePosts: widget.canManagePosts,
                     isCommentsLocked: isCommentsLocked,
                     onLock: onLock,
                   )

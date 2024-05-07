@@ -1,7 +1,11 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/community/data/accept_invite.dart';
 import 'package:spreadit_crossplatform/features/community/data/api_community_info.dart';
 import 'package:spreadit_crossplatform/features/community/data/decline_invite.dart';
+import 'package:spreadit_crossplatform/features/community/data/get_permissions.dart';
+import 'package:spreadit_crossplatform/features/community/data/mod_permissions.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_app_bar.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/widgets/community_info_sect.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
@@ -38,6 +42,7 @@ class _CommunityPageState extends State<CommunityPage> {
   late Future<Map<String, dynamic>> isBannedDataFuture;
   late Future<Map<String, dynamic>> isModDataFuture;
   late Future<Map<String, dynamic>> isInvitedFuture;
+  late Future<ModPermissions> permissionsFuture;
   int communityDataIdx = 0;
   int isApprovedDataIdx = 1;
   int isBannedDataIdx = 2;
@@ -46,6 +51,7 @@ class _CommunityPageState extends State<CommunityPage> {
   Map<String, dynamic> communityData = {};
   Map<String, dynamic> isApprovedData = {};
   Map<String, dynamic> isBannedData = {};
+  ModPermissions? permissionsData;
   List<List<String>> alertTexts = [
     [
       "You are banned from this community 🔨",
@@ -84,6 +90,10 @@ class _CommunityPageState extends State<CommunityPage> {
       username:
           (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => isInvitedData = value);
+    permissionsFuture = fetchPermissionsData(
+      widget.communityName,
+      (UserSingleton().user != null) ? UserSingleton().user!.username : "",
+    ).then((value) => permissionsData = value!);
   }
 
   @override
@@ -95,6 +105,7 @@ class _CommunityPageState extends State<CommunityPage> {
         isBannedDataFuture,
         isModDataFuture,
         isInvitedFuture,
+        permissionsFuture,
       ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -179,6 +190,7 @@ class _CommunityPageState extends State<CommunityPage> {
             ),
             PostFeed(
               isModeratorView: isModData['isModerator'],
+              canManagePosts: permissionsData!.managePostsAndComments,
               postCategory: PostCategories.hot,
               subspreaditName: widget.communityName,
               startSortIndex: 1,

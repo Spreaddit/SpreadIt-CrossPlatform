@@ -18,6 +18,7 @@ class PostCardPage extends StatefulWidget {
   /// The ID of the post.
   final String postId;
   bool isModeratorView;
+  bool canManagePostsAndComments;
   final String? commentId;
   final bool oneComment;
 
@@ -27,6 +28,7 @@ class PostCardPage extends StatefulWidget {
       {Key? key,
       required this.postId,
       this.isModeratorView = false,
+      this.canManagePostsAndComments = false,
       this.commentId,
       this.oneComment = false})
       : super(key: key);
@@ -186,6 +188,8 @@ class _PostCardPageState extends State<PostCardPage> {
                               isModeratorView: widget.isModeratorView,
                               setIsloaded: setIsloaded,
                               oneComment: widget.oneComment,
+                              canManagePostsAndComments:
+                                  widget.canManagePostsAndComments,
                             )
                           : PostCardShimmer(), // Placeholder post card
                     ],

@@ -65,8 +65,14 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
       return;
     }
     if ((route == routes["approved_users_page"] ||
-            route == routes["banned_users_page"]) &&
-        modData["manageUsers"] != true) {
+            route == routes["banned_users_page"]) ||
+        route == routes["moderators_page"] && modData["manageUsers"] != true) {
+      CustomSnackbar(content: "You aren't authorized to view this page")
+          .show(context);
+      return;
+    }
+    if ((route == routes["post_types_page"]) &&
+        modData["managePostsAndComments"] != true) {
       CustomSnackbar(content: "You aren't authorized to view this page")
           .show(context);
       return;

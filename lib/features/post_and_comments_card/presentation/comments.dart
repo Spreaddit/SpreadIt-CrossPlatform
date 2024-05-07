@@ -128,6 +128,7 @@ class CommentCard extends StatefulWidget {
   final bool onecomment;
   final bool isPostLocked;
   final bool isModeratorView;
+  final bool canManageComment;
 
   /// Constructs a [CommentCard] widget with the given parameters.
   CommentCard({
@@ -135,6 +136,7 @@ class CommentCard extends StatefulWidget {
     required this.community,
     this.isPostLocked = false,
     this.isModeratorView = false,
+    this.canManageComment = false,
     this.setIsLoaded,
     this.onecomment = false,
   });
@@ -305,6 +307,7 @@ class _CommentCardState extends State<CommentCard> {
                       isCommentLocked: isLocked,
                       commentId: widget.comment.id,
                       isModeratorView: widget.isModeratorView,
+                      canManageComment: widget.canManageComment,
                       onMorePressed: () {
                         showModalBottomSheet(
                           context: context,

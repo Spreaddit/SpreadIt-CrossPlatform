@@ -22,6 +22,7 @@ class CommentFooter extends StatefulWidget {
   bool isRemoved;
   bool isRemoval;
   final bool isModeratorView;
+  final bool canManageComment;
   String? communityName;
   CommentFooter({
     required this.onMorePressed,
@@ -35,6 +36,7 @@ class CommentFooter extends StatefulWidget {
     this.isRemoval = false,
     this.commentId,
     this.isModeratorView = false,
+    this.canManageComment = false,
     this.onLock,
     this.onRemove,
     this.communityName,
@@ -76,7 +78,7 @@ class CommentFooterState extends State<CommentFooter> {
                     icon: Icon(Icons.more_vert, color: Colors.grey)),
               SizedBox(width: screenWidth * 0.01),
               if (!widget.isCommentLocked && !widget.isPostLocked ||
-                  widget.isModeratorView)
+                  widget.isModeratorView && widget.canManageComment)
 
                 //(widget.isModeratorView &&
                 //   (!widget.isRemoved || !widget.isRemoval)))

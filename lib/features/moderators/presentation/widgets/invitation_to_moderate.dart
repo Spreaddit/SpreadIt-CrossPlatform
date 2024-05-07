@@ -1,23 +1,11 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/data/get_permissions.dart';
+import 'package:spreadit_crossplatform/features/community/data/mod_permissions.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/moderators/data/invite_moderator.dart';
-
-/*List<Map<String, String>> communities = [
-  {
-    'name': 'Icon 1',
-    'url': 'https://via.placeholder.com/150',
-  },
-  {
-    'name': 'Icon 2',
-    'url': 'https://via.placeholder.com/150',
-  },
-  {
-    'name': 'Icon 3',
-    'url': 'https://via.placeholder.com/150',
-  },
-  // Add more icons as needed
-]; */
 
 void showModalBottomSheetInvite(
     BuildContext context, List<Community> communities, String username) {
@@ -25,13 +13,18 @@ void showModalBottomSheetInvite(
   bool _managePostsClicked = false;
   bool _manageUsersClicked = false;
   bool _manageSettingsClicked = false;
-
   late TextEditingController _messageController = TextEditingController(
       text: 'I invite you to be a moderator of r/${_selectedCommunity.name}');
+  late ModPermissions? permissions = ModPermissions(
+      manageUsers: false, manageSettings: false, managePostsAndComments: false);
 
   @override
   void dispose() {
     _messageController.dispose();
+  }
+
+  void checkPermissions() async {
+    permissions = await fetchPermissionsData(_selectedCommunity.name, username);
   }
 
   showModalBottomSheet(
@@ -63,6 +56,14 @@ void showModalBottomSheetInvite(
                               _messageController = TextEditingController(
                                   text:
                                       'I invite you to be a moderator of r/${community.name}');
+                              checkPermissions();
+                              if (permissions!.manageUsers == false) {
+                                Navigator.pop(context);
+                                CustomSnackbar(
+                                        content:
+                                            "You dont't have permission to invite users to r/${community.name}")
+                                    .show(context);
+                              }
                             });
                           },
                           child: Column(
@@ -101,10 +102,6 @@ void showModalBottomSheetInvite(
                 ),
                 SizedBox(height: 16.0),
                 if (_selectedCommunity != null) ...[
-                  /* Text(
-                                'Selected Community: ${_selectedCommunity!['name']}',
-                                style: TextStyle(fontSize: 16.0),
-                              ),*/
                   SizedBox(height: 16.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

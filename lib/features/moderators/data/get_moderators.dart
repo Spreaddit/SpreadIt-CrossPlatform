@@ -4,22 +4,6 @@ import 'package:spreadit_crossplatform/features/moderators/data/moderator_class_
 
 import 'package:spreadit_crossplatform/user_info.dart';
 
-//const apiUrl =
-//   "http://localhost:3006/FAROUQDIAA52/Module9V2/1.0.0"; //EMSAEEHAAAAAAAA
-/*Moderator m1 = Moderator(
-    username: 'rehab',
-    avatar:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAMWde6OBJPo8xsyjX6g0HoNv_V3jmwObQ2cMNOam4Ww&s",
-    managePostsAndComments: false,
-    manageSettings: true,
-    manageUsers: true,
-    moderationDate: DateTime.now(),
-    communityName: "community name");*/
-
-/*List<Moderator> fetchModeratorsData(String communityName, int display) {
-  return [m1, m1, m1];
-}*/
-
 Future<List<Moderator>> fetchModeratorsData(
     String communityName, int display) async {
   try {
