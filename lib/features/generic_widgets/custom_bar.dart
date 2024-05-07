@@ -1,235 +1,92 @@
 import 'package:flutter/material.dart';
 
-/// A customizable input field widget.
-/// This widget provides a flexible input field that can be customized in various ways,
-/// including text, password, and validation support.
-/// Required parameters:
-/// -formKey: A global key used to identify the form that contains this input field.
-/// -onChanged: A callback function triggered whenever the input field value changes.
-/// -label: The label text displayed above the input field.
-/// -placeholder: The placeholder text displayed inside the input field when it's empty.
-/// Optional parameters:
-/// -obscureText: Determines whether the input should be obscured (e.g., for passwords). Defaults is set to false.
-/// -invalidText: The text to display when input validation fails.
-/// -validateField: A function used to validate the input field's value. Returns true if valid, false otherwise.
-/// -validate: Indicates whether input validation is enabled. Defaults is set to false.
+/// A custom tab bar widget.
+///
+/// This widget displays tabs horizontally with customizable titles.
+///
+/// Example usage:
 /// ```dart
-///   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-///   var _inputvalue = '';   // The value inside the input feild
-///    void updateInput(String value, bool isValid) {
-///     _inputvalue = value;
-///     isFeildValid = isValid;
-///     _formkey.currentState!.save();
-///     }
-/// CustomInput(
-///   formKey: _formKey,
-///   onChanged: updateInput, 
-///   label: 'Email',
-///   placeholder: 'Enter your email',
-///   obscureText: false,
-///   invalidText: 'Please enter a valid email',
-///   validateField: (value) {
-///     return EmailValidator.validate(value); 
+/// CustomBar(
+///   onIndexChanged: (index) {
+///     // Handle tab selection
 ///   },
-///   validate: true,
+///   tabs: [
+///     'Tab 1',
+///     'Tab 2',
+///     'Tab 3',
+///   ],
 /// )
 /// ```
+class CustomBar extends StatefulWidget {
+  /// Callback function triggered when a tab is selected.
+  final ValueChanged<int> onIndexChanged;
 
-class CustomInput extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-  final Function(String, bool) onChanged;
-  final String label;
-  final String placeholder;
-  final bool obscureText;
-  final String invalidText;
-  final String? initialBody;
-  final bool Function(String)? validateField;
-  final bool validate;
-  final double? height;
-  final String? tertiaryText;
-  final int? wordLimit;
-  final Color backgroundColor;
+  /// The list of tab titles.
+  final List<String> tabs;
 
-  CustomInput({
-    required this.formKey,
-    required this.onChanged,
-    required this.label,
-    required this.placeholder,
-    this.obscureText = false,
-    this.invalidText = "",
-    this.validateField,
-    this.validate = false,
-    this.height,
-    this.tertiaryText,
-    this.wordLimit,
-    this.backgroundColor = const Color.fromARGB(255, 251, 251, 251),
-    this.initialBody,
-  });
+  /// Creates a custom tab bar.
+  ///
+  /// The [onIndexChanged] and [tabs] parameters are required.
+  const CustomBar({
+    Key? key,
+    required this.onIndexChanged,
+    required this.tabs,
+  }) : super(key: key);
 
   @override
-  _CustomInputState createState() => _CustomInputState();
+  _CustomBarState createState() => _CustomBarState();
 }
 
-class _CustomInputState extends State<CustomInput> {
-  late TextEditingController _controller;
-  bool _isPasswordVisible = false;
-  bool _isValid = true;
-  late FocusNode _focusNode;
-  bool _isFocused = true;
-  late int _remainingCharacters;
+class _CustomBarState extends State<CustomBar> {
+  int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.initialBody);
-    _controller.addListener(_textChangedListener);
-    _focusNode = FocusNode();
-    _focusNode.addListener(() {
-      setState(() {
-        _isFocused = _focusNode.hasFocus;
-      });
-    });
-    
-    // Calculate remaining characters initially
-    if (widget.wordLimit != null) {
-      _remainingCharacters = widget.wordLimit! - _controller.text.length;
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  void _textChangedListener() {
+  void _handleIndexChanged(int index) {
     setState(() {
-      if (widget.validate) {
-        _isValid = widget.validateField!(_controller.text);
-      }
-      widget.onChanged(_controller.text, _isValid);
-
-      // Update remaining characters
-      if (widget.wordLimit != null) {
-        _remainingCharacters = widget.wordLimit! - _controller.text.length;
-      }
+      _selectedIndex = index;
     });
+    widget.onIndexChanged(index);
+  }
+
+  Widget _buildTab(int index) {
+    final isSelected = index == _selectedIndex;
+    return GestureDetector(
+      onTap: () => _handleIndexChanged(index),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 10),
+          Text(
+            widget.tabs[index],
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w400,
+              color: isSelected ? Colors.blue : Colors.black,
+            ),
+          ),
+          SizedBox(height: 10),
+          if (index >= widget.tabs.length - 4) 
+            Container(
+              height: isSelected ? 4.0 : 0,
+              color: isSelected ? Colors.blue : Colors.transparent,
+            ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    Widget inputField = Card(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      color: widget.backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25),
-        side: BorderSide(
-          color: widget.validate
-              ? _isFocused
-                  ? Colors.transparent
-                  : _isValid
-                      ? const Color.fromARGB(255, 107, 188, 110)
-                      : const Color.fromARGB(255, 233, 88, 77)
-              : Colors.transparent,
-          width: 1.0,
-        ),
-      ),
-      child: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.all(5),
-          child: Form(
-            key: widget.formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  focusNode: _focusNode,
-                  decoration: InputDecoration(
-                    labelText: widget.label,
-                    labelStyle: TextStyle(
-                        fontSize: 14, color: Color.fromARGB(255, 85, 80, 80)),
-                    hintText: widget.placeholder,
-                    border: InputBorder.none,
-                    suffixIcon: widget.obscureText
-                        ? IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                          )
-                        : (_controller.text.isNotEmpty
-                            ? IconButton(
-                                icon: Icon(Icons.cancel),
-                                onPressed: () {
-                                  setState(() {
-                                    _controller.clear();
-                                  });
-                                },
-                              )
-                            : null),
-                  ),
-                  controller: _controller,
-                  obscureText: widget.obscureText && !_isPasswordVisible,
-                  maxLines: widget.obscureText? 1:null, // Allow multiple lines
-                ),
-              ],
-            ),
+    return Container(
+      color: Colors.white, 
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(
+          widget.tabs.length,
+          (index) => Expanded(
+            child: _buildTab(index),
           ),
         ),
       ),
-    );
-
-    if (widget.height != null) {
-      inputField = SizedBox.fromSize(
-        size: Size.fromHeight(widget.height!),
-        child: inputField,
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        inputField,
-        if (widget.validate && !_isValid)
-          Container(
-            padding: const EdgeInsets.only(top: 5.0, left: 25),
-            child: Text(
-              widget.invalidText,
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        if (widget.tertiaryText != null || widget.wordLimit != null)
-          Container(
-            padding: const EdgeInsets.only(top: 5.0, left: 25, right: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (widget.tertiaryText != null)
-                  Flexible(
-                    child: Text(
-                      widget.tertiaryText!,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                if (widget.tertiaryText == null)
-                  SizedBox(width: screenWidth * 0.6),
-                if (widget.wordLimit != null)
-                  Text(
-                    ' $_remainingCharacters',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-              ],
-            ),
-          ),
-      ],
     );
   }
 }
