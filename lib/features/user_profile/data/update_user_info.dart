@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -64,7 +63,7 @@ Future<int> updateUserApi({
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/profile-info';
     String? username = UserSingleton().user!.username;
-     var data = {
+    var data = {
       "username": username,
       "name": displayName,
       "avatar": profilePicImageUrl,
@@ -83,12 +82,11 @@ Future<int> updateUserApi({
         },
       ),
     );
-    if(response.statusCode!=200)
-    {
+    if (response.statusCode != 200) {
       print("An error occured");
       return response.statusCode!;
     }
-    if (kIsWeb && (profileImageWeb!= null || backgroundImageWeb != null)) {
+    if (kIsWeb && (profileImageWeb != null || backgroundImageWeb != null)) {
       var request = http.MultipartRequest('PUT', Uri.parse(apiRoute));
       request.headers['Authorization'] = 'Bearer $accessToken';
       request.fields['username'] = username;
@@ -131,7 +129,7 @@ Future<int> updateUserApi({
         print('Unexpected status code: ${response.statusCode}');
         return 404;
       }
-    } else if(profilePicImage!= null || backgroundImage != null)  {
+    } else if (profilePicImage != null || backgroundImage != null) {
       var formData = FormData.fromMap({
         'username': username,
         'name': displayName,
@@ -199,4 +197,3 @@ Future<int> updateUserApi({
     return 1;
   }
 }
-

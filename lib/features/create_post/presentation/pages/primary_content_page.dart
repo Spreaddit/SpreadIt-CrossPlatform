@@ -1,22 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
-import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../../../generic_widgets/validations.dart';
 import '../widgets/show_discard_bottomsheet.dart';
 import '../../../generic_widgets/photo_and_video_pickers/image_picker.dart';
 import '../../../generic_widgets/photo_and_video_pickers/video_picker.dart';
-import '../widgets/poll_widgets/poll.dart';
-import '../widgets/link.dart';
 import '../widgets/image_and_video_widgets.dart';
 
 /// [CreatePost] class renders the create post page , which allows the user to create a post by adding a [title], [content], [link]
@@ -146,8 +142,14 @@ class _CreatePostState extends State<CreatePost> {
   }
 
   Future<void> pickVideo() async {
-    File? video = await pickVideoFromFilePicker.pickVideo();
-    if (video != null) {
+    if(kIsWeb) {
+      final video = await pickVideoFromFilePickerWeb();
+      setState(() {
+        videoWeb = video;
+      });
+    }
+    else {
+      final video = await pickVideoFromFilePicker();
       setState(() {
         this.video = video;
       });
@@ -229,9 +231,9 @@ class _CreatePostState extends State<CreatePost> {
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (video != null || videoWeb != null)
-                  ImageOrVideoWidget(
-                    imageOrVideo: video,
-                    imageOrVideoWeb: videoWeb,
+                   VideoWidget(
+                    video: video,
+                    videoWeb: videoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (isLinkAdded)

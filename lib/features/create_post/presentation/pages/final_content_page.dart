@@ -1,21 +1,16 @@
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/submit_post.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/content.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/link.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/poll_widgets/poll.dart';
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/tags_widgets/add_tag_bottomsheet.dart';
+import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:time_machine/time_machine.dart';
+import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
 import '../widgets/title.dart';
-import '../widgets/content.dart';
 import '../widgets/header_and_footer_widgets/create_post_footer.dart';
 import '../widgets/header_and_footer_widgets/create_post_secondary_footer.dart';
 import '../widgets/header_and_footer_widgets/community_and_rules_header.dart';
@@ -29,7 +24,6 @@ import '../widgets/image_and_video_widgets.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/schedule_posts/data/is_user_moderator_service.dart';
 import 'package:intl/intl.dart';
-import 'package:spreadit_crossplatform/features/schedule_posts/presentation/pages/schedule_posts_page.dart';
 
 /// This page renders the class [FinalCreatePost], which allows the user to make any modifications to the previously created post.
 /// It also allows the user to check the [rules] of the community to which he will post and allows the user to add [Spoiler] and [NSFW] tags to the post
@@ -273,8 +267,13 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   }
 
   Future<void> pickVideo() async {
-    File? video = await pickVideoFromFilePicker.pickVideo();
-    if (video != null) {
+    if (kIsWeb) {
+      final video = await pickVideoFromFilePickerWeb();
+      setState(() {
+        finalVideoWeb = video;
+      });
+    } else {
+      final video = await pickVideoFromFilePicker();
       setState(() {
         finalVideo = video;
       });
@@ -328,7 +327,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         selectedTime!.minute,
       );
     }
-    int response = await submitPost(
+    String response = await submitPost(
         finalTitle,
         finalContent,
         communityName,
@@ -342,18 +341,18 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         isSpoiler,
         isNSFW,
         isScheduled ? selectedDateTime : null);
-    if (response == 201) {
+    if (response == '400') {
+      CustomSnackbar(content: 'Invalid post ID or post data').show(context);
+    } else if (response == '500') {
+      CustomSnackbar(content: 'Internal server error').show(context);
+    } else {
       if (isScheduled) {
         CustomSnackbar(content: 'Scheduled successfully !').show(context);
-        returnToHomePage(context);
+        Navigator.of(context).pop();
       } else {
         CustomSnackbar(content: 'Posted successfully !').show(context);
-        returnToHomePage(context);
+        navigateToPostCardPage(context: context, postId: response);
       }
-    } else if (response == 400) {
-      CustomSnackbar(content: 'Invalid post ID or post data').show(context);
-    } else if (response == 500) {
-      CustomSnackbar(content: 'Internal server error').show(context);
     }
   }
 
@@ -636,9 +635,9 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalVideo != null || finalVideoWeb != null)
-                  ImageOrVideoWidget(
-                    imageOrVideo: finalVideo,
-                    imageOrVideoWeb: finalVideoWeb,
+                  VideoWidget(
+                    video: finalVideo,
+                    videoWeb: finalVideoWeb,
                     onIconPress: cancelImageOrVideo,
                   ),
                 if (finalIsLinkAdded)

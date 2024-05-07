@@ -2,26 +2,26 @@ class User {
   String id;
   String name;
   String username;
-  String? email; 
+  String? email;
   String? googleId;
-  DateTime? birthDate; 
-  String? phone; 
+  DateTime? birthDate;
+  String? phone;
   String? avatarUrl;
-  String? backgroundPictureUrl; 
-  String? location; 
-  String? bio; 
+  String? backgroundPictureUrl;
+  String? location;
+  String? bio;
   int? followersCount;
   int? followingCount;
   DateTime? createdAt;
-  String? role; 
+  String? role;
   bool? nsfw;
   bool? activeInCommunityVisibility;
   bool? isVerified;
   bool? isVisible;
   bool? isActive;
-  String? displayName; 
-  String? about; 
-  DateTime? cakeDay; 
+  String? displayName;
+  String? about;
+  DateTime? cakeDay;
   List<String?>? subscribedCommunities;
   List<String?>? favouriteCommunities;
   final List<SocialMedia?>? socialLinks;
@@ -77,7 +77,7 @@ class User {
       'isVerified': isVerified,
       'isVisible': isVisible,
       'isActive': isActive,
-      'displayName': displayName??'',
+      'displayName': displayName ?? '',
       'about': about ?? '',
       'cakeDay': cakeDay?.toIso8601String(),
       'subscribedCommunities': subscribedCommunities,
@@ -111,7 +111,7 @@ class User {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : DateTime.now(),
-      role: json['role'] ??'',
+      role: json['role'] ?? '',
       nsfw: json['nsfw'],
       activeInCommunityVisibility: json['activeInCommunityVisibility'],
       isActive: json['isActive'],
@@ -119,9 +119,7 @@ class User {
       isVerified: json['isVerified'],
       displayName: json['displayName'],
       about: json['about'],
-      cakeDay:  json['cakeDay'] != null
-          ? DateTime.parse(json['cakeDay'])
-          : null,
+      cakeDay: json['cakeDay'] != null ? DateTime.parse(json['cakeDay']) : null,
       subscribedCommunities: json['subscribedCommunities'] != null
           ? List<String>.from(json['subscribedCommunities'])
           : [],
@@ -135,7 +133,7 @@ class User {
 
 class SocialMedia {
   final String? platform;
-  final String? displayName; 
+  final String? displayName;
   final String? url;
 
   SocialMedia({
@@ -147,7 +145,7 @@ class SocialMedia {
   Map<String, dynamic> toJson() {
     return {
       'platform': platform,
-      'displayName': displayName, 
+      'displayName': displayName,
       'url': url,
     };
   }
@@ -155,7 +153,7 @@ class SocialMedia {
   factory SocialMedia.fromJson(Map<String, dynamic> json) {
     return SocialMedia(
       platform: json['platform'],
-      displayName: json['displayName'], 
+      displayName: json['displayName'],
       url: json['url'],
     );
   }

@@ -23,12 +23,11 @@ import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
-void navigateToPostCardPage(
-  BuildContext context,
-  String postId,
-  bool isUserProfile,
-  Post post,
-) {
+void navigateToPostCardPage({
+  required BuildContext context,
+  required String postId,
+  Post? post,
+}) {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -721,10 +720,9 @@ class _PostInteractionsState extends State<_PostInteractions> {
             ),
             TextButton.icon(
               onPressed: () => navigateToPostCardPage(
-                context,
-                widget.postId,
-                widget.isUserProfile,
-                widget.post,
+                context: context,
+                postId: widget.post.postId,
+                post: widget.post,
               ),
               icon: Icon(
                 Icons.comment,
@@ -879,10 +877,9 @@ class _PostWidgetState extends State<PostWidget> {
                       print("tapped");
                       if (!widget.isFullView) {
                         navigateToPostCardPage(
-                          context,
-                          widget.post.postId,
-                          widget.isUserProfile,
-                          widget.post,
+                          context: context,
+                          postId: widget.post.postId,
+                          post: widget.post,
                         );
                       }
                     },

@@ -112,7 +112,7 @@ class _PostFeedState extends State<PostFeed> {
       fetchedItems = value;
       setState(() {
         if (fetchedItems.isEmpty) {
-          CustomSnackbar(content: "No posts found").show(context);
+          print("No posts found");
         }
         newItems.clear();
         newItems = fetchedItems;
