@@ -46,7 +46,11 @@ class _PostsViewBodyState extends State<PostsViewBody> {
       future: getReportedPostsService.getReportedPosts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            widthFactor: 2,
+            heightFactor: 2,
+            child: CircularProgressIndicator(),
+          );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
