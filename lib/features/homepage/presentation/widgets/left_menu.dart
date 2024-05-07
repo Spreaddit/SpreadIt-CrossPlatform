@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
-// TODO:COMPLETE MENU
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 class LeftMenu extends StatelessWidget {
+  List<String?> subscribedCommunities = UserSingleton().user!.subscribedCommunities!;
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -11,7 +13,7 @@ class LeftMenu extends StatelessWidget {
           ...[
             {
               'icon': Icons.groups,
-              'text': 'Your Communties',
+              'text': 'Your Communities',
               'route': '/discover',
             },
             {
@@ -26,6 +28,23 @@ class LeftMenu extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pushNamed(item['route']);
               },
+            );
+          }).toList(),
+          
+          ListTile(
+            title: Text(
+              'Communities',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          
+        ...subscribedCommunities.map((community) {
+            return ListTile(
+              title: Text('r/${community??''}'),
+             onTap: () {navigateToCommunity(context, community!);},
             );
           }).toList(),
         ],
