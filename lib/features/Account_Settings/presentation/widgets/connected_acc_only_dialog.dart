@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_add_password.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/pages/add_password_page.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
+import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 
 /// A dialog that is displayed when only connected accounts are used to indicate how to convert
 /// current account into a normal one.
 class ConnectedAccountOnlyDialog {
-  
   /// A dialog widget that is used to display a message indicating that the action can only be performed with a connected account.
   /// [callOption] : 0 means deny update email address, 1 means send email for adding passord,
   /// and 2 means deny disconnecting from Google.
@@ -32,6 +33,20 @@ class ConnectedAccountOnlyDialog {
     "To disconnect your Google account, you need to create a Reddit password first.",
   ];
 
+  void sendEmail(BuildContext context, int callOption) async {
+    int response = await requestAddPasswordEmail();
+    if (response == 200) {
+      showSentEmailDialog(context);
+    } else {
+      Navigator.of(context).pop();
+      // Dont pop twice if we are here from pressing Add password
+      if (callOption != 1) {
+        Navigator.of(context).pop();
+      }
+      CustomSnackbar(content: "Error sending email").show(context);
+    }
+  }
+
   /// Shows a dialog for connected account settings.
   ///
   /// This method is responsible for displaying a dialog for connected account settings
@@ -41,7 +56,7 @@ class ConnectedAccountOnlyDialog {
   /// The [callOption] parameter is an integer representing the call option.
   void showConnectedAccDialog(BuildContext context, int callOption) {
     if (callOption == 1) {
-      sendAddPasswordEmail(context);
+      sendEmail(context, callOption);
     } else if (callOption >= titles.length || callOption < 0) {
       return;
     } else {
@@ -79,7 +94,7 @@ class ConnectedAccountOnlyDialog {
                 Expanded(
                   child: Button(
                     onPressed: () {
-                      sendAddPasswordEmail(context);
+                      sendEmail(context, callOption);
                     },
                     text: 'Ok',
                     backgroundColor: Colors.blueAccent,
@@ -97,7 +112,7 @@ class ConnectedAccountOnlyDialog {
   /// Handles the process of sending the email with the [AddPasswordPage] link.
   /// For now though, it routes to [AddPasswordPage] that is until coordination
   /// between BE and CP on how to handle the email occurs.
-  void sendAddPasswordEmail(BuildContext context) {
+  void showSentEmailDialog(BuildContext context) {
     showDialog(
       context: (context),
       builder: (context) => SimpleDialog(
@@ -140,18 +155,11 @@ class ConnectedAccountOnlyDialog {
               Expanded(
                 child: Button(
                   onPressed: () {
-                    // Should be:
                     Navigator.of(context).pop();
                     // Dont pop twice if we are here from pressing Add password
                     if (callOption != 1) {
                       Navigator.of(context).pop();
                     }
-                    // Currently we add:
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => AddPasswordPage(),
-                      ),
-                    );
                   },
                   text: 'Ok',
                   backgroundColor: Colors.blueAccent,

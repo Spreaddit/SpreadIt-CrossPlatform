@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_basic_settings_data.dart';
-import 'package:spreadit_crossplatform/features/Sign_up/Presentaion/pages/start_up_page.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_add_password.dart';
+import 'package:spreadit_crossplatform/features/Account_Settings/data/data_source/api_verify_email_data.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
-import '../../../reset_password/data/update_password.dart';
-import '../../data/data_source/api_user_info_data.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../reset_password/presentation/widgets/reset_password_validations.dart';
 import '../../../generic_widgets/custom_input.dart';
 import '../../../generic_widgets/header.dart';
@@ -14,7 +12,7 @@ import '../../../generic_widgets/header.dart';
 /// It displays 2 input fields where the user writes his `newPassword` and `confirmedPassword`.
 /// It also contains a button `Continue` that the user presses to send his input to the backend.
 class AddPasswordPage extends StatefulWidget {
-  const AddPasswordPage({Key? key}) : super(key: key);
+  AddPasswordPage({Key? key}) : super(key: key);
 
   @override
   State<AddPasswordPage> createState() => _AddPasswordPageState();
@@ -24,31 +22,45 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
   final GlobalKey<FormState> _newPasswordForm = GlobalKey<FormState>();
   final GlobalKey<FormState> _confirmedPasswordForm = GlobalKey<FormState>();
 
-  /// Data fetched from user information API.
-  late Map<String, dynamic> basicData;
-
   String username = "";
   String _newPassword = '';
   String _confirmedPassword = '';
-  String _token = 'dummy_token';
 
   bool isValidInput = false;
-
+  String? currentRoute;
+  bool isDone = false;
+  String emailToken = "";
   @override
   void initState() {
     super.initState();
-    setState(() {
-      fetchData();
-    });
+    username = UserSingleton().user!.username;
   }
 
-  /// Fetches user information.
-  Future<void> fetchData() async {
-    var data = await getUserInfo();
-    setState(() {
-      username = data["username"];
-    });
-    basicData = await getBasicData();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!isDone) {
+      isDone = true;
+      Future.delayed(Duration.zero, () {
+        final currentRoute = ModalRoute.of(context)?.settings.name;
+        final List<String> pathSegments = currentRoute!.split('/');
+        emailToken = pathSegments[pathSegments.length - 1];
+        checkEmailToken(emailToken);
+      });
+    }
+  }
+
+  void checkEmailToken(String emailToken) async {
+    var verificationResponse = await verifyEmail(emailToken: emailToken);
+    if (verificationResponse == 200) {
+      CustomSnackbar(content: "Email verification success").show(context);
+    } else {
+      print("Email verification failed");
+      CustomSnackbar(content: "Email verification failed").show(context);
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+      Navigator.pushNamed(context, '/settings');
+      Navigator.pushNamed(context, '/settings/account-settings');
+    }
   }
 
   /// Updates the new password with the provided [password] and [validation] status.
@@ -71,8 +83,8 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
   /// and updates the validation status accordingly.
   ///
   /// Parameters:
-  /// - [password]: The entered password.
-  /// - [validation]: The validation status of the entered password.
+  /// - [password] : The entered password.
+  /// - [validation] : The validation status of the entered password.
   void updateConfirmedPassword(String password, bool validation) {
     _confirmedPassword = password;
     setState(() {
@@ -94,35 +106,23 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
   }
 
   /// Sends a POST request to the server with the data.
-  void postData() async {
-    int response = await updatePassword(_newPassword, "", _token);
+  void addNewPassword() async {
+    int response = await addPasswordRequest(password: _newPassword);
     if (response == 200) {
-      basicData["email"] = basicData["connectedAccounts"][0];
-      var result = await updateBasicData(updatedData: basicData);
-      if (result != 1) {
-        CustomSnackbar(content: "Failed to update password").show(context);
-      } else {
-        CustomSnackbar(content: "password is updated successfully")
-            .show(context);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => StartUpPage()),
-            (_) => false);
-      }
-    } else if (response == 400) {
+      CustomSnackbar(content: "Password added successfully").show(context);
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/start-up-page', (_) => false);
+    } else if (response == 404) {
       CustomSnackbar(
               content:
-                  "entered password is not the current password , please provide the correct password")
-          .show(context);
-    } else if (response == 401) {
-      CustomSnackbar(content: "an error occurred , please refill correct data")
+                  "User not found, please try again later or contact support")
           .show(context);
     } else if (response == 500) {
       CustomSnackbar(
-              content: "a server error occurred , please try again later")
+              content: "A server error occurred , please try again later")
           .show(context);
     } else {
-      CustomSnackbar(content: "invalid data").show(context);
+      CustomSnackbar(content: "Invalid data").show(context);
     }
   }
 
@@ -135,10 +135,8 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Container(
-                    child: Header(
-                      title: "Choose a new password",
-                    ),
+                  Header(
+                    title: "Choose a new password",
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
@@ -150,23 +148,19 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    child: CustomInput(
-                      formKey: _newPasswordForm,
-                      onChanged: updateNewPassword,
-                      label: "New password",
-                      placeholder: "New password",
-                      obscureText: true,
-                    ),
+                  CustomInput(
+                    formKey: _newPasswordForm,
+                    onChanged: updateNewPassword,
+                    label: "New password",
+                    placeholder: "New password",
+                    obscureText: true,
                   ),
-                  Container(
-                    child: CustomInput(
-                      formKey: _confirmedPasswordForm,
-                      onChanged: updateConfirmedPassword,
-                      label: "Confirmed password",
-                      placeholder: "Confirmed password",
-                      obscureText: true,
-                    ),
+                  CustomInput(
+                    formKey: _confirmedPasswordForm,
+                    onChanged: updateConfirmedPassword,
+                    label: "Confirmed password",
+                    placeholder: "Confirmed password",
+                    obscureText: true,
                   ),
                 ],
               ),
@@ -180,9 +174,9 @@ class _AddPasswordPageState extends State<AddPasswordPage> {
             ),
           ),
           Button(
-            onPressed: textValidations() ? () => postData() : null,
+            onPressed: textValidations() ? () => addNewPassword() : null,
             text: 'Continue',
-            backgroundColor: Colors.orange,
+            backgroundColor: Colors.deepOrangeAccent,
             foregroundColor: Colors.white,
           ),
         ],

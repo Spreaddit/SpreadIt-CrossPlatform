@@ -40,6 +40,7 @@ class SpreadIt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("hey");
     return MaterialApp(
       scrollBehavior: !isAndroid
           ? const MaterialScrollBehavior().copyWith(

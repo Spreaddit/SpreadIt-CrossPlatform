@@ -69,6 +69,15 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
     //     communityName: communityName,
     //   ),
     // );
+  } else if (pathSegments.contains('add-password') &&
+      pathSegments.length >= 5 &&
+      pathSegments[pathSegments.length - 1] != "add-password") {
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (_) => ProtectedRoute(
+        child: AddPasswordPage(),
+      ),
+    );
   }
 
   return null;
