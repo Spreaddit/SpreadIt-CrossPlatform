@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -57,23 +58,23 @@ Future<int> updateUserApi({
   Uint8List? backgroundImageWeb,
   required List<Map<String, dynamic>> socialMedia,
   required bool contentVisibility,
-  required bool showActiveComments,
+  required bool showActiveCommunity,
 }) async {
   try {
     String? accessToken = UserSingleton().accessToken;
     String apiRoute = '$apiUrl/user/profile-info';
     String? username = UserSingleton().user!.username;
-
-    if (kIsWeb) {
+    String jsonBody = jsonEncode(socialMedia);
+    
+    if (kIsWeb && (profileImageWeb!= null || backgroundImageWeb != null)) {
       var request = http.MultipartRequest('PUT', Uri.parse(apiRoute));
       request.headers['Authorization'] = 'Bearer $accessToken';
-
       request.fields['username'] = username;
       request.fields['name'] = displayName;
       request.fields['about'] = aboutUs;
       request.fields['isVisible'] = contentVisibility.toString();
-      request.fields['isActive'] = showActiveComments.toString();
-
+      request.fields['isActive'] = showActiveCommunity.toString();
+      request.fields['socialLinks'] = jsonBody;
       if (profileImageWeb != null) {
         request.files.add(http.MultipartFile.fromBytes(
           'avatar',
@@ -110,13 +111,14 @@ Future<int> updateUserApi({
         print('Unexpected status code: ${response.statusCode}');
         return 404;
       }
-    } else {
+    } else  {
       var formData = FormData.fromMap({
         'username': username,
         'name': displayName,
         'about': aboutUs,
         'isVisible': contentVisibility,
-        'isActive': showActiveComments,
+        'isActive': showActiveCommunity,
+        'socialLinks': socialMedia,
       });
 
       if (profilePicImage != null) {
@@ -147,7 +149,7 @@ Future<int> updateUserApi({
         ));
       }
 
-      if (backgroundImageWeb == null) {
+      if (backgroundImage == null) {
         formData.fields.add(MapEntry(
           'banner',
           backgroundImageUrl!,
@@ -162,6 +164,9 @@ Future<int> updateUserApi({
           },
         ),
       );
+      print(response.statusCode);
+      print(response.statusMessage);
+      print(formData);
       if (response.statusCode == 200) {
         print(response.statusMessage);
         return 200;
@@ -178,3 +183,4 @@ Future<int> updateUserApi({
     return 1;
   }
 }
+

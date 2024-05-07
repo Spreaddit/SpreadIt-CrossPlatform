@@ -26,7 +26,7 @@ Future<int> verifyEmail({
     print('inside verify email');
     if (response.statusCode == 200) {
       UserSingleton().setAccessToken(response.data['accessToken'],
-          DateTime.parse(response.data['token_expiration_date']));
+          DateTime.now());
           print('verify successful');
           UserSingleton().setVerifed();
       return 200;

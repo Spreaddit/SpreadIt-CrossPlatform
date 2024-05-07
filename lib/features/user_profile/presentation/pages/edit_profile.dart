@@ -207,7 +207,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         profilePicImageUrl: profileImageURl,
         socialMedia: socialMediaLinks!,
         contentVisibility: _switchValue1,
-        showActiveComments: _switchValue2,
+        showActiveCommunity: _switchValue2,
       );
 
       var data = {
