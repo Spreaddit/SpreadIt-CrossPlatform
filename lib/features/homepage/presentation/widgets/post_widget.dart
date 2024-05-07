@@ -83,8 +83,7 @@ class _PostHeaderState extends State<_PostHeader> {
   late Timer timer;
   bool shouldRenderJoin = false;
 
-  //bool isAdmin = UserSingleton().user?.role == "Admin";
-  bool isAdmin = true;
+  bool isAdmin = UserSingleton().user?.role == "Admin";
 
   @override
   void initState() {
@@ -778,7 +777,6 @@ class PostWidget extends StatefulWidget {
     required this.isUserProfile,
     this.isSavedPage = false,
     this.feedContext,
-
   });
   @override
   State<PostWidget> createState() => _PostWidgetState();
@@ -871,7 +869,6 @@ class _PostWidgetState extends State<PostWidget> {
                     onSpoilerChanged: onChangeSpoiler,
                     onDeleted: onDeleted,
                     feedContext: widget.feedContext,
-
                     content: widget.post.content != null &&
                             widget.post.content!.isNotEmpty
                         ? widget.post.content![widget.post.content!.length - 1]
@@ -908,7 +905,6 @@ class _PostWidgetState extends State<PostWidget> {
                       isSpoiler: isSpoiler,
                       selectedPollOption: widget.post.selectedPollOption,
                       hasVotedOnPoll: widget.post.hasVotedOnPoll,
-
                     ),
                   ),
                   _PostInteractions(
@@ -922,7 +918,6 @@ class _PostWidgetState extends State<PostWidget> {
                     hasDownvoted: widget.post.hasDownvoted ?? false,
                     hasUpvoted: widget.post.hasUpvoted ?? false,
                     post: widget.post,
-
                   )
                 ],
               )

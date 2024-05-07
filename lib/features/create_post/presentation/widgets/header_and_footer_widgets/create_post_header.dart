@@ -61,8 +61,7 @@ class _CreatePostHeaderState extends State<CreatePostHeader> {
                 height: 40,
                 width: 40,
                 child: IconButton(
-                  icon: Icon(Icons.more_horiz,
-                      size: 40), // Change this to the icon you want
+                  icon: Icon(Icons.more_horiz, size: 40),
                   onPressed: () {
                     widget.showSchedulePostBottomSheet!.call(context);
                   },
