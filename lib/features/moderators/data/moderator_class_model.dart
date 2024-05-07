@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-/*class Moderator {
-  String username;
-  String profilepic;
-  DateTime moderatorSince;
-  bool isFullPermissions;
-  bool isAccess;
-  bool isPosts;
-
-  Moderator({
-    required this.username,
-    required this.profilepic,
-    required this.moderatorSince,
-    required this.isFullPermissions,
-    required this.isPosts,
-    required this.isAccess,
-  });
-}*/
-
+/// Represents a moderator in a community.
 class Moderator {
+  /// The username of the moderator.
   String username;
+
+  /// The banner of the moderator.
   String banner;
+
+  /// The avatar of the moderator.
   String avatar;
+
+  /// The date when the moderator was assigned.
   DateTime moderationDate;
+
+  /// A boolean indicating whether the moderator has permission to manage posts and comments.
   bool managePostsAndComments;
+
+  /// A boolean indicating whether the moderator has permission to manage users.
   bool manageUsers;
+
+  /// A boolean indicating whether the moderator has permission to manage settings.
   bool manageSettings;
+
+  /// The name of the community where the moderator is assigned.
   String communityName;
 
+  /// Constructs a Moderator instance.
   Moderator({
     required this.username,
     required this.banner,
@@ -40,6 +39,7 @@ class Moderator {
     required this.communityName,
   });
 
+  /// Converts the Moderator instance to a JSON object.
   factory Moderator.fromJson(Map<String, dynamic> json) {
     return Moderator(
       username: json['username'],
@@ -53,6 +53,7 @@ class Moderator {
     );
   }
 
+  /// Converts the Moderator instance to a JSON object.
   Map<String, dynamic> toJson() {
     return {
       'username': username,

@@ -5,6 +5,17 @@ import 'package:spreadit_crossplatform/features/discover_communities/data/commun
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/moderators/data/invite_moderator.dart';
 
+/// Shows a modal bottom sheet to invite a moderator to a community.
+///
+/// This function displays a modal bottom sheet where the user can choose a
+/// community to invite a moderator, select the moderator's permissions, and
+/// send the invitation message.
+///
+/// Parameters:
+/// - `context`: The build context.
+/// - `communities`: A list of communities to choose from.
+/// - `username`: The username of the moderator being invited.
+
 void showModalBottomSheetInvite(
     BuildContext context, List<Community> communities, String username) {
   Community _selectedCommunity = communities.first;

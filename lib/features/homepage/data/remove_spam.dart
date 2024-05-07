@@ -5,6 +5,15 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Removes a post as spam.
+///
+/// This function sends a request to the server to remove a post as spam.
+///
+/// [communityName] is the name of the community where the post belongs.
+///
+/// [postId] is the ID of the post to be removed as spam.
+///
+/// Throws a DioException if the request fails.
 Future<void> removeAsSpam(
     {required String communityName, required String postId}) async {
   try {

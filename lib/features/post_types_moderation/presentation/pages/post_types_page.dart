@@ -7,8 +7,14 @@ import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_
 import 'package:spreadit_crossplatform/features/post_types_moderation/data/update_allowed_post_settings.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/widgets/post_options_widget.dart';
 
+/// A page for managing post types and settings for a community.
 class PostTypes extends StatefulWidget {
+  /// The name of the community.
   final String communityName;
+
+  /// Constructs a [PostTypes] widget.
+  ///
+  /// [communityName]: The name of the community.
   const PostTypes({required this.communityName});
 
   @override
@@ -22,6 +28,7 @@ class _PostTypesState extends State<PostTypes> {
   bool isMediaInCommentsAllowed = false;
   String postOption = 'any';
 
+  /// Fetches the post settings for the community.
   Future<void> getPostSettings() async {
     try {
       var data = await fetchPostSettingsData(widget.communityName);

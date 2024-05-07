@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
+/// A widget for selecting post options.
 class PostOptionsBox extends StatefulWidget {
+  /// Callback function triggered when an option is selected.
   final Function(String) onOptionSelected;
+
+  /// The initial selected option.
   final String initialOption;
 
+  /// Constructs a [PostOptionsBox] widget.
+  ///
+  /// [onOptionSelected]: Callback function triggered when an option is selected.
+  /// [initialOption]: The initial selected option.
   const PostOptionsBox(
       {Key? key, required this.onOptionSelected, required this.initialOption})
       : super(key: key);
@@ -31,6 +39,7 @@ class _PostOptionsBoxState extends State<PostOptionsBox> {
     }
   }
 
+  /// Shows the options modal bottom sheet.
   Future<void> _showOptionsModal(BuildContext context) async {
     final selectedOption = await showModalBottomSheet<String>(
       context: context,

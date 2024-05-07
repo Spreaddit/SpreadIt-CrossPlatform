@@ -4,6 +4,15 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Downvotes a comment.
+///
+/// This function sends a request to the server to downvote a comment.
+///
+/// [commentId] is the ID of the comment to be downvoted.
+///
+/// Returns the updated vote count of the comment if successful, otherwise returns null.
+///
+/// Throws a DioException if the request fails.
 Future<int?> downvoteComment({required String commentId}) async {
   try {
     String? accessToken = UserSingleton().accessToken;

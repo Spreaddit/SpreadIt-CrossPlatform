@@ -8,14 +8,24 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/po
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/downvote_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/upvote_comment.dart';
 
-/// This widget is responsible for the display
-/// of [VoteCount]
+/// This widget is responsible for the display of vote count and buttons for upvoting and downvoting comments.
 class CommentVoteButton extends StatefulWidget {
+  /// The initial vote count of the comment.
   final int initialVotesCount;
+
+  /// Indicates whether the comment is upvoted.
   bool isUpvoted;
+
+  /// Indicates whether the comment is downvoted.
   bool isDownvoted;
+
+  /// Indicates whether the comment is removed.
   bool isRemoved;
+
+  /// Indicates whether the comment is removed due to spam.
   bool isRemoval;
+
+  /// The ID of the comment.
   final String commentId;
 
   CommentVoteButton({

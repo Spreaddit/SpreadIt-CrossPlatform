@@ -12,11 +12,13 @@ import 'package:spreadit_crossplatform/features/moderators/data/moderator_class_
 import 'package:spreadit_crossplatform/features/moderators/presentation/pages/edit_moderators_permissions.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
-import 'package:spreadit_crossplatform/features/moderators/presentation/widgets/invitation_to_moderate.dart';
 
+/// A StatefulWidget for inviting a moderator to a community.
 class InviteModeratorPage extends StatefulWidget {
+  /// The name of the community to invite the moderator to.
   String communityName;
 
+  /// Constructs an InviteModeratorPage with the given [communityName].
   InviteModeratorPage({
     required this.communityName,
   });
@@ -27,6 +29,7 @@ class InviteModeratorPage extends StatefulWidget {
   }
 }
 
+/// The state class associated with InviteModeratorPage.
 class _InviteModeratorPageState extends State<InviteModeratorPage> {
   late TextEditingController _usernameController;
   late bool managePostsAndComments;

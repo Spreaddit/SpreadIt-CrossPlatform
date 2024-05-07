@@ -4,6 +4,11 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Locks comments for a specific post.
+///
+/// This function sends a request to the server to lock comments for the specified post.
+///
+/// [postId] is the ID of the post for which comments will be locked.
 Future<void> lockComments({required String postId}) async {
   try {
     String? accessToken = UserSingleton().accessToken;

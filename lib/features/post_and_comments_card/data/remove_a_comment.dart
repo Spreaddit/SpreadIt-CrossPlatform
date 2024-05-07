@@ -4,6 +4,14 @@ import 'package:spreadit_crossplatform/user_info.dart';
 
 String apibase = apiUrl;
 
+/// Removes a comment as spam.
+///
+/// This function sends a request to the server to remove a comment as spam.
+///
+/// [communityName] is the name of the community where the comment belongs.
+/// [commentId] is the ID of the comment to be removed as spam.
+///
+/// Throws a DioException if the request fails.
 Future<void> removeCommentAsSpam(
     {required String communityName, required String commentId}) async {
   try {

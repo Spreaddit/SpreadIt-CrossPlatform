@@ -13,8 +13,12 @@ import 'package:spreadit_crossplatform/user_info.dart';
 import '../../../homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/widgets/invitation_to_moderate.dart';
 
+/// A StatefulWidget representing the main page for managing moderators
 class ModeratorsPage extends StatefulWidget {
+  /// The name of the community for which moderators are managed.
   final String communityName;
+
+  /// Constructs a ModeratorsPage with the given [communityName].
   const ModeratorsPage({required this.communityName});
 
   @override
@@ -23,6 +27,7 @@ class ModeratorsPage extends StatefulWidget {
   }
 }
 
+/// The state class associated with ModeratorsPage.
 class _ModeratorsPageState extends State<ModeratorsPage> {
   bool isModerator = true;
   int _selectedIndex = 0;
@@ -32,7 +37,6 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
   void initState() {
     super.initState();
     fetchModerators();
-    //ModeratorsList = fetchModeratorsData(widget.communityName, _selectedIndex);
   }
 
   void _onIndexChanged(int index) {
@@ -47,6 +51,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
     setState(() {});
   }
 
+  /// Fetches moderators data based on the selected tab index.
   Future<void> fetchModerators() async {
     try {
       var data =
@@ -72,6 +77,7 @@ class _ModeratorsPageState extends State<ModeratorsPage> {
     });
   }
 
+  /// Builds the content of the selected tab based on the selected index.
   Widget _buildSelectedPage() {
     print('build');
     print("_selectedIndexxx: $_selectedIndex");

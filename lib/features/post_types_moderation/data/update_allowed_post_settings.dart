@@ -4,6 +4,11 @@ import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_
 import 'package:spreadit_crossplatform/user_info.dart';
 
 String baseUrl = apiUrl;
+
+/// Updates the post settings for a community.
+///
+/// [updatedSettings]: The updated post settings.
+/// [communityName]: The name of the community.
 Future<void> updatePostSettings(
     PostSettings updatedSettings, String communityName) async {
   try {
