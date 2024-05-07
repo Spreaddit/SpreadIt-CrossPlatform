@@ -5,14 +5,14 @@ import 'package:spreadit_crossplatform/api.dart';
 
 class GetScheduledPostsService {
   Future<List<Post>> getScheduledPosts({
-    String? subspreaditName,
+    required String subspreaditName,
   }) async {
     try {
       String? accessToken = UserSingleton().getAccessToken();
 
-      //String requestURL ='$apiUrl/community/moderation/$subspreaditName/schedule-posts';
       String requestURL =
-          'http://172.27.0.1:3000/MOHAMEDREFAAT031/Posts-Comments/1.0.0/community/moderation/$subspreaditName/schedule-posts';
+          '$apiUrl/community/moderation/$subspreaditName/schedule-posts';
+
       print("post Category Endpoinnnnnt: $requestURL");
       final response = await Dio().get(
         requestURL,
