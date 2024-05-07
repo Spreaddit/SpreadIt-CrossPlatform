@@ -8,9 +8,7 @@ import 'package:spreadit_crossplatform/features/chat/presentation/widgets/naviga
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
-
-// String userId = UserSingleton().user!.firebaseId;
-String userId = 'KMmoAXLiVc9UBl0rNqTO';
+import 'package:spreadit_crossplatform/user_info.dart';
 
 Widget usersList({
   required BuildContext context,
@@ -19,7 +17,7 @@ Widget usersList({
   return StreamBuilder<QuerySnapshot>(
     stream: FirebaseFirestore.instance
         .collection('chatrooms')
-        .where('users', arrayContains: userId)
+        .where('users', arrayContains: UserSingleton().firebaseId!)
         .snapshots(),
     builder: ((context, snapshot) {
       if (snapshot.hasError) {
@@ -32,12 +30,13 @@ Widget usersList({
         );
       }
       return ListView(
+        physics: AlwaysScrollableScrollPhysics(),
         children: snapshot.data!.docs
             .where((element) {
               if (selectedOption == 1) {
-                return element['groupName'] == '';
+                return element['groupname'] == '';
               } else if (selectedOption == 2) {
-                return element['groupName'] != '';
+                return element['groupname'] != '';
               }
               return true;
             })
@@ -86,8 +85,8 @@ Widget _userItem({
 
   String title;
 
-  if (data.groupName != "") {
-    title = data.groupName;
+  if (data.groupname != "") {
+    title = data.groupname;
     avatar = CircleAvatar(
       child: Text(
         title[0].toUpperCase(),
@@ -97,8 +96,9 @@ Widget _userItem({
       ),
     );
   } else {
-    UserData otherUser =
-        data.usersData[0].id != userId ? usersData[0] : usersData[1];
+    UserData otherUser = data.usersData[0].id != UserSingleton().firebaseId!
+        ? usersData[0]
+        : usersData[1];
     title = otherUser.name!;
     avatar = CircleAvatar(
       backgroundImage: NetworkImage(otherUser.avatarUrl!),

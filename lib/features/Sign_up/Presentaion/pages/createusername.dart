@@ -7,10 +7,9 @@ import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart
 import '../../data/check_username.dart';
 import '../../../generic_widgets/snackbar.dart';
 
-
+/// Widget for creating a username during the sign-up process.
 class CreateUsername extends StatefulWidget {
   const CreateUsername({Key? key}) : super(key: key);
-
 
   @override
   State<CreateUsername> createState() => _CreateUsernameState();
@@ -20,18 +19,18 @@ class CreateUsername extends StatefulWidget {
 class _CreateUsernameState extends State<CreateUsername> {
   final GlobalKey<FormState> _usernameform = GlobalKey<FormState>();
 
-
   var _userName = '';
   var _userEmail="";
   var _userPassword="";
   var validUserName = true;
   var invalidText = "";
 
-
+  /// Updates the username and performs validation.
   void updateUsername(String username, bool validation) async {
     _userName = username;
       var responseCode = await checkUsernameAvailability(
       username: _userName,
+      checkIfAvaliable: true,
     );
     setState(() {
       invalidText = validateusernametext(_userName);
@@ -44,37 +43,38 @@ class _CreateUsernameState extends State<CreateUsername> {
     _usernameform.currentState!.save();
   }
 
-
-void navigateToHomePage(BuildContext context) async {
-  if (validUserName) {
-    _usernameform.currentState!.save();
+  /// Navigates to the home page after validation.
+  void navigateToHomePage(BuildContext context) async {
+    if (validUserName) {
+      _usernameform.currentState!.save();
     var responseCode = await signUpApi(
-      username: _userName,
-      email: _userEmail,
-      password: _userPassword,
-    );
-    if (responseCode == 200) {
-      Navigator.of(context).pushNamed('/home'); // SHOULD BE HOME
+        username: _userName,
+        email: _userEmail,
+        password: _userPassword,
+      );
+      if (responseCode == 200) {
+      Navigator.of(context).pushNamed('/email-verification',  arguments: {
+          'email': _userEmail,
+        },); 
     } 
     else if (responseCode == 400) {
       CustomSnackbar(content: "Invalid input" ).show(context); 
     } 
     else if (responseCode == 409) {
       CustomSnackbar(content: "User already exists" ).show(context); 
-    } 
+      }
+    }
   }
-}
 
 
   @override
   Widget build(BuildContext context) {
-  final Map<String, dynamic> args =
-  ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
+    final Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     _userEmail = args['email'];
     _userPassword = args['password'];
-   return Scaffold(
+    return Scaffold(
       body: Column(
         children: [
           Expanded(
@@ -86,12 +86,12 @@ void navigateToHomePage(BuildContext context) async {
                   ),
                   Container(
                     margin: const EdgeInsets.only(
-                      top:20,
-                      left:30,
-                      right:30,
-                      bottom:20,
+                      top: 20,
+                      left: 30,
+                      right: 30,
+                      bottom: 20,
                     ),
-                     alignment: Alignment.center,
+                    alignment: Alignment.center,
                     child: Text(
                       "Most spreadditos use an anonymous username\nYou won't be able to change it later",
                       style: const TextStyle(
@@ -108,8 +108,8 @@ void navigateToHomePage(BuildContext context) async {
                     validateField: validateusername,
                   ),
                   Container(
-                    padding: const EdgeInsets.only(top: 5.0, left: 25, right:25),
-                     alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(top: 5.0, left: 25, right: 25),
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       invalidText,
                       style: TextStyle(
@@ -118,22 +118,19 @@ void navigateToHomePage(BuildContext context) async {
                       textAlign: TextAlign.start,
                     ),
                   ),
-
-
                 ],
               ),
             ),
           ),
-       
-            Button(
-              onPressed: () => navigateToHomePage(context),
-              text: 'Continue',
-              backgroundColor: validUserName
-                  ? Color(0xFFFF4500)
-                  : Color(0xFFEFEFED),
-              foregroundColor: validUserName
-                  ? Colors.white
-                  : Color.fromARGB(255, 113, 112, 112),
+          Button(
+            onPressed: () => navigateToHomePage(context),
+            text: 'Continue',
+            backgroundColor: validUserName
+                ? Color(0xFFFF4500)
+                : Color(0xFFEFEFED),
+            foregroundColor: validUserName
+                ? Colors.white
+                : Color.fromARGB(255, 113, 112, 112),
           ),
         ],
       ),

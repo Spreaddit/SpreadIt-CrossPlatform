@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
+import 'package:spreadit_crossplatform/features/sign_up/data/oauth_service.dart';
 
 class HomePageDrawer extends StatelessWidget {
   bool isAdmin = UserSingleton().user?.role == 'Admin';
@@ -59,7 +60,9 @@ class HomePageDrawer extends StatelessWidget {
               onTap: () {
                 if (item['route'] == '/logout') {
                   UserSingleton().clearUserFromPrefs();
-                  UserSingleton().user = null; // Clear user info
+                  UserSingleton().user = null; 
+                  signOutWithGoogle(context);
+
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/start-up-page', (route) => false);
                 } else {

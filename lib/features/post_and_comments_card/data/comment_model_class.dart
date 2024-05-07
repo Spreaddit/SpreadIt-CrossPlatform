@@ -1,7 +1,8 @@
 import 'package:spreadit_crossplatform/features/user.dart';
+import 'package:equatable/equatable.dart';
 
 /// A class representing a comment in a Flutter application.
-class Comment {
+class Comment extends Equatable {
   /// Unique identifier for the comment.
   final String id;
   /// The text content of the comment.
@@ -85,9 +86,31 @@ class Comment {
       subredditName: json['community_title']??"ayhaga",
       username: usernameFetched,
       profilePic: avatarFetched,
-      postId:  json['postId'], //////// CHECK HYKTOBHA EZAY
+      postId:  json['postId'] ?? '0', 
     );
   }
+  @override
+  List<Object?> get props => [
+        id,
+        content,
+        user,
+        likesCount,
+        repliesCount,
+        isReply,
+        media,
+        createdAt,
+        isHidden,
+        isSaved,
+        postTitle,
+        subredditName,
+        replies,
+        commentParentId,
+        isCollapsed,
+        profilePic,
+        userId,
+        postId,
+        username,
+      ];
 }
 
 /// A class representing media (such as images) associated with a comment.

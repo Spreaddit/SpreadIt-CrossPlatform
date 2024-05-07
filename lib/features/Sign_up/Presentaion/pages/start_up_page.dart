@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spreadit_crossplatform/features/user.dart';
 import '../../../generic_widgets/snackbar.dart';
 import '../../data/google_oauth.dart';
 import "../../data/oauth_service.dart";
@@ -7,18 +9,45 @@ import '../../../generic_widgets/terms_and_cond_text.dart';
 import '../../../generic_widgets/button.dart';
 
 /// The startup page where users can either log in, sign up with email, or sign up with Google.
-class StartUpPage extends StatelessWidget {
-/// Navigates to the login page.
+class StartUpPage extends StatefulWidget {
+  @override
+  _StartUpPageState createState() => _StartUpPageState();
+}
+
+class _StartUpPageState extends State<StartUpPage> {
+ 
+  @override
+  void initState() {
+    super.initState();
+    checkIfUserLoggedIn();
+  }
+  /// Function to check if the user got redirected from homepage as he isn't verifed
+  Future<void> checkIfUserLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataJson = prefs.getString('userSingleton');
+    if(userDataJson!= null)
+    {
+      Map<String, dynamic> jsonMap = json.decode(userDataJson);
+      User user =  User.fromJson(jsonMap['user']);
+      if(user.isVerified! ==false)
+      {
+        CustomSnackbar(content: "Please Verify your email").show(context);
+      }
+    }
+    
+  }
+
+   /// Navigates to the login page.
   void navigateToLogin(BuildContext context) {
     Navigator.of(context).pushNamed('/log-in-page');
   }
 
-/// Navigates to the sign-up page.
+  /// Navigates to the sign-up page.
   void navigateToSignUp(BuildContext context) {
     Navigator.of(context).pushNamed('/sign-up-page');
   }
 
-/// Handles sign-in with Google authentication.
+  /// Handles sign-in with Google authentication.
   Future<void> handleSignIn(BuildContext context) async {
     String accesstoken = await signInWithGoogle(context);
     print("access token: $accesstoken");
@@ -32,7 +61,9 @@ class StartUpPage extends StatelessWidget {
     } else if (responseCode == 409) {
       CustomSnackbar(content: "User already exists").show(context);
     } else if (responseCode == 500) {
-      CustomSnackbar(content: "Internal server error").show(context);
+      CustomSnackbar(content: "An error ocuured please try again later").show(context);
+    } else if (responseCode==402){
+      CustomSnackbar(content: "You have been banned from Spreddit").show(context);
     }
   }
 

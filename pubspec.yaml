@@ -21,7 +21,7 @@ dependencies:
   any_link_preview: ^3.0.1
   custom_refresh_indicator: ^3.1.0
   flutter_polls: ^0.1.6
-
+  http: ^1.2.1
   cupertino_icons: ^1.0.2
 
   carousel_slider: ^4.2.1
@@ -61,6 +61,7 @@ dependencies:
   flutter_link_previewer: ^3.2.2
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
+  http_parser: ^4.0.2
   flutter_chat_ui: ^1.6.12
   mime: ^1.0.5
   flutter_chat_types: ^3.6.2

@@ -1,27 +1,152 @@
-// import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
-// import 'package:spreadit_crossplatform/user_info.dart';
+import 'dart:math';
 
-// enum MessageTypes {
-//   inbox,
-// }
+import 'package:dio/dio.dart';
+import 'package:spreadit_crossplatform/api.dart';
+import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
+import 'package:spreadit_crossplatform/user_info.dart';
 
+/// and fetches its respective [Message] List
+Future<List<MessageModel>> getMessages() async {
+  try {
+    String? accessToken = UserSingleton().getAccessToken();
+
+    String requestURL = '$apiUrl/message/messages';
+    final response = await Dio().get(
+      requestURL,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      print(response.data);
+
+      String conversationId = "";
+
+      List<MessageModel> messageList = [];
+
+      for (var data in (response.data as List)) {
+        if (conversationId == data['conversationId']) {
+          messageList[messageList.length - 1].replies!.add(
+                MessageRepliesModel.fromJson(
+                  data,
+                ),
+              );
+        } else {
+          conversationId = data['conversationId'];
+          messageList.add(MessageModel.fromJson(data));
+        }
+      }
+      return messageList;
+    } else if (response.statusCode == 409) {
+      print("Conflict: ${response.statusMessage}");
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
+    } else {
+      print("Internal Server Error: ${response.statusCode}");
+    }
+    return [];
+  } on DioException catch (e) {
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+      } else if (e.response!.statusCode == 409) {
+        print("Conflict: ${e.response!.statusMessage}");
+      } else {
+        print("Internal Server Error: ${e.response!.statusMessage}");
+      }
+      return [];
+    }
+    rethrow;
+  } catch (e) {
+    //TO DO: show error message to user
+    print("Error occurred: $e");
+    return [];
+  }
+}
+
+Future<List<MessageModel>> handleReadMessages({
+  required bool shouldRead,
+  String? messageId,
+}) async {
+  try {
+    String? accessToken = UserSingleton().getAccessToken();
+    String requestURL = '';
+    if (shouldRead) {
+      if (messageId == null) {
+        requestURL = '$apiUrl/message/readallmessages/';
+      } else {
+        requestURL = '$apiUrl/message/readmsg/$messageId';
+      }
+    } else {
+      requestURL = '$apiUrl/message/unreadmsg/$messageId';
+    }
+    final response = await Dio().post(
+      requestURL,
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      print(response.data);
+
+      String conversationId = "";
+
+      List<MessageModel> messageList = [];
+
+      for (var data in (response.data as List)) {
+        if (conversationId == data['conversationId']) {
+          messageList[messageList.length - 1].replies!.add(
+                MessageRepliesModel.fromJson(
+                  data,
+                ),
+              );
+        } else {
+          conversationId = data['conversationId'];
+          messageList.add(MessageModel.fromJson(data));
+        }
+      }
+      return messageList;
+    } else if (response.statusCode == 409) {
+      print("Conflict: ${response.statusMessage}");
+    } else if (response.statusCode == 400) {
+      print("Bad request: ${response.statusMessage}");
+    } else {
+      print("Internal Server Error: ${response.statusCode}");
+    }
+    return [];
+  } on DioException catch (e) {
+    if (e.response != null) {
+      if (e.response!.statusCode == 400) {
+        print("Bad request: ${e.response!.statusMessage}");
+      } else if (e.response!.statusCode == 409) {
+        print("Conflict: ${e.response!.statusMessage}");
+      } else {
+        print("Internal Server Error: ${e.response!.statusMessage}");
+      }
+      return [];
+    }
+    rethrow;
+  } catch (e) {
+    //TO DO: show error message to user
+    print("Error occurred: $e");
+    return [];
+  }
+}
+
+// /// Takes [messageId] as a paremeter
 // /// and fetches its respective [Post] List
-// Future<List<Message>> getMessages({
-//   required PostCategories category,
-//   String? subspreaditName,
-//   String? timeSort = "",
-//   String? username = "",
+// Future<Post?> getPostById({
+//   required String postId,
 // }) async {
 //   try {
 //     String? accessToken = UserSingleton().getAccessToken();
 
-//     String requestURL = apiUrl +
-//         postCategoryEndpoint(
-//           action: category,
-//           subspreaditName: subspreaditName,
-//           timeSort: timeSort,
-//           username: username,
-//         );
+//     String requestURL = "$apiUrl/posts/$postId/";
+
 //     final response = await Dio().get(
 //       requestURL,
 //       options: Options(
@@ -31,9 +156,7 @@
 //       ),
 //     );
 //     if (response.statusCode == 200) {
-//       List<Post> posts =
-//           (response.data as List).map((x) => Post.fromJson(x)).toList();
-//       return (posts);
+//       return Post.fromJson(response.data);
 //     } else if (response.statusCode == 409) {
 //       print("Conflict: ${response.statusMessage}");
 //     } else if (response.statusCode == 400) {
@@ -41,7 +164,7 @@
 //     } else {
 //       print("Internal Server Error: ${response.statusCode}");
 //     }
-//     return [];
+//     return null;
 //   } on DioException catch (e) {
 //     if (e.response != null) {
 //       if (e.response!.statusCode == 400) {
@@ -51,59 +174,12 @@
 //       } else {
 //         print("Internal Server Error: ${e.response!.statusMessage}");
 //       }
-//       return [];
+//       return null;
 //     }
 //     rethrow;
 //   } catch (e) {
 //     //TO DO: show error message to user
 //     print("Error occurred: $e");
-//     return [];
+//     return null;
 //   }
 // }
-
-// // /// Takes [PostCategories] as a paremeter
-// // /// and fetches its respective [Post] List
-// // Future<Post?> getPostById({
-// //   required String postId,
-// // }) async {
-// //   try {
-// //     String? accessToken = UserSingleton().getAccessToken();
-
-// //     String requestURL = "$apiUrl/posts/$postId/";
-
-// //     final response = await Dio().get(
-// //       requestURL,
-// //       options: Options(
-// //         headers: {
-// //           'Authorization': 'Bearer $accessToken',
-// //         },
-// //       ),
-// //     );
-// //     if (response.statusCode == 200) {
-// //       return Post.fromJson(response.data);
-// //     } else if (response.statusCode == 409) {
-// //       print("Conflict: ${response.statusMessage}");
-// //     } else if (response.statusCode == 400) {
-// //       print("Bad request: ${response.statusMessage}");
-// //     } else {
-// //       print("Internal Server Error: ${response.statusCode}");
-// //     }
-// //     return null;
-// //   } on DioException catch (e) {
-// //     if (e.response != null) {
-// //       if (e.response!.statusCode == 400) {
-// //         print("Bad request: ${e.response!.statusMessage}");
-// //       } else if (e.response!.statusCode == 409) {
-// //         print("Conflict: ${e.response!.statusMessage}");
-// //       } else {
-// //         print("Internal Server Error: ${e.response!.statusMessage}");
-// //       }
-// //       return null;
-// //     }
-// //     rethrow;
-// //   } catch (e) {
-// //     //TO DO: show error message to user
-// //     print("Error occurred: $e");
-// //     return null;
-// //   }
-// // }
