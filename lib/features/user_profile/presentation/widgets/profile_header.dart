@@ -7,6 +7,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
+import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/report_modal.dart';
 import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/class_models/followers_class_model.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/get_users_follow.dart';
@@ -233,8 +234,8 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                       ],
                                       onPressedList: [
                                         () => {
-                                              Navigator.of(context).pushNamed(
-                                                  '/inbox')
+                                              Navigator.of(context)
+                                                  .pushNamed('/inbox')
                                             },
                                         () => {
                                               interactWithUser(
@@ -243,7 +244,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                                       InteractWithUsersActions
                                                           .block)
                                             },
-                                        () => {},
+                                        () => {
+                                              ReportModal(context, "", "0", "0",
+                                                  false, true, widget.username)
+                                            },
                                       ],
                                     );
                                   },
