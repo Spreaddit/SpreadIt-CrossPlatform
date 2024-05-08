@@ -8,14 +8,21 @@ import 'package:spreadit_crossplatform/features/notifications/Data/get_notificat
 import 'package:spreadit_crossplatform/features/notifications/Data/get_recommended_community.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/loader/loader_widget.dart';
-
-/// A StatefulWidget representing the Saved page where users can view their saved posts and comments.
+/// A StatefulWidget representing the inbox page.
 class InboxPage extends StatefulWidget {
+  /// Callback function to notify parent widget about the change in home sub-category.
   final void Function(int)? onChangeHomeSubCategory;
+
+  /// Callback function to set a new message.
   final void Function(MessageModel message) setNewMessage;
+
+  /// A model representing the new message.
   final MessageModel? newMessage;
+
+  /// Flag indicating whether all notifications/messages are read.
   final bool isAllRead;
 
+  /// Constructs an InboxPage instance.
   const InboxPage({
     Key? key,
     this.onChangeHomeSubCategory,
@@ -28,7 +35,9 @@ class InboxPage extends StatefulWidget {
   State<InboxPage> createState() => _InboxPageState();
 }
 
+/// The state of the InboxPage widget.
 class _InboxPageState extends State<InboxPage> {
+  /// Index of the currently selected tab.
   int _selectedIndex = 0;
   List<Notifications> todayNotifications = [];
   List<Notifications> earlierNotifications = [];
@@ -44,6 +53,7 @@ class _InboxPageState extends State<InboxPage> {
     unreadNotificationsCount();
   }
 
+  /// Callback function to handle tab index change.
   void _onIndexChanged(int index) {
     setState(() {
       _selectedIndex = index;

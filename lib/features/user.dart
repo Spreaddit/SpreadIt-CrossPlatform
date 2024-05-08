@@ -1,3 +1,4 @@
+/// Represents a user profile.
 class User {
   String id;
   String name;
@@ -26,6 +27,7 @@ class User {
   List<String?>? favouriteCommunities;
   final List<SocialMedia?>? socialLinks;
 
+  /// Constructs a User instance.
   User({
     required this.id,
     required this.name,
@@ -55,6 +57,7 @@ class User {
     this.socialLinks,
   });
 
+  /// Converts the User object to a JSON format.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -87,6 +90,7 @@ class User {
     };
   }
 
+  /// Constructs a User instance from JSON data.
   factory User.fromJson(Map<String, dynamic> json) {
     var socialMediaJson = json['socialLinks'] as List;
     List<SocialMedia> socialLinks = socialMediaJson
@@ -133,29 +137,38 @@ class User {
   }
 }
 
+/// Represents a social media profile associated with a user.
 class SocialMedia {
+  /// The platform of the social media profile.
   final String? platform;
-  final String? displayName; 
+
+  /// The display name associated with the social media profile.
+  final String? displayName;
+
+  /// The URL of the social media profile.
   final String? url;
 
+  /// Constructs a SocialMedia instance.
   SocialMedia({
     this.platform,
     this.displayName,
     this.url,
   });
 
+  /// Converts the SocialMedia object to a JSON format.
   Map<String, dynamic> toJson() {
     return {
       'platform': platform,
-      'displayName': displayName, 
+      'displayName': displayName,
       'url': url,
     };
   }
 
+  /// Constructs a SocialMedia instance from JSON data.
   factory SocialMedia.fromJson(Map<String, dynamic> json) {
     return SocialMedia(
       platform: json['platform'],
-      displayName: json['displayName'], 
+      displayName: json['displayName'],
       url: json['url'],
     );
   }

@@ -6,13 +6,22 @@ import 'package:spreadit_crossplatform/features/notifications/Data/notifications
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/get_according_to_type.dart';
 import 'package:spreadit_crossplatform/features/notifications/Presentation/widgets/notification_widget.dart';
 
+/// A StatefulWidget representing the notification page.
 class NotificationPage extends StatefulWidget {
-  List<Notifications> todayNotifications;
-  List<Notifications> earlierNotifications;
-  List<Notifications> notifications;
+  /// List of notifications received today.
+   List<Notifications> todayNotifications;
+
+  /// List of earlier notifications.
+   List<Notifications> earlierNotifications;
+
+  /// List of all notifications.
+   List<Notifications> notifications;
+
+  /// Flag indicating whether all notifications are read.
   final bool isAllRead;
 
-  NotificationPage({
+  /// Constructs a NotificationPage instance.
+   NotificationPage({
     Key? key,
     required this.todayNotifications,
     required this.earlierNotifications,
@@ -24,6 +33,7 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
+/// The state of the NotificationPage widget.
 class _NotificationPageState extends State<NotificationPage> {
   List<Notifications> todayNotifications = [];
   List<Notifications> earlierNotifications = [];
@@ -51,6 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
     todayNotifications = widget.todayNotifications;
   }
 
+  /// Function to toggle a notification setting on or off.
   Future<void> turnOffNotification(String key) async {
     try {
       var data = await getData();
@@ -71,6 +82,7 @@ class _NotificationPageState extends State<NotificationPage> {
     }
   }
 
+  /// Callback function to handle hiding a notification.
   void onHide(String id, Notifications removedNotification) async {
     try {
       final status = await hideNotification(id: id);
@@ -162,6 +174,7 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 }
 
+/// Function to determine if the notification type is a community notification.
 bool community(String notificationType) {
   bool isCommunity = notificationType == "community";
   print(" comminty $isCommunity");
