@@ -15,6 +15,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: AddCommentWidget(
+          labelText: "Add a comment",
+          type: "comment",
+          buttonText: "Post",
           commentsList: commentsList,
           postId: 'post1',
           communityName: 'community1',
