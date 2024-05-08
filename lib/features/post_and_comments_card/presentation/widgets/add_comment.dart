@@ -27,13 +27,19 @@ class AddCommentWidget extends StatefulWidget {
 
   /// Name of the community.
   final String communityName;
+  final String type;
+  final String labelText;
+  final String buttonText;
 
   /// Constructs an [AddCommentWidget] with the specified [commentsList], [postId], and [addComment] function.
   AddCommentWidget(
       {required this.commentsList,
       required this.postId,
       required this.addComment,
-      required this.communityName});
+      required this.communityName,
+      required this.type,
+      required this.labelText,
+      required this.buttonText});
 
   @override
   State<AddCommentWidget> createState() {
@@ -92,7 +98,7 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
       isNotApprovedForCommenting = value;
     });
     setState(() {
-      //TODO: check if this causes exception
+      if (!mounted) return;
       isNotApprovedForCommenting = isNotApprovedForCommenting;
     });
   }
@@ -173,7 +179,7 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                     controller: _commentController,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: "Add a comment",
+                      labelText: widget.labelText,
                       suffixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -217,12 +223,17 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                   Comment? nComment = await updateComments(
                     id: widget.postId,
                     content: newComment,
-                    type: 'comment',
+                    type: widget.type,
                     imageFile: uploadedImageFile,
                     imageWeb: uploadedImageWeb,
                   );
                   setState(() {
+                    if (!mounted) return;
                     widget.addComment(nComment!);
+                    CustomSnackbar(
+                            content:
+                                "Your ${widget.type} has been posted successfully! ")
+                        .show(context);
                     print('nComment${nComment.content}');
                     uploadedImageFile = null;
                     uploadedImageWeb = null;
@@ -230,6 +241,7 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                 } else if (uploadedImageFile != null ||
                     uploadedImageWeb != null) {
                   setState(() {
+                    if (!mounted) return;
                     uploadedImageFile = null;
                     uploadedImageWeb = null;
                     CustomSnackbar(
@@ -241,8 +253,11 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                           content: "Sorry you can't post an empty comment :(")
                       .show(context);
                 }
+                if (widget.type == 'reply') {
+                  Navigator.pop(context);
+                }
               },
-        child: Text("Post"),
+        child: Text(widget.buttonText),
       ),
     );
   }

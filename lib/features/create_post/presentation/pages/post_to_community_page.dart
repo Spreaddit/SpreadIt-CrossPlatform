@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/create_post/data/get_communities_list.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/get_allowed_post_settings.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_settings_model_class.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../../../generic_widgets/communities_search_card.dart';
@@ -49,6 +51,7 @@ class _PostToCommunityState extends State<PostToCommunity> {
   List<Community> communityData = [];
   List<Community> filteredList = [];
   bool isShowMorePressed = false;
+  PostSettings? postSettings;
 
   @override
   void initState() {

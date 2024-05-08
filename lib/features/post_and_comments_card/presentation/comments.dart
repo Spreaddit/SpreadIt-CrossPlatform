@@ -14,6 +14,7 @@ import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/date_to_duration.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/update_comments_list.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_replies.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
@@ -212,6 +213,24 @@ class _CommentCardState extends State<CommentCard> {
     });
   }
 
+  void addReply(Comment nReply) {
+    if (!mounted) return;
+    setState(() {
+      widget.comment.replies!.add(nReply);
+      print('newComment${nReply.content}');
+      //uploadedImageFile = null;
+      //uploadedImageWeb = null;
+    });
+  }
+
+  void onContentChanged(String newContent) {
+    if (!mounted) return;
+
+    setState(() {
+      widget.comment.content = newContent;
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -237,7 +256,7 @@ class _CommentCardState extends State<CommentCard> {
       isNotApprovedForEditOrReply = value;
     });
     setState(() {
-      //TODO: check if this causes exception
+      if (!mounted) return;
       isNotApprovedForEditOrReply = isNotApprovedForEditOrReply;
     });
   }
@@ -354,6 +373,7 @@ class _CommentCardState extends State<CommentCard> {
                                         MaterialPageRoute(
                                           builder: (context) => EditComment(
                                             comment: widget.comment,
+                                            onContentChanged: onContentChanged,
                                           ),
                                         ),
                                       ),
@@ -387,135 +407,17 @@ class _CommentCardState extends State<CommentCard> {
                               .show(context);
                           return;
                         }
-                        TextEditingController replyController =
-                            TextEditingController();
-
                         showModalBottomSheet(
                             context: context,
-                            isScrollControlled: true,
                             builder: (BuildContext context) {
-                              return ListTile(
-                                title: Row(
-                                  children: [
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        child: Container(
-                                          padding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom,
-                                            top: 20,
-                                            right: 20,
-                                            left: 20,
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              if (uploadedImageFile != null ||
-                                                  uploadedImageWeb != null)
-                                                // if (isImage)
-
-                                                Container(
-                                                    height:
-                                                        200, // Adjust the height as needed
-                                                    width:
-                                                        200, // double.infinity,
-
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: selectImage(
-                                                            uploadedImageFile,
-                                                            null,
-                                                            uploadedImageWeb),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    )),
-                                              /*Image(
-                                                  image: selectImage(
-                                                      uploadedImageFile,
-                                                      null,
-                                                      uploadedImageWeb),
-                                                  height: 200,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                ),*/
-                                              //   ),
-                                              //  ),
-                                              // ),
-                                              TextFormField(
-                                                controller: replyController,
-                                                maxLines: null,
-                                                decoration: InputDecoration(
-                                                  labelText: 'Your reply...',
-                                                  suffixIcon: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          //_showBottomSheet(context);
-                                                        },
-                                                        icon: Icon(Icons.link),
-                                                      ),
-                                                      IconButton(
-                                                        onPressed: () {
-                                                          pickImage();
-                                                        },
-                                                        icon: Icon(Icons.image),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                trailing: ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    if (replyController.text.isNotEmpty) {
-                                      print('add reply');
-                                      String newReply = replyController.text;
-                                      print(newReply);
-                                      Comment? nReply = await updateComments(
-                                        id: widget.comment.id,
-                                        content: newReply,
-                                        type: 'reply',
-                                        imageFile: uploadedImageFile,
-                                        imageWeb: uploadedImageWeb,
-                                      );
-                                      setState(() {
-                                        widget.comment.replies!.add(nReply!);
-                                        print('newComment${nReply!.content}');
-                                        uploadedImageFile = null;
-                                        uploadedImageWeb = null;
-                                      });
-                                    } else if (uploadedImageFile != null ||
-                                        uploadedImageWeb != null) {
-                                      setState(() {
-                                        uploadedImageFile = null;
-                                        uploadedImageWeb = null;
-                                        CustomSnackbar(
-                                                content:
-                                                    "Sorry you can't post an image only :(")
-                                            .show(context);
-                                      });
-                                    } else {
-                                      CustomSnackbar(
-                                              content:
-                                                  "Sorry you can't post an empty comment :(")
-                                          .show(context);
-                                    }
-                                    //  if (replyController.text.isNotEmpty) {
-                                    replyController.clear();
-                                    // }
-                                  },
-                                  child: Text('Reply'),
-                                ),
+                              return AddCommentWidget(
+                                commentsList: widget.comment.replies!,
+                                postId: widget.comment.id,
+                                addComment: addReply,
+                                communityName: widget.community,
+                                type: 'reply',
+                                buttonText: 'Reply',
+                                labelText: "Add a reply",
                               );
                             });
                       },
