@@ -13,18 +13,21 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// The [communityName] is the name of the community.
   /// The [blurImage] determines whether to apply a blur effect to the banner image and display community name.
   /// The [joined] determines whether the user is a member of this community
+  /// The [onStateChange] is a callback function that is called when the state of the community changes.
   CommunityAppBar({
     Key? key,
     required this.bannerImageLink,
     required this.communityName,
     this.blurImage = false,
     required this.joined,
+    required this.onStateChange,
   }) : super(key: key);
 
   final String bannerImageLink;
   final String communityName;
   final bool blurImage;
   bool joined;
+  final Function onStateChange;
 
   @override
   Size get preferredSize => Size.fromHeight(65);
@@ -135,6 +138,7 @@ class CommunityAppBar extends StatelessWidget implements PreferredSizeWidget {
                       communityName: communityName,
                       muted: isMuted,
                       joined: joined,
+                      onStateChange: () => onStateChange(),
                     );
                   },
                 );

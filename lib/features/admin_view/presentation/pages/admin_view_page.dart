@@ -101,7 +101,9 @@ class _AdminViewPageState extends State<AdminViewPage>
                         await BanUserService().unbanUser(username: username);
                     CustomSnackbar(content: message).show(context);
                   } catch (e) {
-                    CustomSnackbar(content: e.toString()).show(context);
+                    CustomSnackbar(
+                            content: "User not found or is currently Unbanned")
+                        .show(context);
                   }
                   Navigator.of(context).pop();
                 }

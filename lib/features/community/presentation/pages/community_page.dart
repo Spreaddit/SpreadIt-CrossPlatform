@@ -157,6 +157,9 @@ class _CommunityPageState extends State<CommunityPage> {
               bannerImageLink: communityData["communityBanner"],
               communityName: widget.communityName,
               joined: communityData["isMember"],
+              onStateChange: () {
+                fetchData().then((value) => setState(() {}));
+              },
             ),
             body: _buildNormalBody(),
             floatingActionButton: FloatingActionButton(

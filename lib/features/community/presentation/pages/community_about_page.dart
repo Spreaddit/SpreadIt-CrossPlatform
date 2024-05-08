@@ -57,8 +57,11 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
   /// It also checks if the user is currently a member
   /// If the community banner or image link is not available, empty strings are assigned.
   Future<Map<String, dynamic>> fetchCommunityData() async {
-    return getCommunityInfo(widget.communityName)
-        .then((value) => communityData = value);
+    return getCommunityInfo(widget.communityName).then((value) {
+      communityData = value;
+      isMember = communityData['isMember'];
+      return value;
+    });
   }
 
   /// Fetches the moderator data.
@@ -105,6 +108,9 @@ class _CommunityAboutPageState extends State<CommunityAboutPage> {
               communityName: widget.communityName,
               blurImage: true,
               joined: isMember,
+              onStateChange: () {
+                fetchData().then((value) => setState(() {}));
+              },
             ),
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.create),

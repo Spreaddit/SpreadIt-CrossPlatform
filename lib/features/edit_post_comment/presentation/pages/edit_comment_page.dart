@@ -14,10 +14,10 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comm
 class EditComment extends StatefulWidget {
   /// The comment to be edited.
   Comment? comment;
+  final void Function(String)? onContentChanged;
 
   /// Constructor for EditComment widget.
-  EditComment({this.comment});
-
+  EditComment({this.comment, this.onContentChanged});
   @override
   State<EditComment> createState() {
     return _EditCommentState();
@@ -69,18 +69,19 @@ class _EditCommentState extends State<EditComment> {
             onPressed: () async {
               print("pressed");
               widget.comment!.content = content!;
+              widget.onContentChanged!(content!);
               await updateEditedComment(
                   commentId: widget.comment!.id, content: content);
               print("this is the content${widget.comment!.content}");
               print("content before fetching$content");
               Navigator.of(context).pop();
               Navigator.of(context).pop();
-
             },
             isEnabled: isEnabled,
             onIconPress: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop();}, 
+              Navigator.of(context).pop();
+            },
             showHeaderTitle: true,
           ),
         ),

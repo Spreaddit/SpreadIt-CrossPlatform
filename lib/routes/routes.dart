@@ -86,7 +86,7 @@ Route<dynamic>? Function(RouteSettings)? onGenerateRoute = (settings) {
     //   ),
     // );
   } else if (pathSegments.contains('add-password') &&
-      pathSegments.length >= 5 &&
+      pathSegments.length >= 4 &&
       pathSegments[pathSegments.length - 1] != "add-password") {
     return MaterialPageRoute(
       settings: settings,

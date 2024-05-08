@@ -8,6 +8,8 @@ import 'package:spreadit_crossplatform/features/create_post/presentation/widgets
 import 'package:spreadit_crossplatform/features/create_post/presentation/widgets/video_widget.dart';
 import 'dart:io';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/get_allowed_post_settings.dart';
+import 'package:spreadit_crossplatform/features/post_types_moderation/data/post_settings_model_class.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
 import '../widgets/header_and_footer_widgets/create_post_header.dart';
@@ -96,7 +98,10 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   bool finalCreatePoll = false;
   bool isNotApprovedForPosting = false;
   bool isDateChanged = false;
-
+  bool showPhotoIcon = true;
+  bool showVideoIcon = true;
+  bool showLinkIcon = true;
+  bool showPollIcon = true;
   File? finalImage;
   Uint8List? finalImageWeb;
   File? finalVideo;
@@ -107,6 +112,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   bool isScheduled = false;
+  PostSettings? postSettings;
 
   /// [mapCommunityData] : a function which extracts the [communityName], [communityIcon] and [communityRules] from the passsed list of communities
 
@@ -131,6 +137,42 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
         GlobalKey<FormState> newFormKey = GlobalKey<FormState>();
         finalFormKeys.add(newFormKey);
       }
+    }
+  }
+
+  void fetchAllowedSettings(String communityName) async {
+    postSettings = await fetchPostSettingsData(communityName);
+    adjustPostSettings();
+  }
+
+  void adjustPostSettings() {
+    if (!postSettings!.pollsAllowed) {
+      showPollIcon = false;
+      finalCreatePoll = false;
+      CustomSnackbar(content: "Polls are not allowed ").show(context);
+    }
+    if (postSettings!.postTypeOptions == 'text posts only') {
+      showLinkIcon = false;
+      showPhotoIcon = false;
+      showPhotoIcon = false;
+      showPollIcon = false;
+      finalImage = null;
+      finalImageWeb = null;
+      finalVideo = null;
+      finalVideoWeb = null;
+      finalIsLinkAdded = false;
+      finalCreatePoll = false;
+      CustomSnackbar(content: "Only text posts are allowed ").show(context);
+    } else if (postSettings!.postTypeOptions == 'links only') {
+      showPhotoIcon = false;
+      showPhotoIcon = false;
+      showPollIcon = false;
+      finalImage = null;
+      finalImageWeb = null;
+      finalVideo = null;
+      finalVideoWeb = null;
+      finalCreatePoll = false;
+      CustomSnackbar(content: "Only links are allowed ").show(context);
     }
   }
 
@@ -160,6 +202,7 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
       openPollWidow();
       setLastPressedIcon(Icons.poll);
     }
+    fetchAllowedSettings(communityName);
   }
 
   /// [checkIfCanPost] : a function used to check if users aren't approved for posting in the community
@@ -716,10 +759,10 @@ class _FinalCreatePostState extends State<FinalCreatePost> {
           isPrimaryFooterVisible
               ? PostFooter(
                   toggleFooter: toggleFooter,
-                  showAttachmentIcon: true,
-                  showPhotoIcon: true,
-                  showVideoIcon: true,
-                  showPollIcon: true,
+                  showAttachmentIcon: showLinkIcon,
+                  showPhotoIcon: showPhotoIcon,
+                  showVideoIcon: showVideoIcon,
+                  showPollIcon: showPollIcon,
                   onLinkPress: addLink,
                   onImagePress: pickImage,
                   onVideoPress: pickVideo,

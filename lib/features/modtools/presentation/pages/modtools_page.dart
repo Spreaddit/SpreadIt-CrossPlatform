@@ -58,6 +58,7 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
 
   /// Function to navigate to a different page using a custom route transition.
   void navigateToPage(Widget? route) {
+    print("Naviagting: $modData");
     if (route == null) {
       return;
     }
@@ -69,8 +70,9 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
       return;
     }
     if ((route == routes["approved_users_page"] ||
-            route == routes["banned_users_page"]) ||
-        route == routes["moderators_page"] && modData["manageUsers"] != true) {
+            route == routes["banned_users_page"] ||
+            route == routes["moderators_page"]) &&
+        modData["manageUsers"] != true) {
       CustomSnackbar(content: "You aren't authorized to view this page")
           .show(context);
       return;
