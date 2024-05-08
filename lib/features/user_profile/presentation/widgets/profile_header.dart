@@ -8,6 +8,7 @@ import 'package:spreadit_crossplatform/features/discover_communities/data/commun
 import 'package:spreadit_crossplatform/features/generic_widgets/open_url.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/image_picker.dart';
 import 'package:spreadit_crossplatform/features/report_feature/presentation/widgets/report_modal.dart';
+import 'package:spreadit_crossplatform/features/reset_password/presentation/widgets/user_card.dart';
 import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/class_models/followers_class_model.dart';
 import 'package:spreadit_crossplatform/features/user_profile/data/get_users_follow.dart';
@@ -209,7 +210,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           IconButton(
                             icon: Icon(Icons.share),
                             onPressed: () {
-                              sharePressed(url);
+                              sharePressed(kIsWeb? url : "https://app.spreadit.me/user-profile/$username");
                             },
                             color: Colors.white,
                             iconSize: iconSize,
@@ -247,6 +248,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                         () => {
                                               ReportModal(context, "", "0", "0",
                                                   false, true, widget.username)
+                                            
                                             },
                                       ],
                                     );

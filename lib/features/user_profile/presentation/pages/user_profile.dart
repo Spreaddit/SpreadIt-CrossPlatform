@@ -76,11 +76,18 @@ class _UserProfileState extends State<UserProfile> {
     fetchUserInfoAsync();
     fetchComments();
     checkFollowStatus();
+     Future.delayed(Duration.zero, () {
+        final currentRoute = ModalRoute.of(context)?.settings.name;
+        final List<String> pathSegments = currentRoute!.split('/');
+        username = pathSegments[pathSegments.length - 1];
+        setState(() {});
+      });
   }
 
   @override
   void initState() {
     super.initState();
+
   }
 
   /// Checks the follow status of the current user.
