@@ -12,10 +12,6 @@ import 'package:spreadit_crossplatform/features/user_interactions/data/user_inte
 
 import '../../../saved/data/save_or_unsave.dart';
 
-void getReplyNotifications() {
-  //TODO: get reply notifications logic
-}
-
 void hide({
   required BuildContext context,
   required String postId,
@@ -70,8 +66,7 @@ void unmarkSpoiler(BuildContext context, String postId) async {
     Navigator.pop(context);
     CustomSnackbar(content: "Your post now is unmarked Spoiler");
   } else if (response == 500) {
-    CustomSnackbar(content: 'Internal server error, try again later')
-        .show(context);
+    CustomSnackbar(content: 'An error occured').show(context);
   } else {
     CustomSnackbar(content: 'Post not found').show(context);
   }

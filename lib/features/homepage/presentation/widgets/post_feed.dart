@@ -100,7 +100,7 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   Future<void> fetchData() async {
-    print("fetching catrgory de ${widget.postCategory}");
+    print("fetching catrgory de $currentPostCategory");
     if (!mounted) return;
 
     List<Post> fetchedItems;
@@ -117,7 +117,6 @@ class _PostFeedState extends State<PostFeed> {
         if (fetchedItems.isEmpty) {
           print("No posts found");
         }
-        newItems.clear();
         newItems = fetchedItems;
         isLoading = false;
         _loadingMore = false;
@@ -151,9 +150,10 @@ class _PostFeedState extends State<PostFeed> {
     if (!mounted) return;
     setState(() {
       currentPostCategory = postCategory;
-      newItems.clear();
-      existingItems.clear();
+      newItems = [];
+      existingItems = [];
       isLoading = true;
+      page = 1;
     });
     fetchData();
   }
@@ -165,6 +165,9 @@ class _PostFeedState extends State<PostFeed> {
         if (mounted) {
           setState(() {
             isRefreshing = true;
+            existingItems = [];
+            isLoading = true;
+            page = 1;
           });
         }
         return fetchData();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_app_bar.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/data/get_blocked_accounts.dart';
 import 'package:spreadit_crossplatform/features/blocked_accounts/pages/blocked_accounts/data/put_blocked_accounts.dart';
+import 'package:spreadit_crossplatform/features/user_interactions/data/user_interactions/user_to_user/interact.dart';
 
 /// Widget for displaying a list of blocked accounts with an option to unblock them.
 class BlockedAccountsPage extends StatefulWidget {
@@ -58,10 +59,13 @@ class _BlockedAccountsPageState extends State<BlockedAccountsPage> {
                           fontWeight: FontWeight.bold)),
                   trailing: ElevatedButton(
                     onPressed: () {
+                      interactWithUser(
+                        userId: e['username'],
+                        action: InteractWithUsersActions.unblock,
+                      );
                       setState(() {
                         blockedAccountsList.remove(e);
                       });
-                      updateBlockedAccounts(updatedList: blockedAccountsList);
                     },
                     child: Text('Unblock'),
                   ),

@@ -131,14 +131,6 @@ class _PostCardState extends State<PostCard> {
                       setIsLoaded: widget.setIsloaded,
                       onecomment: widget.oneComment,
                     ),
-                  if (widget.comments == null || widget.comments.isEmpty)
-                    Expanded(child: CommentCardShimmer()),
-                  CommentCard(
-                    comment: widget.comments[index],
-                    community: widget.post.community,
-                    setIsLoaded: widget.setIsloaded,
-                    onecomment: widget.oneComment,
-                  ),
                   Container(
                     decoration: BoxDecoration(
                       border: Border(

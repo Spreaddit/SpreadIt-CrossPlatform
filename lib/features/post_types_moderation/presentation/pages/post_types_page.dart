@@ -72,6 +72,7 @@ class _PostTypesState extends State<PostTypes> {
                     pollsAllowed: isPollsAllowed,
                     mediaInCommentsAllowed: isMediaInCommentsAllowed);
                 updatePostSettings(updatedSettings, widget.communityName);
+                 Navigator.pop(context);
               }),
               child: Text('Save')),
         ],
