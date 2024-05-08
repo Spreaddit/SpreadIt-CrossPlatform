@@ -3,6 +3,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/data/get_muted_communities.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/presentation/widgets/muted_community_widget.dart';
+
 /// A page for displaying muted communities.
 ///
 /// This page displays a list of communities that the user has muted. It provides
@@ -47,6 +48,12 @@ class _MutedCommunityPageState extends State<MutedCommunityPage> {
     });
   }
 
+    void updateFilteredList(List<Community> filteredList) {
+    setState(() {
+      communities = List.from(filteredList);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,13 +76,6 @@ class _MutedCommunityPageState extends State<MutedCommunityPage> {
                     "Posts From muted communities won't show \n up in your feeds or recommendations."),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -102,13 +102,6 @@ class _MutedCommunityPageState extends State<MutedCommunityPage> {
         child: Column(children: [
           Text(
               "Posts From muted communities won't show \n up in your feeds or recommendations."),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Search',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
-            ),
-          ),
           ListView.builder(
             shrinkWrap:
                 true, 
