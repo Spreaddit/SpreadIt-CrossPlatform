@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/community/data/api_subscription_info.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_communities/data/mute_or_unmute_community.dart';
@@ -6,6 +7,7 @@ import 'package:spreadit_crossplatform/features/moderation/muted_communities/dat
 /// A bottom sheet widget for interacting with a community.
 class CommunityBottomSheet extends StatelessWidget {
   final String communityName;
+  final Function onStateChange;
   bool joined;
   bool muted;
 
@@ -14,9 +16,11 @@ class CommunityBottomSheet extends StatelessWidget {
   /// The [communityName] is the name of the community.
   /// The [joined] flag indicates whether the user is a member of the community.
   /// The [muted] flag indicates whether the community is muted.
+  /// The [onStateChange] is a callback function that is called when the state of the community changes.
   CommunityBottomSheet({
     required this.communityName,
     required this.joined,
+    required this.onStateChange,
     this.muted = false,
   });
 
@@ -36,7 +40,7 @@ class CommunityBottomSheet extends StatelessWidget {
           mute(communityName, muted, context);
         },
         () {
-          joinOrLeave();
+          joinOrLeave(context);
         },
       ],
     );
@@ -67,5 +71,24 @@ class CommunityBottomSheet extends StatelessWidget {
   }
 
   /// Joins or leaves the community.
-  void joinOrLeave() {}
+  void joinOrLeave(BuildContext context) async{
+    if (!joined) {
+      var response = await postSubscribeRequest(postRequestInfo: {'name': communityName});
+      if (response == 200) {
+        CustomSnackbar(content: "Community joined successfully").show(context);
+        onStateChange();
+      } else {
+        CustomSnackbar(content: "An error occurred, please try again later").show(context);
+      }
+    } else {
+      var response = await postUnsubscribeRequest(postRequestInfo: {'communityName': communityName});
+      if (response == 200) {
+        CustomSnackbar(content: "Community unjoined successfully").show(context);
+        onStateChange();
+      } else {
+        CustomSnackbar(content: "An error occurred, please try again later").show(context);
+      }
+    }
+    Navigator.pop(context); // Close the bottom sheet
+  }
 }
