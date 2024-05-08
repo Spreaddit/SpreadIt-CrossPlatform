@@ -8,6 +8,7 @@ Future<ModPermissions?> fetchPermissionsData(
     String communityName, String username) async {
   try {
     String? accessToken = UserSingleton().accessToken;
+    username = UserSingleton().user!.username;
     String apiroute = "/community/$communityName/$username/get-permissions";
 
     String apiUrl = "$baseUrl$apiroute";

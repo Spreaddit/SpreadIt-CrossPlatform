@@ -17,6 +17,7 @@ import 'package:spreadit_crossplatform/features/post_and_comments_card/data/upda
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/add_comment.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/widgets/on_more_functios.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/get_replies.dart';
+import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/comment_model_class.dart';
 
@@ -89,11 +90,21 @@ class _CommentHeader extends HookWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    username,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  GestureDetector(
+                    onTap: () => {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          settings: RouteSettings(
+                            name: '/user-profile/$username',
+                          ),
+                          builder: (context) => UserProfile(
+                            username: username,
+                          ),
+                        ),
+                      ),
+                    },
+                    child: Text(username),
                   ),
-
                   SizedBox(width: 4), // Adjust the spacing as needed
                   if (isRemoval)
                     Icon(

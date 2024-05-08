@@ -32,7 +32,7 @@ void showModalBottomSheetInvite(
     _messageController.dispose();
   }
 
-  void checkPermissions() async {
+  Future<void> checkPermissions() async {
     permissions = await fetchPermissionsData(_selectedCommunity.name, username);
   }
 
@@ -59,13 +59,14 @@ void showModalBottomSheetInvite(
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            await checkPermissions();
                             setState(() {
                               _selectedCommunity = community;
                               _messageController = TextEditingController(
                                   text:
                                       'I invite you to be a moderator of r/${community.name}');
-                              checkPermissions();
+
                               if (permissions!.manageUsers == false) {
                                 Navigator.pop(context);
                                 CustomSnackbar(
@@ -186,7 +187,10 @@ void showModalBottomSheetInvite(
                       ),
                       SizedBox(width: 16.0),
                       ElevatedButton.icon(
-                        onPressed: _messageController.text.isNotEmpty
+                        onPressed: _messageController.text.isNotEmpty &&
+                                (_managePostsClicked ||
+                                    _manageUsersClicked ||
+                                    _manageSettingsClicked)
                             ? () {
                                 print(_messageController.text);
                                 print(_managePostsClicked);
@@ -204,7 +208,11 @@ void showModalBottomSheetInvite(
                                         content: "Invitaion sent successfully!")
                                     .show(context);
                               }
-                            : null,
+                            : () {
+                                Navigator.pop(context);
+                                CustomSnackbar(content: "Invalid invite!")
+                                    .show(context);
+                              },
                         icon: Icon(Icons.send),
                         label: Text('Send'),
                         style: ButtonStyle(
