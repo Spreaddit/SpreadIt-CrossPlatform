@@ -101,9 +101,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             Navigator.of(context)
                 .pushNamed('/settings/account-settings/update-email')
                 .then((_) => fetchData());
-            Navigator.of(context)
-                .pushNamed('/settings/account-settings/update-email')
-                .then((_) => fetchData());
           }
         },
       ),

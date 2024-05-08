@@ -36,7 +36,7 @@ class CommunityBottomSheet extends StatelessWidget {
           mute(communityName, muted, context);
         },
         () {
-          join();
+          joinOrLeave();
         },
       ],
     );
@@ -67,5 +67,5 @@ class CommunityBottomSheet extends StatelessWidget {
   }
 
   /// Joins or leaves the community.
-  void join() {}
+  void joinOrLeave() {}
 }

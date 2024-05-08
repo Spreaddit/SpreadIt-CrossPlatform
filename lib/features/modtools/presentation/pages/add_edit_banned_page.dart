@@ -105,9 +105,10 @@ class _AddOrEditBannedPageState extends State<AddOrEditBannedPage> {
         modNote: _banReasonController.text,
         messageToUser: _messageToUserController.text,);
     if (response == 200) {
+      CustomSnackbar(content: "u/${_usernameController.text} was banned!").show(context);
       Navigator.pop(context);
       widget.onRequestCompleted();
-      CustomSnackbar(content: "u/${widget.username} was banned!").show(context);
+      
     } else {
       CustomSnackbar(content: "Error banning user").show(context);
     }
