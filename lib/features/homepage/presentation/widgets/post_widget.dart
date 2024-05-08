@@ -11,7 +11,6 @@ import 'package:spreadit_crossplatform/features/edit_post_comment/presentation/p
 import 'package:spreadit_crossplatform/features/generic_widgets/bottom_model_sheet.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/share.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/handle_polls.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/lock_comments.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
@@ -192,12 +191,10 @@ class _PostHeaderState extends State<_PostHeader> {
       "Copy text",
       "Report",
       "Block account",
-      "Hide",
     ];
     List<String> writerOptions = [
       widget.isSaved ? "Unsave" : "Save",
       "Copy text",
-      "Hide",
       "Edit post",
       widget.isSpoiler ? "Unmark Spoiler" : "Mark Spoiler",
       widget.isNsfw ? "Unmark NSFW" : "Mark NSFW",
@@ -221,7 +218,6 @@ class _PostHeaderState extends State<_PostHeader> {
                 widget.onsaved(!widget.isSaved),
               },
       () => copyText(context, widget.content!),
-      hide,
       () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -240,19 +236,23 @@ class _PostHeaderState extends State<_PostHeader> {
           ? () => {
                 widget.onSpoilerChanged(!widget.isSpoiler),
                 unmarkSpoiler(context, widget.post.postId),
+                Navigator.of(context).pop(),
               }
           : () => {
                 widget.onSpoilerChanged(!widget.isSpoiler),
                 markSpoiler(context, widget.post.postId),
+                Navigator.of(context).pop(),
               },
       widget.isNsfw
           ? () => {
                 widget.onNsfwChanged(!widget.isNsfw),
                 unmarkNSFW(context, widget.post.postId),
+                Navigator.of(context).pop(),
               }
           : () => {
                 widget.onNsfwChanged(!widget.isNsfw),
                 markNSFW(context, widget.post.postId),
+                Navigator.of(context).pop(),
               },
       () => deletePost(
             widget.feedContext ?? context,
@@ -286,14 +286,17 @@ class _PostHeaderState extends State<_PostHeader> {
             widget.post.username,
             true,
           ),
-      () => blockAccount(widget.post.username),
-      hide
+      () {
+        blockAccount(widget.post.username);
+        CustomSnackbar(content: "You blocked ${widget.post.username}")
+            .show(context);
+        Navigator.of(context).pop();
+      },
     ];
 
     List<IconData> writerIcons = [
       Icons.save,
       Icons.copy,
-      Icons.hide_source_rounded,
       Icons.edit,
       Icons.new_releases_rounded,
       Icons.warning_rounded,
@@ -304,7 +307,6 @@ class _PostHeaderState extends State<_PostHeader> {
       Icons.copy,
       Icons.flag,
       Icons.block,
-      Icons.hide_source_rounded,
     ];
     showModalBottomSheet(
       context: context,
@@ -771,19 +773,6 @@ class _PostInteractionsState extends State<_PostInteractions> {
                       widget.commentsCount.toString(),
                     ),
                   ),
-            TextButton.icon(
-              onPressed: () => navigateToPostCardPage(
-                context: context,
-                postId: widget.post.postId,
-                post: widget.post,
-              ),
-              icon: Icon(
-                Icons.comment,
-              ),
-              label: Text(
-                widget.commentsCount.toString(),
-              ),
-            ),
             IconButton(
               icon: Icon(Icons.share),
               onPressed: () => sharePressed("should render"),

@@ -123,7 +123,7 @@ class _SearchInCommunityOrUserState extends State<SearchInCommunityOrUser> {
                     updateSearchItem: updateSearchItem,
                     navigateToSearchResult: navigateToCommunityOrUserSearch,
                     navigateToSuggestedResults: () {},
-                    initialBody: '',
+                    initialBody: ' ',
                     communityOrUserName: communityOrUserName,
                     communityOrUserIcon: communityOrUserIcon,
                     isContained: true,

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/create_post/data/get_communities_list.dart';
 import 'package:spreadit_crossplatform/features/discover_communities/data/community.dart';
-import 'package:spreadit_crossplatform/features/discover_communities/data/get_specific_category.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/header_and_footer_widgets/buttonless_header.dart';
 import '../../../generic_widgets/communities_search_card.dart';
@@ -153,4 +153,3 @@ class _PostToCommunityState extends State<PostToCommunity> {
     );
   }
 }
-

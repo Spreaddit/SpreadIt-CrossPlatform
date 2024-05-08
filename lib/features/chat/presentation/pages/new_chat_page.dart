@@ -7,6 +7,7 @@ import 'package:spreadit_crossplatform/theme/theme.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 
+/// A page for starting a new chat.
 class NewChatPage extends StatefulWidget {
   const NewChatPage({
     Key? key,
@@ -128,6 +129,15 @@ class _NewChatPageState extends State<NewChatPage> {
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  /// Validates the entered username.
+  ///
+  /// This function checks if the entered username exists in the database.
+  /// If the username exists, it adds it to the list of tags.
+  ///
+  /// Parameters:
+  ///
+  /// - `tag`: The username entered by the user.
+  /// - `onTagSubmitted`: Callback function to handle the submitted tag.
   Future<void> usernameValidator(
     String? tag,
     void Function(UserData val) onTagSubmitted,

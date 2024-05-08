@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/NSFW_post.dart';
+import 'package:spreadit_crossplatform/features/post_and_comments_card/data/hide_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/spoiler_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unNSFW_post.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/data/unspoiler_post.dart';
@@ -11,11 +12,17 @@ import 'package:spreadit_crossplatform/features/user_interactions/data/user_inte
 
 import '../../../saved/data/save_or_unsave.dart';
 
-void getReplyNotifications() {
-  //TODO: get reply notifications logic
+void hide({
+  required BuildContext context,
+  required String postId,
+  required bool shouldHide,
+  required void Function() onHide,
+}) async {
+  var response = await hidePost(postId, shouldHide);
+  if (response != 200) {
+    CustomSnackbar(content: "An error occured").show(context);
+  }
 }
-
-void hide() {}
 
 void copyText(BuildContext context, String text) {
   Clipboard.setData(ClipboardData(
@@ -24,14 +31,9 @@ void copyText(BuildContext context, String text) {
   CustomSnackbar(
     content: "copied to clipboard",
   ).show(context);
+  Navigator.of(context).pop();
 }
 
-void save() {
-  //TODO:Save comment logic
-}
-void collapseThread() {
-  //TODO:Collaps thread logic
-}
 void blockAccount(String username) {
   interactWithUser(
     userId: username,
@@ -64,8 +66,7 @@ void unmarkSpoiler(BuildContext context, String postId) async {
     Navigator.pop(context);
     CustomSnackbar(content: "Your post now is unmarked Spoiler");
   } else if (response == 500) {
-    CustomSnackbar(content: 'Internal server error, try again later')
-        .show(context);
+    CustomSnackbar(content: 'An error occured').show(context);
   } else {
     CustomSnackbar(content: 'Post not found').show(context);
   }
@@ -107,8 +108,7 @@ void savePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: postId, type: 'savepost');
   Navigator.pop(context);
   if (statusCode == 200) {
-     CustomSnackbar(content: 'Post saved successfully.')
-        .show(context);
+    CustomSnackbar(content: 'Post saved successfully.').show(context);
   } else {
     CustomSnackbar(content: "Error occurred while trying to unsave")
         .show(context);
@@ -120,23 +120,25 @@ void unsavePost(BuildContext context, String postId) async {
   int statusCode = await saveOrUnsave(id: '$postId', type: 'unsavepost');
   Navigator.pop(context);
   if (statusCode == 200) {
-    CustomSnackbar(content: 'Post unsaved successfully.')
-        .show(context);
+    CustomSnackbar(content: 'Post unsaved successfully.').show(context);
   } else {
-    CustomSnackbar(content: "Error occurred while trying to unsave, Please try again later")
+    CustomSnackbar(
+            content:
+                "Error occurred while trying to unsave, Please try again later")
         .show(context);
   }
 }
 
-void saveOrUnsaveComment(BuildContext context, String id , bool isSaved) async {
+void saveOrUnsaveComment(BuildContext context, String id, bool isSaved) async {
   int statusCode = await saveOrUnsave(id: id, type: 'comments');
   Navigator.pop(context);
   if (statusCode == 200) {
     print('Comment unsaved/saved successfully.');
     String content;
-    isSaved ? content ='Comment Unsaved successfully': content= 'Comment Saved successfully';
-     CustomSnackbar(content: content)
-        .show(context);
+    isSaved
+        ? content = 'Comment Unsaved successfully'
+        : content = 'Comment Saved successfully';
+    CustomSnackbar(content: content).show(context);
   } else {
     CustomSnackbar(content: "Error occurred Please Try again later")
         .show(context);

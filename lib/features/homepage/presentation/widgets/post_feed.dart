@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spreadit_crossplatform/features/generic_widgets/snackbar.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/get_feed_posts.dart';
 import 'package:spreadit_crossplatform/features/homepage/data/post_class_model.dart';
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/post_widget.dart';
@@ -101,7 +100,7 @@ class _PostFeedState extends State<PostFeed> {
   }
 
   Future<void> fetchData() async {
-    print("fetching catrgory de ${widget.postCategory}");
+    print("fetching catrgory de $currentPostCategory");
     if (!mounted) return;
 
     List<Post> fetchedItems;
@@ -118,7 +117,6 @@ class _PostFeedState extends State<PostFeed> {
         if (fetchedItems.isEmpty) {
           print("No posts found");
         }
-        newItems.clear();
         newItems = fetchedItems;
         isLoading = false;
         _loadingMore = false;
@@ -152,9 +150,10 @@ class _PostFeedState extends State<PostFeed> {
     if (!mounted) return;
     setState(() {
       currentPostCategory = postCategory;
-      newItems.clear();
-      existingItems.clear();
+      newItems = [];
+      existingItems = [];
       isLoading = true;
+      page = 1;
     });
     fetchData();
   }
@@ -166,6 +165,9 @@ class _PostFeedState extends State<PostFeed> {
         if (mounted) {
           setState(() {
             isRefreshing = true;
+            existingItems = [];
+            isLoading = true;
+            page = 1;
           });
         }
         return fetchData();
