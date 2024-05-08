@@ -210,7 +210,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           IconButton(
                             icon: Icon(Icons.share),
                             onPressed: () {
-                              sharePressed(kIsWeb? url : "https://app.spreadit.me/user-profile/${widget.username}");
+                              sharePressed(kIsWeb? url : "https://app.spreaddit.me/user-profile/${widget.username}");
                             },
                             color: Colors.white,
                             iconSize: iconSize,
