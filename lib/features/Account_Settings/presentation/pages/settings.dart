@@ -3,7 +3,6 @@ import 'package:spreadit_crossplatform/features/Account_Settings/presentation/wi
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_btn_to_page.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_body.dart';
 import 'package:spreadit_crossplatform/features/Account_Settings/presentation/widgets/settings_section_title.dart';
-import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 import '../widgets/sort_home.dart';
 

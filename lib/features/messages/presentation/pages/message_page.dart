@@ -5,6 +5,17 @@ import 'package:spreadit_crossplatform/features/messages/presentation/pages/mess
 import 'package:spreadit_crossplatform/features/messages/presentation/widgets/new_message.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
+/// Constructor for MessagePage.
+///
+/// Example:
+/// ```dart
+/// MessagePage(
+///   message: message,
+///   setNewMessage: (message) {
+///     // Handle setting the new message here
+///   },
+/// );
+/// ```
 class MessagePage extends StatefulWidget {
   final MessageModel message;
   final void Function(MessageModel message) setNewMessage;
@@ -123,6 +134,15 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 }
+
+/// MessageReplyTile.
+///
+/// Example:
+/// ```dart
+/// MessageReplyTile(
+///   message: message,
+/// );
+/// ```
 
 class MessageReplyTile extends StatefulWidget {
   final MessageRepliesModel message;

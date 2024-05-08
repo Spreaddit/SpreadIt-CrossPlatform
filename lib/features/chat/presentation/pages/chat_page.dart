@@ -15,9 +15,21 @@ import 'package:spreadit_crossplatform/user_info.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:uuid/uuid.dart';
 
+/// A widget representing a chat page where users can exchange text messages and images.
+///
+/// This widget provides a chat interface for users to communicate with each other.
+/// It supports sending and receiving text messages, as well as uploading and displaying images.
 class ChatPage extends StatefulWidget {
+  /// The unique identifier of the chatroom.
   final String id;
+
+  /// The name of the chatroom displayed in the app bar.
   final String chatroomName;
+
+  /// Creates a [ChatPage] widget.
+  ///
+  /// The [id] parameter is required to identify the chatroom.
+  /// The [chatroomName] parameter is the name of the chatroom displayed in the app bar.
   const ChatPage({
     Key? key,
     required this.id,

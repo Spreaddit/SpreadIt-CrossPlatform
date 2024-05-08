@@ -7,8 +7,14 @@ import 'package:spreadit_crossplatform/features/messages/data/handle_message_dat
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 import 'package:spreadit_crossplatform/features/messages/presentation/pages/message_page.dart';
 
-// TODO: https://pub.dev/packages/badges (unread messages)
-
+/// Returns the last message in a conversation.
+///
+/// Example:
+/// ```dart
+/// MessageModel message = getMessage();
+/// MessageRepliesModel lastMessage = getLastMessage(message);
+/// ```
+///
 MessageRepliesModel getLastMessage(MessageModel message) {
   if (message.replies!.isEmpty) {
     return message.primaryMessage;
@@ -16,6 +22,19 @@ MessageRepliesModel getLastMessage(MessageModel message) {
     return message.replies![message.replies!.length - 1];
   }
 }
+
+/// Constructor for MessageInbox.
+///
+/// Example:
+/// ```dart
+/// MessageInbox(
+///   isAllRead: true,
+///   newMessage: newMessage,
+///   setNewMessage: (message) {
+///     // Handle setting the new message here
+///   },
+/// );
+/// ```
 
 class MessageInbox extends StatefulWidget {
   final bool isAllRead;
@@ -81,6 +100,12 @@ class _MessageInboxState extends State<MessageInbox> {
     return lastMessage.isRead || lastMessage.direction == "outgoing";
   }
 
+  /// Handles marking a conversation as read or unread.
+  ///
+  /// Example:
+  /// ```dart
+  /// handleReadConversation(message, true);
+  /// ```
   void handleReadConversation(
     MessageModel message,
     int index,
@@ -172,6 +197,22 @@ class _MessageInboxState extends State<MessageInbox> {
   }
 }
 
+/// Constructor for MessageTile.
+///
+/// Example:
+/// ```dart
+/// MessageTile(
+///   message: message,
+///   isRead: false,
+///   index: 0,
+///   setNewMessage: (message) {
+///     // Handle setting the new message here
+///   },
+///   handleReadConversation: (message, index, shouldRead) {
+///     // Handle marking conversation as read or unread here
+///   },
+/// );
+/// ```
 class MessageTile extends StatefulWidget {
   final MessageModel message;
   final bool isRead;
