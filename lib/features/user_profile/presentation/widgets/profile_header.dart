@@ -194,7 +194,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                       IconButton(
                         icon: Icon(Icons.arrow_back),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
                         },
                         color: Colors.white,
                         iconSize: iconSize,
@@ -210,7 +210,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           IconButton(
                             icon: Icon(Icons.share),
                             onPressed: () {
-                              sharePressed(kIsWeb? url : "https://app.spreadit.me/user-profile/$username");
+                              sharePressed(kIsWeb? url : "https://app.spreadit.me/user-profile/${widget.username}");
                             },
                             color: Colors.white,
                             iconSize: iconSize,
