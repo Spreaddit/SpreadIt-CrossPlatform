@@ -153,6 +153,7 @@ class _ChatPageState extends State<ChatPage> {
 
     setState(() {
       _messages[index] = updatedMessage;
+      isUploading = false;
     });
   }
 

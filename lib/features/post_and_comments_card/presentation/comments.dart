@@ -315,7 +315,6 @@ class _CommentCardState extends State<CommentCard> {
                             return CustomBottomSheet(
                               icons: [
                                 Icons.share,
-                                Icons.notifications_on_rounded,
                                 Icons.save,
                                 if (isUserProfile &&
                                     !isNotApprovedForEditOrReply)
@@ -326,7 +325,6 @@ class _CommentCardState extends State<CommentCard> {
                               ],
                               text: [
                                 "Share",
-                                "Get Reply notifications",
                                 isSaved ? "Unsave" : "save",
                                 if (isUserProfile &&
                                     !isNotApprovedForEditOrReply)
@@ -339,7 +337,6 @@ class _CommentCardState extends State<CommentCard> {
                                 () {
                                   sharePressed(comment.content);
                                 },
-                                getReplyNotifications,
                                 () => {
                                       saveOrUnsaveComment(
                                         context,

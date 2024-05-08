@@ -12,10 +12,6 @@ import 'package:spreadit_crossplatform/features/user_interactions/data/user_inte
 
 import '../../../saved/data/save_or_unsave.dart';
 
-void getReplyNotifications() {
-  //TODO: get reply notifications logic
-}
-
 void hide({
   required BuildContext context,
   required String postId,
