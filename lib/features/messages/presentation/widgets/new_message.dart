@@ -5,10 +5,32 @@ import 'package:spreadit_crossplatform/features/messages/data/handle_message_dat
 import 'package:spreadit_crossplatform/features/messages/data/message_model.dart';
 import 'package:spreadit_crossplatform/theme/theme.dart';
 
+/// Method to show send message modal
+///
+/// This method displays a modal bottom sheet containing a form for sending a new message. It provides a convenient way to gather user input for sending messages.
+///
+/// Example usage:
+/// ```dart
+/// showSendMessage(
+///   context: context,
+///   setNewMessage: (message) {
+///     // Handle setting the new message here
+///   },
+/// );
+/// ```
+///
+/// Parameters:
+/// - `context`: The build context from the calling widget.
+/// - `messageId`: (Optional) The ID of the message if it's a reply to an existing message.
+/// - `setNewMessage`: A callback function that takes a `MessageModel` object and handles setting the new message.
+/// - `setNewMessageInner`: (Optional) A callback function that takes a `MessageModel` object and handles setting the new inner message if `messageId` is not null.
+/// Define a stateful widget for a new message form
 class NewMessageForm extends StatefulWidget {
   final String? messageId;
   final void Function(MessageModel message) setNewMessage;
   final void Function(MessageModel message)? setNewMessageInner;
+
+  /// Constructor for NewMessageForm
   NewMessageForm({
     this.messageId,
     required this.setNewMessage,
@@ -19,37 +41,50 @@ class NewMessageForm extends StatefulWidget {
   State<NewMessageForm> createState() => _NewMessageFormState();
 }
 
+/// State class for the NewMessageForm widget
 class _NewMessageFormState extends State<NewMessageForm> {
+  /// Global key for the form
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  /// Controllers for handling input fields
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _subjectController = TextEditingController();
 
+  /// Function to submit the form
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      /// Extracting values from input fields
       String username = _usernameController.text;
       String subject = _subjectController.text;
       String message = _messageController.text;
+
+      /// Send message and get the response
       var value = await sendMessage(
           username: username,
           subject: subject,
           messageId: widget.messageId,
           message: message);
 
+      /// If response is not null, update message
       if (value != null) {
         widget.setNewMessage(value);
+
+        /// If messageId is not null, update inner message
         if (widget.messageId != null) {
-          print("ANaaaa ahooo");
           widget.setNewMessageInner!(value);
         }
       } else {
+        /// Show error message if sending message fails
         CustomSnackbar(content: "Error sending message").show(context);
       }
 
+      /// Close the form
       Navigator.pop(context);
     }
   }
 
+  /// Build method for the widget
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -64,6 +99,7 @@ class _NewMessageFormState extends State<NewMessageForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              /// Close button and Send button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -88,6 +124,8 @@ class _NewMessageFormState extends State<NewMessageForm> {
                 ],
               ),
               SizedBox(height: 30),
+
+              /// Username input field
               if (widget.messageId == null)
                 TextFormField(
                   controller: _usernameController,
@@ -103,6 +141,8 @@ class _NewMessageFormState extends State<NewMessageForm> {
                   thickness: 0.5,
                   color: redditGrey,
                 ),
+
+              /// Subject input field
               if (widget.messageId == null)
                 TextFormField(
                   controller: _subjectController,
@@ -117,6 +157,8 @@ class _NewMessageFormState extends State<NewMessageForm> {
                   thickness: 0.5,
                   color: redditGrey,
                 ),
+
+              /// Message input field
               Container(
                 constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height * 0.3),
@@ -131,6 +173,8 @@ class _NewMessageFormState extends State<NewMessageForm> {
                 ),
               ),
               SizedBox(height: 20),
+
+              /// Button to show link builder
               IconButton(
                 onPressed: () {
                   _showLinkBuilder(context);
@@ -144,6 +188,7 @@ class _NewMessageFormState extends State<NewMessageForm> {
     );
   }
 
+  /// Method to show link builder modal
   void _showLinkBuilder(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -154,6 +199,7 @@ class _NewMessageFormState extends State<NewMessageForm> {
     );
   }
 
+  /// Validation method for username field
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a username';
@@ -161,6 +207,7 @@ class _NewMessageFormState extends State<NewMessageForm> {
     return null;
   }
 
+  /// Validation method for subject field
   String? _validateSubject(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a subject';
@@ -168,6 +215,7 @@ class _NewMessageFormState extends State<NewMessageForm> {
     return null;
   }
 
+  /// Validation method for message field
   String? _validateMessage(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter a message';
@@ -176,14 +224,17 @@ class _NewMessageFormState extends State<NewMessageForm> {
   }
 }
 
+/// Widget for the link builder form
 class LinkBuilderForm extends StatelessWidget {
   final TextEditingController messageController;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController linkController = TextEditingController();
   final TextEditingController linkMessageController = TextEditingController();
 
+  /// Constructor for LinkBuilderForm
   LinkBuilderForm({required this.messageController});
 
+  /// Build method for the widget
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -197,6 +248,7 @@ class LinkBuilderForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              /// Input field for link name
               TextFormField(
                 controller: linkMessageController,
                 maxLines: null,
@@ -212,6 +264,8 @@ class LinkBuilderForm extends StatelessWidget {
                 },
               ),
               SizedBox(height: 10),
+
+              /// Input field for link URL
               TextFormField(
                 controller: linkController,
                 decoration: InputDecoration(
@@ -229,6 +283,8 @@ class LinkBuilderForm extends StatelessWidget {
                 },
               ),
               SizedBox(height: 20),
+
+              /// Button to insert link into message
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
@@ -254,6 +310,7 @@ class LinkBuilderForm extends StatelessWidget {
   }
 }
 
+/// Method to show send message modal
 void showSendMessage({
   required BuildContext context,
   String? messageId,
