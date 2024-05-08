@@ -89,7 +89,7 @@ Future<bool> checkIfNotApproved(String communityName, String username) async {
   bool isNotApproved = banResponse['isBanned'] ||
       ((communityResponse["communityType"] == "Private" ||
               communityResponse["communityType"] == "Restricted") &&
-          !approvedResponse["isContributor"]);
+          !approvedResponse["isContributor"] && communityResponse["isModerator"] == false);
   return isNotApproved;
 }
 
@@ -106,6 +106,6 @@ Future<bool> checkIfBannedOrPrivate(
       communityName: communityName, username: username);
   bool isBannedOrPrivate = banResponse['isBanned'] ||
       (communityResponse["communityType"] == "Private" &&
-          !approvedResponse["isContributor"]);
+          !approvedResponse["isContributor"] && communityResponse["isModerator"] == false);
   return isBannedOrPrivate;
 }

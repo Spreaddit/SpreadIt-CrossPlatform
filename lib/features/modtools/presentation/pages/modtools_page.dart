@@ -12,8 +12,8 @@ import 'package:spreadit_crossplatform/features/modtools/presentation/pages/appr
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/banned_users_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/community_type_page.dart';
 import 'package:spreadit_crossplatform/features/modtools/presentation/pages/description_page.dart';
-import 'package:spreadit_crossplatform/features/modtools/presentation/pages/dummy_page.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
+import 'package:spreadit_crossplatform/features/schedule_posts/presentation/pages/schedule_posts_page.dart';
 import 'package:spreadit_crossplatform/user_info.dart';
 
 /// Widget to display moderator tools for a community.
@@ -113,13 +113,7 @@ class _ModtoolsPageState extends State<ModtoolsPage> {
       "post_types_page": PostTypes(
         communityName: widget.communityName,
       ),
-      "discovery_page": DummyPage(
-        communityName: widget.communityName,
-      ),
-      "content_tags_page": DummyPage(
-        communityName: widget.communityName,
-      ),
-      "scheduled_posts_page": DummyPage(
+      "scheduled_posts_page": SchedulePostsPage(
         communityName: widget.communityName,
       ),
       "moderators_page": ModeratorsPage(
