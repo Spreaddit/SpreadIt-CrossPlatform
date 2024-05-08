@@ -71,12 +71,8 @@ void main() {
       };
   
     });
-      // Add more tests to cover other functionalities like searching, navigation within page views, etc.
+      
   });
 }
 
-// void pushWidget(Widget widget) {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   runApp(widget); // Wrap the widget directly
-//   //popUntil((route) => route.isFirst); // Pop until the first route (usually the test app)
-// }
+
