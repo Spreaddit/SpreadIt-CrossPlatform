@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:spreadit_crossplatform/features/community/presentation/pages/community_page.dart';
+import 'package:spreadit_crossplatform/features/dynamic_navigations/navigate_to_community.dart';
 import 'package:spreadit_crossplatform/features/notifications/Data/notifications_class_model.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/user_profile/presentation/pages/user_profile.dart';
@@ -91,7 +92,17 @@ NotificationData processNotification(
       content = notification.post!.title;
       buttonText = null;
       onPress = () {
-        navigateToPostFeed(context, notification.postId!, null, false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            settings: RouteSettings(
+              name: '/post-card-page/${notification.postId!}/true',
+            ),
+            builder: (context) => PostCardPage(
+              postId: notification.postId!,
+            ),
+          ),
+        );
       };
       break;
 
@@ -145,7 +156,14 @@ NotificationData processNotification(
       icon = Ionicons.person;
       content = '';
       buttonText = 'Accept invitation';
-      onPress = () {};
+      onPress = () {
+        String message = notification.content!;
+        int indexOfIn = message.indexOf("in ");
+        int indexOfCommunity = message.indexOf(" community");
+        String wordAfterIn =
+            message.substring(indexOfIn + 3, indexOfCommunity).trim();
+        navigateToCommunity(context, wordAfterIn);
+      };
       break;
     default:
       throw ArgumentError(

@@ -24,6 +24,7 @@ import 'package:spreadit_crossplatform/features/homepage/presentation/pages/home
 import 'package:spreadit_crossplatform/features/homepage/presentation/widgets/top_bar.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/add_muted_user_page.dart';
 import 'package:spreadit_crossplatform/features/moderation/muted_users/presentation/pages/muted_user_page.dart';
+import 'package:spreadit_crossplatform/features/notifications/Presentation/pages/inbox_page.dart';
 import 'package:spreadit_crossplatform/features/post_and_comments_card/presentation/pages/post_card_page.dart';
 import 'package:spreadit_crossplatform/features/moderators/presentation/pages/moderators-page.dart';
 import 'package:spreadit_crossplatform/features/post_types_moderation/presentation/pages/post_types_page.dart';
@@ -129,6 +130,8 @@ Map<String, WidgetBuilder> generateRoutes() {
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.discover)),
     '/chat-rooms': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.chat)),
+    '/inbox': (context) =>
+        ProtectedRoute(child: HomePage(currentPage: CurrentPage.inbox)),
     '/new-chat': (context) => ProtectedRoute(child: NewChatPage()),
     '/all': (context) =>
         ProtectedRoute(child: HomePage(currentPage: CurrentPage.all)),

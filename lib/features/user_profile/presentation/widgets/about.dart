@@ -1,6 +1,7 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:spreadit_crossplatform/features/messages/presentation/widgets/new_message.dart';
+
 /// The `AboutWidget` class is responsible for displaying user information such as post karma, comment karma, and about text.
 ///
 /// This widget is typically used within user profile pages to provide a summary of the user's activity and background.
@@ -34,7 +35,7 @@ class AboutWidget extends StatelessWidget {
   /// - `onSendMessagePressed`: Callback function triggered when the "Send a Message" button is pressed.
   /// - `onStartChatPressed`: Callback function triggered when the "Start Chat" button is pressed.
   /// - `myProfile`: A boolean value indicating whether the current profile belongs to the logged-in user.
-   AboutWidget({
+  AboutWidget({
     required this.commentKarmaNo,
     required this.aboutText,
     required this.postKarmaNo,
@@ -67,7 +68,10 @@ class AboutWidget extends StatelessWidget {
               children: [
                 if (onSendMessagePressed != null)
                   TextButton.icon(
-                    onPressed: onSendMessagePressed,
+                    onPressed: () {
+                       Navigator.pushNamedAndRemoveUntil(
+                      context, '/inbox', (route) => false);
+                    },
                     icon: Icon(
                       CupertinoIcons.envelope,
                       color: Colors.black,
@@ -80,7 +84,9 @@ class AboutWidget extends StatelessWidget {
                 SizedBox(height: screenHeight * 0.03),
                 if (onStartChatPressed != null)
                   TextButton.icon(
-                    onPressed: onStartChatPressed,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/new-chat');
+                    },
                     icon: Icon(
                       CupertinoIcons.chat_bubble_2_fill,
                       color: Colors.black,

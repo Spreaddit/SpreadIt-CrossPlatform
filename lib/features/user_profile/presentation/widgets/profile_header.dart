@@ -132,15 +132,13 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   }
 
   void navigateToUserSearch() {
-        Navigator.of(context).pushNamed('/community-or-user-search', 
-        arguments: {
-          'communityOrUserName': widget.username,
-          'communityOrUserIcon': widget.profilePicture ,
-          'fromUserProfile': true,
-          'fromCommunityPage': false,
-        });
-      }
-
+    Navigator.of(context).pushNamed('/community-or-user-search', arguments: {
+      'communityOrUserName': widget.username,
+      'communityOrUserIcon': widget.profilePicture,
+      'fromUserProfile': true,
+      'fromCommunityPage': false,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,19 +223,19 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                     return CustomBottomSheet(
                                       icons: [
                                         CupertinoIcons.envelope,
-                                        CupertinoIcons.add_circled,
                                         Icons.block,
                                         CupertinoIcons.flag,
                                       ],
                                       text: [
                                         'Send a message',
-                                        'Add to custom feed',
                                         'Block',
                                         'Report a profile'
                                       ],
                                       onPressedList: [
-                                        () => {},
-                                        () => {},
+                                        () => {
+                                              Navigator.of(context).pushNamed(
+                                                  '/inbox')
+                                            },
                                         () => {
                                               interactWithUser(
                                                   userId: widget.displayName,
@@ -310,7 +308,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                 child: IconButton(
                                   icon: Icon(
                                       CupertinoIcons.chat_bubble_text_fill),
-                                  onPressed: widget.onStartChatPressed,
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/new-chat');
+                                  },
                                   color: Colors.white,
                                   iconSize: iconSize * 0.75,
                                 ),
