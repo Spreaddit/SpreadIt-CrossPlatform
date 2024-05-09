@@ -103,7 +103,8 @@ class _PostCardState extends State<PostCard> {
             isFullView: true,
             isModeratorView: widget.isModeratorView,
             isUserProfile:
-                widget.post.userId == UserSingleton().user!.id || isAdmin,
+                widget.post.username == UserSingleton().user!.username ||
+                    isAdmin,
             canManagePosts: widget.canManagePostsAndComments,
           ),
           Container(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/non_skippable_dialog.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/validations.dart';
 import 'package:spreadit_crossplatform/features/generic_widgets/button.dart';
