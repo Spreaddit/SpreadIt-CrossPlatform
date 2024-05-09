@@ -165,7 +165,7 @@ class _JoinCommunityBtnState extends State<JoinCommunityBtn> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(
-              color: Colors.deepOrangeAccent,
+              color: const Color.fromARGB(255, 189, 189, 189),
             ),
           );
         } else if (snapshot.hasError) {

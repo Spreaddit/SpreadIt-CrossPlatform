@@ -195,6 +195,7 @@ class _CommunityPageState extends State<CommunityPage> {
           children: <Widget>[
             CommunityInfoSection(
               communityName: widget.communityName,
+              isModData: isModData,
               communityData: communityData,
               onReturnToCommunityPage: () {
                 fetchData().then((value) => setState(() {}));
