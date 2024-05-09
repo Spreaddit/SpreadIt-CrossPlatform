@@ -42,7 +42,7 @@ String postCategoryEndpoint({
       case PostCategories.top:
         return "/home/top/";
       case PostCategories.recent:
-        return "/home/posts/";
+        return "/home/recentposts/";
       case PostCategories.views:
         return "/home/sort/views/";
       case PostCategories.save:
