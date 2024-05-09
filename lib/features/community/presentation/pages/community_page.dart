@@ -68,8 +68,15 @@ class _CommunityPageState extends State<CommunityPage> {
 
   /// Fetches the community information.
   Future<void> fetchData() async {
-    communityDataFuture = getCommunityInfo(widget.communityName)
-        .then((value) => communityData = value);
+    communityDataFuture = getCommunityInfo(widget.communityName).then((value) {
+      communityData = value;
+      setState(() {
+        communityBannerLink = communityData["communityBanner"];
+        isMember = communityData['isMember'];
+        data = communityData;
+      });
+      return communityData;
+    });
     isApprovedDataFuture = checkIfApprovedRequest(
       communityName: widget.communityName,
       username:
@@ -94,11 +101,6 @@ class _CommunityPageState extends State<CommunityPage> {
       widget.communityName,
       (UserSingleton().user != null) ? UserSingleton().user!.username : "",
     ).then((value) => permissionsData = value!);
-    data = await getCommunityInfo(widget.communityName);
-    setState(() {
-      communityBannerLink = data["communityBanner"];
-      isMember = data['isMember'];
-    });
   }
 
   @override
