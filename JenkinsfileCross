@@ -12,7 +12,7 @@ pipeline {
             steps {
                  sh 'pwd && ls -l' 
                  sh 'cd SpreadIt-CrossPlatform && sudo mkdir webBuildfile && sudo chmod -R u+rwx webBuildfile && sudo mv webBuild.zip webBuildfile/ && pwd && ls -l'
-                 sh 'cd SpreadIt-CrossPlatform && cd webBuildfile && sudo unzip web.zip'
+                 sh 'cd SpreadIt-CrossPlatform && cd webBuildfile && pwd && ls -l && sudo unzip web.zip'
                  sh 'sudo systemctl restart nginx' 
             }
         }
