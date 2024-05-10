@@ -11,6 +11,7 @@ pipeline {
         stage('Deploy') {
             steps {
                  sh 'cd SpreadIt-CrossPlatform && sudo mkdir webBuildfile && sudo chmod -R u+rwx webBuildfile'
+                 sh 'pwd && ls -l' 
                  sh 'sudo mv webBuild.zip webBuildfile'
                  sh 'cd webBuildfile && sudo unzip web.zip'
                  sh 'sudo systemctl restart nginx' 
