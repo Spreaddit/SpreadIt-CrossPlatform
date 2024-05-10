@@ -4,17 +4,16 @@ pipeline {
         stage('clone repo') {
             steps {
               // only allowed edit is pushing a build file -> to be edited later when flutter is fixed
-                sh 'sudo rm -rf SpreadIt-CrossPlatform && git clone https://#token#@github.com/Spreaddit/SpreadIt-CrossPlatform.git'
+                sh 'sudo rm -rf SpreadIt-CrossPlatform && git clone https://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@github.com/Spreaddit/SpreadIt-CrossPlatform.git'
             }
         }
         
         stage('Deploy') {
             steps {
-              //edit nginx config to path /var/lib/jenkins/workspace/
-                 sh 'cd CrossPlatform && sudo mkdir webBuild'
-                 sh 'sudo mv web.zip webBuild'
-                 sh 'cd webBuild && sudo unzip web.zip'
-                 sh 'sudo systemctl restart nginx'
+                 sh 'cd SpreadIt-CrossPlatform && sudo mkdir webBuildfile'
+                 sh 'sudo mv webBuild.zip webBuildfile'
+                 sh 'cd webBuildfile && sudo unzip web.zip'
+                 sh 'sudo systemctl restart nginx' 
             }
         }
     }
