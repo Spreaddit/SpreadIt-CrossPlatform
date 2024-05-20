@@ -4,7 +4,7 @@ pipeline {
         stage('clone repo') {
             steps {
               // only allowed edit is pushing a build file -> to be edited later when flutter is fixed
-                sh 'sudo rm -rf SpreadIt-CrossPlatform && git clone https://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@github.com/Spreaddit/SpreadIt-CrossPlatform.git'
+                sh 'sudo rm -rf SpreadIt-CrossPlatform && git clone https://github.com/Spreaddit/SpreadIt-CrossPlatform.git'
             }
         }
         
